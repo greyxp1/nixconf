@@ -2,6 +2,15 @@
 {
   flake.nixosModules.niri =
     { pkgs, ... }:
+
+    let
+      oniri = pkgs.rustPlatform.buildRustPackage {
+        pname = "oniri";
+        version = "0-unstable";
+        src = inputs.oniri;
+        cargoHash = "sha256-ue08WszHwDbnXRR3lxcwCrtC2XMpg55BXcj65tS3u1E=";
+      };
+    in
     {
       imports = [
         inputs.niri.nixosModules.niri
@@ -21,25 +30,39 @@
         {
           programs.niri.config = builtins.readFile ./config.kdl;
           home.packages = [
-            inputs.niri-float-sticky.packages.${pkgs.stdenv.hostPlatform.system}.default
+            pkgs.xwayland-satellite
+            oniri
+            inputs.nsticky.packages.${pkgs.stdenv.hostPlatform.system}.nsticky
+
             (pkgs.writeScriptBin "screencast-monitor" ''
-              #!${pkgs.nushell}/bin/nu
-              dbus-monitor --session "type='method_call',interface='org.freedesktop.portal.ScreenCast',member='Start'"
-              | lines
-              | each { |line|
-                  if ($line | str contains "method call") {
-                    run-external "niri" "msg" "action" "set-dynamic-cast-monitor"
-                  }
-                }
+              #!${pkgs.dash}/bin/dash
+              dbus-monitor --session "type='method_call',interface='org.freedesktop.portal.ScreenCast',member='Start'" \
+              | grep --line-buffered "method call" \
+              | while read -r _; do niri msg action set-dynamic-cast-monitor; done
             '')
 
-            #(pkgs.writeShellScriptBin "screencast-monitor" ''
-            #  dbus-monitor --session \
-            #    "type='method_call',interface='org.freedesktop.portal.ScreenCast',member='Start'" \
-            #    2>/dev/null |
-            #  awk '/method call/ { system("niri msg action set-dynamic-cast-monitor"); fflush() }'
-            #'')
+            (pkgs.writeScriptBin "nsticky-stage-toggle" ''
+              #!${pkgs.dash}/bin/dash
+              STATE="/tmp/nsticky-staged"
+              if [ -f "$STATE" ]; then
+                nsticky stage remove-all && rm "$STATE"
+              else
+                nsticky stage add-all && touch "$STATE"
+              fi
+            '')
           ];
+
+          xdg.configFile."nsticky/config.toml".text = ''
+            [sticky.pip]
+            title = "^Picture in picture$"
+
+            [sticky.chrome-pip]
+            app_id = "^chrome-ldgfbffkinooeloadekpmfoklnobpien-Default$"
+
+            [sticky.discord-vc]
+            app_id = "^discord$"
+            title = "^VC[^|]*$"
+          '';
 
           xdg.configFile."xdg-desktop-portal-termfilechooser/config".text = ''
             [filechooser]
