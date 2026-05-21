@@ -11,7 +11,6 @@
           "https://noctalia.cachix.org"
           "https://attic.xuyh0120.win/lantian"
           "https://cache.garnix.io"
-          "https://cache.nixos-cuda.org"
           "https://catppuccin.cachix.org"
         ];
         trusted-public-keys = [
@@ -21,7 +20,6 @@
           "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
           "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
           "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
-          "cuda.org:74DUi4Ye579gUqzH4ziL9IyiJBlDpMRn9MBN8oNan9M="
           "catppuccin.cachix.org-1:noG/4HkbhJb+lUAdKrph6LaozJvAeEEZj4N732IysmU="
         ];
       };
