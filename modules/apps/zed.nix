@@ -25,7 +25,6 @@
               project_panel.dock = "left";
               git_panel.dock = "left";
               buffer_font_family = "JetBrainsMono Nerd Font";
-              tab_bar.show = false;
 
               telemetry = {
                 diagnostics = false;
