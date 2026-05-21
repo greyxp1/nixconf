@@ -1,16 +1,13 @@
 spawn-sh-at-startup "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=niri"
 spawn-at-startup "noctalia"
 spawn-sh-at-startup "screencast-monitor"
-spawn-sh-at-startup "tile-to-2"
-spawn-sh-at-startup "niri-float-sticky -title '^Picture in picture$'"
-spawn-sh-at-startup "niri-float-sticky -app-id '^equibop$' -title '^([^E|]|E[^q|]|Eq[^u|]|Equ[^i|]|Equi[^b|]|Equib[^o|]|Equibo[^p|]|Equibop[^$|])[^|]*$'"
-spawn-at-startup "equibop"
+spawn-sh-at-startup "oniri --tiling-layout --edges-maximizing"
 
 binds {
     Mod+Return repeat=false { spawn "kitty"; }
     Mod+E repeat=false { spawn-sh "kitty -- yazi"; }
     Mod+B repeat=false { spawn "helium"; }
-    Mod+D repeat=false { spawn "equibop"; }
+    Mod+D repeat=false { spawn "discord"; }
     Mod+Z repeat=false { spawn "zeditor"; }
 
     Mod+Escape repeat=false { spawn "noctalia" "msg" "panel-toggle" "session"; }
@@ -24,6 +21,9 @@ binds {
     XF86AudioRaiseVolume repeat=false { spawn "noctalia" "msg" "volume-up"; }
     XF86AudioLowerVolume repeat=false { spawn "noctalia" "msg" "volume-down"; }
     XF86AudioMute repeat=false { spawn "noctalia" "msg" "volume-mute"; }
+
+    Mod+G repeat=false { spawn "nsticky" "sticky" "toggle-active"; }
+    Mod+Shift+G repeat=false { spawn "nsticky-stage-toggle"; }
 
     Mod+Q repeat=false { close-window; }
     Mod+F repeat=false { maximize-window-to-edges; }
@@ -52,6 +52,7 @@ binds {
 workspace "browser"
 workspace "default"
 workspace "chat"
+workspace "stage"
 prefer-no-csd
 
 layout {
@@ -77,8 +78,6 @@ layout {
 }
 
 input {
-    focus-follows-mouse max-scroll-amount="10%"
-
     keyboard {
         repeat-delay 250
         repeat-rate 50
@@ -154,34 +153,35 @@ window-rule {
     }
 }
 
+spawn-at-startup "helium"
 window-rule {
     match app-id="^helium$"
     open-on-workspace "browser"
-    open-maximized-to-edges true
 }
 
+spawn-at-startup "zeditor"
 window-rule {
     match app-id="^dev.zed.Zed$"
     open-on-workspace "default"
-    open-maximized-to-edges true
 }
 
+spawn-at-startup "discord"
 window-rule {
-    match app-id="^equibop$" title="^Equibop$"
+    match app-id="^discord$"
     open-on-workspace "chat"
-    open-maximized-to-edges true
 }
 
 window-rule {
-    match app-id="^kitty$|^equibop$|^mpv$|^.virt-manager-wrapped$"
+    match app-id="^kitty$|^discord$"
     match title="(?i).*(Youtube|Jellyfin-Player).*"
     match title="^Picture in picture$"
     opacity 1.0
 }
 
+spawn-at-startup "nsticky"
 window-rule {
-    match app-id="^equibop$"
-    exclude title="^Equibop$"
+    match app-id="^discord$"
+    exclude title="(?i).*discord$"
     match title="^Picture in picture$"
     match app-id="^chrome-ldgfbffkinooeloadekpmfoklnobpien-Default$"
 
