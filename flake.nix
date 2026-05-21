@@ -39,9 +39,14 @@
       url = "git+https://codeberg.org/debugloop/niri-autoselect-portal.git";
     };
 
-    niri-float-sticky = {
-      url = "github:probeldev/niri-float-sticky";
+    nsticky = {
+      url = "github:lonerOrz/nsticky";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    oniri = {
+      url = "github:Antiz96/oniri";
+      flake = false;
     };
 
     noctalia = {
