@@ -27,6 +27,12 @@
               tab_powerline_style = "slanted";
               strip_trailing_spaces = "smart";
               confirm_os_window_close = 0;
+              enable_audio_bell = "no";
+
+              "map ctrl+shift+a" =
+                "combine : launch --stdin-source=@screen_scrollback --type=clipboard : "
+                + "kitten notify --type=info --icon=edit-copy \"Clipboard\" "
+                + "\"Terminal scrollback copied successfully!\"";
             };
           };
         };
