@@ -12,16 +12,27 @@
         };
       };
 
-      users.users.grey.shell = pkgs.nushell;
+      programs.fish.enable = true;
+      users.users.grey.shell = pkgs.fish;
 
       home-manager.users.grey =
         { ... }:
         {
-          programs.nushell = {
+          programs.btop.enable = true;
+          programs.codex.enable = true;
+
+          programs.fish = {
             enable = true;
-            environmentVariables.PAGER = "bat";
-            settings.show_banner = false;
-            shellAliases = {
+            interactiveShellInit = ''
+              set -g fish_greeting
+              set -gx MANPAGER "sh -c 'col -bx | bat -l man -p'"
+              set -gx PAGER "bat -p"
+              function ls; nu -c "ls $argv"; end
+              function cat; bat --paging=never $argv; end
+              bind \cl 'clear; commandline -f repaint'
+            '';
+
+            functions = {
               rebuild = "nh os switch";
               update = "nh os switch --update";
               home = "sudo systemctl restart home-manager-grey.service";
@@ -30,23 +41,24 @@
               tree = "lstr -g --icons --git-status";
               treell = "lstr -a -s -p --icons";
               treei = "lstr interactive -g --icons --git-status";
+
+              clear = ''
+                printf '\033[3J'
+                command clear
+                commandline -f repaint
+              '';
             };
           };
 
           programs.zoxide = {
             enable = true;
-            enableNushellIntegration = true;
+            enableFishIntegration = true;
             options = [ "--cmd cd" ];
-          };
-
-          programs.carapace = {
-            enable = true;
-            enableNushellIntegration = true;
           };
 
           programs.starship = {
             enable = true;
-            enableNushellIntegration = true;
+            enableFishIntegration = true;
             settings = {
               add_newline = false;
               aws.disabled = true;
@@ -60,13 +72,13 @@
             lstr
             bat
             fastfetch
-            btop
             zip
             unzip
             wget
-            codex
             nerd-fonts.jetbrains-mono
             fzf
+            nushell
+            dash
           ];
         };
     };
