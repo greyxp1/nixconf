@@ -26,9 +26,7 @@
         extraGroups = [
           "networkmanager"
           "wheel"
-          "video"
           "input"
-          "libvirtd"
           "seat"
         ];
         initialPassword = "123";
@@ -59,15 +57,6 @@
         power-profiles-daemon.enable = true;
         dbus.enable = true;
         gvfs.enable = true;
-      };
-
-      environment = {
-        pathsToLink = [ "/share/applications" ];
-        sessionVariables = {
-          NIXOS_OZONE_WL = "1";
-          ELECTRON_OZONE_PLATFORM_HINT = "wayland";
-          XDG_CURRENT_DESKTOP = "niri";
-        };
       };
 
       hardware = {
