@@ -1,55 +1,47 @@
 { inputs, ... }:
 {
   flake.nixosModules.nixcord =
-    { pkgs, ... }:
+    { ... }:
     {
       home-manager.sharedModules = [ inputs.nixcord.homeModules.nixcord ];
-
       home-manager.users.grey =
         { ... }:
         {
           programs.nixcord = {
             enable = true;
-            discord.enable = false;
-
-            equibop = {
+            discord = {
               enable = true;
-              state.firstLaunch = false;
+              vencord.enable = false;
+              equicord.enable = true;
 
               settings = {
-                middleClickAutoscroll = true;
-                tray = false;
-                hardwareVideoAcceleration = true;
-                enableSplashScreen = false;
-                splashTheming = false;
-                staticTitle = true;
+                MINIMIZE_TO_TRAY = false;
+                openasar = {
+                  setup = true;
+                  quickstart = true;
+                  css = ''
+                    @import url("https://refact0r.github.io/midnight-discord/build/midnight.css");
+                    @import url(https://mwittrien.github.io/BetterDiscordAddons/Themes/EmojiReplace/base/Apple.css);
+                    body {
+                      --background-image: on;
+                      --background-image-url: url('https://i.imgur.com/mOR0PoA.jpeg');
+                      --top-bar-height: var(--gap);
+                      --transparency-tweaks: on;
+                      --panel-blur: on;
+                      --blur-amount: 12px;
+                      --bg-floating: hsla(220, 15%, 13%, 0.6);
+                      --custom-chatbar: separated;
+                      --small-user-panel: off;
+                    }
+                    :root { --bg-4: hsla(220, 15%, 10%, 0.81); }
+                    div[class^="winButtons_"] { display: none !important; }
+                    [class^="base_"] { --top-bar-right-margin: calc(32px * var(--button-count) + var(--button-count) * var(--space-xs)) !important; }
+                  '';
+                };
               };
-
-              package = pkgs.equibop.overrideAttrs (old: {
-                nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ pkgs.makeWrapper ];
-                postFixup = (old.postFixup or "") + ''
-                  wrapProgram $out/bin/equibop \
-                    --add-flags "--force_high_performance_gpu" \
-                    --add-flags "--enable-features=VaapiVideoDecodeLinuxGL,AcceleratedVideoDecodeLinuxGL,AcceleratedVideoDecodeLinuxZeroCopyGL,AcceleratedVideoEncoder,VaapiOnNvidiaGPUs,VaapiIgnoreDriverChecks" \
-                    --add-flags "--ignore-gpu-blocklist"
-                '';
-              });
             };
 
-            quickCss = ''
-              @import url("https://refact0r.github.io/midnight-discord/build/midnight.css");
-              @import url(https://mwittrien.github.io/BetterDiscordAddons/Themes/EmojiReplace/base/Apple.css);
-              body {
-                --remove-bg-layer: on;
-                --top-bar-height: var(--gap);
-              }
-              :root { --bg-4: hsla(220, 15%, 10%, 0.81); }
-            '';
-
             config = {
-              useQuickCss = true;
-              transparent = true;
-
               plugins = {
                 alwaysTrust.enable = true;
                 betterCommands.enable = true;
@@ -77,7 +69,6 @@
                 keepCurrentChannel.enable = true;
                 memberCount.enable = true;
                 messageClickActions.enable = true;
-                messageTranslate.enable = true;
                 micLoopbackTester.enable = true;
                 moreUserTags.enable = true;
                 newPluginsManager.enable = true;
@@ -104,10 +95,10 @@
                 sendTimestamps.enable = true;
                 showTimeoutDuration.enable = true;
                 stickerPaste.enable = true;
+                translate.enable = true;
                 unindent.enable = true;
                 userVoiceShow.enable = true;
                 voiceChannelLog.enable = true;
-                webScreenShareFixes.enable = true;
                 whoReacted.enable = true;
                 whosWatching.enable = true;
                 youtubeAdblock.enable = true;
@@ -128,6 +119,10 @@
                   questButtonDisplay = "unclaimed";
                   resumeInterruptedQuests = true;
                   autoCompleteQuestTypes = {
+                    PLAY_ON_DESKTOP = true;
+                    PLAY_ON_XBOX = true;
+                    PLAY_ON_PLAYSTATION = true;
+                    PLAY_ACTIVITY = true;
                     WATCH_VIDEO = true;
                     WATCH_VIDEO_ON_MOBILE = true;
                     ACHIEVEMENT_IN_ACTIVITY = true;
@@ -143,26 +138,11 @@
                   saveImages = true;
                 };
 
-                streamingCodecDisabler = {
-                  enable = true;
-                  #disableAv1Codec = true;
-                  disableH265Codec = true;
-                  disableVP9Codec = true;
-                  disableVP8Codec = true;
-                  disableH264Codec = true;
-                };
-
                 voiceRejoin = {
                   enable = true;
                   preventReconnectIfCallEnded = "none";
                   rejoinDelay = 1.0;
                   rejoinTimeout = 120.0;
-                };
-
-                equibopStreamFixes = {
-                  enable = true;
-                  minBitrate = 10000;
-                  bitsPerPixelPct = 16;
                 };
 
                 voiceMessages = {
