@@ -5,7 +5,7 @@
     {
       home-manager.sharedModules = [ inputs.nixcord.homeModules.nixcord ];
       home-manager.users.grey =
-        { ... }:
+        { pkgs, ... }:
         {
           programs.nixcord = {
             enable = true;
@@ -40,6 +40,12 @@
                 };
               };
             };
+
+            userPlugins.SensibleDefaults = pkgs.writeText "SensibleDefaults.ts" (
+              builtins.readFile ./SensibleDefaults.ts
+            );
+
+            extraConfig.plugins.SensibleDefaults.enable = true;
 
             config = {
               plugins = {
