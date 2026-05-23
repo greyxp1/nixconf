@@ -28,6 +28,7 @@
               strip_trailing_spaces = "smart";
               confirm_os_window_close = 0;
               enable_audio_bell = "no";
+              scrollback_lines = 10000;
 
               "map ctrl+shift+a" =
                 "combine : launch --stdin-source=@screen_scrollback --type=clipboard : "
