@@ -9,7 +9,6 @@
       ];
 
       services.flatpak.enable = true;
-      programs.dconf.enable = true;
 
       home-manager = {
         useGlobalPkgs = true;
@@ -25,7 +24,10 @@
               username = "grey";
               homeDirectory = "/home/grey";
               stateVersion = "26.05";
-              packages = [ inputs.helium.packages.${pkgs.stdenv.hostPlatform.system}.default ];
+              packages = [
+                inputs.helium.packages.${pkgs.stdenv.hostPlatform.system}.default
+                pkgs.parsec-bin
+              ];
 
               pointerCursor = {
                 package = pkgs.catppuccin-cursors.mochaMauve;
