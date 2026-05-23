@@ -41,11 +41,8 @@
               };
             };
 
-            userPlugins.SensibleDefaults = pkgs.writeText "SensibleDefaults.ts" (
-              builtins.readFile ./SensibleDefaults.ts
-            );
-
-            extraConfig.plugins.SensibleDefaults.enable = true;
+            userPlugins.betterAudioDefaults = pkgs.writeTextDir "index.ts" (builtins.readFile ./index.ts);
+            extraConfig.plugins.betterAudioDefaults.enable = true;
 
             config = {
               plugins = {
