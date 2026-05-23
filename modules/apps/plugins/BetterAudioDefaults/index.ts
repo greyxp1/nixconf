@@ -1,10 +1,3 @@
-/*
- * Vencord, a Discord client mod
- * Copyright (c) 2025 Vendicated and contributors
- * SPDX-License-Identifier: GPL-3.0-or-later
- */
-
-import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
 import { findByProps } from "@webpack";
 
@@ -13,7 +6,7 @@ export default definePlugin({
   name: "BetterAudioDefaults",
   description:
     "Enables Studio Profile and QoS while disabling audio attenuation and VC-switching/mic silence warnings.",
-  authors: [Devs.greyxp1],
+  authors: [{ name: "greyxp1", id: 1233920168196046892n }],
   tags: ["Voice", "Utility"],
 
   start() {
@@ -30,11 +23,11 @@ export default definePlugin({
     if (vcModule?.handleVoiceConnect) {
       const originalFn = vcModule.handleVoiceConnect;
       vcModule.handleVoiceConnect = Object.assign(
-        (...args: any[]) =>
+        (...args: unknown[]) =>
           originalFn.call(
             vcModule,
             {
-              ...args[0],
+              ...(args[0] as Record<string, unknown>),
               bypassChangeModal: true,
             },
             ...args.slice(1),

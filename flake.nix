@@ -63,6 +63,11 @@
       url = "github:kaylorben/nixcord";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    fake-deafen = {
+      url = "github:hyyven/Vencord-FakeDeafen";
+      flake = false;
+    };
   };
 
   outputs =

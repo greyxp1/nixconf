@@ -41,8 +41,23 @@
               };
             };
 
-            userPlugins.betterAudioDefaults = pkgs.writeTextDir "index.ts" (builtins.readFile ./index.ts);
-            extraConfig.plugins.betterAudioDefaults.enable = true;
+            #userPlugins.betterAudioDefaults = pkgs.writeTextDir "index.ts" (builtins.readFile ./index.ts);
+
+            #userPlugins = {
+            #  someCoolPlugin = "github:someUser/someCoolPlugin/abc123def456...";
+            #  FakeDeafen = "github:hyyven/Vencord-FakeDeafen/${inputs.fake-deafen.rev}";
+            #  betterAudioDefaults = "github:equicord/betterAudioDefaults/abc123def456...";
+            #};
+
+            userPlugins = {
+              BetterAudioSettings = ./plugins/BetterAudioDefaults;
+              FakeDeafen = ./plugins/FakeDeafen;
+            };
+
+            extraConfig.plugins = {
+              BetterAudioDefaults.enable = true;
+              FakeDeafen.enable = true;
+            };
 
             config = {
               plugins = {
