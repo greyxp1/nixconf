@@ -22,6 +22,7 @@
         package = inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.niri-unstable;
       };
 
+      systemd.user.services.niri-flake-polkit.enable = false;
       services.niri-autoselect-portal.enable = true;
       xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-termfilechooser ];
       xdg.portal.config.niri."org.freedesktop.impl.portal.FileChooser" = [ "termfilechooser" ];
