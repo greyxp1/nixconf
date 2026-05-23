@@ -18,9 +18,6 @@
       home-manager.users.grey =
         { ... }:
         {
-          programs.btop.enable = true;
-          programs.codex.enable = true;
-
           programs.fish = {
             enable = true;
             interactiveShellInit = ''
@@ -67,6 +64,18 @@
             };
           };
 
+          programs.bottom = {
+            enable = true;
+            settings = {
+              flags = {
+                group_processes = true;
+                process_memory_as_value = true;
+                case_sensitive = false;
+                regex = true;
+              };
+            };
+          };
+
           home.packages = with pkgs; [
             curl
             lstr
@@ -75,6 +84,7 @@
             zip
             unzip
             wget
+            codex
             nerd-fonts.jetbrains-mono
             fzf
             nushell
