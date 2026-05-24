@@ -5,7 +5,7 @@
     {
       home-manager.sharedModules = [ inputs.nixcord.homeModules.nixcord ];
       home-manager.users.grey =
-        { pkgs, ... }:
+        { ... }:
         {
           programs.nixcord = {
             enable = true;
@@ -41,17 +41,9 @@
               };
             };
 
-            #userPlugins.betterAudioDefaults = pkgs.writeTextDir "index.ts" (builtins.readFile ./index.ts);
-
-            #userPlugins = {
-            #  someCoolPlugin = "github:someUser/someCoolPlugin/abc123def456...";
-            #  FakeDeafen = "github:hyyven/Vencord-FakeDeafen/${inputs.fake-deafen.rev}";
-            #  betterAudioDefaults = "github:equicord/betterAudioDefaults/abc123def456...";
-            #};
-
             userPlugins = {
-              BetterAudioSettings = ./plugins/BetterAudioDefaults;
               FakeDeafen = ./plugins/FakeDeafen;
+              BetterAudioDefaults = ./plugins/BetterAudioDefaults;
             };
 
             extraConfig.plugins = {
