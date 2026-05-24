@@ -66,7 +66,7 @@
             };
           };
 
-          wireplumber.extraConfig = lib.mkForce {
+          wireplumber.extraConfig = {
             "10-disable-hw-volume" = {
               "monitor.alsa.rules" = [
                 {
@@ -88,11 +88,12 @@
           after = [
             "sound.target"
             "pipewire.service"
+            "pipewire-pulse.service"
           ];
           wantedBy = [ "multi-user.target" ];
           serviceConfig = {
             Type = "oneshot";
-            ExecStartPre = "${pkgs.coreutils}/bin/sleep 5";
+            ExecStartPre = "${pkgs.dash}/bin/dash -c 'until ${pkgs.alsa-utils}/bin/aplay -l 2>/dev/null | grep -q AT2005USB; do sleep 1; done'";
             ExecStart = [
               "${pkgs.alsa-utils}/bin/amixer -c AT2005USB sset Speaker 100%"
               "${pkgs.alsa-utils}/bin/amixer -c AT2005USB sset Mic playback 0%"
