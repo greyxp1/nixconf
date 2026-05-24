@@ -5,7 +5,7 @@
     {
       home-manager.sharedModules = [ inputs.nixcord.homeModules.nixcord ];
       home-manager.users.grey =
-        { ... }:
+        { pkgs, ... }:
         {
           programs.nixcord = {
             enable = true;
@@ -42,8 +42,10 @@
             };
 
             userPlugins = {
-              FakeDeafen = ./plugins/FakeDeafen;
-              BetterAudioDefaults = ./plugins/BetterAudioDefaults;
+              FakeDeafen = pkgs.writeTextDir "index.tsx" (builtins.readFile ./plugins/FakeDeafen/index.tsx);
+              BetterAudioDefaults = pkgs.writeTextDir "index.ts" (
+                builtins.readFile ./plugins/BetterAudioDefaults/index.ts
+              );
             };
 
             extraConfig.plugins = {
