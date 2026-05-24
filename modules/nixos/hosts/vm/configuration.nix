@@ -44,7 +44,6 @@
               wants = [ "seatd.service" ];
             };
 
-            # Mesa provides the virtio Vulkan driver (Venus) inside the guest.
             hardware.graphics = {
               enable = true;
               extraPackages = with pkgs; [ mesa ];
@@ -59,9 +58,25 @@
               sessionVariables = {
                 WLR_NO_HARDWARE_CURSORS = "1";
                 LIBSEAT_BACKEND = "seatd";
+                # Venus/Zink: OpenGL via Zink → Vulkan via virtio-gpu-venus
+                # Requires blob=on on the virtio-gpu device in virt-manager XML
+                MESA_LOADER_DRIVER_OVERRIDE = "zink";
+                GALLIUM_DRIVER = "zink";
               };
-              systemPackages = with pkgs; [ spice-vdagent ];
+              systemPackages = with pkgs; [
+                spice-vdagent
+                vulkan-tools # vulkaninfo — verify Venus is active
+              ];
             };
+
+            # Replace Super (Mod) with Alt so host doesn't capture keybinds
+            home-manager.sharedModules = [
+              {
+                programs.niri.config = lib.mkForce (
+                  builtins.replaceStrings [ "Mod+" ] [ "Alt+" ] (builtins.readFile ../../apps/niri/config.kdl)
+                );
+              }
+            ];
           }
         )
       ]
