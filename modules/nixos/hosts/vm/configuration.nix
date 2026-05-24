@@ -59,16 +59,8 @@
               sessionVariables = {
                 WLR_NO_HARDWARE_CURSORS = "1";
                 LIBSEAT_BACKEND = "seatd";
-                # Force OpenGL apps through Zink → Venus instead of falling back to VirGL.
-                # Zink translates OpenGL to Vulkan, which Venus then passes to the host GPU.
-                MESA_LOADER_DRIVER_OVERRIDE = "zink";
-                GALLIUM_DRIVER = "zink";
               };
-              systemPackages = with pkgs; [
-                spice-vdagent
-                mesa-demos # vkcube / glxinfo for verifying Venus inside guest
-                vulkan-tools # vulkaninfo to confirm virtio/Venus driver is active
-              ];
+              systemPackages = with pkgs; [ spice-vdagent ];
             };
           }
         )
