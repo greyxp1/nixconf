@@ -16,15 +16,18 @@
             networking.hostName = "vm";
             custom.disk.device = "/dev/vda";
 
-            boot.initrd.availableKernelModules = [
-              "virtio_pci"
-              "virtio_blk"
-              "virtio_scsi"
-              "virtio_gpu"
-              "virtio_balloon"
-              "ahci"
-              "sd_mod"
-            ];
+            boot = {
+              kernelModules = [ "virtio_gpu" ];
+              initrd.availableKernelModules = [
+                "virtio_pci"
+                "virtio_blk"
+                "virtio_scsi"
+                "virtio_gpu"
+                "virtio_balloon"
+                "ahci"
+                "sd_mod"
+              ];
+            };
 
             # seatd handles DRM device ownership — required for niri TTY backend in VM
             services.seatd = {
