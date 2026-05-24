@@ -9,10 +9,8 @@
     }:
     {
       config = lib.mkIf (config.networking.hostName == "desktop") {
-
         environment.systemPackages = with pkgs; [
           spice-gtk
-
           (pkgs.writeScriptBin "create-nixos-vm" ''
             #!/bin/sh
             if [ -z "$1" ] || [ -z "$2" ]; then
@@ -32,12 +30,12 @@
               --noautoconsole \
               --cdrom "$2" \
               --video virtio,accel3d=on \
+              --xml ./devices/video/model/@blob=on \
               --graphics spice,listen=none,image.compression=off \
               --graphics egl-headless,gl.rendernode=/dev/dri/renderD128
           '')
         ];
 
-        # Ensure the user has full hardware access to standard render nodes
         users.users.grey.extraGroups = [
           "libvirtd"
           "video"
@@ -45,8 +43,6 @@
         ];
 
         programs.virt-manager.enable = true;
-        programs.dconf.enable = true;
-
         programs.dconf.profiles.user.databases = [
           {
             settings = {
@@ -62,7 +58,6 @@
           enable = true;
           qemu = {
             runAsRoot = true;
-
             # Fixes EGL_NOT_INITIALIZED: Exposes the host's Nvidia/OpenGL driver libraries to QEMU's sandbox
             package = pkgs.qemu_kvm.overrideAttrs (oldAttrs: {
               nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [ pkgs.makeWrapper ];
@@ -71,7 +66,6 @@
                   --prefix LD_LIBRARY_PATH : /run/opengl-driver/lib
               '';
             });
-
             verbatimConfig = ''
               cgroup_device_acl = [
                   "/dev/null", "/dev/full", "/dev/zero",
