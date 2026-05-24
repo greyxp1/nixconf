@@ -118,22 +118,6 @@
         "type": "github"
       }
     },
-    "fake-deafen": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1777388154,
-        "narHash": "sha256-Q/NgsuutjqaLJ0pGfD6HodeG9zrhCWrAoD2aIxQ9UA8=",
-        "owner": "hyyven",
-        "repo": "Vencord-FakeDeafen",
-        "rev": "30b9231580308a159149bbdcc4c2373a093b1d7c",
-        "type": "github"
-      },
-      "original": {
-        "owner": "hyyven",
-        "repo": "Vencord-FakeDeafen",
-        "type": "github"
-      }
-    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -798,7 +782,6 @@
       "inputs": {
         "catppuccin": "catppuccin",
         "disko": "disko",
-        "fake-deafen": "fake-deafen",
         "flake-parts": "flake-parts",
         "helium": "helium",
         "home-manager": "home-manager",
