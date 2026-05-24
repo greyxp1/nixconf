@@ -20,14 +20,10 @@
               "virtio_pci"
               "virtio_blk"
               "virtio_scsi"
+              "virtio_gpu"
+              "virtio_balloon"
               "ahci"
               "sd_mod"
-              "virtio_gpu"
-            ];
-            boot.kernelModules = [
-              "kvm-amd"
-              "kvm-intel"
-              "virtio_gpu"
             ];
 
             # seatd handles DRM device ownership — required for niri TTY backend in VM
@@ -45,7 +41,11 @@
               wants = [ "seatd.service" ];
             };
 
-            hardware.graphics.extraPackages = with pkgs; [ mesa ];
+            # Mesa provides the virtio Vulkan driver (Venus) inside the guest.
+            hardware.graphics = {
+              enable = true;
+              extraPackages = with pkgs; [ mesa ];
+            };
 
             services = {
               spice-vdagentd.enable = true;
@@ -55,12 +55,16 @@
             environment = {
               sessionVariables = {
                 WLR_NO_HARDWARE_CURSORS = "1";
-                # tell libseat to use seatd explicitly
                 LIBSEAT_BACKEND = "seatd";
+                # Force OpenGL apps through Zink → Venus instead of falling back to VirGL.
+                # Zink translates OpenGL to Vulkan, which Venus then passes to the host GPU.
+                MESA_LOADER_DRIVER_OVERRIDE = "zink";
+                GALLIUM_DRIVER = "zink";
               };
               systemPackages = with pkgs; [
                 spice-vdagent
-                mesa-demos # glxinfo/eglinfo for debugging
+                mesa-demos # vkcube / glxinfo for verifying Venus inside guest
+                vulkan-tools # vulkaninfo to confirm virtio/Venus driver is active
               ];
             };
           }
