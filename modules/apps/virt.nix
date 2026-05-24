@@ -11,6 +11,8 @@
       config = lib.mkIf (config.networking.hostName == "desktop") {
         environment.systemPackages = with pkgs; [
           spice-gtk
+          virt-viewer
+
           (pkgs.writeScriptBin "create-nixos-vm" ''
             #!/bin/sh
             if [ -z "$1" ] || [ -z "$2" ]; then
@@ -27,7 +29,7 @@
               --os-variant=nixos-unstable \
               --boot uefi \
               --network network=default,model=virtio \
-              --noautoconsole \
+              --memorybacking source.type=memfd \
               --cdrom "$2" \
               --video virtio,accel3d=on \
               --xml ./devices/video/model/@blob=on \
