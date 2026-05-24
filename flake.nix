@@ -36,7 +36,7 @@
     };
 
     niri-autoselect-portal = {
-      url = "codeberg:debugloop/niri-autoselect-portal";
+      url = "git+https://codeberg.org/debugloop/niri-autoselect-portal.git";
     };
 
     nsticky = {
