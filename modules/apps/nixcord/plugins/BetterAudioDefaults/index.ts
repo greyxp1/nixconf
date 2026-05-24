@@ -1,3 +1,4 @@
+// @ts-nocheck
 import definePlugin from "@utils/types";
 import { findByProps } from "@webpack";
 
@@ -34,7 +35,6 @@ export default definePlugin({
           ),
         originalFn,
       );
-
       unpatchVoiceConnect = () => {
         vcModule.handleVoiceConnect = originalFn;
       };
