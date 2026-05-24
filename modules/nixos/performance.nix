@@ -7,7 +7,8 @@
       services.irqbalance.enable = true;
 
       boot.kernel.sysctl = {
-        "vm.swappiness" = 10;
+        "vm.swappiness" = 100;
+        "vm.page-cluster" = 0;
         "vm.vfs_cache_pressure" = 50;
         "vm.dirty_ratio" = 10;
         "vm.dirty_background_ratio" = 5;
@@ -26,7 +27,6 @@
           download-buffer-size = 524288000;
           narinfo-cache-negative-ttl = 0;
           builders-use-substitutes = true;
-          keep-going = true;
         };
       };
     };
