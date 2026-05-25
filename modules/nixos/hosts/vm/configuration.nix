@@ -1,63 +1,58 @@
-{ inputs, withSystem, ... }: {
-  flake.nixosConfigurations.vm = withSystem "x86_64-linux" (
-    { config, ... }: inputs.nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      specialArgs = {
-        inherit inputs;
-        flakePackages = config.packages;
+{ inputs, ... }: {
+  flake.nixosConfigurations.vm = inputs.nixpkgs.lib.nixosSystem {
+    system = "x86_64-linux";
+    specialArgs = { inherit inputs; };
+
+    modules = [({ pkgs, lib, ... }: {
+      networking.hostName = "vm";
+      custom.disk.device = "/dev/vda";
+
+      boot = {
+        kernelModules = [ "virtio_gpu" ];
+        initrd.availableKernelModules = [
+          "virtio_pci"
+          "virtio_blk"
+          "virtio_scsi"
+          "virtio_gpu"
+          "virtio_balloon"
+          "ahci"
+          "sd_mod"
+        ];
       };
 
-      modules = [({ pkgs, lib, ... }: {
-        networking.hostName = "vm";
-        custom.disk.device = "/dev/vda";
+      # seatd handles DRM device ownership — required for niri TTY backend in VM
+      services.seatd = {
+        enable = true;
+        group = "seat";
+      };
 
-        boot = {
-          kernelModules = [ "virtio_gpu" ];
-          initrd.availableKernelModules = [
-            "virtio_pci"
-            "virtio_blk"
-            "virtio_scsi"
-            "virtio_gpu"
-            "virtio_balloon"
-            "ahci"
-            "sd_mod"
-          ];
-        };
+      # greetd must run niri-session after seatd is up
+      systemd.services.greetd = {
+        after = lib.mkForce [
+          "multi-user.target"
+          "seatd.service"
+        ];
+        wants = [ "seatd.service" ];
+      };
 
-        # seatd handles DRM device ownership — required for niri TTY backend in VM
-        services.seatd = {
-          enable = true;
-          group = "seat";
-        };
+      hardware.graphics = {
+        enable = true;
+        extraPackages = with pkgs; [ mesa ];
+      };
 
-        # greetd must run niri-session after seatd is up
-        systemd.services.greetd = {
-          after = lib.mkForce [
-            "multi-user.target"
-            "seatd.service"
-          ];
-          wants = [ "seatd.service" ];
-        };
+      services = {
+        spice-vdagentd.enable = true;
+        qemuGuest.enable = true;
+      };
 
-        hardware.graphics = {
-          enable = true;
-          extraPackages = with pkgs; [ mesa ];
+      environment = {
+        sessionVariables = {
+          WLR_NO_HARDWARE_CURSORS = "1";
+          LIBSEAT_BACKEND = "seatd";
         };
-
-        services = {
-          spice-vdagentd.enable = true;
-          qemuGuest.enable = true;
-        };
-
-        environment = {
-          sessionVariables = {
-            WLR_NO_HARDWARE_CURSORS = "1";
-            LIBSEAT_BACKEND = "seatd";
-          };
-          systemPackages = with pkgs; [ spice-vdagent ];
-        };
-      })]
-      ++ builtins.attrValues inputs.self.nixosModules;
-    }
-  );
+        systemPackages = with pkgs; [ spice-vdagent ];
+      };
+    })]
+    ++ builtins.attrValues inputs.self.nixosModules;
+  };
 }
