@@ -21,6 +21,7 @@
       # Boot / initrd
       boot = {
         initrd = {
+          systemd.network.wait-online.enable = false;
           availableKernelModules = [
             "nvme"
             "xhci_pci"
@@ -29,10 +30,6 @@
             "usbhid"
             "sd_mod"
           ];
-          systemd = {
-            enable = true;
-            network.wait-online.enable = false;
-          };
         };
         kernelModules = [ "kvm-amd" ];
       };

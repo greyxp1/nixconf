@@ -4,7 +4,10 @@
 
     boot = {
       supportedFilesystems = [ "btrfs" ];
-      initrd.supportedFilesystems = [ "btrfs" ];
+      initrd = {
+        supportedFilesystems = [ "btrfs" ];
+        systemd.enable = true;
+      };
 
       loader = {
         efi.canTouchEfiVariables = true;
