@@ -1,5 +1,5 @@
 { inputs, ... }: {
-  flake.nixosModules.noctalia-v5 = { pkgs, ... }: {
+  flake.nixosModules.noctalia = { pkgs, ... }: {
     environment.systemPackages = [
       inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
     ];
