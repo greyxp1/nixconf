@@ -87,10 +87,13 @@ echo "==> Activating swap..."
 sudo udevadm settle
 SWAP_DEV=$(sudo blkid -t TYPE=swap -o device 2>/dev/null | head -1)
 if [[ -n "$SWAP_DEV" ]]; then
-  sudo swapon "$SWAP_DEV"
+  if ! grep -q "^$SWAP_DEV" /proc/swaps; then
+    sudo swapon "$SWAP_DEV"
+  fi
   echo "==> Swap: $(free -h | awk '/Swap/{print $2}') total"
 else
   echo "WARNING: No swap partition found, proceeding without swap"
+fiARNING: No swap partition found, proceeding without swap"
 fi
 
 # ── 5. Install ────────────────────────────────────────────────────────────────
