@@ -1,9 +1,6 @@
-{ inputs, ... }: {
-  flake.nixosConfigurations.vm = inputs.nixpkgs.lib.nixosSystem {
-    system = "x86_64-linux";
-    specialArgs = { inherit inputs; };
-
-    modules = [({ pkgs, lib, ... }: {
+{ inputs, ... }: let mkHost = import ../_mkHost.nix inputs; in {
+  flake.nixosConfigurations.vm = mkHost {
+    hostModule = { pkgs, lib, ... }: {
       networking.hostName = "vm";
       custom.disk.device = "/dev/vda";
 
@@ -52,7 +49,6 @@
         };
         systemPackages = with pkgs; [ spice-vdagent ];
       };
-    })]
-    ++ builtins.attrValues inputs.self.nixosModules;
+    };
   };
 }

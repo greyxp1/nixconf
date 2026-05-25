@@ -1,9 +1,11 @@
-{ inputs, ... }: {
-  flake.nixosConfigurations.desktop = inputs.nixpkgs.lib.nixosSystem {
-    system = "x86_64-linux";
-    specialArgs = { inherit inputs; };
-
-    modules = [({ pkgs, lib, ... }: {
+{ inputs, ... }: let mkHost = import ../_mkHost.nix inputs; in {
+  flake.nixosConfigurations.desktop = mkHost {
+    extraModules = [
+      inputs.lanzaboote.nixosModules.lanzaboote
+      ./_audio.nix
+      ./_virt.nix
+    ];
+    hostModule = { pkgs, lib, ... }: {
       networking.hostName = "desktop";
       custom.disk.device = "/dev/disk/by-id/nvme-KINGSTON_SNV2S1000G_50026B778557B959";
 
@@ -76,7 +78,6 @@
           finegrained = false;
         };
       };
-    }) inputs.lanzaboote.nixosModules.lanzaboote ]
-    ++ builtins.attrValues inputs.self.nixosModules;
+    };
   };
 }

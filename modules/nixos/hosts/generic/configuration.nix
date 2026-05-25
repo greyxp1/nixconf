@@ -1,9 +1,6 @@
-{ inputs, ... }: {
-  flake.nixosConfigurations.generic = inputs.nixpkgs.lib.nixosSystem {
-    system = "x86_64-linux";
-    specialArgs = { inherit inputs; };
-
-    modules = [({ ... }:{
+{ inputs, ... }: let mkHost = import ../_mkHost.nix inputs; in {
+  flake.nixosConfigurations.generic = mkHost {
+    hostModule = { ... }: {
       networking.hostName = "generic";
       custom.disk.device = "/dev/sda";
       boot.initrd.availableKernelModules = [
@@ -20,7 +17,6 @@
         "kvm-amd"
         "kvm-intel"
       ];
-    })]
-    ++ builtins.attrValues inputs.self.nixosModules;
+    };
   };
 }
