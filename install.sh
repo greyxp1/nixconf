@@ -82,10 +82,16 @@ sudo nix --extra-experimental-features "nix-command flakes" \
   --flake "$WORK_DIR#$HOST" \
   --disk main "$DEV" 2>&1 | grep -E "^(error|Error|warning|Warning|==>) " || true
 
-# Ensure swap is active — disko may not swapon after formatting
+# Wait for udev to finish creating device symlinks, then activate swap
 echo "==> Activating swap..."
-sudo swapon /dev/disk/by-partlabel/disk-main-swap 2>/dev/null || true
-echo "==> Swap: $(free -h | awk '/Swap/{print $2}') total"
+sudo udevadm settle
+SWAP_DEV=$(sudo blkid -t TYPE=swap -o device 2>/dev/null | head -1)
+if [[ -n "$SWAP_DEV" ]]; then
+  sudo swapon "$SWAP_DEV"
+  echo "==> Swap: $(free -h | awk '/Swap/{print $2}') total"
+else
+  echo "WARNING: No swap partition found, proceeding without swap"
+fi
 
 # ── 5. Install ────────────────────────────────────────────────────────────────
 echo "==> Installing NixOS ($HOST)..."
