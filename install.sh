@@ -22,9 +22,7 @@ fi
 
 case "$HOST" in
   desktop|vm|generic) ;;
-  *)
-    echo "ERROR: Unknown host '$HOST'. Choose: desktop, vm, or generic."
-    exit 1 ;;
+  *) echo "ERROR: Unknown host '$HOST'. Choose: desktop, vm, or generic."; exit 1 ;;
 esac
 
 # ── Cleanup on exit ───────────────────────────────────────────────────────────
@@ -40,20 +38,14 @@ cd "$WORK_DIR"
 exec < /dev/tty
 
 # ── 2. Require UEFI ───────────────────────────────────────────────────────────
-if [[ ! -d /sys/firmware/efi/efivars ]]; then
-  echo "ERROR: UEFI firmware required. BIOS/Legacy is not supported."
-  exit 1
-fi
+[[ -d /sys/firmware/efi/efivars ]] || { echo "ERROR: UEFI required."; exit 1; }
 echo "==> Firmware: UEFI"
 
 # ── 3. Disk selection ─────────────────────────────────────────────────────────
 ISO_DISK=$(findmnt -n -o SOURCE /iso 2>/dev/null | xargs -r lsblk -no PKNAME 2>/dev/null || true)
 
 mapfile -t DISK_NAMES < <(
-  lsblk -dn -o NAME,TYPE -e 7 \
-    | awk '$2=="disk"{print $1}' \
-    | grep -v "^${ISO_DISK}$" \
-  || true
+  lsblk -dn -o NAME,TYPE -e 7 | awk '$2=="disk"{print $1}' | grep -v "^${ISO_DISK}$" || true
 )
 [[ ${#DISK_NAMES[@]} -eq 0 ]] && { echo "ERROR: No eligible disks found."; exit 1; }
 
@@ -73,31 +65,29 @@ else
   DEV="/dev/${DISK_NAMES[$CHOICE]}"
 fi
 
-# ── 4. Partition and format with disko ────────────────────────────────────────
-echo "==> Partitioning and formatting $DEV..."
+# ── 4. Configure binary caches ────────────────────────────────────────────────
+# Append extra caches to the live installer's nix config so disko-install
+# can pull from them during the build.
+sudo tee -a /etc/nix/nix.conf > /dev/null << 'EOF'
+extra-substituters = https://nix-community.cachix.org https://niri.cachix.org https://noctalia.cachix.org https://attic.xuyh0120.win/lantian https://cache.garnix.io https://catppuccin.cachix.org
+extra-trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= niri.cachix.org-1:Wv0OmO7PsuocRKzfDoJ3mulSl7Z6oezYhGhR+3W2964= noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4= lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc= cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g= catppuccin.cachix.org-1:noG/4HkbhJb+lUAdKrph6LaozJvAeEEZj4N732IysmU=
+EOF
+sudo systemctl restart nix-daemon 2>/dev/null || true
+
+# ── 5. Install ────────────────────────────────────────────────────────────────
+# disko-install atomically: formats disk, mounts (incl. activating swap),
+# then runs nixos-install — no manual swap step needed.
+echo "==> Installing NixOS ($HOST)..."
 sudo nix --extra-experimental-features "nix-command flakes" \
-  run 'github:nix-community/disko/latest' -- \
+  run 'github:nix-community/disko/latest#disko-install' -- \
   --mode destroy,format,mount \
   --yes-wipe-all-disks \
   --flake "$WORK_DIR#$HOST" \
-  --disk main "$DEV" 2>&1 | grep -E "^(error|Error|warning|Warning|==>) " || true
-
-echo "==> Activating swap..."
-sudo udevadm settle
-# Partition suffix: nvme/vd/mmcblk devices ending in digit need 'p' (e.g. nvme0n1p2)
-SWAP_PART="${DEV}$([[ $DEV =~ [0-9]$ ]] && echo p)2"
-sudo swapon "$SWAP_PART" 2>/dev/null || true
-
-# ── 5. Install ────────────────────────────────────────────────────────────────
-echo "==> Installing NixOS ($HOST)..."
-sudo nixos-install \
-  --root /mnt \
-  --flake "$WORK_DIR#$HOST" \
-  --no-root-passwd \
-  --option substituters "https://cache.nixos.org https://nix-community.cachix.org https://niri.cachix.org https://noctalia.cachix.org https://attic.xuyh0120.win/lantian https://cache.garnix.io https://catppuccin.cachix.org" \
-  --option trusted-public-keys "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= niri.cachix.org-1:Wv0OmO7PsuocRKzfDoJ3mulSl7Z6oezYhGhR+3W2964= noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4= lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc= cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g= catppuccin.cachix.org-1:noG/4HkbhJb+lUAdKrph6LaozJvAeEEZj4N732IysmU="
+  --disk main "$DEV" \
+  --no-root-passwd
 
 # ── 6. Persist config on installed system ─────────────────────────────────────
+sudo mkdir -p /mnt/home/grey
 sudo cp -rT "$WORK_DIR" /mnt/home/grey/nixconf
 sudo chown -R 1000:1000 /mnt/home/grey/nixconf
 
