@@ -28,10 +28,7 @@ case "$HOST" in
 esac
 
 # ── Cleanup on exit ───────────────────────────────────────────────────────────
-cleanup() {
-  sudo swapoff /mnt/.swap/swapfile 2>/dev/null || true
-  sudo umount -R /mnt 2>/dev/null || true
-}
+cleanup() { sudo umount -R /mnt 2>/dev/null || true; }
 trap cleanup EXIT
 
 # ── 1. Clone config ───────────────────────────────────────────────────────────
@@ -78,61 +75,12 @@ fi
 
 # ── 4. Partition and format with disko ────────────────────────────────────────
 echo "==> Partitioning and formatting $DEV..."
-
-DISKO_CONFIG=$(mktemp /tmp/disko-XXXXXX.nix)
-cat > "$DISKO_CONFIG" << NIXEOF
-{
-  disko.devices.disk.main = {
-    type   = "disk";
-    device = "$DEV";
-    content = {
-      type = "gpt";
-      partitions = {
-        ESP = {
-          size = "512M";
-          type = "EF00";
-          content = {
-            type         = "filesystem";
-            format       = "vfat";
-            mountpoint   = "/boot";
-            extraArgs    = [ "-F" "32" "-n" "NIXBOOT" ];
-            mountOptions = [ "umask=0077" ];
-          };
-        };
-        root = {
-          size    = "100%";
-          content = {
-            type      = "btrfs";
-            extraArgs = [ "-f" "--label" "nixos" ];
-            subvolumes = {
-              "@"          = { mountpoint = "/";           mountOptions = [ "compress=zstd" "noatime" ]; };
-              "@nix"       = { mountpoint = "/nix";        mountOptions = [ "compress=zstd" "noatime" ]; };
-              "@home"      = { mountpoint = "/home";       mountOptions = [ "compress=zstd" "noatime" ]; };
-              "@log"       = { mountpoint = "/var/log";    mountOptions = [ "compress=zstd" "noatime" ]; };
-              "@snapshots" = { mountpoint = "/.snapshots"; mountOptions = [ "compress=zstd" "noatime" ]; };
-            };
-          };
-        };
-      };
-    };
-  };
-}
-NIXEOF
-
 sudo nix --extra-experimental-features "nix-command flakes" \
   run 'github:nix-community/disko/latest' -- \
   --mode destroy,format,mount \
   --yes-wipe-all-disks \
-  "$DISKO_CONFIG" 2>&1 | grep -E "^(error|Error|warning|Warning|==>)" || true
-
-rm -f "$DISKO_CONFIG"
-
-# ── 4.5 Enable swap file (prevents OOM during flake evaluation/build) ────────
-echo "==> Creating swap file on /mnt (4G)..."
-sudo mkdir -p /mnt/.swap
-sudo btrfs filesystem mkswapfile --size 4g /mnt/.swap/swapfile
-sudo swapon /mnt/.swap/swapfile
-echo "==> Swap active ($(free -h | awk '/Swap/{print $2}') total)"
+  --flake "$WORK_DIR#$HOST" \
+  --disk main "$DEV" 2>&1 | grep -E "^(error|Error|warning|Warning|==>) " || true
 
 # ── 5. Install ────────────────────────────────────────────────────────────────
 echo "==> Installing NixOS ($HOST)..."
