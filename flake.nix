@@ -2,17 +2,13 @@
   description = "Modular NixOS Configuration";
 
   inputs = {
+    nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
+    preservation.url = "github:nix-community/preservation";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     import-tree.url = "github:vic/import-tree";
-    nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
 
     disko = {
       url = "github:nix-community/disko";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    preservation = {
-      url = "github:nix-community/preservation";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
