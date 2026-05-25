@@ -11,10 +11,9 @@
       config = lib.mkIf (config.networking.hostName == "desktop") {
         environment.systemPackages = with pkgs; [
           spice-gtk
-          virt-viewer
 
           (pkgs.writeScriptBin "create-nixos-vm" ''
-            #!/bin/sh
+            #!${pkgs.dash}/bin/dash
             if [ -z "$1" ] || [ -z "$2" ]; then
               echo "Usage: create-nixos-vm <vm-name> <path-to-nixos-iso>"
               exit 1
@@ -25,16 +24,18 @@
               --name "$1" \
               --memory 8192 \
               --vcpus 4 \
+              --memorybacking source.type=memfd,access.mode=shared \
               --disk size=40,pool=default,bus=virtio \
               --os-variant=nixos-unstable \
               --boot uefi \
               --network network=default,model=virtio \
-              --memorybacking source.type=memfd \
+              --noautoconsole \
               --cdrom "$2" \
               --video virtio,accel3d=on \
-              --xml ./devices/video/model/@blob=on \
               --graphics spice,listen=none,image.compression=off \
               --graphics egl-headless,gl.rendernode=/dev/dri/renderD128
+
+            virt-manager --connect qemu:///system --show-domain-console "$1" &
           '')
         ];
 
@@ -60,7 +61,6 @@
           enable = true;
           qemu = {
             runAsRoot = true;
-            # Fixes EGL_NOT_INITIALIZED: Exposes the host's Nvidia/OpenGL driver libraries to QEMU's sandbox
             package = pkgs.qemu_kvm.overrideAttrs (oldAttrs: {
               nativeBuildInputs = (oldAttrs.nativeBuildInputs or [ ]) ++ [ pkgs.makeWrapper ];
               postInstall = (oldAttrs.postInstall or "") + ''
@@ -68,6 +68,7 @@
                   --prefix LD_LIBRARY_PATH : /run/opengl-driver/lib
               '';
             });
+
             verbatimConfig = ''
               cgroup_device_acl = [
                   "/dev/null", "/dev/full", "/dev/zero",
