@@ -68,15 +68,6 @@
                 vulkan-tools # vulkaninfo — verify Venus is active
               ];
             };
-
-            # Replace Super (Mod) with Alt so host doesn't capture keybinds
-            home-manager.sharedModules = [
-              {
-                programs.niri.config = lib.mkForce (
-                  builtins.replaceStrings [ "Mod+" ] [ "Alt+" ] (builtins.readFile ../../apps/niri/config.kdl)
-                );
-              }
-            ];
           }
         )
       ]
