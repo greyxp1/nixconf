@@ -13,12 +13,13 @@
         ];
 
         userSettings = {
+          buffer_font_family = "JetBrainsMono Nerd Font";
+          languages.Nix.language_servers = [ "nixd" ];
           session.trust_all_worktrees = true;
           collaboration_panel.button = false;
           window_decorations = "server";
           project_panel.dock = "left";
           git_panel.dock = "left";
-          buffer_font_family = "JetBrainsMono Nerd Font";
 
           telemetry = {
             diagnostics = false;
@@ -29,6 +30,10 @@
             sidebar_side = "right";
             dock = "right";
           };
+
+          lsp.nixd.initialization_options.options.nixos.expr =
+            "(builtins.getFlake \"path:/home/grey/nixconf\")"
+            + ".nixosConfigurations.desktop.options";
         };
       };
     };
