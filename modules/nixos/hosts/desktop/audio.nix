@@ -11,42 +11,38 @@
         extraLadspaPackages = [ pkgs.rnnoise-plugin ];
 
         extraConfig.pipewire."50-rnnoise" = {
-          "context.modules" = [
-            {
-              name = "libpipewire-module-filter-chain";
-              flags = [ "nofail" ];
-              args = {
-                "node.description" = "RNNoise Microphone";
-                "media.name" = "RNNoise Microphone";
-                "filter.graph" = {
-                  nodes = [
-                    {
-                      type = "ladspa";
-                      name = "rnnoise";
-                      plugin = "librnnoise_ladspa";
-                      label = "noise_suppressor_mono";
-                      control = {
-                        "VAD Threshold (%)" = 85.0;
-                        "VAD Grace Period (ms)" = 200.0;
-                        "Retroactive VAD Grace (ms)" = 0.0;
-                      };
-                    }
-                  ];
-                };
-                "capture.props" = {
-                  "node.name" = "capture.rnnoise_source";
-                  "node.passive" = true;
-                  "audio.rate" = 48000;
-                };
-                "playback.props" = {
-                  "node.name" = "rnnoise_source";
-                  "media.class" = "Audio/Source";
-                  "node.description" = "RNNoise Microphone";
-                  "audio.rate" = 48000;
-                };
+          "context.modules" = [{
+            name = "libpipewire-module-filter-chain";
+            flags = [ "nofail" ];
+            args = {
+              "node.description" = "RNNoise Microphone";
+              "media.name" = "RNNoise Microphone";
+              "filter.graph" = {
+                nodes = [{
+                  type = "ladspa";
+                  name = "rnnoise";
+                  plugin = "librnnoise_ladspa";
+                  label = "noise_suppressor_mono";
+                  control = {
+                    "VAD Threshold (%)" = 85.0;
+                    "VAD Grace Period (ms)" = 200.0;
+                    "Retroactive VAD Grace (ms)" = 0.0;
+                  };
+                }];
               };
-            }
-          ];
+              "capture.props" = {
+                "node.name" = "capture.rnnoise_source";
+                "node.passive" = true;
+                "audio.rate" = 48000;
+              };
+              "playback.props" = {
+                "node.name" = "rnnoise_source";
+                "media.class" = "Audio/Source";
+                "node.description" = "RNNoise Microphone";
+                "audio.rate" = 48000;
+              };
+            };
+          }];
         };
 
         extraConfig.pipewire."99-lowlatency" = {
@@ -60,12 +56,10 @@
 
         wireplumber.extraConfig = {
           "10-disable-hw-volume" = {
-            "monitor.alsa.rules" = [
-              {
-                matches = [ { "device.name" = "~alsa_card.*"; } ];
-                actions.update-props."api.alsa.soft-mixer" = true;
-              }
-            ];
+            "monitor.alsa.rules" = [{
+              matches = [ { "device.name" = "~alsa_card.*"; } ];
+              actions.update-props."api.alsa.soft-mixer" = true;
+            }];
           };
           "20-default-source" = {
             "wireplumber.settings" = {
