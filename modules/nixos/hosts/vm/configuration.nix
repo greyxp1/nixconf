@@ -1,5 +1,4 @@
-{ inputs, withSystem, ... }:
-{
+{ inputs, withSystem, ... }: {
   flake.nixosConfigurations.vm = withSystem "x86_64-linux" (
     { config, ... }:
     inputs.nixpkgs.lib.nixosSystem {
@@ -11,8 +10,7 @@
 
       modules = [
         (
-          { pkgs, lib, ... }:
-          {
+          { pkgs, lib, ... }: {
             networking.hostName = "vm";
             custom.disk.device = "/dev/vda";
 

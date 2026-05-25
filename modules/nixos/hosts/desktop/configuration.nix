@@ -1,5 +1,4 @@
-{ inputs, withSystem, ... }:
-{
+{ inputs, withSystem, ... }: {
   flake.nixosConfigurations.desktop = withSystem "x86_64-linux" (
     { config, ... }:
     inputs.nixpkgs.lib.nixosSystem {
@@ -11,8 +10,7 @@
 
       modules = [
         (
-          { pkgs, lib, ... }:
-          {
+          { pkgs, lib, ... }: {
             networking.hostName = "desktop";
             custom.disk.device = "/dev/disk/by-id/nvme-KINGSTON_SNV2S1000G_50026B778557B959";
 

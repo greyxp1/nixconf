@@ -1,5 +1,4 @@
-{ inputs, withSystem, ... }:
-{
+{ inputs, withSystem, ... }: {
   flake.nixosConfigurations.generic = withSystem "x86_64-linux" (
     { config, ... }:
     inputs.nixpkgs.lib.nixosSystem {
