@@ -58,15 +58,8 @@
               sessionVariables = {
                 WLR_NO_HARDWARE_CURSORS = "1";
                 LIBSEAT_BACKEND = "seatd";
-                # Venus/Zink: OpenGL via Zink → Vulkan via virtio-gpu-venus
-                # Requires blob=on on the virtio-gpu device in virt-manager XML
-                MESA_LOADER_DRIVER_OVERRIDE = "zink";
-                GALLIUM_DRIVER = "zink";
               };
-              systemPackages = with pkgs; [
-                spice-vdagent
-                vulkan-tools # vulkaninfo — verify Venus is active
-              ];
+              systemPackages = with pkgs; [ spice-vdagent ];
             };
           }
         )
