@@ -5,7 +5,7 @@
     ];
 
     home-manager.users.grey = {
-      home.file.".config/noctalia/config.toml".source = ./config.toml;
+      xdg.configFile."noctalia/config.toml".source = ./config.toml;
     };
   };
 }
