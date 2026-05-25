@@ -24,7 +24,7 @@
           max-jobs = "auto";
           cores = 0;
           http-connections = 128;
-          download-buffer-size = 1073741824;
+          download-buffer-size = 2147483648;
           narinfo-cache-negative-ttl = 0;
           builders-use-substitutes = true;
         };
