@@ -82,6 +82,11 @@ sudo nix --extra-experimental-features "nix-command flakes" \
   --flake "$WORK_DIR#$HOST" \
   --disk main "$DEV" 2>&1 | grep -E "^(error|Error|warning|Warning|==>) " || true
 
+# Ensure swap is active — disko may not swapon after formatting
+echo "==> Activating swap..."
+sudo swapon /dev/disk/by-partlabel/disk-main-swap 2>/dev/null || true
+echo "==> Swap: $(free -h | awk '/Swap/{print $2}') total"
+
 # ── 5. Install ────────────────────────────────────────────────────────────────
 echo "==> Installing NixOS ($HOST)..."
 sudo nixos-install \
