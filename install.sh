@@ -75,7 +75,6 @@ extra-trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq
 echo "==> Installing NixOS ($HOST)..."
 sudo -E nix --extra-experimental-features "nix-command flakes" \
   run 'github:nix-community/disko/latest#disko-install' -- \
-  --mode destroy,format,mount \
   --yes-wipe-all-disks \
   --flake "$WORK_DIR#$HOST" \
   --disk main "$DEV" \
