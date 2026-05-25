@@ -84,8 +84,9 @@ sudo nix --extra-experimental-features "nix-command flakes" \
 
 echo "==> Activating swap..."
 sudo udevadm settle
-SWAP_DEV=$(sudo blkid -t TYPE=swap -o device 2>/dev/null | head -1; true)
-[[ -n "$SWAP_DEV" ]] && sudo swapon "$SWAP_DEV" || true
+# Partition suffix: nvme/vd/mmcblk devices ending in digit need 'p' (e.g. nvme0n1p2)
+SWAP_PART="${DEV}$([[ $DEV =~ [0-9]$ ]] && echo p)2"
+sudo swapon "$SWAP_PART" 2>/dev/null || true
 
 # ── 5. Install ────────────────────────────────────────────────────────────────
 echo "==> Installing NixOS ($HOST)..."
