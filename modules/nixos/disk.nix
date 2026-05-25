@@ -1,24 +1,14 @@
 { ... }: {
   flake.nixosModules.disk = { lib, config, ... }: {
-    # The disk device is only needed if you want to re-run disko manually
-    # to repartition an existing installation. The install script always
-    # provides this via --disk main <device> at install time.
     options.custom.disk.device = lib.mkOption {
       type = lib.types.str;
       default = "/dev/sda";
-      description = ''
-        Disk device used when re-running disko manually.
-        Not used for normal system operation — filesystems mount by label.
-        Override with the actual disk path if repartitioning.
-      '';
+      description = "Disk device for manual disko re-runs. Boot uses labels, so this doesn't affect normal operation.";
     };
 
     config = {
-      # ── Disko partition layout ─────────────────────────────────────────────
-      # Used by the install script (via disko standalone) and available for
-      # manual repartitioning. The device is overridden at install time.
       disko.devices.disk.main = {
-        type = "disk";
+        type   = "disk";
         device = config.custom.disk.device;
         content = {
           type = "gpt";
@@ -30,60 +20,23 @@
                 type = "filesystem";
                 format = "vfat";
                 mountpoint = "/boot";
-                extraArgs = [
-                  "-F"
-                  "32"
-                  "-n"
-                  "NIXBOOT"
-                ];
+                extraArgs = [ "-F" "32" "-n" "NIXBOOT" ];
                 mountOptions = [ "umask=0077" ];
               };
+            };
+            swap = {
+              size = "8G";
+              content = { type = "swap"; resumeDevice = true; };
             };
             root = {
               size = "100%";
               content = {
                 type = "btrfs";
-                extraArgs = [
-                  "-f"
-                  "--label"
-                  "nixos"
-                ];
+                extraArgs = [ "-f" "--label" "nixos" ];
                 subvolumes = {
-                  "@" = {
-                    mountpoint = "/";
-                    mountOptions = [
-                      "compress=zstd"
-                      "noatime"
-                    ];
-                  };
-                  "@nix" = {
-                    mountpoint = "/nix";
-                    mountOptions = [
-                      "compress=zstd"
-                      "noatime"
-                    ];
-                  };
-                  "@home" = {
-                    mountpoint = "/home";
-                    mountOptions = [
-                      "compress=zstd"
-                      "noatime"
-                    ];
-                  };
-                  "@log" = {
-                    mountpoint = "/var/log";
-                    mountOptions = [
-                      "compress=zstd"
-                      "noatime"
-                    ];
-                  };
-                  "@snapshots" = {
-                    mountpoint = "/.snapshots";
-                    mountOptions = [
-                      "compress=zstd"
-                      "noatime"
-                    ];
-                  };
+                  "@nix" = { mountpoint = "/nix"; mountOptions = [ "compress=zstd" "noatime" ]; };
+                  "@home" = { mountpoint = "/home"; mountOptions = [ "compress=zstd" "noatime" ]; };
+                  "@persistent" = { mountpoint = "/persistent"; mountOptions = [ "compress=zstd" "noatime" ]; };
                 };
               };
             };
@@ -91,56 +44,28 @@
         };
       };
 
-      # ── Label-based fileSystems ────────────────────────────────────────────
-      # These override whatever disko auto-generates from device paths.
-      # By using labels, the config works on any hardware without modification.
-      # As long as the disk is formatted with the correct labels (which the
-      # install script ensures), these mounts will always work.
       fileSystems = lib.mkForce {
         "/" = {
-          device = "LABEL=nixos";
-          fsType = "btrfs";
-          options = [
-            "subvol=@"
-            "compress=zstd"
-            "noatime"
-          ];
+          device = "none";
+          fsType = "tmpfs";
+          options = [ "defaults" "size=4G" "mode=755" ];
         };
         "/nix" = {
           device = "LABEL=nixos";
           fsType = "btrfs";
-          options = [
-            "subvol=@nix"
-            "compress=zstd"
-            "noatime"
-          ];
+          options = [ "subvol=@nix" "compress=zstd" "noatime" ];
+          neededForBoot = true;
         };
         "/home" = {
           device = "LABEL=nixos";
           fsType = "btrfs";
-          options = [
-            "subvol=@home"
-            "compress=zstd"
-            "noatime"
-          ];
+          options = [ "subvol=@home" "compress=zstd" "noatime" ];
         };
-        "/var/log" = {
+        "/persistent" = {
           device = "LABEL=nixos";
           fsType = "btrfs";
-          options = [
-            "subvol=@log"
-            "compress=zstd"
-            "noatime"
-          ];
-        };
-        "/.snapshots" = {
-          device = "LABEL=nixos";
-          fsType = "btrfs";
-          options = [
-            "subvol=@snapshots"
-            "compress=zstd"
-            "noatime"
-          ];
+          options = [ "subvol=@persistent" "compress=zstd" "noatime" ];
+          neededForBoot = true;
         };
         "/boot" = {
           device = "/dev/disk/by-label/NIXBOOT";
