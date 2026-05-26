@@ -22,25 +22,14 @@
       root.initialHashedPassword = "";
       grey = {
         isNormalUser = true;
-        extraGroups = [
-          "networkmanager"
-          "wheel"
-          "input"
-          "seat"
-        ];
+        extraGroups = [ "networkmanager" "wheel" "input" "seat" ];
         initialPassword = "123";
       };
     };
 
     nix.settings = {
-      trusted-users = [
-        "root"
-        "@wheel"
-      ];
-      experimental-features = [
-        "nix-command"
-        "flakes"
-      ];
+      trusted-users = [ "root" "@wheel" ];
+      experimental-features = [ "nix-command" "flakes" ];
     };
 
     services = {
