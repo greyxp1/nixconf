@@ -3,6 +3,7 @@ set -euo pipefail
 
 REPO="https://github.com/greyxp1/nixconf.git"
 WORK_DIR="/tmp/nixconf"
+MOUNT="/mnt/disko-install-root"
 HOST="${1:-}"
 
 # ── Host selection ────────────────────────────────────────────────────────────
@@ -26,7 +27,7 @@ case "$HOST" in
 esac
 
 # ── Cleanup on exit ───────────────────────────────────────────────────────────
-cleanup() { sudo umount -R /mnt 2>/dev/null || true; }
+cleanup() { sudo umount -R "$MOUNT" 2>/dev/null || true; }
 trap cleanup EXIT
 
 # ── 1. Clone config ───────────────────────────────────────────────────────────
@@ -66,24 +67,18 @@ else
 fi
 
 # ── 4. Install ────────────────────────────────────────────────────────────────
-# disko-install atomically: formats disk, mounts (incl. activating swap),
-# then runs nixos-install — no manual swap step needed.
-# NIX_CONFIG injects extra caches since /etc/nix/nix.conf is read-only on the live ISO.
+# disko-install formats, mounts (incl. swap), and installs atomically.
+# NIX_CONFIG injects extra caches — /etc/nix/nix.conf is read-only on the live ISO.
 export NIX_CONFIG="extra-substituters = https://nix-community.cachix.org https://niri.cachix.org https://noctalia.cachix.org https://attic.xuyh0120.win/lantian https://cache.garnix.io https://catppuccin.cachix.org
 extra-trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= niri.cachix.org-1:Wv0OmO7PsuocRKzfDoJ3mulSl7Z6oezYhGhR+3W2964= noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4= lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc= cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g= catppuccin.cachix.org-1:noG/4HkbhJb+lUAdKrph6LaozJvAeEEZj4N732IysmU="
 
 echo "==> Installing NixOS ($HOST)..."
 sudo -E nix --extra-experimental-features "nix-command flakes" \
   run 'github:nix-community/disko/latest#disko-install' -- \
-  --yes-wipe-all-disks \
+  --mode format \
   --flake "$WORK_DIR#$HOST" \
   --disk main "$DEV" \
-  --no-root-passwd
-
-# ── 5. Persist config on installed system ─────────────────────────────────────
-sudo mkdir -p /mnt/home/grey
-sudo cp -rT "$WORK_DIR" /mnt/home/grey/nixconf
-sudo chown -R 1000:1000 /mnt/home/grey/nixconf
+  --extra-files "$WORK_DIR" "/home/grey/nixconf"
 
 echo "==> Done! Rebooting..."
 sudo reboot
