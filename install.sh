@@ -50,7 +50,7 @@ sudo nix --extra-experimental-features "nix-command flakes" \
   run 'github:nix-community/disko/latest' -- \
   --mode destroy,format,mount \
   --flake "$WORK_DIR#$HOST" \
-  --disk main "$DEV" 2>&1 | grep -E "^\+" | grep -v "nix-store" || true
+  --disk main "$DEV"
 
 echo "==> Activating swap..."
 SWAP="${DEV}$([[ "$DEV" =~ [0-9]$ ]] && echo p)2"
