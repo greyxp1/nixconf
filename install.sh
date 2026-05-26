@@ -48,7 +48,7 @@ fi
 echo "==> Formatting $DEV..."
 DISKO_SCRIPT=$(sudo nix build \
   --extra-experimental-features "nix-command flakes" \
-  --no-link --print-out-paths \
+  --impure --no-link --print-out-paths \
   --expr "
     (builtins.getFlake \"path:$WORK_DIR\")
       .nixosConfigurations.\"$HOST\"
