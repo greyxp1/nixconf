@@ -44,18 +44,57 @@ else
   DEV="/dev/${DISKS[$i]}"
 fi
 
-# Format + mount
+# Format + mount via inline disko config (mirrors disk.nix exactly)
 echo "==> Formatting $DEV..."
-DISKO_SCRIPT=$(sudo nix build \
-  --extra-experimental-features "nix-command flakes" \
-  --impure --no-link --print-out-paths \
-  --expr "
-    (builtins.getFlake \"path:$WORK_DIR\")
-      .nixosConfigurations.\"$HOST\"
-      .extendModules { modules = [{ custom.disk.device = \"$DEV\"; }]; }
-      .config.system.build.diskoScript
-  ")
-sudo "$DISKO_SCRIPT"
+DISKO_CONFIG=$(mktemp /tmp/disko-XXXXXX.nix)
+cat > "$DISKO_CONFIG" << NIXEOF
+{
+  disko.devices.disk.main = {
+    type   = "disk";
+    device = "$DEV";
+    content = {
+      type = "gpt";
+      partitions = {
+        ESP = {
+          size = "512M";
+          type = "EF00";
+          content = {
+            type         = "filesystem";
+            format       = "vfat";
+            mountpoint   = "/boot";
+            extraArgs    = [ "-F" "32" "-n" "NIXBOOT" ];
+            mountOptions = [ "umask=0077" ];
+          };
+        };
+        swap = {
+          size    = "8G";
+          content = { type = "swap"; resumeDevice = true; };
+        };
+        root = {
+          size    = "100%";
+          content = {
+            type      = "btrfs";
+            extraArgs = [ "-f" "--label" "nixos" ];
+            subvolumes = {
+              "@nix"        = { mountpoint = "/nix";        mountOptions = [ "compress=zstd" "noatime" ]; };
+              "@home"       = { mountpoint = "/home";       mountOptions = [ "compress=zstd" "noatime" ]; };
+              "@persistent" = { mountpoint = "/persistent"; mountOptions = [ "compress=zstd" "noatime" ]; };
+            };
+          };
+        };
+      };
+    };
+  };
+}
+NIXEOF
+
+sudo nix --extra-experimental-features "nix-command flakes" \
+  run 'github:nix-community/disko/latest' -- \
+  --mode destroy,format,mount \
+  --yes-wipe-all-disks \
+  "$DISKO_CONFIG" 2>&1 | grep -E "^(error|Error|warning|Warning|==>)" || true
+
+rm -f "$DISKO_CONFIG"
 
 # Install
 echo "==> Installing NixOS ($HOST)..."
