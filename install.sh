@@ -19,8 +19,6 @@ if [[ -z "$HOST" ]]; then
 fi
 [[ "$HOST" =~ ^(desktop|vm|generic)$ ]] || { echo "Unknown host: $HOST"; exit 1; }
 
-# Setup
-trap 'sudo swapoff -a 2>/dev/null || true; sudo umount -R /mnt 2>/dev/null || true' EXIT
 echo "==> Fetching config..."
 rm -rf "$WORK_DIR" && git clone -q "$REPO" "$WORK_DIR"
 exec < /dev/tty
@@ -44,70 +42,28 @@ else
   DEV="/dev/${DISKS[$i]}"
 fi
 
-# Format + mount via inline disko config (mirrors disk.nix exactly)
-echo "==> Formatting $DEV..."
-DISKO_CONFIG=$(mktemp /tmp/disko-XXXXXX.nix)
-cat > "$DISKO_CONFIG" << NIXEOF
-{
-  disko.devices.disk.main = {
-    type   = "disk";
-    device = "$DEV";
-    content = {
-      type = "gpt";
-      partitions = {
-        ESP = {
-          size = "512M";
-          type = "EF00";
-          content = {
-            type         = "filesystem";
-            format       = "vfat";
-            mountpoint   = "/boot";
-            extraArgs    = [ "-F" "32" "-n" "NIXBOOT" ];
-            mountOptions = [ "umask=0077" ];
-          };
-        };
-        swap = {
-          size    = "8G";
-          content = { type = "swap"; resumeDevice = true; };
-        };
-        root = {
-          size    = "100%";
-          content = {
-            type      = "btrfs";
-            extraArgs = [ "-f" "--label" "nixos" ];
-            subvolumes = {
-              "@nix"        = { mountpoint = "/nix";        mountOptions = [ "compress=zstd" "noatime" ]; };
-              "@home"       = { mountpoint = "/home";       mountOptions = [ "compress=zstd" "noatime" ]; };
-              "@persistent" = { mountpoint = "/persistent"; mountOptions = [ "compress=zstd" "noatime" ]; };
-            };
-          };
-        };
-      };
-    };
-  };
-}
-NIXEOF
-
-sudo nix --extra-experimental-features "nix-command flakes" \
-  run 'github:nix-community/disko/latest' -- \
-  --mode destroy,format,mount \
-  --yes-wipe-all-disks \
-  "$DISKO_CONFIG" 2>&1 | grep -E "^(error|Error|warning|Warning|==>)" || true
-
-rm -f "$DISKO_CONFIG"
-
-# Install
-echo "==> Installing NixOS ($HOST)..."
-sudo nixos-install \
-  --root /mnt \
+# Format, install, and write bootloader in one step.
+# --disk main overrides disko.devices.disk.main.device via mkVMOverride (priority 10),
+# which beats mkForce (50), so custom.disk.device in disk.nix is correctly overridden.
+echo "==> Installing NixOS ($HOST) on $DEV..."
+sudo nix run \
+  --extra-experimental-features "nix-command flakes" \
+  'github:nix-community/disko/latest#disko-install' -- \
   --flake "$WORK_DIR#$HOST" \
-  --no-root-passwd \
+  --disk main "$DEV" \
+  --write-efi-boot-entries \
+  --mount-point /mnt \
   --option substituters "https://cache.nixos.org https://nix-community.cachix.org https://niri.cachix.org https://noctalia.cachix.org https://attic.xuyh0120.win/lantian https://cache.garnix.io https://catppuccin.cachix.org" \
   --option trusted-public-keys "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= niri.cachix.org-1:Wv0OmO7PsuocRKzfDoJ3mulSl7Z6oezYhGhR+3W2964= noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4= lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc= cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g= catppuccin.cachix.org-1:noG/4HkbhJb+lUAdKrph6LaozJvAeEEZj4N732IysmU="
 
-# Copy config
-sudo cp -rT "$WORK_DIR" /mnt/home/grey/nixconf
-sudo chown -R 1000:1000 /mnt/home/grey/nixconf
+# disko-install unmounts /mnt on exit. Remount @home to copy nixconf
+# so `nh` and rebuilds work out of the box after first boot.
+echo "==> Copying nixconf..."
+mkdir -p /mnt
+sudo mount -t btrfs -o subvol=@home,compress=zstd,noatime LABEL=nixos /mnt
+sudo cp -rT "$WORK_DIR" /mnt/grey/nixconf
+sudo chown -R 1000:1000 /mnt/grey/nixconf
+sudo umount /mnt
 
 echo "==> Done! Rebooting..."
 sudo reboot
