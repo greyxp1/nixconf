@@ -18,15 +18,18 @@
       algorithm = "zstd";
     };
 
-    users.users.grey = {
-      isNormalUser = true;
-      extraGroups = [
-        "networkmanager"
-        "wheel"
-        "input"
-        "seat"
-      ];
-      initialPassword = "123";
+    users.users = {
+      root.initialHashedPassword = "";
+      grey = {
+        isNormalUser = true;
+        extraGroups = [
+          "networkmanager"
+          "wheel"
+          "input"
+          "seat"
+        ];
+        initialPassword = "123";
+      };
     };
 
     nix.settings = {
