@@ -46,15 +46,16 @@ fi
 
 # Format + mount
 echo "==> Formatting $DEV..."
-sudo nix --extra-experimental-features "nix-command flakes" \
-  run 'github:nix-community/disko/latest' -- \
-  --mode destroy,format,mount \
-  --flake "$WORK_DIR#$HOST" \
-  --disk main "$DEV"
-
-echo "==> Activating swap..."
-SWAP="${DEV}$([[ "$DEV" =~ [0-9]$ ]] && echo p)2"
-sudo swapon "$SWAP" 2>/dev/null || true
+DISKO_SCRIPT=$(sudo nix build \
+  --extra-experimental-features "nix-command flakes" \
+  --impure --no-link --print-out-paths \
+  --expr "
+    (builtins.getFlake \"path:$WORK_DIR\")
+      .nixosConfigurations.\"$HOST\"
+      .extendModules { modules = [{ custom.disk.device = \"$DEV\"; }]; }
+      .config.system.build.diskoScript
+  ")
+sudo "$DISKO_SCRIPT"
 
 # Install
 echo "==> Installing NixOS ($HOST)..."
