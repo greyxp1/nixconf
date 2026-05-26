@@ -20,7 +20,7 @@ fi
 [[ "$HOST" =~ ^(desktop|vm|generic)$ ]] || { echo "Unknown host: $HOST"; exit 1; }
 
 # Setup
-trap 'sudo umount -R /mnt 2>/dev/null || true' EXIT
+trap 'sudo swapoff -a 2>/dev/null || true; sudo umount -R /mnt 2>/dev/null || true' EXIT
 echo "==> Fetching config..."
 rm -rf "$WORK_DIR" && git clone -q "$REPO" "$WORK_DIR"
 exec < /dev/tty
@@ -48,7 +48,7 @@ fi
 echo "==> Formatting $DEV..."
 DISKO_SCRIPT=$(sudo nix build \
   --extra-experimental-features "nix-command flakes" \
-  --impure --no-link --print-out-paths \
+  --no-link --print-out-paths \
   --expr "
     (builtins.getFlake \"path:$WORK_DIR\")
       .nixosConfigurations.\"$HOST\"
