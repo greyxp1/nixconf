@@ -8,7 +8,7 @@
 
     config = {
       disko.devices.disk.main = {
-        type   = "disk";
+        type = "disk";
         device = config.custom.disk.device;
         content = {
           type = "gpt";
