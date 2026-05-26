@@ -78,17 +78,16 @@ sudo nix run \
   --extra-experimental-features "nix-command flakes" \
   "${NIX_OPTS[@]}" \
   'github:nix-community/disko/latest' -- \
-  -qq \
   --flake "$WORK_DIR#$HOST" \
   --mode destroy,format,mount \
-  --yes-wipe-all-disks
+  --yes-wipe-all-disks \
+  2>&1 | grep -E "^(error|Error|warning|Warning|==>)" || true
 
 echo "==> Installing NixOS ($HOST)..."
 sudo nixos-install \
   --root /mnt \
   --flake "$WORK_DIR#$HOST" \
   --no-root-passwd \
-  --option verbosity 1 \
   "${NIX_OPTS[@]}"
 
 # The copied config already has the correct device baked in for future disko runs.
