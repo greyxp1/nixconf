@@ -4,7 +4,7 @@
     pname = "oniri";
     version = "0-unstable";
     src = inputs.oniri;
-    cargoHash = "sha256-ue08WszHwDbnXRR3lxcwCrtC2XMpg55BXcj65tS3u1E=";
+    cargoHash = "sha256-0LWYo7XBj1DP20Ua+azJweS6UZR/rV4vCVQPVmazghA=";
   };
   in {
     imports = [
