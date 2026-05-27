@@ -1,13 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Enforce minimum RAM before doing anything destructive
-_RAM_GiB=$(awk '/MemTotal/{printf "%d", $2 / 1024 / 1024}' /proc/meminfo)
-if (( _RAM_GiB < 4 )); then
-  echo "error: at least 4 GiB of RAM required for installation (found ${_RAM_GiB} GiB)"
-  exit 1
-fi
-
 REPO="https://github.com/greyxp1/nixconf.git"
 WORK_DIR="/tmp/nixconf"
 HOST="${1:-}"
