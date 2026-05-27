@@ -4,6 +4,7 @@
       home.packages = with pkgs; [ nixd ];
       programs.zed-editor = {
         enable = true;
+        package = pkgs.zed-editor-fhs;
         extensions = [
           "html"
           "git-firefly"
