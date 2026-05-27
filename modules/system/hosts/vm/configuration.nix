@@ -2,7 +2,7 @@
   flake.nixosConfigurations.vm = mkHost {
     hostModule = { pkgs, lib, ... }: {
       networking.hostName = "vm";
-      custom.disk.device = "/dev/vda";
+      custom.disk.device = import ./_device.nix;
 
       boot = {
         kernelModules = [ "virtio_gpu" ];

@@ -2,7 +2,7 @@
   flake.nixosConfigurations.generic = mkHost {
     hostModule = { ... }: {
       networking.hostName = "generic";
-      custom.disk.device = "/dev/sda";
+      custom.disk.device = import ./_device.nix;
       boot.initrd.availableKernelModules = [
         "ahci"
         "xhci_pci"
