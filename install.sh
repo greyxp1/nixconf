@@ -84,6 +84,7 @@ else
 fi
 
 # Write device — single source of truth for both diskoConfigurations and custom.disk.device
+DEV_FINAL=$(by_id "$DEV")
 echo "\"$DEV_FINAL\"" > "$WORK_DIR/modules/system/hosts/$HOST/_device.nix"
 echo "==> Using device: $DEV_FINAL"
 
