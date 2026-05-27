@@ -1,12 +1,41 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Enforce minimum RAM before doing anything destructive
+_RAM_GiB=$(awk '/MemTotal/{printf "%d", $2 / 1024 / 1024}' /proc/meminfo)
+if (( _RAM_GiB < 4 )); then
+  echo "error: at least 4 GiB of RAM required for installation (found ${_RAM_GiB} GiB)"
+  exit 1
+fi
+
 REPO="https://github.com/greyxp1/nixconf.git"
 WORK_DIR="/tmp/nixconf"
 HOST="${1:-}"
+
+SUBSTITUTERS=(
+  "https://cache.nixos.org"
+  "https://nix-community.cachix.org"
+  "https://niri.cachix.org"
+  "https://noctalia.cachix.org"
+  "https://attic.xuyh0120.win/lantian"
+  "https://cache.garnix.io"
+  "https://catppuccin.cachix.org"
+)
+
+TRUSTED_KEYS=(
+  "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+  "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+  "niri.cachix.org-1:Wv0OmO7PsuocRKzfDoJ3mulSl7Z6oezYhGhR+3W2964="
+  "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
+  "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
+  "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
+  "catppuccin.cachix.org-1:noG/4HkbhJb+lUAdKrph6LaozJvAeEEZj4N732IysmU="
+)
+
 NIX_OPTS=(
-  --option substituters "https://cache.nixos.org https://nix-community.cachix.org https://niri.cachix.org https://noctalia.cachix.org https://attic.xuyh0120.win/lantian https://cache.garnix.io https://catppuccin.cachix.org"
-  --option trusted-public-keys "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= niri.cachix.org-1:Wv0OmO7PsuocRKzfDoJ3mulSl7Z6oezYhGhR+3W2964= noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4= lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc= cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g= catppuccin.cachix.org-1:noG/4HkbhJb+lUAdKrph6LaozJvAeEEZj4N732IysmU="
+  --option download-buffer-size 536870912
+  --option substituters   "${SUBSTITUTERS[*]}"
+  --option trusted-public-keys "${TRUSTED_KEYS[*]}"
 )
 
 # Returns the most stable device path for a given block device:
