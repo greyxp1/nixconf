@@ -9,7 +9,7 @@
   in {
     imports = [
       inputs.niri.nixosModules.niri
-      #inputs.niri-autoselect-portal.nixosModules.default
+      inputs.niri-autoselect-portal.nixosModules.default
     ];
 
     programs.niri = {
@@ -18,7 +18,7 @@
     };
 
     systemd.user.services.niri-flake-polkit.enable = false;
-    #services.niri-autoselect-portal.enable = true;
+    services.niri-autoselect-portal.enable = true;
     xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-termfilechooser ];
     xdg.portal.config.niri."org.freedesktop.impl.portal.FileChooser" = [ "termfilechooser" ];
 
@@ -29,12 +29,12 @@
         oniri
         inputs.nsticky.packages.${pkgs.stdenv.hostPlatform.system}.nsticky
 
-        #(pkgs.writeScriptBin "screencast-monitor" ''
-        #  #!${pkgs.dash}/bin/dash
-        #  dbus-monitor --session "type='method_call',interface='org.freedesktop.portal.ScreenCast',member='Start'" \
-        #  | grep --line-buffered "method call" \
-        #  | while read -r _; do niri msg action set-dynamic-cast-monitor; done
-        #'')
+        (pkgs.writeScriptBin "screencast-monitor" ''
+          #!${pkgs.dash}/bin/dash
+          dbus-monitor --session "type='method_call',interface='org.freedesktop.portal.ScreenCast',member='Start'" \
+          | grep --line-buffered "method call" \
+          | while read -r _; do niri msg action set-dynamic-cast-monitor; done
+        '')
 
         (pkgs.writeScriptBin "nsticky-stage-toggle" ''
           #!${pkgs.dash}/bin/dash
