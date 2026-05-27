@@ -43,6 +43,7 @@ in {
     };
 
     config = {
+      systemd.services.systemd-machine-id-commit.enable = false;
       fileSystems = lib.mkForce {
         "/"           = { device = "none";        fsType = "tmpfs"; options = [ "defaults" "size=4G" "mode=755" ]; };
         "/nix"        = { device = "LABEL=nixos"; fsType = "btrfs"; options = [ "subvol=@nix"        "compress=zstd" "noatime" ]; neededForBoot = true; };
