@@ -5,8 +5,12 @@
     time.timeZone = "America/Montreal";
     networking.networkmanager.enable = true;
     nixpkgs.config.allowUnfree = true;
-    security.polkit.enable = true;
     documentation.nixos.enable = false;
+
+    security = {
+      polkit.enable = true;
+      sudo.extraConfig = "Defaults lecture=never";
+    };
 
     system = {
       nixos.label = config.networking.hostName;
