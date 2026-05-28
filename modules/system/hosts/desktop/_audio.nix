@@ -58,11 +58,6 @@
           actions.update-props."api.alsa.soft-mixer" = true;
         }];
       };
-      "20-default-source" = {
-        "wireplumber.settings" = {
-          "default.audio.source" = "rnnoise_source";
-        };
-      };
     };
   };
 
