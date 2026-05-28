@@ -36,6 +36,7 @@
             "media.class" = "Audio/Source";
             "node.description" = "RNNoise Microphone";
             "audio.rate" = 48000;
+            "priority.session" = 2000;
           };
         };
       }];
