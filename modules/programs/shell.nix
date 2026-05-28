@@ -84,6 +84,7 @@
         fzf
         nushell
         dash
+        tldr
       ];
     };
   };
