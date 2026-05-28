@@ -15,6 +15,10 @@
       sharedModules = [ inputs.catppuccin.homeModules.catppuccin ];
 
       users.grey = { pkgs, lib, ... }: {
+        dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
+        gtk.gtk3.extraConfig.Settings = "gtk-application-prefer-dark-theme=1\n";
+        gtk.gtk4.extraConfig.Settings = "gtk-application-prefer-dark-theme=1\n";
+
         home = {
           username = "grey";
           homeDirectory = "/home/grey";
