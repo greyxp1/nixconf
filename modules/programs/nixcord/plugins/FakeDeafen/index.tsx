@@ -20,8 +20,23 @@ const settings = definePluginSettings({
 });
 
 let socket: any, originalSend: any;
-let ChannelStore: any, SelectedChannelStore: any, MediaEngineStore: any;
-function refreshVoiceState(enabled: boolean) {
+let ChannelStore: any,
+  SelectedChannelStore: any,
+  MediaEngineStore: any,
+  MediaEngineActions: any;
+let wasMutedBeforeFakeDeafen = false;
+
+function toggle(enabled: boolean) {
+  if (enabled) {
+    wasMutedBeforeFakeDeafen = MediaEngineStore?.isMute() ?? false;
+    if (!wasMutedBeforeFakeDeafen) MediaEngineActions?.toggleSelfMute();
+  } else if (
+    !wasMutedBeforeFakeDeafen &&
+    (MediaEngineStore?.isMute() ?? false)
+  ) {
+    MediaEngineActions?.toggleSelfMute();
+  }
+
   const channelId = SelectedChannelStore?.getVoiceChannelId();
   if (!socket || !channelId) return;
   try {
@@ -46,7 +61,7 @@ const userContextPatch: NavContextMenuPatchCallback = (children, { user }) => {
       action={() => {
         const next = !settings.store.enabled;
         settings.store.enabled = next;
-        refreshVoiceState(next);
+        toggle(next);
       }}
     />
   );
@@ -69,6 +84,7 @@ export default definePlugin({
     ChannelStore = findByProps("getChannel", "getDMFromUserId");
     SelectedChannelStore = findByProps("getVoiceChannelId");
     MediaEngineStore = findByProps("isDeaf", "isMute");
+    MediaEngineActions = findByProps("toggleSelfMute", "toggleSelfDeaf");
     socket = findByProps("getSocket")?.getSocket();
     if (!socket) return;
     originalSend = socket.send;
@@ -83,6 +99,10 @@ export default definePlugin({
   },
 
   stop() {
+    if (settings.store.enabled) {
+      settings.store.enabled = false;
+      toggle(false);
+    }
     if (socket && originalSend) socket.send = originalSend;
     removeContextMenuPatch("user-context", userContextPatch);
   },
