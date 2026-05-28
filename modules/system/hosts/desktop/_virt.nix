@@ -61,8 +61,19 @@
     };
   };
 
-  systemd.services.libvirtd.preStart = ''
-    ${pkgs.libvirt}/bin/virsh net-autostart default || true
-    ${pkgs.libvirt}/bin/virsh net-start default 2>/dev/null || true
-  '';
+  systemd.services.libvirt-default-network = {
+    description = "Autostart libvirt default network";
+    after = [ "libvirtd.service" ];
+    requires = [ "libvirtd.service" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = pkgs.writeScript "libvirt-net-start" ''
+        #!${pkgs.dash}/bin/dash
+        ${pkgs.libvirt}/bin/virsh net-autostart default || true
+        ${pkgs.libvirt}/bin/virsh net-start default 2>/dev/null || true
+      '';
+    };
+  };
 }
