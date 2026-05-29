@@ -4,21 +4,15 @@
       inputs.home-manager.nixosModules.home-manager
       inputs.catppuccin.nixosModules.catppuccin
     ];
-
     services.flatpak.enable = true;
-
     home-manager = {
       useGlobalPkgs = true;
       useUserPackages = true;
       backupFileExtension = "backup";
       overwriteBackup = true;
       sharedModules = [ inputs.catppuccin.homeModules.catppuccin ];
-
       users.grey = { pkgs, lib, ... }: {
         dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
-        gtk.gtk3.extraConfig.Settings = "gtk-application-prefer-dark-theme=1\n";
-        gtk.gtk4.extraConfig.Settings = "gtk-application-prefer-dark-theme=1\n";
-
         home = {
           username = "grey";
           homeDirectory = "/home/grey";
@@ -27,7 +21,6 @@
             inputs.helium.packages.${pkgs.stdenv.hostPlatform.system}.default
             pkgs.parsec-bin
           ];
-
           pointerCursor = {
             package = pkgs.catppuccin-cursors.mochaMauve;
             name = "catppuccin-mocha-mauve-cursors";
@@ -35,13 +28,11 @@
             gtk.enable = true;
           };
         };
-
         catppuccin = {
           enable = true;
           flavor = "mocha";
           accent = "mauve";
         };
-
         gtk = {
           enable = true;
           theme = {
