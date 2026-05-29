@@ -99,7 +99,7 @@ cursor {
     hide-when-typing
 }
 
-output "DP-3" {
+output "DP-2" {
     variable-refresh-rate
     mode "2560x1440@170.071"
 }
@@ -173,8 +173,8 @@ window-rule {
 
 window-rule {
     match app-id="^kitty$|^discord$"
-    match title="(?i).*(Youtube|Jellyfin-Player).*"
-    match title="^Picture in picture$"
+    match app-id="^helium$" title="(?i).*(Youtube|Jellyfin-Player|Picture in picture).*"
+    match app-id="^.virt-manager-wrapped$" title="(?i).*nixos.*"
     opacity 1.0
 }
 
