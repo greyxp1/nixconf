@@ -28,7 +28,7 @@
           { on = [ "<A-m>" ]; run = "plugin mount";                   desc = "Mount manager"; }
           { on = [ "<A-p>" ]; run = "plugin toggle-pane min-preview"; desc = "Hide/show preview pane"; }
           { on = [ "M" ];     run = "plugin toggle-pane max-preview"; desc = "Maximize/restore preview pane"; }
-          { on = [ "<A-d>" ]; run = ''shell -- ripdrag --no-click --and-exit --icon-size 64 --target --all "$@" | while read -r fp; do cp -nR "$fp" .; done''; desc = "Drag-and-drop (bidirectional)"; }
+          { on = [ "<A-d>" ]; run = ''shell -- ripdrag --and-exit --target --all "$@" | while read -r fp; do cp -nR "$fp" .; done''; desc = "Drag-and-drop (bidirectional)"; }
         ];
       };
     };
