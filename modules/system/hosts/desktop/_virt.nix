@@ -3,10 +3,20 @@
     spice-gtk
     (writeScriptBin "create-nixos-vm" ''
       #!${pkgs.dash}/bin/dash
-      if [ -z "$1" ] || [ -z "$2" ]; then
-        echo "Usage: create-nixos-vm <vm-name> <path-to-nixos-iso>"
-        exit 1
+      set -eu
+      [ -n "$1" ] && [ -n "$2" ] || { echo "Usage: create-nixos-vm <name> <iso>"; exit 1; }
+
+      VIRSH="${pkgs.libvirt}/bin/virsh --connect qemu:///system"
+
+      if $VIRSH dominfo "$1" >/dev/null 2>&1; then
+        printf "VM '%s' already exists. Destroy and recreate? [y/N] " "$1"
+        read -r answer
+        case "$answer" in [yY]*) ;; *) exit 0 ;; esac
+        $VIRSH destroy "$1" 2>/dev/null || true
+        $VIRSH undefine "$1" --nvram --remove-all-storage 2>/dev/null || $VIRSH undefine "$1" --nvram
       fi
+
+      echo "==> Creating '$1'..."
       virt-install \
         --connect qemu:///system \
         --name "$1" \
@@ -22,7 +32,9 @@
         --video virtio,accel3d=on \
         --graphics spice,listen=none,image.compression=off \
         --graphics egl-headless,gl.rendernode=/dev/dri/renderD128
-      virt-manager --connect qemu:///system --show-domain-console "$1" &
+
+      nohup virt-manager --connect qemu:///system --show-domain-console "$1" >/dev/null 2>&1 &
+      kill $PPID
     '')
   ];
 
@@ -69,8 +81,7 @@
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
-      ExecStart = pkgs.writeScript "libvirt-net-start" ''
-        #!${pkgs.dash}/bin/dash
+      ExecStart = pkgs.writeShellScript "libvirt-net-start" ''
         ${pkgs.libvirt}/bin/virsh net-autostart default || true
         ${pkgs.libvirt}/bin/virsh net-start default 2>/dev/null || true
       '';
