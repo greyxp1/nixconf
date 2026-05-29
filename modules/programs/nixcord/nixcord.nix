@@ -28,7 +28,15 @@
                   --custom-chatbar: separated;
                   --small-user-panel: off;
                 }
-                :root { --bg-4: hsla(220, 15%, 10%, 0.81); }
+                :root {
+                  --bg-4: hsla(220, 15%, 10%, 0.81);
+                  --text-0: hsla(220, 15%, 10%, 1);
+                  --text-1: hsl(220, 45%, 100%);
+                  --text-2: hsl(220, 25%, 90%);
+                  --text-3: hsl(220, 20%, 75%);
+                  --text-4: hsl(220, 15%, 55%);
+                  --text-5: hsl(220, 15%, 40%);
+                }
                 div[class^="winButtons_"] { display: none !important; }
                 [class^="base_"] { --top-bar-right-margin: calc(32px * var(--button-count) + var(--button-count) * var(--space-xs)) !important; }
               '';
@@ -143,6 +151,14 @@
               ignoreSelf = true;
               messageLimit = 0;
               saveImages = true;
+            };
+
+            messageLogger = {
+              enable = true;
+              collapseDeleted = true;
+              ignoreSelf = true;
+              separatedDiffs = true;
+              showEditDiffs = true;
             };
 
             voiceRejoin = {
