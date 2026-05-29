@@ -100,7 +100,6 @@ cursor {
 }
 
 output "DP-2" {
-    variable-refresh-rate on-demand=true
     mode "2560x1440@170.071"
 }
 
