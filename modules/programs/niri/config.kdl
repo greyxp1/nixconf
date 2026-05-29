@@ -125,7 +125,14 @@ gestures {
 }
 
 recent-windows {
-    off
+    highlight {
+        padding 10
+        corner-radius 14
+    }
+    previews {
+        max-height 680
+        max-scale 1
+    }
 }
 
 blur {
