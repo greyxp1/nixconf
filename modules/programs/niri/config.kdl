@@ -49,6 +49,7 @@ binds {
     Mod+Shift+WheelScrollDown repeat=false { focus-column-right; }
 }
 
+screenshot-path "~/Pictures/Screenshots/%Y-%m-%d %H-%M-%S.png"
 workspace "browser"
 workspace "default"
 workspace "chat"
