@@ -43,6 +43,12 @@ enabled = false
 [dock]
 position = "bottom"
 
+[keybinds]
+down = [ "Ctrl+j" ]
+left = [ "Ctrl+h" ]
+right = [ "Ctrl+l" ]
+up = [ "Ctrl+k" ]
+
 [notification]
 background_opacity = 0.81000000000000005
 
