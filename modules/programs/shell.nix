@@ -66,7 +66,12 @@
         settings = let theme = fromTOML (builtins.readFile (builtins.fetchurl {
           url = "https://raw.githubusercontent.com/CoryCharlton/starship-configuration/master/starship.toml";
           sha256 = "sha256:0g0fs3j7rrk7v099xqni935c3w480nzr0i04ahav5riw03c1hxrd";
-        })); in theme // { format = builtins.replaceStrings [ "\n$character" ] [ "$character" ] theme.format; add_newline = false; };
+        }));
+        in theme // {
+          format = builtins.replaceStrings [ "\n$character" ] [ "$character" ] theme.format;
+          add_newline = false;
+          palette = pkgs.lib.mkForce theme.palette;
+        };
       };
 
       programs.bottom = {
