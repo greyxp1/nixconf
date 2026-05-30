@@ -10,7 +10,6 @@
         };
 
         settings = {
-          cursor_shape = "beam";
           cursor_blink_interval = 0;
           cursor_trail = 4;
           cursor_trail_decay = "0.1 0.4";
