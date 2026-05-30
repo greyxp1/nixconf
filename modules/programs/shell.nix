@@ -11,34 +11,46 @@
 
     programs.fish.enable = true;
     users.users.grey.shell = pkgs.fish;
-
     home-manager.users.grey = { ... }: {
+      home.sessionVariables = {
+        MANPAGER = "sh -c 'col -bx | bat -l man -p'";
+        PAGER = "bat -p";
+      };
+
       programs.fish = {
         enable = true;
         interactiveShellInit = ''
           set -g fish_greeting
-          set -gx MANPAGER "sh -c 'col -bx | bat -l man -p'"
-          set -gx PAGER "bat -p"
+          set -g __fish_skip_newline 1
+
+          function fish_postexec --on-event fish_postexec
+            set -g __fish_skip_newline 0
+            contains -- (string split -m1 ' ' -- $argv[1])[1] ls clear && set -g __fish_skip_newline 1
+          end
+
+          function fish_prompt
+            test "$__fish_skip_newline" = 0 && echo
+            set -g __fish_skip_newline 0
+            starship prompt --status $status --pipestatus $pipestatus
+          end
+
+          bind \cl 'set -g __fish_skip_newline 1; clear; commandline -f repaint'
           function ls; nu -c "ls $argv"; end
-          function cat; bat --paging=never $argv; end
-          bind \cl 'clear; commandline -f repaint'
         '';
 
         functions = {
+          cat = "bat --paging=never $argv";
+          clear = ''
+            printf '\033[3J'
+            command clear
+          '';
           rebuild = "nh os switch";
           update = "nh os switch --update";
           home = "sudo systemctl restart home-manager-grey.service";
           clean = "nh clean all";
-          cdi = "__zoxide_zi";
           tree = "lstr -g --icons --git-status";
           treell = "lstr -a -s -p --icons";
           treei = "lstr interactive -g --icons --git-status";
-
-          clear = ''
-            printf '\033[3J'
-            command clear
-            commandline -f repaint
-          '';
         };
       };
 
@@ -51,12 +63,10 @@
       programs.starship = {
         enable = true;
         enableFishIntegration = true;
-        settings = {
-          add_newline = false;
-          aws.disabled = true;
-          gcloud.disabled = true;
-          line_break.disabled = true;
-        };
+        settings = let theme = fromTOML (builtins.readFile (builtins.fetchurl {
+          url = "https://raw.githubusercontent.com/CoryCharlton/starship-configuration/master/starship.toml";
+          sha256 = "sha256:0g0fs3j7rrk7v099xqni935c3w480nzr0i04ahav5riw03c1hxrd";
+        })); in theme // { format = builtins.replaceStrings [ "\n$character" ] [ "$character" ] theme.format; add_newline = false; };
       };
 
       programs.bottom = {
