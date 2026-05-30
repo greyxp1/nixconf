@@ -180,8 +180,9 @@ window-rule {
 
 window-rule {
     match app-id="^kitty$|^discord$"
-    match app-id="^helium$" title="(?i).*(Youtube|Jellyfin-Player|Picture in picture).*"
+    match app-id="^helium$" title="(?i).*(Youtube|Jellyfin-Player).*"
     match app-id="^.virt-manager-wrapped$" title="(?i).*nixos.*"
+    match title="^Picture in picture$|^Parsec$"
     opacity 1.0
 }
 
