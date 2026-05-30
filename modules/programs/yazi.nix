@@ -11,11 +11,22 @@
           inherit smart-enter jump-to-char full-border mount toggle-pane compress restore starship;
         };
 
-        initLua = ''
-          require("full-border"):setup({ type = ui.Border.ROUNDED })
-          require("smart-enter"):setup({ open_multi = true })
-          require("starship"):setup()
-        '';
+        initLua =
+          let
+            theme = fromTOML (builtins.readFile (builtins.fetchurl {
+              url = "https://raw.githubusercontent.com/CoryCharlton/starship-configuration/master/starship.toml";
+              sha256 = "sha256:0g0fs3j7rrk7v099xqni935c3w480nzr0i04ahav5riw03c1hxrd";
+            }));
+            starshipCfg = (pkgs.formats.toml {}).generate "starship-yazi.toml" (theme // {
+              add_newline = false;
+              format = builtins.replaceStrings [ "\n$character" ] [ "" ] theme.format;
+              character = { disabled = true; };
+            });
+          in ''
+            require("full-border"):setup({ type = ui.Border.ROUNDED })
+            require("smart-enter"):setup({ open_multi = true })
+            require("starship"):setup({ config_file = "${starshipCfg}" })
+          '';
 
         settings.mgr = {
           ratio   = [ 1 2 5 ];
