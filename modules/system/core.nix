@@ -9,7 +9,7 @@
 
     security = {
       polkit.enable = true;
-      sudo.extraConfig = "Defaults lecture=never";
+      sudo.wheelNeedsPassword = false;
     };
 
     system = {
