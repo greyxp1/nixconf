@@ -4,8 +4,8 @@ spawn-sh-at-startup "screencast-monitor"
 spawn-sh-at-startup "oniri --tiling-layout --edges-maximizing"
 
 binds {
-    Mod+Return repeat=false { spawn "kitty"; }
-    Mod+E repeat=false { spawn-sh "kitty -- yazi"; }
+    Mod+Return repeat=false { spawn "foot"; }
+    Mod+E repeat=false { spawn-sh "foot -- yazi"; }
     Mod+B repeat=false { spawn "helium"; }
     Mod+D repeat=false { spawn "discord"; }
     Mod+Z repeat=false { spawn "zeditor"; }
@@ -179,10 +179,9 @@ window-rule {
 }
 
 window-rule {
-    match app-id="^kitty$|^discord$"
+    match app-id="^foot$|^discord$|^org.qutebrowser.qutebrowser$"
     match app-id="^helium$" title="(?i).*(Youtube|Jellyfin-Player).*"
     match app-id="^.virt-manager-wrapped$" title="(?i).*nixos.*"
-    match app-id="^org.qutebrowser.qutebrowser$"
     match title="^Picture in picture$|^Parsec$"
     opacity 1.0
 }

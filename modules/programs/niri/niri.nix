@@ -12,11 +12,8 @@
       inputs.niri-autoselect-portal.nixosModules.default
     ];
 
-    programs.niri = {
-      enable = true;
-      package = inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.niri-unstable;
-    };
-
+    programs.niri.enable = true;
+    programs.niri.package = inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.niri-unstable;
     systemd.user.services.niri-flake-polkit.enable = false;
     services.niri-autoselect-portal.enable = true;
     xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-termfilechooser ];
@@ -63,7 +60,7 @@
         [filechooser]
         cmd=${pkgs.xdg-desktop-portal-termfilechooser}/share/xdg-desktop-portal-termfilechooser/yazi-wrapper.sh
         default_dir=$HOME
-        env=TERMCMD=kitty --class yazi-filepicker
+        env=TERMCMD=foot --app-id yazi-filepicker
       '';
     }];
   };
