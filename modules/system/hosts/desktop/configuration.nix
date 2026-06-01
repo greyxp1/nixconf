@@ -20,6 +20,7 @@
 
       # Boot / initrd
       boot = {
+        kernelModules = [ "kvm-amd" ];
         initrd = {
           systemd.network.wait-online.enable = false;
           availableKernelModules = [
@@ -31,21 +32,16 @@
             "sd_mod"
           ];
         };
-        kernelModules = [ "kvm-amd" ];
       };
 
       # Secure Boot
-      boot = {
-        loader.systemd-boot.enable = lib.mkForce false;
-        lanzaboote = {
-          autoGenerateKeys.enable = true;
-          enable = true;
-          pkiBundle = "/var/lib/sbctl";
-          autoEnrollKeys = {
-            enable = true;
-            autoReboot = true;
-          };
-        };
+      boot.loader.systemd-boot.enable = lib.mkForce false;
+      boot.lanzaboote = {
+        enable = true;
+        autoGenerateKeys.enable = true;
+        pkiBundle = "/var/lib/sbctl";
+        autoEnrollKeys.enable = true;
+        autoEnrollKeys.autoReboot = true;
       };
 
       system.activationScripts.sbctl-keys = {
@@ -56,10 +52,7 @@
         '';
       };
 
-      environment.systemPackages = with pkgs; [
-        nvidia-vaapi-driver
-        sbctl
-      ];
+      environment.systemPackages = with pkgs; [ nvidia-vaapi-driver sbctl ];
 
       # NVIDIA
       services = {
@@ -70,10 +63,8 @@
         open = true;
         modesetting.enable = true;
         nvidiaSettings = false;
-        powerManagement = {
-          enable = true;
-          finegrained = false;
-        };
+        powerManagement.enable = true;
+        powerManagement.finegrained = false;
       };
     };
   };

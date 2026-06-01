@@ -74,16 +74,12 @@
         };
       };
 
-      programs.bottom = {
-        enable = true;
-        settings = {
-          flags = {
-            group_processes = true;
-            process_memory_as_value = true;
-            case_sensitive = false;
-            regex = true;
-          };
-        };
+      programs.bottom.enable = true;
+      programs.bottom.settings.flags = {
+        group_processes = true;
+        process_memory_as_value = true;
+        case_sensitive = false;
+        regex = true;
       };
 
       home.packages = with pkgs; [

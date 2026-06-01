@@ -21,17 +21,10 @@
           window_decorations = "server";
           project_panel.dock = "left";
           git_panel.dock = "left";
-
-          telemetry = {
-            diagnostics = false;
-            metrics = false;
-          };
-
-          agent = {
-            sidebar_side = "right";
-            dock = "right";
-          };
-
+          telemetry.diagnostics = false;
+          telemetry.metrics = false;
+          agent.sidebar_side = "right";
+          agent.dock = "right";
           lsp.nixd.initialization_options.options.nixos.expr =
             "(builtins.getFlake \"path:/home/grey/nixconf\")"
             + ".nixosConfigurations.desktop.options";
