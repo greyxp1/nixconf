@@ -182,6 +182,7 @@ window-rule {
     match app-id="^kitty$|^discord$"
     match app-id="^helium$" title="(?i).*(Youtube|Jellyfin-Player).*"
     match app-id="^.virt-manager-wrapped$" title="(?i).*nixos.*"
+    match app-id="^org.qutebrowser.qutebrowser$"
     match title="^Picture in picture$|^Parsec$"
     opacity 1.0
 }
