@@ -1,6 +1,6 @@
 { ... }: {
-  flake.nixosModules.git = { pkgs, ... }: {
-    home-manager.users.grey = { ... }: {
+  flake.nixosModules.git = { ... }: {
+    home-manager.users.grey = { pkgs, ... }: {
       programs.git.enable = true;
       programs.git.settings = {
         credential.helper = "${pkgs.git-credential-manager}/bin/git-credential-manager";
@@ -11,23 +11,17 @@
         pull.rebase = true;
         branch.autosetuprebase = "always";
         push.autoSetupRemote = true;
-        core.editor = "nvim";
         diff.algorithm = "histogram";
         merge.conflictstyle = "zdiff3";
         fetch.prune = true;
         fetch.all = true;
-
-        user = {
-          name = "greyxp1";
-          email = "greyxp999@gmail.com";
-        };
-
-        alias = {
-          lg = "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit";
-          st = "status";
-          co = "checkout";
-          br = "branch";
-        };
+        user.name = "greyxp1";
+        user.email = "greyxp999@gmail.com";
+      };
+      programs.delta.enable = true;
+      programs.delta.options = {
+        side-by-side = true;
+        line-numbers = true;
       };
     };
   };
