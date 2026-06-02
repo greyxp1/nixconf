@@ -1,10 +1,8 @@
 { ... }: {
   flake.nixosModules.git = { ... }: {
-    home-manager.users.grey = { pkgs, ... }: {
+    home-manager.users.grey = { ... }: {
       programs.git.enable = true;
       programs.git.settings = {
-        credential.helper = "${pkgs.git-credential-manager}/bin/git-credential-manager";
-        credential.credentialStore = "secretservice";
         init.defaultBranch = "main";
         help.autocorrect = 1;
         column.ui = "auto";
@@ -22,6 +20,14 @@
       programs.delta.options = {
         side-by-side = true;
         line-numbers = true;
+      };
+      programs.ssh = {
+        enable = true;
+        enableDefaultConfig = false;
+        settings = {
+          "*" = {AddKeysToAgent = "yes";};
+          "github.com" = {IdentityFile = "~/.ssh/id_ed25519";};
+        };
       };
     };
   };
