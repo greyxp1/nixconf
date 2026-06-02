@@ -1,7 +1,7 @@
-spawn-sh-at-startup "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=niri"
-spawn-at-startup "noctalia"
-spawn-sh-at-startup "screencast-monitor"
 spawn-sh-at-startup "oniri --tiling-layout --edges-maximizing"
+spawn-sh-at-startup "screencast-monitor"
+spawn-at-startup "noctalia"
+spawn-sh-at-startup "noctalia msg scripted-widget screen_recorder focused replay-start"
 
 binds {
     Mod+Return repeat=false { spawn "foot"; }
@@ -10,20 +10,21 @@ binds {
     Mod+D repeat=false { spawn "discord"; }
     Mod+Z repeat=false { spawn "zeditor"; }
 
-    Mod+Escape repeat=false { spawn "noctalia" "msg" "panel-toggle" "session"; }
-    Mod+C repeat=false { spawn "noctalia" "msg" "panel-toggle" "control-center"; }
-    Mod+S repeat=false { spawn "noctalia" "msg" "panel-toggle" "launcher"; }
-    Mod+V repeat=false { spawn "noctalia" "msg" "panel-toggle" "clipboard"; }
+    Mod+Escape repeat=false { spawn-sh "noctalia msg panel-toggle session"; }
+    Mod+C repeat=false { spawn-sh "noctalia msg panel-toggle control-center"; }
+    Mod+S repeat=false { spawn-sh "noctalia msg panel-toggle launcher"; }
+    Mod+V repeat=false { spawn-sh "noctalia msg panel-toggle clipboard"; }
+    Mod+Print repeat=false { spawn-sh "noctalia msg scripted-widget screen_recorder focused replay-save"; }
 
     Mod+Shift+C repeat=false { set-dynamic-cast-window; }
     Mod+Ctrl+C repeat=false { set-dynamic-cast-monitor; }
 
-    XF86AudioRaiseVolume repeat=false { spawn "noctalia" "msg" "volume-up"; }
-    XF86AudioLowerVolume repeat=false { spawn "noctalia" "msg" "volume-down"; }
-    XF86AudioMute repeat=false { spawn "noctalia" "msg" "volume-mute"; }
+    XF86AudioRaiseVolume repeat=false { spawn-sh "noctalia msg volume-up"; }
+    XF86AudioLowerVolume repeat=false { spawn-sh "noctalia msg volume-down"; }
+    XF86AudioMute repeat=false { spawn-sh "noctalia msg volume-mute"; }
 
-    Mod+G repeat=false { spawn "nsticky" "sticky" "toggle-active"; }
-    Mod+Shift+G repeat=false { spawn "nsticky-stage-toggle"; }
+    Mod+G repeat=false { spawn-sh "nsticky sticky toggle-active"; }
+    Mod+Shift+G repeat=false { spawn-sh "nsticky-stage-toggle"; }
 
     Mod+Q repeat=false { close-window; }
     Mod+F repeat=false { maximize-window-to-edges; }
