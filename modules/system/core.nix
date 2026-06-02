@@ -9,6 +9,13 @@
     system.stateVersion = "25.11";
     zramSwap.enable = true;
     zramSwap.algorithm = "zstd";
+    systemd.network.wait-online.enable = false;
+    users.users.root.initialHashedPassword = "";
+    users.users.grey = {
+      isNormalUser = true;
+      extraGroups = [ "networkmanager" "wheel" "input" "seat" ];
+      initialPassword = "123";
+    };
 
     nix.settings = {
       trusted-users = [ "root" "@wheel" ];
@@ -29,13 +36,6 @@
       };
     };
 
-    users.users.root.initialHashedPassword = "";
-    users.users.grey = {
-      isNormalUser = true;
-      extraGroups = [ "networkmanager" "wheel" "input" "seat" ];
-      initialPassword = "123";
-    };
-
     hardware = {
       enableRedistributableFirmware = true;
       graphics.enable = true;
@@ -48,15 +48,25 @@
       rtkit.enable = true;
     };
 
-    boot.kernel.sysctl = {
-      "vm.swappiness" = 100;
-      "vm.page-cluster" = 0;
-      "vm.vfs_cache_pressure" = 50;
-      "vm.dirty_ratio" = 10;
-      "vm.dirty_background_ratio" = 5;
-      "net.core.rmem_max" = 16777216;
-      "net.core.wmem_max" = 16777216;
-      "net.core.netdev_max_backlog" = 16384;
+    boot = {
+      supportedFilesystems = [ "btrfs" ];
+      initrd.supportedFilesystems = [ "btrfs" ];
+      initrd.systemd.enable = true;
+      kernel.sysctl = {
+        "vm.swappiness" = 100;
+        "vm.page-cluster" = 0;
+        "vm.vfs_cache_pressure" = 50;
+        "vm.dirty_ratio" = 10;
+        "vm.dirty_background_ratio" = 5;
+        "net.core.rmem_max" = 16777216;
+        "net.core.wmem_max" = 16777216;
+        "net.core.netdev_max_backlog" = 16384;
+      };
+      loader = {
+        efi.canTouchEfiVariables = true;
+        systemd-boot.enable = true;
+        timeout = 0;
+      };
     };
   };
 }
