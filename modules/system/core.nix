@@ -1,6 +1,10 @@
 { inputs, ... }: {
   flake.nixosModules.core = { config, ... }: {
-    imports = [ inputs.disko.nixosModules.disko ];
+    imports = [
+      inputs.disko.nixosModules.disko
+      inputs.home-manager.nixosModules.home-manager
+    ];
+
     time.timeZone = "America/Montreal";
     networking.networkmanager.enable = true;
     nixpkgs.config.allowUnfree = true;
@@ -27,6 +31,7 @@
     };
 
     services = {
+      flatpak.enable = true;
       irqbalance.enable = true;
       dbus.enable = true;
       greetd = {
@@ -55,7 +60,6 @@
       kernel.sysctl = {
         "vm.swappiness" = 100;
         "vm.page-cluster" = 0;
-        "vm.vfs_cache_pressure" = 50;
         "vm.dirty_ratio" = 10;
         "vm.dirty_background_ratio" = 5;
         "net.core.rmem_max" = 16777216;
@@ -66,6 +70,26 @@
         efi.canTouchEfiVariables = true;
         systemd-boot.enable = true;
         timeout = 0;
+      };
+    };
+
+    home-manager = {
+      useGlobalPkgs = true;
+      useUserPackages = true;
+      backupFileExtension = "backup";
+      overwriteBackup = true;
+      sharedModules = [ inputs.catppuccin.homeModules.catppuccin ];
+      users.grey = { pkgs, ... }: {
+        xdg.enable = true;
+        home = {
+          username = "grey";
+          homeDirectory = "/home/grey";
+          stateVersion = "26.05";
+          packages = [
+            inputs.helium.packages.${pkgs.stdenv.hostPlatform.system}.default
+            pkgs.parsec-bin
+          ];
+        };
       };
     };
   };
