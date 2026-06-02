@@ -47,6 +47,7 @@ up = [ "Ctrl+k" ]
 background_opacity = 0.81000000000000005
 
 [shell]
+setup_wizard_enabled = false
 avatar_path = "/home/grey/nixconf/assets/user.jpg"
 password_style = "random"
 polkit_agent = true
