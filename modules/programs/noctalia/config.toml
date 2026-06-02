@@ -5,7 +5,7 @@ center = [ "workspaces" ]
 enabled = true
 end = [ "tray", "notifications" ]
 margin_edge = 0
-margin_ends = 500
+margin_ends = 600
 margin_h = 10
 position = "right"
 radius_bottom_left = 16
@@ -14,7 +14,7 @@ radius_top_left = 16
 radius_top_right = 0
 reserve_space = false
 scale = 1.25
-start = [ "clock" ]
+start = [ "screen_recorder" ]
 thickness = 38
 
 [config]
@@ -88,11 +88,19 @@ directory = "/home/grey/nixconf/assets/wallpapers"
 [weather]
 auto_locate = true
 
-[widget.clock]
-format = "{:%I:%M}"
+[widget.screen_recorder]
+color_range = "full"
+filename_pattern = "%Y%m%d_%H%M%S"
+hide_inactive = true
+replay_duration = 120
+replay_enabled = true
+restore_portal = true
+script = "scripts/screen_recorder.lua"
+type = "scripted"
+video_codec = "av1"
 
-[widget.notifications]
-hide_when_no_unread = true
+[widget.tray]
+hidden = [ "chrome_status_icon_1" ]
 
 [widget.workspaces]
 display = "none"
