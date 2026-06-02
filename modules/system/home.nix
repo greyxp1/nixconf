@@ -1,9 +1,6 @@
 { inputs, ... }: {
   flake.nixosModules.home = { ... }:{
-    imports = [
-      inputs.home-manager.nixosModules.home-manager
-      inputs.catppuccin.nixosModules.catppuccin
-    ];
+    imports = [ inputs.home-manager.nixosModules.home-manager ];
     services.flatpak.enable = true;
     home-manager = {
       useGlobalPkgs = true;
@@ -30,6 +27,7 @@
         };
         catppuccin = {
           enable = true;
+          autoEnable = true;
           flavor = "mocha";
           accent = "mauve";
         };
