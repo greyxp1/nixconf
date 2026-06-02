@@ -4,15 +4,6 @@
       home.packages = with pkgs; [ nixd ];
       programs.zed-editor = {
         enable = true;
-        package = pkgs.zed-editor-fhs;
-        extensions = [
-          "html"
-          "git-firefly"
-          "nix"
-          "kdl"
-          "toml"
-        ];
-
         userSettings = {
           buffer_font_family = "JetBrainsMono Nerd Font";
           languages.Nix.language_servers = [ "nixd" ];
@@ -29,6 +20,14 @@
             "(builtins.getFlake \"path:/home/grey/nixconf\")"
             + ".nixosConfigurations.desktop.options";
         };
+
+        extensions = [
+          "html"
+          "git-firefly"
+          "nix"
+          "kdl"
+          "toml"
+        ];
       };
     };
   };
