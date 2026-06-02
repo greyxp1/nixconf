@@ -23,19 +23,13 @@ thickness = 38
 type = "notification"
 
 [[control_center.shortcuts]]
-type = "power_profile"
-
-[[control_center.shortcuts]]
 type = "clipboard"
 
 [[control_center.shortcuts]]
-type = "sysmon"
-
-[[control_center.shortcuts]]
-type = "nightlight"
-
-[[control_center.shortcuts]]
 type = "media"
+
+[[control_center.shortcuts]]
+type = "weather"
 
 [desktop_widgets]
 enabled = false
