@@ -1,10 +1,6 @@
 { inputs, ... }: {
   flake.nixosModules.core = { config, ... }: {
-    imports = [
-      inputs.disko.nixosModules.disko
-      inputs.home-manager.nixosModules.home-manager
-    ];
-
+    imports = [ inputs.home-manager.nixosModules.home-manager ];
     time.timeZone = "America/Montreal";
     networking.networkmanager.enable = true;
     nixpkgs.config.allowUnfree = true;
