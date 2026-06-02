@@ -48,7 +48,7 @@
           update = "nh os switch --update";
           home = "sudo systemctl restart home-manager-grey.service";
           clean = "nh clean all";
-          optimize = "nix store optimize";
+          optimise = "nix store optimise -v";
           tree = "lstr -g --icons --git-status";
           treell = "lstr -a -s -p --icons";
           treei = "lstr interactive -g --icons --git-status";
