@@ -21,14 +21,6 @@
         side-by-side = true;
         line-numbers = true;
       };
-      programs.ssh = {
-        enable = true;
-        enableDefaultConfig = false;
-        settings = {
-          "*" = {AddKeysToAgent = "yes";};
-          "github.com" = {IdentityFile = "~/.ssh/id_ed25519";};
-        };
-      };
     };
   };
 }
