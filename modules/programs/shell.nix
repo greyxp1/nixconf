@@ -51,6 +51,38 @@
           tree = "lstr -g --icons --git-status";
           treell = "lstr -a -s -p --icons";
           treei = "lstr interactive -g --icons --git-status";
+
+          enroll = ''
+            # Restore age key if missing
+            if not test -f ~/.age/key.txt
+              echo "Paste your AGE-SECRET-KEY then press Ctrl+D:"
+              mkdir -p ~/.age
+              cat > ~/.age/key.txt
+              chmod 600 ~/.age/key.txt
+            end
+
+            # Rebuild first — ragenix uses the age key to decrypt and place ~/.ssh/id_ed25519
+            nh os switch
+
+            set -l host (hostname)
+            set -l new_key (awk '{print $1" "$2}' /etc/ssh/ssh_host_ed25519_key.pub)
+            set -l secrets ~/nixconf/secrets/secrets.nix
+
+            # Update existing host key or insert new one
+            if grep -q "# $host" $secrets
+              sed -i "s|\"ssh-ed25519 [^\"]*\" # $host|\"$new_key\" # $host|" $secrets
+            else
+              awk -v e="    \"$new_key\" # $host" '/^\s*\];/ { print e } { print }' \
+                $secrets > /tmp/_s.nix && mv /tmp/_s.nix $secrets
+            end
+
+            # Re-encrypt for the updated recipient list (new host key now included)
+            cd ~/nixconf
+            ragenix --rules secrets/secrets.nix -r -i ~/.age/key.txt
+            git add secrets/
+            git commit -m "chore: enroll $host"
+            git push
+          '';
         };
       };
 
