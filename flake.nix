@@ -30,6 +30,7 @@
     nixcord.inputs.nixpkgs.follows = "nixpkgs";
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
+    musnix.url = "github:musnix/musnix";
   };
 
   outputs = inputs:
