@@ -1,7 +1,7 @@
-{ inputs, ... }: {
-  flake.nixosModules.nixcord = { ... }: {
-    home-manager.sharedModules = [ inputs.nixcord.homeModules.nixcord ];
-    home-manager.users.grey = { pkgs, ... }: {
+{inputs, ...}: {
+  flake.nixosModules.nixcord = {...}: {
+    home-manager.sharedModules = [inputs.nixcord.homeModules.nixcord];
+    home-manager.users.grey = {pkgs, ...}: {
       programs.nixcord = {
         enable = true;
         discord = {

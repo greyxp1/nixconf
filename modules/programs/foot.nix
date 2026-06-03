@@ -1,12 +1,12 @@
-{ ... }: {
-  flake.nixosModules.foot = { ... }: {
-    home-manager.users.grey = { pkgs, ... }: {
+{...}: {
+  flake.nixosModules.foot = {...}: {
+    home-manager.users.grey = {pkgs, ...}: {
       programs.foot.enable = true;
       programs.foot.settings = {
         scrollback.lines = 10000;
         bell.system = "no";
         "colors-dark".alpha = "0.81";
-        "key-bindings" = { "pipe-scrollback" = "[${pkgs.wl-clipboard}/bin/wl-copy] Control+a"; };
+        "key-bindings" = {"pipe-scrollback" = "[${pkgs.wl-clipboard}/bin/wl-copy] Control+a";};
 
         main = {
           font = "JetBrainsMono Nerd Font:size=13";

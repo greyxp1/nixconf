@@ -71,8 +71,9 @@
     };
   };
 
-  outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } {
-    imports = [ (inputs.import-tree ./modules) ];
-    systems = [ "x86_64-linux" ];
-  };
+  outputs = inputs:
+    inputs.flake-parts.lib.mkFlake {inherit inputs;} {
+      imports = [(inputs.import-tree ./modules)];
+      systems = ["x86_64-linux"];
+    };
 }

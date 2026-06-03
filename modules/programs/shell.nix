@@ -1,5 +1,5 @@
-{ ... }: {
-  flake.nixosModules.shell = { pkgs, ... }: {
+{...}: {
+  flake.nixosModules.shell = {pkgs, ...}: {
     programs.nh = {
       enable = true;
       flake = "/home/grey/nixconf";
@@ -11,7 +11,7 @@
 
     programs.fish.enable = true;
     users.users.grey.shell = pkgs.fish;
-    home-manager.users.grey = { ... }: {
+    home-manager.users.grey = {...}: {
       home.sessionVariables = {
         MANPAGER = "sh -c 'col -bx | bat -l man -p'";
         PAGER = "bat -p";
@@ -90,21 +90,24 @@
       programs.zoxide = {
         enable = true;
         enableFishIntegration = true;
-        options = [ "--cmd cd" ];
+        options = ["--cmd cd"];
       };
 
       programs.starship = {
         enable = true;
         enableFishIntegration = true;
-        settings = let theme = fromTOML (builtins.readFile (builtins.fetchurl {
-          url = "https://raw.githubusercontent.com/CoryCharlton/starship-configuration/master/starship.toml";
-          sha256 = "sha256:0g0fs3j7rrk7v099xqni935c3w480nzr0i04ahav5riw03c1hxrd";
-        }));
-        in theme // {
-          format = builtins.replaceStrings [ "\n$character" ] [ "$character" ] theme.format;
-          add_newline = false;
-          palette = pkgs.lib.mkForce theme.palette;
-        };
+        settings = let
+          theme = fromTOML (builtins.readFile (builtins.fetchurl {
+            url = "https://raw.githubusercontent.com/CoryCharlton/starship-configuration/master/starship.toml";
+            sha256 = "sha256:0g0fs3j7rrk7v099xqni935c3w480nzr0i04ahav5riw03c1hxrd";
+          }));
+        in
+          theme
+          // {
+            format = builtins.replaceStrings ["\n$character"] ["$character"] theme.format;
+            add_newline = false;
+            palette = pkgs.lib.mkForce theme.palette;
+          };
       };
 
       programs.bottom.enable = true;

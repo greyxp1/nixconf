@@ -1,26 +1,32 @@
-{ inputs, ... }: let mkHost = import ../_mkHost.nix inputs; in {
+{inputs, ...}: let
+  mkHost = import ../_mkHost.nix inputs;
+in {
   flake.nixosConfigurations.desktop = mkHost {
     extraModules = [
       inputs.lanzaboote.nixosModules.lanzaboote
       ./_audio.nix
       ./_virt.nix
     ];
-    hostModule = { pkgs, lib, ... }: {
+    hostModule = {
+      pkgs,
+      lib,
+      ...
+    }: {
       networking.hostName = "desktop";
       custom.disk.device = import ./_device.nix;
 
       # Kernel
-      nixpkgs.overlays = [ inputs.nix-cachyos-kernel.overlays.pinned ];
+      nixpkgs.overlays = [inputs.nix-cachyos-kernel.overlays.pinned];
       boot.kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest-lto-x86_64-v3;
 
       # AMD CPU
-      boot.kernelParams = [ "amd_pstate=active" ];
+      boot.kernelParams = ["amd_pstate=active"];
       powerManagement.cpuFreqGovernor = "performance";
       hardware.cpu.amd.updateMicrocode = true;
 
       # Boot / initrd
       boot = {
-        kernelModules = [ "kvm-amd" ];
+        kernelModules = ["kvm-amd"];
         initrd = {
           systemd.network.wait-online.enable = false;
           availableKernelModules = [
@@ -52,11 +58,11 @@
         '';
       };
 
-      environment.systemPackages = with pkgs; [ nvidia-vaapi-driver sbctl ];
+      environment.systemPackages = with pkgs; [nvidia-vaapi-driver sbctl];
 
       # NVIDIA
       services = {
-        xserver.videoDrivers = [ "nvidia" ];
+        xserver.videoDrivers = ["nvidia"];
         acpid.enable = lib.mkForce false;
       };
       hardware.nvidia = {

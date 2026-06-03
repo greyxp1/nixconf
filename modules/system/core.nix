@@ -1,6 +1,6 @@
-{ inputs, ... }: {
-  flake.nixosModules.core = { config, ... }: {
-    imports = [ inputs.home-manager.nixosModules.home-manager ];
+{inputs, ...}: {
+  flake.nixosModules.core = {config, ...}: {
+    imports = [inputs.home-manager.nixosModules.home-manager];
     time.timeZone = "America/Montreal";
     networking.networkmanager.enable = true;
     nixpkgs.config.allowUnfree = true;
@@ -13,13 +13,13 @@
     users.users.root.initialHashedPassword = "";
     users.users.grey = {
       isNormalUser = true;
-      extraGroups = [ "networkmanager" "wheel" "input" "seat" ];
+      extraGroups = ["networkmanager" "wheel" "input" "seat"];
       initialPassword = "123";
     };
 
     nix.settings = {
-      trusted-users = [ "root" "@wheel" ];
-      experimental-features = [ "nix-command" "flakes" ];
+      trusted-users = ["root" "@wheel"];
+      experimental-features = ["nix-command" "flakes"];
       max-jobs = "auto";
       cores = 0;
       http-connections = 128;
@@ -50,8 +50,8 @@
     };
 
     boot = {
-      supportedFilesystems = [ "btrfs" ];
-      initrd.supportedFilesystems = [ "btrfs" ];
+      supportedFilesystems = ["btrfs"];
+      initrd.supportedFilesystems = ["btrfs"];
       initrd.systemd.enable = true;
       kernel.sysctl = {
         "vm.swappiness" = 100;
@@ -74,8 +74,8 @@
       useUserPackages = true;
       backupFileExtension = "backup";
       overwriteBackup = true;
-      sharedModules = [ inputs.catppuccin.homeModules.catppuccin ];
-      users.grey = { pkgs, ... }: {
+      sharedModules = [inputs.catppuccin.homeModules.catppuccin];
+      users.grey = {pkgs, ...}: {
         xdg.enable = true;
         home = {
           username = "grey";

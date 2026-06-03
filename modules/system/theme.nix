@@ -1,6 +1,10 @@
-{ ... }: {
-  flake.nixosModules.theme = { ... }:{
-    home-manager.users.grey = { pkgs, lib, ... }: {
+{...}: {
+  flake.nixosModules.theme = {...}: {
+    home-manager.users.grey = {
+      pkgs,
+      lib,
+      ...
+    }: {
       dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
       home.pointerCursor = {
         package = pkgs.catppuccin-cursors.mochaMauve;
@@ -21,7 +25,7 @@
         theme = {
           name = "catppuccin-mocha-mauve-standard";
           package = pkgs.catppuccin-gtk.override {
-            accents = [ "mauve" ];
+            accents = ["mauve"];
             variant = "mocha";
           };
         };

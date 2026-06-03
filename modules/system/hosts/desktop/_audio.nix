@@ -1,45 +1,49 @@
-{ pkgs, ... }: {
-  environment.systemPackages = [ pkgs.rnnoise-plugin ];
+{pkgs, ...}: {
+  environment.systemPackages = [pkgs.rnnoise-plugin];
   services.pipewire = {
     enable = true;
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    extraLadspaPackages = [ pkgs.rnnoise-plugin ];
+    extraLadspaPackages = [pkgs.rnnoise-plugin];
     extraConfig.pipewire."50-rnnoise" = {
-      "context.modules" = [{
-        name = "libpipewire-module-filter-chain";
-        flags = [ "nofail" ];
-        args = {
-          "node.description" = "RNNoise Microphone";
-          "media.name" = "RNNoise Microphone";
-          "filter.graph" = {
-            nodes = [{
-              type = "ladspa";
-              name = "rnnoise";
-              plugin = "librnnoise_ladspa";
-              label = "noise_suppressor_mono";
-              control = {
-                "VAD Threshold (%)" = 85.0;
-                "VAD Grace Period (ms)" = 200.0;
-                "Retroactive VAD Grace (ms)" = 0.0;
-              };
-            }];
-          };
-          "capture.props" = {
-            "node.name" = "capture.rnnoise_source";
-            "node.passive" = true;
-            "audio.rate" = 48000;
-          };
-          "playback.props" = {
-            "node.name" = "rnnoise_source";
-            "media.class" = "Audio/Source";
+      "context.modules" = [
+        {
+          name = "libpipewire-module-filter-chain";
+          flags = ["nofail"];
+          args = {
             "node.description" = "RNNoise Microphone";
-            "audio.rate" = 48000;
-            "priority.session" = 2000;
+            "media.name" = "RNNoise Microphone";
+            "filter.graph" = {
+              nodes = [
+                {
+                  type = "ladspa";
+                  name = "rnnoise";
+                  plugin = "librnnoise_ladspa";
+                  label = "noise_suppressor_mono";
+                  control = {
+                    "VAD Threshold (%)" = 85.0;
+                    "VAD Grace Period (ms)" = 200.0;
+                    "Retroactive VAD Grace (ms)" = 0.0;
+                  };
+                }
+              ];
+            };
+            "capture.props" = {
+              "node.name" = "capture.rnnoise_source";
+              "node.passive" = true;
+              "audio.rate" = 48000;
+            };
+            "playback.props" = {
+              "node.name" = "rnnoise_source";
+              "media.class" = "Audio/Source";
+              "node.description" = "RNNoise Microphone";
+              "audio.rate" = 48000;
+              "priority.session" = 2000;
+            };
           };
-        };
-      }];
+        }
+      ];
     };
 
     extraConfig.pipewire."99-lowlatency" = {
@@ -53,10 +57,12 @@
 
     wireplumber.extraConfig = {
       "10-disable-hw-volume" = {
-        "monitor.alsa.rules" = [{
-          matches = [ { "device.name" = "~alsa_card.*"; } ];
-          actions.update-props."api.alsa.soft-mixer" = true;
-        }];
+        "monitor.alsa.rules" = [
+          {
+            matches = [{"device.name" = "~alsa_card.*";}];
+            actions.update-props."api.alsa.soft-mixer" = true;
+          }
+        ];
       };
     };
   };
@@ -68,7 +74,7 @@
       "pipewire.service"
       "pipewire-pulse.service"
     ];
-    wantedBy = [ "multi-user.target" ];
+    wantedBy = ["multi-user.target"];
     serviceConfig = {
       Type = "oneshot";
       ExecStartPre = "${pkgs.dash}/bin/dash -c 'until ${pkgs.alsa-utils}/bin/aplay -l 2>/dev/null | grep -q AT2005USB; do sleep 1; done'";

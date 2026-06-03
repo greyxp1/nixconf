@@ -1,4 +1,4 @@
-{ inputs, ... }: let
+{inputs, ...}: let
   mkLayout = device: {
     disko.devices.disk.main = {
       type = "disk";
@@ -7,21 +7,41 @@
         type = "gpt";
         partitions = {
           ESP = {
-            size = "512M"; type = "EF00";
+            size = "512M";
+            type = "EF00";
             content = {
-              type = "filesystem"; format = "vfat"; mountpoint = "/boot";
-              extraArgs = [ "-F" "32" "-n" "NIXBOOT" ]; mountOptions = [ "umask=0077" ];
+              type = "filesystem";
+              format = "vfat";
+              mountpoint = "/boot";
+              extraArgs = ["-F" "32" "-n" "NIXBOOT"];
+              mountOptions = ["umask=0077"];
             };
           };
-          swap = { size = "8G"; content = { type = "swap"; resumeDevice = true; }; };
+          swap = {
+            size = "8G";
+            content = {
+              type = "swap";
+              resumeDevice = true;
+            };
+          };
           root = {
             size = "100%";
             content = {
-              type = "btrfs"; extraArgs = [ "-f" "--label" "nixos" ];
+              type = "btrfs";
+              extraArgs = ["-f" "--label" "nixos"];
               subvolumes = {
-                "@nix"        = { mountpoint = "/nix";        mountOptions = [ "compress=zstd" "noatime" ]; };
-                "@home"       = { mountpoint = "/home";       mountOptions = [ "compress=zstd" "noatime" ]; };
-                "@persistent" = { mountpoint = "/persistent"; mountOptions = [ "compress=zstd" "noatime" ]; };
+                "@nix" = {
+                  mountpoint = "/nix";
+                  mountOptions = ["compress=zstd" "noatime"];
+                };
+                "@home" = {
+                  mountpoint = "/home";
+                  mountOptions = ["compress=zstd" "noatime"];
+                };
+                "@persistent" = {
+                  mountpoint = "/persistent";
+                  mountOptions = ["compress=zstd" "noatime"];
+                };
               };
             };
           };
@@ -30,7 +50,11 @@
     };
   };
 in {
-  flake.nixosModules.filesystem = { lib, config, ... }: {
+  flake.nixosModules.filesystem = {
+    lib,
+    config,
+    ...
+  }: {
     imports = [
       inputs.disko.nixosModules.disko
       inputs.preservation.nixosModules.preservation
@@ -46,25 +70,55 @@ in {
     config = {
       systemd.services.systemd-machine-id-commit.enable = false;
       fileSystems = lib.mkForce {
-        "/"           = { device = "none";        fsType = "tmpfs"; options = [ "defaults" "size=4G" "mode=755" ]; };
-        "/nix"        = { device = "LABEL=nixos"; fsType = "btrfs"; options = [ "subvol=@nix"        "compress=zstd" "noatime" ]; neededForBoot = true; };
-        "/home"       = { device = "LABEL=nixos"; fsType = "btrfs"; options = [ "subvol=@home"       "compress=zstd" "noatime" ]; };
-        "/persistent" = { device = "LABEL=nixos"; fsType = "btrfs"; options = [ "subvol=@persistent" "compress=zstd" "noatime" ]; neededForBoot = true; };
-        "/boot"       = { device = "/dev/disk/by-label/NIXBOOT"; fsType = "vfat"; options = [ "umask=0077" ]; };
+        "/" = {
+          device = "none";
+          fsType = "tmpfs";
+          options = ["defaults" "size=4G" "mode=755"];
+        };
+        "/nix" = {
+          device = "LABEL=nixos";
+          fsType = "btrfs";
+          options = ["subvol=@nix" "compress=zstd" "noatime"];
+          neededForBoot = true;
+        };
+        "/home" = {
+          device = "LABEL=nixos";
+          fsType = "btrfs";
+          options = ["subvol=@home" "compress=zstd" "noatime"];
+        };
+        "/persistent" = {
+          device = "LABEL=nixos";
+          fsType = "btrfs";
+          options = ["subvol=@persistent" "compress=zstd" "noatime"];
+          neededForBoot = true;
+        };
+        "/boot" = {
+          device = "/dev/disk/by-label/NIXBOOT";
+          fsType = "vfat";
+          options = ["umask=0077"];
+        };
       };
 
       preservation = {
         enable = true;
         preserveAt."/persistent" = {
           directories = [
-            { directory = "/var/lib/nixos"; inInitrd = true; }
+            {
+              directory = "/var/lib/nixos";
+              inInitrd = true;
+            }
             "/var/lib/NetworkManager"
             "/var/lib/bluetooth"
             "/var/lib/libvirt"
             "/var/lib/sbctl"
             "/var/log"
           ];
-          files = [ { file = "/etc/machine-id"; inInitrd = true; } ];
+          files = [
+            {
+              file = "/etc/machine-id";
+              inInitrd = true;
+            }
+          ];
         };
       };
     };

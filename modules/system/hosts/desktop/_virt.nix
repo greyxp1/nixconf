@@ -1,4 +1,4 @@
-{ pkgs, ... }: {
+{pkgs, ...}: {
   environment.systemPackages = with pkgs; [
     spice-gtk
     (writeScriptBin "create-nixos-vm" ''
@@ -38,16 +38,18 @@
     '')
   ];
 
-  users.users.grey.extraGroups = [ "libvirtd" "video" "render" ];
+  users.users.grey.extraGroups = ["libvirtd" "video" "render"];
 
   programs = {
     virt-manager.enable = true;
-    dconf.profiles.user.databases = [{
-      settings."org/virt-manager/virt-manager/connections" = {
-        autoconnect = [ "qemu:///system" ];
-        uris = [ "qemu:///system" ];
-      };
-    }];
+    dconf.profiles.user.databases = [
+      {
+        settings."org/virt-manager/virt-manager/connections" = {
+          autoconnect = ["qemu:///system"];
+          uris = ["qemu:///system"];
+        };
+      }
+    ];
   };
 
   virtualisation.libvirtd = {
@@ -55,11 +57,13 @@
     qemu = {
       runAsRoot = true;
       package = pkgs.qemu_kvm.overrideAttrs (old: {
-        nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ pkgs.makeWrapper ];
-        postInstall = (old.postInstall or "") + ''
-          wrapProgram $out/bin/qemu-system-x86_64 \
-            --prefix LD_LIBRARY_PATH : /run/opengl-driver/lib
-        '';
+        nativeBuildInputs = (old.nativeBuildInputs or []) ++ [pkgs.makeWrapper];
+        postInstall =
+          (old.postInstall or "")
+          + ''
+            wrapProgram $out/bin/qemu-system-x86_64 \
+              --prefix LD_LIBRARY_PATH : /run/opengl-driver/lib
+          '';
       });
       verbatimConfig = ''
         cgroup_device_acl = [
@@ -75,9 +79,9 @@
 
   systemd.services.libvirt-default-network = {
     description = "Autostart libvirt default network";
-    after = [ "libvirtd.service" ];
-    requires = [ "libvirtd.service" ];
-    wantedBy = [ "multi-user.target" ];
+    after = ["libvirtd.service"];
+    requires = ["libvirtd.service"];
+    wantedBy = ["multi-user.target"];
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;

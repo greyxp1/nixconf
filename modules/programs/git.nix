@@ -1,6 +1,6 @@
-{ ... }: {
-  flake.nixosModules.git = { ... }: {
-    home-manager.users.grey = { ... }: {
+{...}: {
+  flake.nixosModules.git = {...}: {
+    home-manager.users.grey = {...}: {
       programs.git.enable = true;
       programs.git.settings = {
         init.defaultBranch = "main";

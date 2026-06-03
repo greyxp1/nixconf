@@ -1,5 +1,5 @@
-{ ... }: {
-  flake.nixosModules.cache = { ... }: {
+{...}: {
+  flake.nixosModules.cache = {...}: {
     nix.settings = {
       substituters = [
         "https://cache.nixos.org"
