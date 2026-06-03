@@ -1,6 +1,14 @@
 {inputs, ...}: {
-  flake.nixosModules.core = {config, ...}: {
-    imports = [inputs.home-manager.nixosModules.home-manager];
+  flake.nixosModules.core = {
+    config,
+    lib,
+    ...
+  }: {
+    imports = [
+      inputs.home-manager.nixosModules.home-manager
+      inputs.musnix.nixosModules.musnix
+    ];
+
     time.timeZone = "America/Montreal";
     networking.networkmanager.enable = true;
     nixpkgs.config.allowUnfree = true;
@@ -13,7 +21,7 @@
     users.users.root.initialHashedPassword = "";
     users.users.grey = {
       isNormalUser = true;
-      extraGroups = ["networkmanager" "wheel" "input" "seat"];
+      extraGroups = ["audio" "networkmanager" "wheel" "input" "seat"];
       initialPassword = "123";
     };
 
@@ -32,15 +40,43 @@
       dbus.enable = true;
       greetd = {
         enable = true;
-        settings.default_session.command = "niri-session";
-        settings.default_session.user = "grey";
+        settings.default_session = {
+          command = "niri-session";
+          user = "grey";
+        };
+      };
+      pipewire = {
+        enable = true;
+        alsa = {
+          enable = true;
+          support32Bit = true;
+        };
+        pulse.enable = true;
+        extraConfig.pipewire."99-lowlatency"."context.properties" = {
+          "default.clock.rate" = 48000;
+          "default.clock.quantum" = 128;
+          "default.clock.min-quantum" = 64;
+          "default.clock.max-quantum" = 512;
+        };
+        wireplumber.extraConfig."10-disable-hw-volume"."monitor.alsa.rules" = [
+          {
+            matches = [{"device.name" = "~alsa_card.*";}];
+            actions.update-props."api.alsa.soft-mixer" = true;
+          }
+        ];
       };
     };
 
-    hardware = {
-      enableRedistributableFirmware = true;
-      graphics.enable = true;
-      graphics.enable32Bit = true;
+    musnix.enable = true;
+    musnix.rtirq = {
+      enable = true;
+      nameList = "usb";
+    };
+
+    hardware.enableRedistributableFirmware = true;
+    hardware.graphics = {
+      enable = true;
+      enable32Bit = true;
     };
 
     security = {
@@ -54,7 +90,7 @@
       initrd.supportedFilesystems = ["btrfs"];
       initrd.systemd.enable = true;
       kernel.sysctl = {
-        "vm.swappiness" = 100;
+        "vm.swappiness" = lib.mkForce 100;
         "vm.page-cluster" = 0;
         "vm.dirty_ratio" = 10;
         "vm.dirty_background_ratio" = 5;
