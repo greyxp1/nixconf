@@ -21,7 +21,7 @@ binds {
 
     XF86AudioRaiseVolume repeat=false { spawn-sh "noctalia msg volume-up"; }
     XF86AudioLowerVolume repeat=false { spawn-sh "noctalia msg volume-down"; }
-    XF86AudioMute repeat=false { spawn-sh "noctalia msg volume-mute"; }
+    XF86AudioMute repeat=false { spawn-sh "noctalia msg media toggle"; }
 
     Mod+G repeat=false { spawn-sh "nsticky sticky toggle-active"; }
     Mod+Shift+G repeat=false { spawn-sh "nsticky-stage-toggle"; }
