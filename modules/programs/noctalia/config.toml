@@ -47,11 +47,11 @@ up = [ "Ctrl+k" ]
 background_opacity = 0.81000000000000005
 
 [shell]
-setup_wizard_enabled = false
 avatar_path = "/home/grey/nixconf/assets/user.jpg"
 password_style = "random"
 polkit_agent = true
 settings_show_advanced = true
+setup_wizard_enabled = false
 show_location = false
 
     [shell.panel]
@@ -86,7 +86,6 @@ auto_locate = true
 [widget.screen_recorder]
 color_range = "full"
 filename_pattern = "%Y%m%d_%H%M%S"
-hide_inactive = true
 replay_duration = 120
 replay_enabled = true
 restore_portal = true
