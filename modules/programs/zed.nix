@@ -1,7 +1,33 @@
 {...}: {
   flake.nixosModules.zed = {...}: {
     home-manager.users.grey = {pkgs, ...}: {
-      home.packages = with pkgs; [nixd alejandra];
+      home.packages = with pkgs; [
+        nixd
+        nil
+        alejandra
+        statix
+        deadnix
+      ];
+
+      xdg.configFile."zed/tasks.json".text = builtins.toJSON [
+        {
+          label = "statix check";
+          command = "statix check $ZED_FILE";
+        }
+        {
+          label = "statix fix";
+          command = "statix fix $ZED_FILE";
+        }
+        {
+          label = "deadnix";
+          command = "deadnix $ZED_FILE";
+        }
+        {
+          label = "deadnix fix";
+          command = "deadnix --edit $ZED_FILE";
+        }
+      ];
+
       programs.zed-editor = {
         enable = true;
         userSettings = {
@@ -15,17 +41,19 @@
           telemetry.metrics = false;
           agent.sidebar_side = "right";
           agent.dock = "right";
+          inlay_hints.enabled = true;
+          inlay_hints.show_other_hints = false;
+          colorize_brackets = true;
+          languages.Nix.formatter.external.command = "alejandra";
+          languages.Nix.formatter.external.arguments = ["--quiet" "--"];
 
-          languages.Nix = {
-            language_servers = ["nixd"];
-            formatter.external.command = "alejandra";
-            formatter.external.arguments = ["--quiet" "--"];
+          lsp = {
+            nixd.initialization_options.formatting.command = ["alejandra" "--quiet" "--"];
+            nixd.initialization_options.nixos.expr =
+              "(builtins.getFlake \"path:/home/grey/nixconf\")"
+              + ".nixosConfigurations.desktop.options";
+            nil.initialization_options.formatting.command = ["alejandra" "--quiet" "--"];
           };
-
-          lsp.nixd.initialization_options.formatting.command = ["alejandra"];
-          lsp.nixd.initialization_options.options.nixos.expr =
-            "(builtins.getFlake \"path:/home/grey/nixconf\")"
-            + ".nixosConfigurations.desktop.options";
         };
 
         extensions = [
