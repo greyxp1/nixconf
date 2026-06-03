@@ -98,3 +98,4 @@ hidden = [ "chrome_status_icon_1" ]
 
 [widget.workspaces]
 display = "none"
+hide_when_empty = true
