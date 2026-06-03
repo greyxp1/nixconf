@@ -137,8 +137,6 @@ recent-windows {
 }
 
 blur {
-    passes 3
-    offset 3.0
     noise 0.03
     saturation 1.0
 }
@@ -213,8 +211,8 @@ layer-rule {
 }
 
 layer-rule {
-    match namespace="^noctalia-(bar-main|notification|dock|panel)$"
-    background-effect {
-        xray false
-    }
+  match namespace="^noctalia-(bar-[^\"]+|notification|dock|panel|osd)$"
+  background-effect {
+    xray false
+   }
 }
