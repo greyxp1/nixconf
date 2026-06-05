@@ -1,11 +1,9 @@
 spawn-sh-at-startup "oniri --tiling-layout --edges-maximizing"
 spawn-sh-at-startup "screencast-monitor"
-spawn-at-startup "noctalia"
-spawn-sh-at-startup "noctalia msg scripted-widget screen_recorder focused replay-start"
 
 binds {
-    Mod+Return repeat=false { spawn "foot"; }
-    Mod+E repeat=false { spawn-sh "foot -- yazi"; }
+    Mod+Return repeat=false { spawn "ghostty"; }
+    Mod+E repeat=false { spawn-sh "ghostty --window-padding-y=8 --window-padding-x=8 -e yazi"; }
     Mod+B repeat=false { spawn "helium"; }
     Mod+D repeat=false { spawn "discord"; }
     Mod+Z repeat=false { spawn "zeditor"; }
@@ -59,7 +57,7 @@ prefer-no-csd
 
 layout {
     background-color "transparent"
-    gaps 10
+    gaps 14
 
     preset-column-widths {
         proportion 0.33333
@@ -142,7 +140,7 @@ blur {
 }
 
 window-rule {
-    geometry-corner-radius 10
+    geometry-corner-radius 16
     clip-to-geometry true
     draw-border-with-background false
     opacity 0.81
@@ -178,7 +176,7 @@ window-rule {
 }
 
 window-rule {
-    match app-id="^foot$|^discord$|^org.qutebrowser.qutebrowser$"
+    match app-id="^ghostty$|^discord$|^org.qutebrowser.qutebrowser$"
     match app-id="^helium$" title="(?i).*(Youtube|Jellyfin-Player).*"
     match app-id="^.virt-manager-wrapped$" title="(?i).*nixos.*"
     match title="^Picture in picture$|^Parsec$"
@@ -199,7 +197,7 @@ window-rule {
 }
 
 window-rule {
-    match app-id="^yazi-filepicker$"
+    match app-id="^com.mitchellh.ghostty$" title="filepicker"
     open-floating true
     default-column-width { fixed 1600; }
     default-window-height { fixed 900; }
