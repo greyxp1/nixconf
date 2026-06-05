@@ -4,7 +4,7 @@
       pname = "oniri";
       version = "0-unstable";
       src = inputs.oniri;
-      cargoHash = "sha256-0LWYo7XBj1DP20Ua+azJweS6UZR/rV4vCVQPVmazghA=";
+      cargoHash = "sha256-50zEsbDP1DlhHr1iAubpDrzLs8FaLOiMuE/k3eE6jQw=";
     };
   in {
     imports = [
@@ -16,8 +16,6 @@
     programs.niri.package = inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.niri-unstable;
     systemd.user.services.niri-flake-polkit.enable = false;
     services.niri-autoselect-portal.enable = true;
-    xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-termfilechooser];
-    xdg.portal.config.niri."org.freedesktop.impl.portal.FileChooser" = ["termfilechooser"];
 
     home-manager.sharedModules = [
       {
@@ -55,13 +53,6 @@
           [sticky.discord-vc]
           app_id = "^discord$"
           title = "^VC[^|]*$"
-        '';
-
-        xdg.configFile."xdg-desktop-portal-termfilechooser/config".text = ''
-          [filechooser]
-          cmd=${pkgs.xdg-desktop-portal-termfilechooser}/share/xdg-desktop-portal-termfilechooser/yazi-wrapper.sh
-          default_dir=$HOME
-          env=TERMCMD=foot --app-id yazi-filepicker
         '';
       }
     ];
