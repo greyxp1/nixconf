@@ -62,9 +62,9 @@
           username = "grey";
           homeDirectory = "/home/grey";
           stateVersion = "26.05";
-          packages = [
-            inputs.helium.packages.${pkgs.stdenv.hostPlatform.system}.default
-            pkgs.parsec-bin
+          packages = with pkgs; [
+            inputs.helium.packages.${stdenv.hostPlatform.system}.default
+            parsec-bin
           ];
         };
       };
