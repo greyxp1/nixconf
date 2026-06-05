@@ -1,13 +1,38 @@
 {...}: {
-  flake.nixosModules.yazi = {pkgs, ...}: {
+  flake.nixosModules.yazi = {pkgs, ...}: let
+    starshipTheme = fromTOML (builtins.readFile ./starship.toml);
+    starshipCfg = (pkgs.formats.toml {}).generate "starship-yazi.toml" (starshipTheme
+      // {
+        format = builtins.replaceStrings ["\n$character"] [""] starshipTheme.format;
+        character.disabled = true;
+      });
+  in {
+    xdg.portal = {
+      extraPortals = [pkgs.xdg-desktop-portal-termfilechooser];
+      config.niri."org.freedesktop.impl.portal.FileChooser" = ["termfilechooser"];
+    };
+
+    home-manager.sharedModules = [
+      {
+        xdg.configFile."xdg-desktop-portal-termfilechooser/config".text = ''
+          [filechooser]
+          cmd=${pkgs.xdg-desktop-portal-termfilechooser}/share/xdg-desktop-portal-termfilechooser/yazi-wrapper.sh
+          default_dir=$HOME
+          env=TERMCMD=${pkgs.ghostty}/bin/ghostty --window-padding-y=8 --window-padding-x=8 --background-opacity=0.6 --class=yazi-filepicker --title=filepicker -e
+        '';
+      }
+    ];
+
     home-manager.users.grey = {...}: {
       programs.yazi = {
         enable = true;
         enableFishIntegration = true;
         shellWrapperName = "yazi";
         extraPackages = with pkgs; [ripdrag trash-cli];
-        settings.mgr.ratio = [1 2 5];
-        settings.mgr.sort_by = "natural";
+        settings.mgr = {
+          ratio = [1 2 5];
+          sort_by = "natural";
+        };
 
         plugins = with pkgs.yaziPlugins; {
           inherit smart-enter jump-to-char full-border mount toggle-pane compress restore starship;
@@ -56,18 +81,7 @@
           }
         ];
 
-        initLua = let
-          theme = fromTOML (builtins.readFile (builtins.fetchurl {
-            url = "https://raw.githubusercontent.com/CoryCharlton/starship-configuration/master/starship.toml";
-            sha256 = "sha256:0g0fs3j7rrk7v099xqni935c3w480nzr0i04ahav5riw03c1hxrd";
-          }));
-          starshipCfg = (pkgs.formats.toml {}).generate "starship-yazi.toml" (theme
-            // {
-              add_newline = false;
-              format = builtins.replaceStrings ["\n$character"] [""] theme.format;
-              character = {disabled = true;};
-            });
-        in ''
+        initLua = ''
           require("full-border"):setup({ type = ui.Border.ROUNDED })
           require("smart-enter"):setup({ open_multi = true })
           require("starship"):setup({ config_file = "${starshipCfg}" })
