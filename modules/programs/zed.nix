@@ -62,6 +62,7 @@
           "nix"
           "kdl"
           "toml"
+          "glsl"
         ];
       };
     };
