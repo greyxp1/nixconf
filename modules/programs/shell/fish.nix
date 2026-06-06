@@ -14,7 +14,7 @@
           function fish_prompt
             starship prompt --status $status --pipestatus $pipestatus
           end
-          bind \cl 'printf \\033[3J; command clear; commandline -f repaint'
+          bind \cl 'printf \\033[3J]; command clear; commandline -f repaint'
         '';
 
         functions = {
