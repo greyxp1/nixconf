@@ -6,6 +6,7 @@ in {
       inputs.lanzaboote.nixosModules.lanzaboote
       ./_audio.nix
       ./_virt.nix
+      ./_gaming.nix
     ];
     hostModule = {
       pkgs,
