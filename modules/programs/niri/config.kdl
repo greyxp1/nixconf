@@ -5,7 +5,7 @@ binds {
     Mod+Return repeat=false { spawn "ghostty"; }
     Mod+E repeat=false { spawn-sh "ghostty --window-padding-y=8 --window-padding-x=8 -e yazi"; }
     Mod+B repeat=false { spawn "helium"; }
-    Mod+D repeat=false { spawn "discord"; }
+    Mod+D repeat=false { spawn "equibop"; }
     Mod+Z repeat=false { spawn "zeditor"; }
 
     Mod+Escape repeat=false { spawn-sh "noctalia msg panel-toggle session"; }
@@ -169,14 +169,14 @@ window-rule {
     open-on-workspace "default"
 }
 
-spawn-at-startup "discord"
+spawn-at-startup "equibop"
 window-rule {
-    match app-id="^discord$"
+    match app-id="^equibop$"
     open-on-workspace "chat"
 }
 
 window-rule {
-    match app-id="^ghostty$|^discord$|^org.qutebrowser.qutebrowser$"
+    match app-id="^ghostty$|^equibop$|^org.qutebrowser.qutebrowser$"
     match app-id="^helium$" title="(?i).*(Youtube|Jellyfin-Player).*"
     match app-id="^.virt-manager-wrapped$" title="(?i).*nixos.*"
     match title="^Picture in picture$|^Parsec$"
@@ -185,8 +185,8 @@ window-rule {
 
 spawn-at-startup "nsticky"
 window-rule {
-    match app-id="^discord$"
-    exclude title="(?i).*discord$"
+    match app-id="^equibop$"
+    exclude title="Equibop$"
     match title="^Picture in picture$"
     match app-id="^chrome-ldgfbffkinooeloadekpmfoklnobpien-Default$"
 
