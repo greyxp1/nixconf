@@ -12,7 +12,7 @@
         systemd.enable = true;
       };
       systemd.user.services.noctalia.Service.ExecStartPost = "${pkgs.writeShellScript "noctalia-init-replay" ''
-        sleep 0.5
+        sleep 5
         ${noctaliaPkg}/bin/noctalia msg scripted-widget screen_recorder focused replay-start
       ''}";
     };
