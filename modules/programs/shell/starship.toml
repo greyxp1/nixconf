@@ -21,7 +21,7 @@ $nodejs\
 [ ](fg:color_bg4 bg:color_bg5)\
 $cmd_duration\
 [ ](fg:color_bg5)\
-\n$character\
+$character\
 """
 
 palette = "ccswe_dark"

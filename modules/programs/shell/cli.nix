@@ -1,9 +1,5 @@
 {...}: {
-  flake.nixosModules.shell = {
-    pkgs,
-    lib,
-    ...
-  }: let
+  flake.nixosModules.shell = {pkgs, ...}: let
     starshipTheme = fromTOML (builtins.readFile ./starship.toml);
   in {
     programs.nh = {
@@ -21,27 +17,24 @@
         PAGER = "bat -p";
       };
 
-      programs.zoxide = {
-        enable = true;
-        enableFishIntegration = true;
-        options = ["--cmd cd"];
-      };
+      programs = {
+        zoxide = {
+          enable = true;
+          enableNushellIntegration = true;
+          options = ["--cmd cd"];
+        };
 
-      programs.starship = {
-        enable = true;
-        enableFishIntegration = true;
-        settings =
-          starshipTheme
-          // {
-            format = builtins.replaceStrings ["\n$character"] ["$character"] starshipTheme.format;
-            add_newline = false;
-            palette = lib.mkForce starshipTheme.palette;
-          };
-      };
+        starship = {
+          enable = true;
+          settings =
+            starshipTheme
+            // {
+              add_newline = false;
+            };
+        };
 
-      programs.bottom = {
-        enable = true;
-        settings.flags = {
+        bottom.enable = true;
+        bottom.settings.flags = {
           group_processes = true;
           process_memory_as_value = true;
           case_sensitive = false;
@@ -60,9 +53,7 @@
         codex
         nerd-fonts.jetbrains-mono
         fzf
-        eza
         dash
-        tldr
       ];
     };
   };

@@ -3,7 +3,7 @@
     starshipTheme = fromTOML (builtins.readFile ./starship.toml);
     starshipCfg = (pkgs.formats.toml {}).generate "starship-yazi.toml" (starshipTheme
       // {
-        format = builtins.replaceStrings ["\n$character"] [""] starshipTheme.format;
+        format = builtins.replaceStrings ["$character"] [""] starshipTheme.format;
         character.disabled = true;
       });
   in {
