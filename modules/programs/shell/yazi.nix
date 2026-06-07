@@ -1,11 +1,7 @@
 {...}: {
   flake.nixosModules.yazi = {pkgs, ...}: let
     starshipTheme = fromTOML (builtins.readFile ./starship.toml);
-    starshipCfg = (pkgs.formats.toml {}).generate "starship-yazi.toml" (starshipTheme
-      // {
-        format = builtins.replaceStrings ["$character"] [""] starshipTheme.format;
-        character.disabled = true;
-      });
+    starshipCfg = (pkgs.formats.toml {}).generate "starship-yazi.toml" (starshipTheme // {character.disabled = true;});
   in {
     xdg.portal = {
       extraPortals = [pkgs.xdg-desktop-portal-termfilechooser];
@@ -66,7 +62,7 @@
             desc = "Restore last deleted file";
           }
           {
-            on = ["<A-m>"];
+            on = ["M"];
             run = "plugin mount";
             desc = "Mount manager";
           }
@@ -76,7 +72,7 @@
             desc = "Hide/show preview pane";
           }
           {
-            on = ["M"];
+            on = ["<A-m>"];
             run = "plugin toggle-pane max-preview";
             desc = "Maximize/restore preview pane";
           }
