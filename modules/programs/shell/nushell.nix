@@ -109,16 +109,13 @@
               bash -c $"cat > '($key_file)'"
               ^chmod 600 $key_file
             }
-
             nh os switch
-
             let host    = (^hostname | str trim)
             let new_key = (
               open /etc/ssh/ssh_host_ed25519_key.pub
               | str trim | split row " " | first 2 | str join " "
             )
             let secrets = ($env.HOME | path join "nixconf/secrets/secrets.nix")
-
             if (open $secrets | str contains $"# ($host)") {
               ^sed -i $"s|\"ssh-ed25519 [^\"]*\" # ($host)|\"($new_key)\" # ($host)|" $secrets
             } else {
@@ -126,12 +123,12 @@
               | save --force /tmp/_s.nix
               cp /tmp/_s.nix $secrets
             }
-
             cd ~/nixconf
+            git remote set-url origin git@github.com:greyxp1/nixconf.git
             ragenix --rules secrets/secrets.nix -r -i $key_file
             git add secrets/
             git commit -m $"chore: enroll ($host)"
-            git push
+            git -c core.sshCommand="ssh -o StrictHostKeyChecking=accept-new" push
           }
         '';
       };
