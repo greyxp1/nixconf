@@ -4,20 +4,23 @@
       programs.ghostty = {
         enable = true;
         settings = {
-          background-opacity = 0.9;
-          font-size = 13;
-          #window-padding-x = 7;
-          #window-padding-y = 7;
-          window-padding-balance = true;
+          cursor-style = "bar";
+          background-opacity = 0.91;
+          font-size = 14;
+          window-padding-x = 8;
+          window-padding-y = 8;
           window-padding-color = "extend";
           cursor-style-blink = false;
           confirm-close-surface = false;
           link-url = true;
           link-previews = true;
           clipboard-trim-trailing-spaces = true;
+          copy-on-select = "clipboard";
+          selection-background = "#0078D7";
           custom-shader-animation = "always";
           custom-shader = [
             "${./shaders/cursor.glsl}"
+            "${./shaders/unfocused.glsl}"
           ];
         };
       };
