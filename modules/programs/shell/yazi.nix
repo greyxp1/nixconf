@@ -29,9 +29,15 @@
         enableFishIntegration = true;
         shellWrapperName = "yazi";
         extraPackages = with pkgs; [ripdrag trash-cli];
-        settings.mgr = {
-          ratio = [1 2 5];
-          sort_by = "natural";
+        settings = {
+          mgr.ratio = [1 2 5];
+          mgr.sort_by = "natural";
+          opener.edit = [
+            {
+              run = ''hx "$@"'';
+              block = true;
+            }
+          ];
         };
 
         plugins = with pkgs.yaziPlugins; {
