@@ -26,11 +26,8 @@
 
         starship = {
           enable = true;
-          settings =
-            starshipTheme
-            // {
-              add_newline = false;
-            };
+          enableNushellIntegration = true;
+          settings = starshipTheme;
         };
 
         bottom.enable = true;
