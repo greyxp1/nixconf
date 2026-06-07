@@ -54,6 +54,8 @@
 
   virtualisation.libvirtd = {
     enable = true;
+    onShutdown = "shutdown";
+    onBoot = "ignore";
     qemu = {
       runAsRoot = true;
       package = pkgs.qemu_kvm.overrideAttrs (old: {
