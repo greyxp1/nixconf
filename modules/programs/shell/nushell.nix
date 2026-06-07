@@ -7,7 +7,6 @@
       programs.carapace.enableNushellIntegration = false;
       programs.nushell = {
         enable = true;
-        environmentVariables."__NU_NL" = false;
         settings = {
           show_banner = false;
           table.mode = "rounded";
@@ -21,11 +20,25 @@
           rebuild = "nh os switch";
           update = "nh os switch --update";
           home = "sudo systemctl restart home-manager-grey.service";
-          clean = "nh clean all";
-          optimise = "nix store optimise -v";
+          clean = "nh clean all --optimise";
         };
 
         extraConfig = ''
+          # ── Keybindings ───────────────────────────────────────────────────
+          # Force Ctrl+L to do a hard clear, wiping the terminal scrollback
+          $env.config.keybindings = (
+            $env.config | default [] keybindings | get keybindings
+            | append {
+                name: clear_scrollback
+                modifier: control
+                keycode: char_l
+                mode: [emacs, vi_normal, vi_insert]
+                event: [
+                  { send: clearscrollback }
+                ]
+            }
+          )
+
           # ── Completions ─────────────────────────────────────────────────────
           # Taken verbatim from https://www.nushell.sh/cookbook/external_completers.html
           #
