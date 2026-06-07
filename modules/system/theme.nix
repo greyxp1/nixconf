@@ -2,11 +2,7 @@
   flake.nixosModules.theme = {...}: {
     home-manager = {
       sharedModules = [inputs.catppuccin.homeModules.catppuccin];
-      users.grey = {
-        pkgs,
-        lib,
-        ...
-      }: {
+      users.grey = {pkgs, ...}: {
         dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
         home.pointerCursor = {
           package = pkgs.catppuccin-cursors.mochaMauve;
@@ -20,20 +16,18 @@
           autoEnable = true;
           flavor = "mocha";
           accent = "mauve";
+          starship.enable = false;
+          gtk.icon.enable = false;
         };
 
         gtk = {
           enable = true;
-          theme = {
-            name = "catppuccin-mocha-mauve-standard";
-            package = pkgs.catppuccin-gtk.override {
-              accents = ["mauve"];
-              variant = "mocha";
-            };
-          };
-          iconTheme = lib.mkForce {
-            name = "Adwaita";
-            package = pkgs.adwaita-icon-theme;
+          iconTheme.name = "Adwaita";
+          iconTheme.package = pkgs.adwaita-icon-theme;
+          theme.name = "catppuccin-mocha-mauve-standard";
+          theme.package = pkgs.catppuccin-gtk.override {
+            accents = ["mauve"];
+            variant = "mocha";
           };
         };
       };
