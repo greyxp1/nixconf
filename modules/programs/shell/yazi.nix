@@ -18,7 +18,7 @@
           [filechooser]
           cmd=${pkgs.xdg-desktop-portal-termfilechooser}/share/xdg-desktop-portal-termfilechooser/yazi-wrapper.sh
           default_dir=$HOME
-          env=TERMCMD=${pkgs.ghostty}/bin/ghostty --window-padding-y=8 --window-padding-x=8 --background-opacity=0.6 --class=yazi-filepicker --title=filepicker -e
+          env=TERMCMD=${pkgs.ghostty}/bin/ghostty --background-opacity=0.6 --class=yazi-filepicker --title=filepicker -e
         '';
       }
     ];
