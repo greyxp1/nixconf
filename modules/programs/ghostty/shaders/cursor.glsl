@@ -168,16 +168,16 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
     fragColor = base;
 
     // Unfocused: hide cursor by sampling the line below, then exit.
-    //if (iFocus == 0) {
-    //    vec2 vu0  = px2n(fragCoord, 1.0);
-    //    vec4 cc0  = vec4(px2n(iCurrentCursor.xy, 1.0), px2n(iCurrentCursor.zw, 0.0));
-    //    vec2 ctr0 = cc0.xy - cc0.zw * vec2(-0.5, 0.5);
-    //    if (rectSDF(vu0, ctr0, cc0.zw * 0.5) <= 0.0) {
-    //        float sy  = clamp(fragCoord.y - iCurrentCursor.w, 0.0, iResolution.y - 1.0);
-    //        fragColor = texture(iChannel0, vec2(fragCoord.x, sy) / iResolution.xy);
-    //    }
-    //    return;
-    //}
+    if (iFocus == 0) {
+        vec2 vu0 = px2n(fragCoord, 1.0);
+        vec4 cc0 = vec4(px2n(iCurrentCursor.xy, 1.0), px2n(iCurrentCursor.zw, 0.0));
+        vec2 ctr0 = cc0.xy - cc0.zw * vec2(-0.5, 0.5);
+        if (rectSDF(vu0, ctr0, cc0.zw * 0.5) <= 0.0) {
+            float sy = clamp(fragCoord.y - iCurrentCursor.w, 0.0, iResolution.y - 1.0);
+            fragColor = texture(iChannel0, vec2(fragCoord.x, sy) / iResolution.xy);
+        }
+        return;
+    }
 
     float t = iTime - iTimeCursorChange;
 

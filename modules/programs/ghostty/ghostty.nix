@@ -18,10 +18,7 @@
           copy-on-select = "clipboard";
           selection-background = "#0078D7";
           custom-shader-animation = "always";
-          custom-shader = [
-            "${./shaders/cursor.glsl}"
-            "${./shaders/unfocused.glsl}"
-          ];
+          custom-shader = ["${./shaders/cursor.glsl}"];
         };
       };
     };
