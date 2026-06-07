@@ -3,7 +3,7 @@ spawn-sh-at-startup "screencast-monitor"
 
 binds {
     Mod+Return repeat=false { spawn "ghostty"; }
-    Mod+E repeat=false { spawn-sh "ghostty --window-padding-y=8 --window-padding-x=8 -e yazi"; }
+    Mod+E repeat=false { spawn-sh "ghostty -e yazi"; }
     Mod+B repeat=false { spawn "helium"; }
     Mod+D repeat=false { spawn "equibop"; }
     Mod+Z repeat=false { spawn "zeditor"; }
@@ -57,7 +57,7 @@ prefer-no-csd
 
 layout {
     background-color "transparent"
-    gaps 14
+    gaps 10
 
     preset-column-widths {
         proportion 0.33333
