@@ -8,6 +8,7 @@ const vec3 GLOW_COLOR_OVERRIDE_CURRENT = vec3(0.2, 0.4, 1.0);
 const vec3 GLOW_COLOR_OVERRIDE_PREVIOUS = vec3(0.4, 0.1, 1.0);
 const float GLOW_COLOR_OFFSET_BRIGHTNESS = 0.5;
 const float TIME_DURATION_FACTOR = 1.0;
+const float GLOW_MIN_TRAVEL = 1.5; // min travel in cursor-heights to enable glow (suppresses typing / single-char moves)
 
 // ─────────────────────────────────────────────────────────────────────────────
 //  UTILITIES
@@ -190,28 +191,35 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
         vec2 prevCenter = prevPos + prevSize * vec2(0.5, -0.5);
 
         float dCenter = distance(currCenter, prevCenter);
-        float dSeg = dot(uv - prevCenter, currCenter - prevCenter) * pow(dCenter + EPS, -2);
-        bool nearbyPrev = dCenter < TRAIL_MIN_DISTANCE;
 
-        float tShape = 1.0 - pow(1.0 - clamp(t / TIME_DURATION_FACTOR, 0.0, 1.0), 3);
-        float tVisible = exp(-t / TIME_DURATION_FACTOR * 50.0);
+        // Skip glow for small moves (typing or single-character navigation).
+        // GLOW_MIN_TRAVEL is in units of cursor height, so 1.5 means the cursor
+        // must travel more than 1.5x its own height before the glow fires.
+        // Typical values: 1 char horizontal ~0.5 heights, 1 line vertical ~1 height.
+        if (dCenter > currSize.y * GLOW_MIN_TRAVEL) {
+            float dSeg = dot(uv - prevCenter, currCenter - prevCenter) * pow(dCenter + EPS, -2);
+            bool nearbyPrev = dCenter < TRAIL_MIN_DISTANCE;
 
-        float dTrail = sdTrail(uv, currPos, currSize, prevPos, prevSize, tShape);
-        float dTip = nearbyPrev ? 0.0 : clamp(1.0 - abs(dSeg - 1.0), 0.0, 1.0);
+            float tShape = 1.0 - pow(1.0 - clamp(t / TIME_DURATION_FACTOR, 0.0, 1.0), 3);
+            float tVisible = exp(-t / TIME_DURATION_FACTOR * 50.0);
 
-        vec4 currColor = colorOverride(iCurrentCursorColor, vec4(GLOW_COLOR_OVERRIDE_CURRENT, 1.0));
-        vec4 prevColor = colorOverride(iPreviousCursorColor, vec4(GLOW_COLOR_OVERRIDE_PREVIOUS, 1.0));
-        vec4 glowColor = mix(fragColor, mix(prevColor, currColor, dTip) + GLOW_COLOR_OFFSET_BRIGHTNESS, pow(dTip, 3));
-        glowColor = mix(glowColor, fragColor, pow(smoothstep(0.0, 0.3, dTrail), 0.1));
+            float dTrail = sdTrail(uv, currPos, currSize, prevPos, prevSize, tShape);
+            float dTip = nearbyPrev ? 0.0 : clamp(1.0 - abs(dSeg - 1.0), 0.0, 1.0);
 
-        vec4 trailColor = mix(vec4(1.0), glowColor, pow(smoothstep(0.0, 0.01, dTrail), 0.2));
-        vec4 trail = mix(trailColor, fragColor, pow(smoothstep(0.0, nearbyPrev ? 0.01 : 0.1, dTrail), 0.2));
-        if (!nearbyPrev) {
-            trail = mix(trailColor, trail, pow(smoothstep(0.0, 6.0, dTip), 0.05));
-            trail = mix(trailColor, trail, pow(smoothstep(0.0, 8.0, dTip), 0.005));
+            vec4 currColor = colorOverride(iCurrentCursorColor, vec4(GLOW_COLOR_OVERRIDE_CURRENT, 1.0));
+            vec4 prevColor = colorOverride(iPreviousCursorColor, vec4(GLOW_COLOR_OVERRIDE_PREVIOUS, 1.0));
+            vec4 glowColor = mix(fragColor, mix(prevColor, currColor, dTip) + GLOW_COLOR_OFFSET_BRIGHTNESS, pow(dTip, 3));
+            glowColor = mix(glowColor, fragColor, pow(smoothstep(0.0, 0.3, dTrail), 0.1));
+
+            vec4 trailColor = mix(vec4(1.0), glowColor, pow(smoothstep(0.0, 0.01, dTrail), 0.2));
+            vec4 trail = mix(trailColor, fragColor, pow(smoothstep(0.0, nearbyPrev ? 0.01 : 0.1, dTrail), 0.2));
+            if (!nearbyPrev) {
+                trail = mix(trailColor, trail, pow(smoothstep(0.0, 6.0, dTip), 0.05));
+                trail = mix(trailColor, trail, pow(smoothstep(0.0, 8.0, dTip), 0.005));
+            }
+
+            fragColor = mix(fragColor, trail, tVisible);
         }
-
-        fragColor = mix(fragColor, trail, tVisible);
     }
 
     // ── Shared warp/ripple setup (Y-normalised space) ─────────────────────────
