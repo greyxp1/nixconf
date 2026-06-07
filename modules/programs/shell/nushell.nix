@@ -7,9 +7,24 @@
       programs.carapace.enableNushellIntegration = false;
       programs.nushell = {
         enable = true;
-        extraEnv = ''
-          $env.__NU_NL = false
-        '';
+        environmentVariables."__NU_NL" = false;
+        settings = {
+          show_banner = false;
+          table.mode = "rounded";
+          completions.algorithm = "fuzzy";
+          completions.external.enable = true;
+        };
+
+        shellAliases = {
+          cat = "bat --paging=never";
+          tree = "lstr -g --icons --git-status";
+          rebuild = "nh os switch";
+          update = "nh os switch --update";
+          home = "sudo systemctl restart home-manager-grey.service";
+          clean = "nh clean all";
+          optimise = "nix store optimise -v";
+        };
+
         extraConfig = ''
           # ── Completions ─────────────────────────────────────────────────────
           # Taken verbatim from https://www.nushell.sh/cookbook/external_completers.html
@@ -51,51 +66,28 @@
             if ($result | is-empty) { do $fish_completer $spans } else { $result }
           }
 
-          $env.config = ($env.config | merge {
-            show_banner: false
-            table: { mode: "rounded" }
-            completions: {
-              algorithm: "fuzzy"
-              external: { enable: true, completer: $external_completer }
-            }
-            # ── Blank line between commands ──────────────────────────────────
-            hooks: {
-              pre_execution: [{ code: {|| $env.__NU_NL = true } }]
-              pre_prompt: [{
-                code: {||
-                  if ($env.__NU_NL? | default false) {
-                    $env.__NU_NL = false
-                    let cmd = (
-                      try { history | last | get command | str trim | split row " " | first }
-                      catch { "" }
-                    )
-                    if $cmd not-in ["clear" "ll" ""] { print "" }
-                  }
+          # Direct assignments avoid the shallow-merge clobber issue.
+          # completions.algorithm and .external.enable are handled by settings above.
+          $env.config.completions.external.completer = $external_completer
+
+          # ── Blank line between commands ──────────────────────────────────
+          $env.config.hooks = {
+            pre_execution: [{ code: {|| $env.__NU_NL = true } }]
+            pre_prompt: [{
+              code: {||
+                if ($env.__NU_NL? | default false) {
+                  $env.__NU_NL = false
+                  let cmd = (
+                    try { history | last | get command | str trim | split row " " | first }
+                    catch { "" }
+                  )
+                  if $cmd not-in ["clear" "ll" ""] { print "" }
                 }
-              }]
-            }
-          })
-
-          # ── Aliases and functions ────────────────────────────────────────────
-          alias ll       = eza --long --icons --git --group-directories-first --time-style=relative --header
-          alias cat      = bat --paging=never
-          alias rebuild  = nh os switch
-          alias update   = nh os switch --update
-          alias clean    = nh clean all
-          alias optimise = nix store optimise -v
-          alias tree     = lstr -g --icons --git-status
-          alias treell   = lstr -a -s -p --icons
-          alias treei    = lstr interactive -g --icons --git-status
-
-          def clear [] {
-            print -n "\e[3J"
-            ^clear
+              }
+            }]
           }
 
-          def home [] {
-            sudo systemctl restart home-manager-grey.service
-          }
-
+          # ── Functions ────────────────────────────────────────────────────
           def enroll [] {
             let key_file = ($env.HOME | path join ".age/key.txt")
             if not ($key_file | path exists) {
