@@ -33,7 +33,7 @@
         --graphics spice,listen=none,image.compression=off \
         --graphics egl-headless,gl.rendernode=/dev/dri/renderD128
 
-      nohup virt-manager --connect qemu:///system --show-domain-console "$1" >/dev/null 2>&1 &
+      systemd-run --user --quiet --collect virt-manager --connect qemu:///system --show-domain-console "$1"
       kill $PPID
     '')
   ];
