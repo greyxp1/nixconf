@@ -9,10 +9,14 @@
   in {
     home-manager.sharedModules = [
       {
-        home.packages = [oniri];
-        wayland.windowManager.niri.settings.spawn-sh-at-startup = [
-          {_args = ["oniri --tiling-layout --edges-maximizing"];}
-        ];
+        systemd.user.services.oniri = {
+          Unit.Description = "oniri tiling layout helper";
+          Unit.After = ["graphical-session.target"];
+          Unit.PartOf = ["graphical-session.target"];
+          Service.ExecStart = "${oniri}/bin/oniri --tiling-layout --edges-maximizing";
+          Service.Restart = "on-failure";
+          Install.WantedBy = ["graphical-session.target"];
+        };
       }
     ];
   };

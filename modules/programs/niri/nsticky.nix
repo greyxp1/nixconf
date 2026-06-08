@@ -1,13 +1,14 @@
 {inputs, ...}: {
-  flake.nixosModules.nsticky = {pkgs, ...}: {
+  flake.nixosModules.nsticky = {pkgs, ...}: let
+    nsticky = inputs.nsticky.packages.${pkgs.stdenv.hostPlatform.system}.nsticky;
+  in {
     home-manager.sharedModules = [
       {
         home.packages = [
-          inputs.nsticky.packages.${pkgs.stdenv.hostPlatform.system}.nsticky
-
+          nsticky
           (pkgs.writeScriptBin "nsticky-stage-toggle" ''
             #!${pkgs.dash}/bin/dash
-            STATE="/tmp/nsticky-staged"
+            STATE=/tmp/nsticky-staged
             if [ -f "$STATE" ]; then
               nsticky stage remove-all && rm "$STATE"
             else
@@ -26,16 +27,20 @@
           title = "^VC[^|]*$"
         '';
 
-        wayland.windowManager.niri.settings = {
-          spawn-at-startup = [
-            {_args = ["nsticky"];}
-          ];
-          binds = let
-            bind = action: {_props.repeat = false;} // action;
-          in {
-            "Mod+G" = bind {spawn-sh = "nsticky sticky toggle-active";};
-            "Mod+Shift+G" = bind {spawn-sh = "nsticky-stage-toggle";};
-          };
+        systemd.user.services.nsticky = {
+          Unit.Description = "nsticky sticky window manager";
+          Unit.After = ["graphical-session.target"];
+          Unit.PartOf = ["graphical-session.target"];
+          Service.ExecStart = "${nsticky}/bin/nsticky";
+          Service.Restart = "on-failure";
+          Install.WantedBy = ["graphical-session.target"];
+        };
+
+        wayland.windowManager.niri.settings.binds = let
+          bind = action: {_props.repeat = false;} // action;
+        in {
+          "Mod+G" = bind {spawn-sh = "nsticky sticky toggle-active";};
+          "Mod+Shift+G" = bind {spawn = "nsticky-stage-toggle";};
         };
       }
     ];
