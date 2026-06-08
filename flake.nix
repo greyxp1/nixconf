@@ -15,8 +15,8 @@
     ragenix.url = "github:yaxitech/ragenix";
     ragenix.inputs.nixpkgs.follows = "nixpkgs";
     catppuccin.url = "github:catppuccin/nix";
-    niri.url = "github:sodiboo/niri-flake";
-    niri.inputs.nixpkgs.follows = "nixpkgs";
+    niri-nix.url = "git+https://codeberg.org/BANanaD3V/niri-nix";
+    niri-nix.inputs.nixpkgs.follows = "nixpkgs";
     niri-autoselect-portal.url = "git+https://codeberg.org/debugloop/niri-autoselect-portal.git";
     nsticky.url = "github:lonerOrz/nsticky";
     nsticky.inputs.nixpkgs.follows = "nixpkgs";
