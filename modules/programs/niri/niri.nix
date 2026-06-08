@@ -1,11 +1,5 @@
 {inputs, ...}: {
   flake.nixosModules.niri = {pkgs, ...}: let
-    oniri = pkgs.rustPlatform.buildRustPackage {
-      pname = "oniri";
-      version = "0-unstable";
-      src = inputs.oniri;
-      cargoHash = "sha256-50zEsbDP1DlhHr1iAubpDrzLs8FaLOiMuE/k3eE6jQw=";
-    };
     bind = action: {_props.repeat = false;} // action;
   in {
     imports = [
@@ -25,7 +19,6 @@
       {
         home.packages = with pkgs; [
           xwayland-satellite
-          oniri
           inputs.nsticky.packages.${stdenv.hostPlatform.system}.nsticky
 
           (writeScriptBin "screencast-monitor" ''
@@ -94,7 +87,6 @@
           };
 
           spawn-sh-at-startup = [
-            {_args = ["oniri --tiling-layout --edges-maximizing"];}
             {_args = ["screencast-monitor"];}
           ];
 
