@@ -10,28 +10,14 @@
     systemd.network.wait-online.enable = false;
     security.polkit.enable = true;
     security.sudo.wheelNeedsPassword = false;
+    services.flatpak.enable = true;
+    nix.settings.trusted-users = ["root" "@wheel"];
+    nix.settings.experimental-features = ["nix-command" "flakes"];
     users.users.root.initialHashedPassword = "";
     users.users.grey = {
       isNormalUser = true;
       extraGroups = ["networkmanager" "wheel" "input" "seat"];
       initialPassword = "123";
-    };
-
-    nix.settings = {
-      trusted-users = ["root" "@wheel"];
-      experimental-features = ["nix-command" "flakes"];
-    };
-
-    services = {
-      flatpak.enable = true;
-      dbus.enable = true;
-      greetd = {
-        enable = true;
-        settings.default_session = {
-          command = "niri-session";
-          user = "grey";
-        };
-      };
     };
 
     hardware = {
