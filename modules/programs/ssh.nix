@@ -7,6 +7,7 @@
     services.openssh.enable = true;
     services.openssh.openFirewall = false;
     home-manager.users.grey = {...}: {
+      services.ssh-agent.enable = true;
       programs.ssh = {
         enable = true;
         enableDefaultConfig = false;
