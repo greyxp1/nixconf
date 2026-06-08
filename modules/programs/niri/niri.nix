@@ -4,11 +4,15 @@
   in {
     imports = [inputs.niri-nix.nixosModules.default];
     nixpkgs.overlays = [inputs.niri-nix.overlays.niri-nix];
-    programs.niri.enable = true;
-    programs.niri.package = pkgs.niri-unstable;
     services.greetd.enable = true;
-    services.greetd.settings.default_session.command = "niri-session";
+    services.greetd.settings.default_session.command = "uwsm start niri-uwsm.desktop";
     services.greetd.settings.default_session.user = "grey";
+    programs.niri = {
+      enable = true;
+      package = pkgs.niri-unstable;
+      withUWSM = true;
+    };
+
     home-manager.sharedModules = [
       inputs.niri-nix.homeModules.default
       {
@@ -21,7 +25,7 @@
           prefer-no-csd = {};
           cursor.hide-after-inactive-ms = 3000;
           cursor.hide-when-typing = {};
-          #debug.honor-xdg-activation-with-invalid-serial = {};
+          debug.honor-xdg-activation-with-invalid-serial = {};
           overview.workspace-shadow.off = {};
           hotkey-overlay.skip-at-startup = {};
           gestures.hot-corners.off = {};
