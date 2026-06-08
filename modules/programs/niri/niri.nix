@@ -2,35 +2,21 @@
   flake.nixosModules.niri = {pkgs, ...}: let
     bind = action: {_props.repeat = false;} // action;
   in {
-    imports = [
-      inputs.niri-nix.nixosModules.default
-      inputs.niri-autoselect-portal.nixosModules.default
-    ];
-
+    imports = [inputs.niri-nix.nixosModules.default];
     nixpkgs.overlays = [inputs.niri-nix.overlays.niri-nix];
     programs.niri.enable = true;
     programs.niri.package = pkgs.niri-unstable;
     services.greetd.enable = true;
     services.greetd.settings.default_session.command = "niri-session";
     services.greetd.settings.default_session.user = "grey";
-    services.niri-autoselect-portal.enable = true;
     home-manager.sharedModules = [
       inputs.niri-nix.homeModules.default
       {
-        home.packages = with pkgs; [
-          xwayland-satellite
-
-          (writeScriptBin "screencast-monitor" ''
-            #!${pkgs.dash}/bin/dash
-            dbus-monitor --session "type='method_call',interface='org.freedesktop.portal.ScreenCast',member='Start'" \
-            | grep --line-buffered "method call" \
-            | while read -r _; do niri msg action set-dynamic-cast-monitor; done
-
-          '')
-        ];
-
+        home.packages = [pkgs.xwayland-satellite];
         wayland.windowManager.niri.enable = true;
         wayland.windowManager.niri.settings = {
+          spawn-at-startup = map (cmd: {_args = [cmd];}) ["helium" "zeditor" "equibop"];
+          workspace = map (ws: {_args = [ws];}) ["browser" "default" "chat" "stage"];
           screenshot-path = "~/Pictures/Screenshots/%Y-%m-%d %H-%M-%S.png";
           prefer-no-csd = {};
           cursor.hide-after-inactive-ms = 3000;
@@ -66,12 +52,6 @@
             focus-ring.width = 3;
           };
 
-          spawn-sh-at-startup = [
-            {_args = ["screencast-monitor"];}
-          ];
-
-          spawn-at-startup = map (cmd: {_args = [cmd];}) ["helium" "zeditor" "equibop"];
-          workspace = map (ws: {_args = [ws];}) ["browser" "default" "chat" "stage"];
           output = [
             {
               _args = ["DP-2"];
