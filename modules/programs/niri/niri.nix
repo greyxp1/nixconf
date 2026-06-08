@@ -19,35 +19,15 @@
       {
         home.packages = with pkgs; [
           xwayland-satellite
-          inputs.nsticky.packages.${stdenv.hostPlatform.system}.nsticky
 
           (writeScriptBin "screencast-monitor" ''
             #!${pkgs.dash}/bin/dash
             dbus-monitor --session "type='method_call',interface='org.freedesktop.portal.ScreenCast',member='Start'" \
             | grep --line-buffered "method call" \
             | while read -r _; do niri msg action set-dynamic-cast-monitor; done
-          '')
 
-          (writeScriptBin "nsticky-stage-toggle" ''
-            #!${pkgs.dash}/bin/dash
-            STATE="/tmp/nsticky-staged"
-            if [ -f "$STATE" ]; then
-              nsticky stage remove-all && rm "$STATE"
-            else
-              nsticky stage add-all && touch "$STATE"
-            fi
           '')
         ];
-
-        xdg.configFile."nsticky/config.toml".text = ''
-          [sticky.pip]
-          title = "^Picture in picture$"
-          [sticky.chrome-pip]
-          app_id = "^chrome-ldgfbffkinooeloadekpmfoklnobpien-Default$"
-          [sticky.discord-vc]
-          app_id = "^discord$"
-          title = "^VC[^|]*$"
-        '';
 
         wayland.windowManager.niri.enable = true;
         wayland.windowManager.niri.settings = {
@@ -90,7 +70,7 @@
             {_args = ["screencast-monitor"];}
           ];
 
-          spawn-at-startup = map (cmd: {_args = [cmd];}) ["helium" "zeditor" "equibop" "nsticky"];
+          spawn-at-startup = map (cmd: {_args = [cmd];}) ["helium" "zeditor" "equibop"];
           workspace = map (ws: {_args = [ws];}) ["browser" "default" "chat" "stage"];
           output = [
             {
@@ -122,10 +102,6 @@
             "XF86AudioRaiseVolume" = bind {spawn-sh = "noctalia msg volume-up";};
             "XF86AudioLowerVolume" = bind {spawn-sh = "noctalia msg volume-down";};
             "XF86AudioMute" = bind {spawn-sh = "noctalia msg media toggle";};
-
-            # Nsticky
-            "Mod+G" = bind {spawn-sh = "nsticky sticky toggle-active";};
-            "Mod+Shift+G" = bind {spawn-sh = "nsticky-stage-toggle";};
 
             # Window management
             "Mod+Q" = bind {close-window = {};};
