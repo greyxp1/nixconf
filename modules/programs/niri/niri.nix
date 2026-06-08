@@ -6,6 +6,7 @@
       src = inputs.oniri;
       cargoHash = "sha256-50zEsbDP1DlhHr1iAubpDrzLs8FaLOiMuE/k3eE6jQw=";
     };
+    bind = action: {_props.repeat = false;} // action;
   in {
     imports = [
       inputs.niri-nix.nixosModules.default
@@ -22,6 +23,39 @@
     home-manager.sharedModules = [
       inputs.niri-nix.homeModules.default
       {
+        home.packages = with pkgs; [
+          xwayland-satellite
+          oniri
+          inputs.nsticky.packages.${stdenv.hostPlatform.system}.nsticky
+
+          (writeScriptBin "screencast-monitor" ''
+            #!${pkgs.dash}/bin/dash
+            dbus-monitor --session "type='method_call',interface='org.freedesktop.portal.ScreenCast',member='Start'" \
+            | grep --line-buffered "method call" \
+            | while read -r _; do niri msg action set-dynamic-cast-monitor; done
+          '')
+
+          (writeScriptBin "nsticky-stage-toggle" ''
+            #!${pkgs.dash}/bin/dash
+            STATE="/tmp/nsticky-staged"
+            if [ -f "$STATE" ]; then
+              nsticky stage remove-all && rm "$STATE"
+            else
+              nsticky stage add-all && touch "$STATE"
+            fi
+          '')
+        ];
+
+        xdg.configFile."nsticky/config.toml".text = ''
+          [sticky.pip]
+          title = "^Picture in picture$"
+          [sticky.chrome-pip]
+          app_id = "^chrome-ldgfbffkinooeloadekpmfoklnobpien-Default$"
+          [sticky.discord-vc]
+          app_id = "^discord$"
+          title = "^VC[^|]*$"
+        '';
+
         wayland.windowManager.niri.enable = true;
         wayland.windowManager.niri.settings = {
           screenshot-path = "~/Pictures/Screenshots/%Y-%m-%d %H-%M-%S.png";
@@ -64,20 +98,8 @@
             {_args = ["screencast-monitor"];}
           ];
 
-          spawn-at-startup = [
-            {_args = ["helium"];}
-            {_args = ["zeditor"];}
-            {_args = ["equibop"];}
-            {_args = ["nsticky"];}
-          ];
-
-          workspace = [
-            {_args = ["browser"];}
-            {_args = ["default"];}
-            {_args = ["chat"];}
-            {_args = ["stage"];}
-          ];
-
+          spawn-at-startup = map (cmd: {_args = [cmd];}) ["helium" "zeditor" "equibop" "nsticky"];
+          workspace = map (ws: {_args = [ws];}) ["browser" "default" "chat" "stage"];
           output = [
             {
               _args = ["DP-2"];
@@ -87,169 +109,60 @@
 
           binds = {
             # Apps
-            "Mod+Return" = {
-              _props.repeat = false;
-              spawn = "ghostty";
-            };
-            "Mod+E" = {
-              _props.repeat = false;
-              spawn-sh = "ghostty -e yazi";
-            };
-            "Mod+B" = {
-              _props.repeat = false;
-              spawn = "helium";
-            };
-            "Mod+D" = {
-              _props.repeat = false;
-              spawn = "equibop";
-            };
-            "Mod+Z" = {
-              _props.repeat = false;
-              spawn = "zeditor";
-            };
+            "Mod+Return" = bind {spawn = "ghostty";};
+            "Mod+E" = bind {spawn-sh = "ghostty -e yazi";};
+            "Mod+B" = bind {spawn = "helium";};
+            "Mod+D" = bind {spawn = "equibop";};
+            "Mod+Z" = bind {spawn = "zeditor";};
 
             # Noctalia panels
-            "Mod+Escape" = {
-              _props.repeat = false;
-              spawn-sh = "noctalia msg panel-toggle session";
-            };
-            "Mod+C" = {
-              _props.repeat = false;
-              spawn-sh = "noctalia msg panel-toggle control-center";
-            };
-            "Mod+S" = {
-              _props.repeat = false;
-              spawn-sh = "noctalia msg panel-toggle launcher";
-            };
-            "Mod+V" = {
-              _props.repeat = false;
-              spawn-sh = "noctalia msg panel-toggle clipboard";
-            };
-            "Mod+Print" = {
-              _props.repeat = false;
-              spawn-sh = "noctalia msg scripted-widget screen_recorder focused replay-save";
-            };
+            "Mod+Escape" = bind {spawn-sh = "noctalia msg panel-toggle session";};
+            "Mod+C" = bind {spawn-sh = "noctalia msg panel-toggle control-center";};
+            "Mod+S" = bind {spawn-sh = "noctalia msg panel-toggle launcher";};
+            "Mod+V" = bind {spawn-sh = "noctalia msg panel-toggle clipboard";};
+            "Mod+Print" = bind {spawn-sh = "noctalia msg scripted-widget screen_recorder focused replay-save";};
 
             # Screencast
-            "Mod+Shift+C" = {
-              _props.repeat = false;
-              set-dynamic-cast-window = {};
-            };
-            "Mod+Ctrl+C" = {
-              _props.repeat = false;
-              set-dynamic-cast-monitor = {};
-            };
+            "Mod+Shift+C" = bind {set-dynamic-cast-window = {};};
+            "Mod+Ctrl+C" = bind {set-dynamic-cast-monitor = {};};
 
             # Audio (media keys)
-            "XF86AudioRaiseVolume" = {
-              _props.repeat = false;
-              spawn-sh = "noctalia msg volume-up";
-            };
-            "XF86AudioLowerVolume" = {
-              _props.repeat = false;
-              spawn-sh = "noctalia msg volume-down";
-            };
-            "XF86AudioMute" = {
-              _props.repeat = false;
-              spawn-sh = "noctalia msg media toggle";
-            };
+            "XF86AudioRaiseVolume" = bind {spawn-sh = "noctalia msg volume-up";};
+            "XF86AudioLowerVolume" = bind {spawn-sh = "noctalia msg volume-down";};
+            "XF86AudioMute" = bind {spawn-sh = "noctalia msg media toggle";};
 
             # Nsticky
-            "Mod+G" = {
-              _props.repeat = false;
-              spawn-sh = "nsticky sticky toggle-active";
-            };
-            "Mod+Shift+G" = {
-              _props.repeat = false;
-              spawn-sh = "nsticky-stage-toggle";
-            };
+            "Mod+G" = bind {spawn-sh = "nsticky sticky toggle-active";};
+            "Mod+Shift+G" = bind {spawn-sh = "nsticky-stage-toggle";};
 
             # Window management
-            "Mod+Q" = {
-              _props.repeat = false;
-              close-window = {};
-            };
-            "Mod+F" = {
-              _props.repeat = false;
-              maximize-window-to-edges = {};
-            };
-            "Mod+Shift+F" = {
-              _props.repeat = false;
-              toggle-window-rule-opacity = {};
-            };
-            "Mod+T" = {
-              _props.repeat = false;
-              toggle-window-floating = {};
-            };
-            "Mod+R" = {
-              _props.repeat = false;
-              switch-preset-column-width = {};
-            };
-            "Mod+Tab" = {
-              _props.repeat = false;
-              toggle-overview = {};
-            };
-            "Print" = {
-              _props.repeat = false;
-              screenshot = {};
-            };
+            "Mod+Q" = bind {close-window = {};};
+            "Mod+F" = bind {maximize-window-to-edges = {};};
+            "Mod+Shift+F" = bind {toggle-window-rule-opacity = {};};
+            "Mod+T" = bind {toggle-window-floating = {};};
+            "Mod+R" = bind {switch-preset-column-width = {};};
+            "Mod+Tab" = bind {toggle-overview = {};};
+            "Print" = bind {screenshot = {};};
 
             # Focus movement
-            "Mod+H" = {
-              _props.repeat = false;
-              focus-column-left = {};
-            };
-            "Mod+L" = {
-              _props.repeat = false;
-              focus-column-right = {};
-            };
-            "Mod+J" = {
-              _props.repeat = false;
-              focus-workspace-down = {};
-            };
-            "Mod+K" = {
-              _props.repeat = false;
-              focus-workspace-up = {};
-            };
+            "Mod+H" = bind {focus-column-left = {};};
+            "Mod+L" = bind {focus-column-right = {};};
+            "Mod+J" = bind {focus-workspace-down = {};};
+            "Mod+K" = bind {focus-workspace-up = {};};
 
             # Window/column movement
-            "Mod+Shift+H" = {
-              _props.repeat = false;
-              move-column-left = {};
-            };
-            "Mod+Shift+L" = {
-              _props.repeat = false;
-              move-column-right = {};
-            };
-            "Mod+Shift+J" = {
-              _props.repeat = false;
-              move-column-to-workspace-down = {};
-            };
-            "Mod+Shift+K" = {
-              _props.repeat = false;
-              move-column-to-workspace-up = {};
-            };
+            "Mod+Shift+H" = bind {move-column-left = {};};
+            "Mod+Shift+L" = bind {move-column-right = {};};
+            "Mod+Shift+J" = bind {move-column-to-workspace-down = {};};
+            "Mod+Shift+K" = bind {move-column-to-workspace-up = {};};
 
             # Scroll binds
-            "Mod+WheelScrollUp" = {
-              _props.repeat = false;
-              focus-workspace-up = {};
-            };
-            "Mod+WheelScrollDown" = {
-              _props.repeat = false;
-              focus-workspace-down = {};
-            };
-            "Mod+Shift+WheelScrollUp" = {
-              _props.repeat = false;
-              focus-column-left = {};
-            };
-            "Mod+Shift+WheelScrollDown" = {
-              _props.repeat = false;
-              focus-column-right = {};
-            };
+            "Mod+WheelScrollUp" = bind {focus-workspace-up = {};};
+            "Mod+WheelScrollDown" = bind {focus-workspace-down = {};};
+            "Mod+Shift+WheelScrollUp" = bind {focus-column-left = {};};
+            "Mod+Shift+WheelScrollDown" = bind {focus-column-right = {};};
           };
 
-          # Window rules
           window-rule = [
             # Global: rounded, blurred, slightly transparent
             {
@@ -260,13 +173,11 @@
               background-effect.blur = true;
               background-effect.xray = true;
             }
-
             # Floating windows: no xray bleed-through
             {
               match._props."is-floating" = true;
               background-effect.xray = false;
             }
-
             # Workspace assignments
             {
               match._props."app-id" = "^helium$";
@@ -280,33 +191,31 @@
               match._props."app-id" = "^equibop$";
               open-on-workspace = "chat";
             }
-
-            # Full-opacity exceptions (media players, virt, PiP, Parsec)
+            # Full-opacity exceptions
             {
               match = [
-                {_props."app-id" = ''^ghostty$|^equibop$|^org.qutebrowser.qutebrowser$'';}
+                {_props."app-id" = "^ghostty$|^equibop$|^org.qutebrowser.qutebrowser$";}
                 {
                   _props = {
-                    "app-id" = "^helium$";
-                    title = ''(?i).*(Youtube|Jellyfin-Player).*'';
+                    app-id = "^helium$";
+                    title = "(?i).*(Youtube|Jellyfin-Player).*";
                   };
                 }
                 {
                   _props = {
-                    "app-id" = ''^.virt-manager-wrapped$'';
-                    title = ''(?i).*nixos.*'';
+                    app-id = "^.virt-manager-wrapped$";
+                    title = "(?i).*nixos.*";
                   };
                 }
-                {_props.title = ''^Picture in picture$|^Parsec$'';}
+                {_props.title = "^Picture in picture$|^Parsec$";}
               ];
               opacity = 1.0;
             }
-
-            # Sticky / PiP floating windows (nsticky targets)
+            # Sticky / PiP floating windows
             {
               match = [
                 {_props."app-id" = "^equibop$";}
-                {_props.title = ''^Picture in picture$'';}
+                {_props.title = "^Picture in picture$";}
                 {_props."app-id" = "^chrome-ldgfbffkinooeloadekpmfoklnobpien-Default$";}
               ];
               exclude._props.title = "Equibop$";
@@ -316,14 +225,13 @@
               default-floating-position._props = {
                 x = 10;
                 y = 10;
-                "relative-to" = "top-right";
+                relative-to = "top-right";
               };
             }
-
-            # Ghostty filepicker (yazi, etc.)
+            # Ghostty filepicker
             {
               match._props = {
-                "app-id" = "^com.mitchellh.ghostty$";
+                app-id = "^com.mitchellh.ghostty$";
                 title = "filepicker";
               };
               open-floating = true;
@@ -332,53 +240,17 @@
             }
           ];
 
-          # Layer rules
           layer-rule = [
             {
               match._props.namespace = "^noctalia-wallpaper";
               place-within-backdrop = true;
             }
             {
-              match._props.namespace = ''^noctalia-(bar-[^"]+|notification|dock|panel|osd)$'';
+              match._props.namespace = "^noctalia-(bar-[^\"]+|notification|dock|panel|osd)$";
               background-effect.xray = false;
             }
           ];
         };
-
-        home.packages = with pkgs; [
-          xwayland-satellite
-          oniri
-          inputs.nsticky.packages.${stdenv.hostPlatform.system}.nsticky
-
-          (writeScriptBin "screencast-monitor" ''
-            #!${pkgs.dash}/bin/dash
-            dbus-monitor --session "type='method_call',interface='org.freedesktop.portal.ScreenCast',member='Start'" \
-            | grep --line-buffered "method call" \
-            | while read -r _; do niri msg action set-dynamic-cast-monitor; done
-          '')
-
-          (writeScriptBin "nsticky-stage-toggle" ''
-            #!${pkgs.dash}/bin/dash
-            STATE="/tmp/nsticky-staged"
-            if [ -f "$STATE" ]; then
-              nsticky stage remove-all && rm "$STATE"
-            else
-              nsticky stage add-all && touch "$STATE"
-            fi
-          '')
-        ];
-
-        xdg.configFile."nsticky/config.toml".text = ''
-          [sticky.pip]
-          title = "^Picture in picture$"
-
-          [sticky.chrome-pip]
-          app_id = "^chrome-ldgfbffkinooeloadekpmfoklnobpien-Default$"
-
-          [sticky.discord-vc]
-          app_id = "^discord$"
-          title = "^VC[^|]*$"
-        '';
       }
     ];
   };
