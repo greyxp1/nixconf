@@ -31,6 +31,8 @@
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
     musnix.url = "github:musnix/musnix";
+    mac-style-plymouth.url = "github:SergioRibera/s4rchiso-plymouth-theme";
+    mac-style-plymouth.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs:
