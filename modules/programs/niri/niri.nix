@@ -7,6 +7,7 @@
     services.greetd.enable = true;
     services.greetd.settings.default_session.command = "uwsm start niri-uwsm.desktop";
     services.greetd.settings.default_session.user = "grey";
+    environment.variables.UWSM_SILENT_START = "2";
     programs.niri = {
       enable = true;
       package = pkgs.niri-unstable;
