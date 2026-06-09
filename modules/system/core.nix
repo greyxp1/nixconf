@@ -26,17 +26,6 @@
       graphics.enable32Bit = true;
     };
 
-    boot = {
-      supportedFilesystems = ["btrfs"];
-      initrd.supportedFilesystems = ["btrfs"];
-      initrd.systemd.enable = true;
-      loader = {
-        efi.canTouchEfiVariables = true;
-        systemd-boot.enable = true;
-        timeout = 0;
-      };
-    };
-
     home-manager = {
       useGlobalPkgs = true;
       useUserPackages = true;
