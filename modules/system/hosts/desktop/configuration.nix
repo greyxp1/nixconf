@@ -7,6 +7,7 @@ in {
       ./_audio.nix
       ./_virt.nix
       ./_gaming.nix
+      ./_nvidia.nix
     ];
     hostModule = {
       pkgs,
@@ -59,20 +60,7 @@ in {
         '';
       };
 
-      environment.systemPackages = with pkgs; [nvidia-vaapi-driver sbctl];
-
-      # NVIDIA
-      services = {
-        xserver.videoDrivers = ["nvidia"];
-        acpid.enable = lib.mkForce false;
-      };
-      hardware.nvidia = {
-        open = true;
-        modesetting.enable = true;
-        nvidiaSettings = false;
-        powerManagement.enable = true;
-        powerManagement.finegrained = false;
-      };
+      environment.systemPackages = [pkgs.sbctl];
     };
   };
 }
