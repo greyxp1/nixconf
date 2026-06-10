@@ -147,20 +147,14 @@
             # Full-opacity exceptions
             {
               match = [
-                {_props."app-id" = "^ghostty$|^equibop$|^org.qutebrowser.qutebrowser$";}
-                {
-                  _props = {
-                    app-id = "^helium$";
-                    title = "(?i).*(Youtube|Jellyfin-Player).*";
-                  };
-                }
+                {_props."app-id" = "^ghostty$|^equibop$|^helium$";}
                 {
                   _props = {
                     app-id = "^.virt-manager-wrapped$";
                     title = "(?i).*nixos.*";
                   };
                 }
-                {_props.title = "^Picture in picture$|^Parsec$";}
+                {_props.title = "^Parsec$";}
               ];
               opacity = 1.0;
             }
