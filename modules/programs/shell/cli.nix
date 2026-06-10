@@ -1,39 +1,34 @@
 {inputs, ...}: {
-  flake.nixosModules.shell = {pkgs, ...}: let
-    starshipTheme = fromTOML (builtins.readFile ./starship.toml);
-  in {
+  flake.nixosModules.shell = {pkgs, ...}: {
     programs.nh = {
       enable = true;
       flake = "/home/grey/nixconf";
-      clean = {
-        enable = true;
-        extraArgs = "--keep-since 2d --keep 3";
-      };
+      clean.enable = true;
+      clean.extraArgs = "--keep-since 2d --keep 3";
     };
 
     home-manager = {
       sharedModules = [inputs.nix-index-database.homeModules.nix-index];
       users.grey = {...}: {
-        home.sessionVariables = {
-          MANPAGER = "sh -c 'col -bx | bat -l man -p'";
-          PAGER = "bat -p";
-        };
-
         programs = {
           nix-index.enable = true;
           nix-index-database.comma.enable = true;
-
-          zoxide = {
-            enable = true;
-            enableNushellIntegration = true;
-            options = ["--cmd cd"];
-          };
-
-          starship = {
-            enable = true;
-            enableNushellIntegration = true;
-            settings = starshipTheme;
-          };
+          bat.enable = true;
+          bat.config.style = "numbers,changes,rule,snip";
+          starship.enable = true;
+          starship.settings = fromTOML (builtins.readFile ./starship.toml);
+          zoxide.enable = true;
+          zoxide.options = ["--cmd cd"];
+          eza.enable = true;
+          eza.extraOptions = [
+            "-l"
+            "--icons"
+            "--git"
+            "--group-directories-first"
+            "--time-style=relative"
+            "--no-user"
+            "--no-permissions"
+          ];
 
           bottom.enable = true;
           bottom.settings.flags = {
@@ -44,10 +39,21 @@
           };
         };
 
+        xdg.configFile."tlrc/config.toml".text = ''
+          [output]
+          show_title = false
+          compact = true
+          option_style = "short"
+
+          [style]
+          bullet.color = "blue"
+          example.color = "green"
+          placeholder.color = { hex = "#fab387" } # Peach
+          placeholder.italic = true
+        '';
+
         home.packages = with pkgs; [
           curl
-          lstr
-          bat
           fastfetch
           zip
           unzip
@@ -55,7 +61,8 @@
           codex
           nerd-fonts.jetbrains-mono
           fzf
-          dash
+          tlrc
+          ripgrep
         ];
       };
     };
