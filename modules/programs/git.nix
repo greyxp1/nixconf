@@ -2,9 +2,11 @@
   flake.nixosModules.git = {...}: {
     home-manager.users.grey = {...}: {
       programs.git.enable = true;
+      programs.delta.enable = true;
+      programs.delta.options.side-by-side = true;
+      programs.delta.options.line-numbers = true;
       programs.git.settings = {
         init.defaultBranch = "main";
-        help.autocorrect = 1;
         column.ui = "auto";
         pull.rebase = true;
         branch.autosetuprebase = "always";
@@ -15,11 +17,6 @@
         fetch.all = true;
         user.name = "greyxp1";
         user.email = "greyxp999@gmail.com";
-      };
-      programs.delta.enable = true;
-      programs.delta.options = {
-        side-by-side = true;
-        line-numbers = true;
       };
     };
   };
