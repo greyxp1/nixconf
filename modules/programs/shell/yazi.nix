@@ -2,11 +2,17 @@
   flake.nixosModules.yazi = {pkgs, ...}: let
     starshipTheme = fromTOML (builtins.readFile ./starship.toml);
     starshipCfg = (pkgs.formats.toml {}).generate "starship-yazi.toml" (starshipTheme // {character.disabled = true;});
+    plug = on: run: desc: {
+      inherit on desc;
+      run = "plugin ${run}";
+    };
   in {
     xdg.portal = {
       extraPortals = [pkgs.xdg-desktop-portal-termfilechooser];
       config.niri."org.freedesktop.impl.portal.FileChooser" = ["termfilechooser"];
     };
+
+    environment.etc."mime.types".source = "${pkgs.mailcap}/etc/mime.types";
 
     home-manager.sharedModules = [
       {
@@ -32,59 +38,28 @@
       programs.yazi = {
         enable = true;
         enableFishIntegration = true;
-        shellWrapperName = "yazi";
         extraPackages = with pkgs; [ripdrag trash-cli];
-        settings = {
-          mgr.ratio = [1 2 5];
-          mgr.sort_by = "natural";
-          opener.edit = [
-            {
-              run = ''hx "$@"'';
-              block = true;
-            }
-          ];
-        };
+        settings.mgr.ratio = [1 2 5];
+        settings.mgr.sort_by = "natural";
+        settings.opener.edit = [
+          {
+            run = ''hx "$@"'';
+            block = true;
+          }
+        ];
 
         plugins = with pkgs.yaziPlugins; {
           inherit smart-enter jump-to-char full-border mount toggle-pane compress restore starship;
         };
 
         keymap.mgr.prepend_keymap = [
-          {
-            on = ["l"];
-            run = "plugin smart-enter";
-            desc = "Enter dir or open file";
-          }
-          {
-            on = ["f"];
-            run = "plugin jump-to-char";
-            desc = "Jump to filename starting with char";
-          }
-          {
-            on = ["C"];
-            run = "plugin compress";
-            desc = "Compress selected files";
-          }
-          {
-            on = ["u"];
-            run = "plugin restore";
-            desc = "Restore last deleted file";
-          }
-          {
-            on = ["M"];
-            run = "plugin mount";
-            desc = "Mount manager";
-          }
-          {
-            on = ["<A-p>"];
-            run = "plugin toggle-pane min-preview";
-            desc = "Hide/show preview pane";
-          }
-          {
-            on = ["<A-m>"];
-            run = "plugin toggle-pane max-preview";
-            desc = "Maximize/restore preview pane";
-          }
+          (plug ["l"] "smart-enter" "Enter dir or open file")
+          (plug ["f"] "jump-to-char" "Jump to filename starting with char")
+          (plug ["C"] "compress" "Compress selected files")
+          (plug ["u"] "restore" "Restore last deleted file")
+          (plug ["M"] "mount" "Mount manager")
+          (plug ["<A-p>"] "toggle-pane min-preview" "Hide/show preview pane")
+          (plug ["<A-m>"] "toggle-pane max-preview" "Maximize/restore preview pane")
           {
             on = ["<A-d>"];
             run = ''shell -- ripdrag --and-exit --target --all "$@" | while read -r fp; do cp -nR "$fp" .; done'';
