@@ -1,0 +1,67 @@
+{...}: {
+  flake.nixosModules.shell = {pkgs, ...}: {
+    programs.fish.enable = true;
+    users.users.grey.shell = pkgs.fish;
+    home-manager.users.grey = {...}: {
+      programs.fish = {
+        enable = true;
+        shellAliases = {
+          rebuild = "nh os switch";
+          update = "nh os switch --update";
+          home = "sudo systemctl restart home-manager-grey.service";
+          clean = "nh clean all --optimise";
+          cat = "bat";
+          ls = "eza --no-filesize";
+          ll = "eza --total-size";
+          la = "eza -a --no-filesize";
+          lla = "eza -a --total-size";
+          lt = "eza --tree --no-time --no-filesize";
+          llt = "eza --tree --total-size";
+        };
+        functions = {
+          clear = ''
+            command clear
+            printf '\033[3J'
+            set -g __fish_skip_newline
+          '';
+          enroll = ''
+            if not test -f ~/.age/key.txt
+              echo "Paste your AGE-SECRET-KEY then press Ctrl+D:"
+              mkdir -p ~/.age
+              cat > ~/.age/key.txt
+              chmod 600 ~/.age/key.txt
+            end
+            nh os switch
+            set -l host (hostname)
+            set -l new_key (cut -d' ' -f1-2 /etc/ssh/ssh_host_ed25519_key.pub)
+            set -l secrets ~/nixconf/secrets/secrets.nix
+            if grep -q "# $host" $secrets
+              sed -i "s|\"ssh-ed25519 [^\"]*\" # $host|\"$new_key\" # $host|" $secrets
+            else
+              sed -i "/^\s*\];/i\\    \"$new_key\" # $host" $secrets
+            end
+            cd ~/nixconf
+            git remote set-url origin git@github.com:greyxp1/nixconf.git
+            ragenix --rules secrets/secrets.nix -r -i ~/.age/key.txt
+            git add secrets/
+            git commit -m "chore: enroll $host"
+            git -c core.sshCommand="ssh -o StrictHostKeyChecking=accept-new" push
+          '';
+        };
+        interactiveShellInit = ''
+          set -g fish_greeting
+
+          function _nl
+            set -q __fish_skip_newline && set -e __fish_skip_newline; or echo
+          end
+          function _nl_post --on-event fish_postexec; _nl; end
+          function _nl_enter
+            string length -q -- (commandline); or _nl
+            commandline -f execute
+          end
+          bind \r _nl_enter
+        '';
+      };
+    };
+  };
+}
