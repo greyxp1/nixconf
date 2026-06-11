@@ -22,8 +22,7 @@
     nsticky.inputs.nixpkgs.follows = "nixpkgs";
     oniri.url = "github:Antiz96/oniri";
     oniri.flake = false;
-    noctalia.url = "github:noctalia-dev/noctalia-shell/v5";
-    noctalia.inputs.nixpkgs.follows = "nixpkgs";
+    noctalia.url = "github:noctalia-dev/noctalia";
     helium.url = "github:AlvaroParker/helium-nix";
     helium.inputs.nixpkgs.follows = "nixpkgs";
     nixcord.url = "github:kaylorben/nixcord";
