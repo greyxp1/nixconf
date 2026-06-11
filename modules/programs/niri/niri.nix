@@ -117,12 +117,10 @@
           };
 
           window-rule = [
-            # Global: rounded, blurred, slightly transparent
             {
               geometry-corner-radius = 16;
               clip-to-geometry = true;
               draw-border-with-background = false;
-              opacity = 0.81;
               background-effect.blur = true;
               background-effect.xray = true;
             }
@@ -131,32 +129,28 @@
               match._props."is-floating" = true;
               background-effect.xray = false;
             }
+            # Opacity exceptions
+            {
+              match._props."app-id" = "^steam$|^dev.zed.Zed$";
+              opacity = 0.81;
+            }
             # Workspace assignments
             {
               match._props."app-id" = "^helium$";
               open-on-workspace = "browser";
             }
             {
-              match._props."app-id" = "^dev.zed.Zed$";
+              match._props."app-id" = "^dev.zed.Zed$|^steam$";
+              open-on-workspace = "default";
+            }
+            {
+              match._props."app-id" = "^steam_app_.*$";
+              open-fullscreen = true;
               open-on-workspace = "default";
             }
             {
               match._props."app-id" = "^equibop$";
               open-on-workspace = "chat";
-            }
-            # Full-opacity exceptions
-            {
-              match = [
-                {_props."app-id" = "^ghostty$|^equibop$|^helium$";}
-                {
-                  _props = {
-                    app-id = "^.virt-manager-wrapped$";
-                    title = "(?i).*nixos.*";
-                  };
-                }
-                {_props.title = "^Picture in picture$|^Parsec$";}
-              ];
-              opacity = 1.0;
             }
             # Sticky / PiP floating windows
             {
