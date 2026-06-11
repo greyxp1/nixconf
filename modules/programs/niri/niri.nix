@@ -154,7 +154,7 @@
                     title = "(?i).*nixos.*";
                   };
                 }
-                {_props.title = "^Parsec$";}
+                {_props.title = "^Picture in picture$|^Parsec$";}
               ];
               opacity = 1.0;
             }
