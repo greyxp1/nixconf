@@ -57,13 +57,13 @@
             blockKrisp.enable = true;
             callTimer.enable = true;
             callTimer.format = "human";
-            ClearURLs.enable = true;
+            clearUrls.enable = true;
             consoleJanitor.enable = true;
             copyFileContents.enable = true;
             copyStickerLinks.enable = true;
             crashHandler.enable = true;
             declutter.enable = true;
-            declutter.removeShopAboveDM = true;
+            declutter.removeShopAboveDm = true;
             disableCallIdle.enable = true;
             expressionCloner.enable = true;
             fakeNitro.enable = true;
@@ -74,7 +74,7 @@
             followVoiceUser.enable = true;
             followVoiceUser.onlyWhenInVoice = false;
             fullSearchContext.enable = true;
-            FullVCPFP.enable = true;
+            fullVcpfp.enable = true;
             gifPaste.enable = true;
             guildPickerDumper.enable = true;
             hideMessages.enable = true;
@@ -96,7 +96,7 @@
             noPushToTalk.enable = true;
             noTypingAnimation.enable = true;
             noUnblockToJump.enable = true;
-            OnePingPerDM.enable = true;
+            onePingPerDm.enable = true;
             pinIcon.enable = true;
             platformIndicators.enable = true;
             previewMessage.enable = true;
