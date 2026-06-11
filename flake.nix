@@ -4,6 +4,10 @@
     preservation.url = "github:nix-community/preservation";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     import-tree.url = "github:vic/import-tree";
+    catppuccin.url = "github:catppuccin/nix";
+    noctalia.url = "github:noctalia-dev/noctalia";
+    musnix.url = "github:musnix/musnix";
+
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
     lanzaboote.url = "github:nix-community/lanzaboote/v1.0.0";
@@ -14,7 +18,6 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     ragenix.url = "github:yaxitech/ragenix";
     ragenix.inputs.nixpkgs.follows = "nixpkgs";
-    catppuccin.url = "github:catppuccin/nix";
     niri-nix.url = "git+https://codeberg.org/BANanaD3V/niri-nix";
     niri-nix.inputs.nixpkgs.follows = "nixpkgs";
     niri-autoselect-portal.url = "git+https://codeberg.org/debugloop/niri-autoselect-portal.git";
@@ -22,14 +25,12 @@
     nsticky.inputs.nixpkgs.follows = "nixpkgs";
     oniri.url = "github:Antiz96/oniri";
     oniri.flake = false;
-    noctalia.url = "github:noctalia-dev/noctalia";
     helium.url = "github:AlvaroParker/helium-nix";
     helium.inputs.nixpkgs.follows = "nixpkgs";
     nixcord.url = "github:kaylorben/nixcord";
     nixcord.inputs.nixpkgs.follows = "nixpkgs";
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
-    musnix.url = "github:musnix/musnix";
     mac-style-plymouth.url = "github:SergioRibera/s4rchiso-plymouth-theme";
     mac-style-plymouth.inputs.nixpkgs.follows = "nixpkgs";
   };
