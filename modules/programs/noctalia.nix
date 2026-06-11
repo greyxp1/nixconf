@@ -28,7 +28,7 @@
             enabled = true;
             end = ["tray" "notifications"];
             margin_edge = 0;
-            margin_ends = 600;
+            margin_ends = 550;
             margin_h = 10;
             position = "right";
             radius_bottom_left = 16;
@@ -100,7 +100,6 @@
             recorder.type = "noctalia/screen_recorder:recorder";
             tray.hidden = ["chrome_status_icon_1"];
             workspaces.display = "none";
-            workspaces.hide_when_empty = true;
           };
         };
       };
