@@ -77,7 +77,7 @@
             "Mod+C" = bind {spawn-sh = "noctalia msg panel-toggle control-center";};
             "Mod+S" = bind {spawn-sh = "noctalia msg panel-toggle launcher";};
             "Mod+V" = bind {spawn-sh = "noctalia msg panel-toggle clipboard";};
-            "Mod+Print" = bind {spawn-sh = "noctalia msg scripted-widget screen_recorder focused replay-save";};
+            "Mod+Print" = bind {spawn-sh = "noctalia msg plugin noctalia/screen_recorder:service all replay-save";};
 
             # Screencast
             "Mod+Shift+C" = bind {set-dynamic-cast-window = {};};
