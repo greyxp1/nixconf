@@ -6,7 +6,8 @@ in {
       inputs.lanzaboote.nixosModules.lanzaboote
       ./_audio.nix
       ./_virt.nix
-      ./_gaming.nix
+      ./steam/_steam.nix
+      ./steam/kovaaks/_kovaaks.nix
       ./_nvidia.nix
     ];
     hostModule = {
