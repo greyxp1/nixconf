@@ -60,6 +60,7 @@
             commandline -f execute
           end
           bind \r _nl_enter
+          bind \cl 'clear; commandline -f repaint'
         '';
       };
     };
