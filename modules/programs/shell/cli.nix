@@ -15,6 +15,7 @@
           nix-index-database.comma.enable = true;
           bat.enable = true;
           bat.config.style = "numbers,changes,rule,snip";
+          bat.config.paging = "never";
           starship.enable = true;
           starship.settings = fromTOML (builtins.readFile ./starship.toml);
           zoxide.enable = true;
