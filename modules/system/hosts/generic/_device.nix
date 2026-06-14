@@ -1,1 +1,1 @@
-"/dev/sda"
+"/dev/disk/by-id/ata-WDC_WD10SPZX-22Z10T0_WD-WXT1A48NCYTD"
