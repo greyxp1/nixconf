@@ -94,8 +94,8 @@
             "Print" = bind {screenshot = {};};
 
             # Screencast
-            #"Mod+Shift+C" = bind {set-dynamic-cast-window = {};};
-            #"Mod+Ctrl+C" = bind {set-dynamic-cast-monitor = {};};
+            "Mod+Shift+C" = bind {set-dynamic-cast-window = {};};
+            "Mod+Ctrl+C" = bind {set-dynamic-cast-monitor = {};};
 
             # Focus movement
             "Mod+H" = bind {focus-column-left = {};};
