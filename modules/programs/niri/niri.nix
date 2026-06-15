@@ -20,7 +20,7 @@
         home.packages = [pkgs.xwayland-satellite];
         wayland.windowManager.niri.enable = true;
         wayland.windowManager.niri.settings = {
-          spawn-at-startup = map (cmd: {_args = [cmd];}) ["helium" "zeditor" "equibop"];
+          spawn-at-startup = map (cmd: {_args = [cmd];}) ["helium" "zeditor" "discord"];
           workspace = map (ws: {_args = [ws];}) ["browser" "default" "chat" "stage"];
           screenshot-path = "~/Pictures/Screenshots/%Y-%m-%d %H-%M-%S.png";
           prefer-no-csd = {};
@@ -69,7 +69,7 @@
             "Mod+Return" = bind {spawn = "ghostty";};
             "Mod+E" = bind {spawn-sh = "ghostty -e yazi";};
             "Mod+B" = bind {spawn = "helium";};
-            "Mod+D" = bind {spawn = "equibop";};
+            "Mod+D" = bind {spawn = "discord";};
             "Mod+Z" = bind {spawn = "zeditor";};
 
             # Noctalia panels
@@ -78,10 +78,6 @@
             "Mod+S" = bind {spawn-sh = "noctalia msg panel-toggle launcher";};
             "Mod+V" = bind {spawn-sh = "noctalia msg panel-toggle clipboard";};
             "Mod+Print" = bind {spawn-sh = "noctalia msg plugin noctalia/screen_recorder:service all replay-save";};
-
-            # Screencast
-            "Mod+Shift+C" = bind {set-dynamic-cast-window = {};};
-            "Mod+Ctrl+C" = bind {set-dynamic-cast-monitor = {};};
 
             # Audio (media keys)
             "XF86AudioRaiseVolume" = bind {spawn-sh = "noctalia msg volume-up";};
@@ -96,6 +92,10 @@
             "Mod+R" = bind {switch-preset-column-width = {};};
             "Mod+Tab" = bind {toggle-overview = {};};
             "Print" = bind {screenshot = {};};
+
+            # Screencast
+            #"Mod+Shift+C" = bind {set-dynamic-cast-window = {};};
+            #"Mod+Ctrl+C" = bind {set-dynamic-cast-monitor = {};};
 
             # Focus movement
             "Mod+H" = bind {focus-column-left = {};};
@@ -149,17 +149,17 @@
               open-on-workspace = "default";
             }
             {
-              match._props."app-id" = "^equibop$";
+              match._props."app-id" = "^discord$";
               open-on-workspace = "chat";
             }
             # Sticky / PiP floating windows
             {
               match = [
-                {_props."app-id" = "^equibop$";}
+                {_props."app-id" = "^discord$";}
                 {_props.title = "^Picture in picture$";}
                 {_props."app-id" = "^chrome-ldgfbffkinooeloadekpmfoklnobpien-Default$";}
               ];
-              exclude._props.title = "Equibop$";
+              exclude._props.title = "(?i).*discord$";
               open-floating = true;
               default-column-width.fixed = 1024; # 768 x 432
               default-window-height.fixed = 576;
