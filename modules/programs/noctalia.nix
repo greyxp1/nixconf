@@ -36,9 +36,9 @@
             radius_top_left = 16;
             radius_top_right = 0;
             reserve_space = false;
-            scale = 1.25;
+            scale = 1.4;
             start = ["recorder"];
-            thickness = 38;
+            thickness = 42;
           };
 
           control_center.shortcuts = [
