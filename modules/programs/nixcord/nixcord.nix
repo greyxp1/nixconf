@@ -44,7 +44,7 @@
             copyStickerLinks.enable = true;
             crashHandler.enable = true;
             declutter.enable = true;
-            declutter.removeShopAboveDm = true;
+            declutter.removeShopAboveDms = true;
             disableCallIdle.enable = true;
             expressionCloner.enable = true;
             fakeNitro.enable = true;
