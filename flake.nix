@@ -7,6 +7,7 @@
     catppuccin.url = "github:catppuccin/nix";
     noctalia.url = "github:noctalia-dev/noctalia";
     musnix.url = "github:musnix/musnix";
+    discordPatch.url = "github:LuckShiba/nixpkgs/discord-vk";
 
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
@@ -20,7 +21,7 @@
     ragenix.inputs.nixpkgs.follows = "nixpkgs";
     niri-nix.url = "git+https://codeberg.org/BANanaD3V/niri-nix";
     niri-nix.inputs.nixpkgs.follows = "nixpkgs";
-    niri-autoselect-portal.url = "git+https://codeberg.org/debugloop/niri-autoselect-portal.git";
+    #niri-autoselect-portal.url = "git+https://codeberg.org/debugloop/niri-autoselect-portal.git?ref=main";
     nsticky.url = "github:lonerOrz/nsticky";
     nsticky.inputs.nixpkgs.follows = "nixpkgs";
     oniri.url = "github:Antiz96/oniri";
