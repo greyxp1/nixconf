@@ -8,37 +8,18 @@
 
         discord = {
           enable = true;
-          commandLineArgs = ["--"];
+          #commandLineArgs = ["--"];
           vencord.enable = false;
           equicord.enable = true;
           settings.MINIMIZE_TO_TRAY = false;
           settings.openasar.setup = true;
           settings.openasar.quickstart = true;
-        };
 
-        equibop = {
-          enable = true;
-          state.firstLaunch = false;
-          settings = {
-            middleClickAutoscroll = true;
-            tray = false;
-            hardwareVideoAcceleration = true;
-            enableSplashScreen = false;
-            splashTheming = false;
-            staticTitle = true;
-          };
-
-          package = pkgs.equibop.overrideAttrs (old: {
-            nativeBuildInputs = (old.nativeBuildInputs or []) ++ [pkgs.makeWrapper];
-            postFixup =
-              (old.postFixup or "")
-              + ''
-                wrapProgram $out/bin/equibop \
-                  --add-flags "--force_high_performance_gpu" \
-                  --add-flags "--enable-features=VaapiVideoDecodeLinuxGL,AcceleratedVideoDecodeLinuxGL,AcceleratedVideoDecodeLinuxZeroCopyGL,AcceleratedVideoEncoder,VaapiOnNvidiaGPUs,VaapiIgnoreDriverChecks" \
-                  --add-flags "--ignore-gpu-blocklist"
-              '';
-          });
+          package =
+            (import inputs.discordPatch {
+              system = pkgs.stdenv.hostPlatform.system;
+              config.allowUnfree = true;
+            }).discord;
         };
 
         userPlugins.FakeDeafen = ./plugins/FakeDeafen;
@@ -137,10 +118,10 @@
               questButtonDisplay = "unclaimed";
               resumeInterruptedQuests = true;
               autoCompleteQuestTypes = {
-                #PLAY_ON_DESKTOP = true;
-                #PLAY_ON_XBOX = true;
-                #PLAY_ON_PLAYSTATION = true;
-                #PLAY_ACTIVITY = true;
+                PLAY_ON_DESKTOP = true;
+                PLAY_ON_XBOX = true;
+                PLAY_ON_PLAYSTATION = true;
+                PLAY_ACTIVITY = true;
                 WATCH_VIDEO = true;
                 WATCH_VIDEO_ON_MOBILE = true;
                 ACHIEVEMENT_IN_ACTIVITY = true;
