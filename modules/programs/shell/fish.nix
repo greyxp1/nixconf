@@ -19,11 +19,8 @@
           llt = "eza --tree --total-size";
         };
         functions = {
-          clear = ''
-            command clear
-            printf '\033[3J'
-            set -g __fish_skip_newline
-          '';
+          clear = "command clear; printf '\\033[3J'";
+          fish_user_key_bindings = "bind \\r _nl_enter; bind \\cl 'clear; commandline -f repaint'";
           enroll = ''
             if not test -f ~/.age/key.txt
               echo "Paste your AGE-SECRET-KEY then press Ctrl+D:"
@@ -50,17 +47,11 @@
         };
         interactiveShellInit = ''
           set -g fish_greeting
-
-          function _nl
-            set -q __fish_skip_newline && set -e __fish_skip_newline; or echo
-          end
-          function _nl_post --on-event fish_postexec; _nl; end
+          function _nl --on-event fish_postexec; echo; end
           function _nl_enter
-            string length -q -- (commandline); or _nl
+            string length -q -- (commandline); or echo
             commandline -f execute
           end
-          bind \r _nl_enter
-          bind \cl 'clear; commandline -f repaint'
         '';
       };
     };
