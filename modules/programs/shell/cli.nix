@@ -55,7 +55,6 @@
 
         home.packages = with pkgs; [
           curl
-          fastfetch
           zip
           unzip
           wget
