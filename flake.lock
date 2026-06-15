@@ -623,11 +623,11 @@
         "nixpkgs-nixcord": "nixpkgs-nixcord"
       },
       "locked": {
-        "lastModified": 1781483439,
-        "narHash": "sha256-RdFGCsQ7rLTTZBa/6LtDFy3yYExhFlsdcVtBe7qngYA=",
+        "lastModified": 1781518863,
+        "narHash": "sha256-RIw8FZ4LRhGnLZBNT/QjOVKd2ic58aOLkboGO1get34=",
         "owner": "kaylorben",
         "repo": "nixcord",
-        "rev": "95fb84f4fdaa262ef7a5ca942c21ffa3bc9d00b1",
+        "rev": "70f46ab369179073b821910244667a342b38324d",
         "type": "github"
       },
       "original": {
@@ -777,11 +777,11 @@
         "nixpkgs": "nixpkgs_5"
       },
       "locked": {
-        "lastModified": 1781497885,
-        "narHash": "sha256-+V42FTNuDkbqfqTMvj38lQZ+lPyr5ow2JiUCx05WeEM=",
+        "lastModified": 1781528599,
+        "narHash": "sha256-BruAnH8RihF9H5Fwcma55K+R7aURb6jDyq3+79CJxxU=",
         "owner": "noctalia-dev",
         "repo": "noctalia",
-        "rev": "deaae83724bb5707124f98904e907a670d1ffc0f",
+        "rev": "327cf1e2b9de62fc17a499874aed5e0734f004cb",
         "type": "github"
       },
       "original": {
@@ -815,11 +815,11 @@
     "oniri": {
       "flake": false,
       "locked": {
-        "lastModified": 1780903288,
-        "narHash": "sha256-Oi9jf1U4W1bxyZAHKSvxNGN5j7T7TFBB1m1epirioy8=",
+        "lastModified": 1781505227,
+        "narHash": "sha256-N1bjJDGDB5dsOvI3W3bOFvOQTsxYNtrvuL9bWfocsLU=",
         "owner": "Antiz96",
         "repo": "oniri",
-        "rev": "9226d5d743f2588edff115cfb6210e3882eae86b",
+        "rev": "36b45953012a73e675f336ae8c902f1c420b3e28",
         "type": "github"
       },
       "original": {
