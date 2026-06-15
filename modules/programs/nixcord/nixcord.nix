@@ -8,7 +8,11 @@
 
         discord = {
           enable = true;
-          #commandLineArgs = ["--"];
+          commandLineArgs = [
+            "--enable-features=VaapiVideoDecoder"
+            "--enable-blink-features=MiddleClickAutoscroll"
+            "--ozone-platform-hint=auto"
+          ];
           vencord.enable = false;
           equicord.enable = true;
           settings.MINIMIZE_TO_TRAY = false;
