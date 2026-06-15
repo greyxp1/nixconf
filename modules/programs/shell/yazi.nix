@@ -13,18 +13,6 @@
     };
 
     environment.etc."mime.types".source = "${pkgs.mailcap}/etc/mime.types";
-
-    home-manager.sharedModules = [
-      {
-        xdg.configFile."xdg-desktop-portal-termfilechooser/config".text = ''
-          [filechooser]
-          cmd=${pkgs.xdg-desktop-portal-termfilechooser}/share/xdg-desktop-portal-termfilechooser/yazi-wrapper.sh
-          default_dir=$HOME
-          env=TERMCMD=${pkgs.ghostty}/bin/ghostty --background-opacity=0.6 --class=yazi-filepicker --title=filepicker -e
-        '';
-      }
-    ];
-
     services.udisks2.enable = true;
     security.polkit.extraConfig = ''
       polkit.addRule(function(action, subject) {
@@ -35,6 +23,13 @@
     '';
 
     home-manager.users.grey = {...}: {
+      xdg.configFile."xdg-desktop-portal-termfilechooser/config".text = ''
+        [filechooser]
+        cmd=${pkgs.xdg-desktop-portal-termfilechooser}/share/xdg-desktop-portal-termfilechooser/yazi-wrapper.sh
+        default_dir=$HOME
+        env=TERMCMD=${pkgs.ghostty}/bin/ghostty --background-opacity=0.6 --class=yazi-filepicker --title=filepicker -e
+      '';
+
       programs.yazi = {
         enable = true;
         enableFishIntegration = true;
