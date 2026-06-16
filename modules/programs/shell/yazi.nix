@@ -38,7 +38,7 @@
         settings.mgr.sort_by = "natural";
         settings.opener.edit = [
           {
-            run = ''hx "$@"'';
+            run = ''zeditor "$@"'';
             block = true;
           }
         ];
