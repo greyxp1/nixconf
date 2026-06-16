@@ -52,7 +52,6 @@
           layout = {
             insert-hint.off = {};
             background-color = "transparent";
-            gaps = 10;
             focus-ring.active-color = "#cba6f7";
             focus-ring.width = 3;
           };
@@ -66,8 +65,8 @@
 
           binds = {
             # Apps
-            "Mod+Return" = bind {spawn = "ghostty";};
-            "Mod+E" = bind {spawn-sh = "ghostty -e yazi";};
+            "Mod+Return" = bind {spawn = "kitty";};
+            "Mod+E" = bind {spawn-sh = "kitty -o cursor_trail=0 -e yazi";};
             "Mod+B" = bind {spawn = "helium";};
             "Mod+D" = bind {spawn = "discord";};
             "Mod+Z" = bind {spawn = "zeditor";};
@@ -169,12 +168,9 @@
                 relative-to = "top-right";
               };
             }
-            # Ghostty filepicker
+            # filepicker
             {
-              match._props = {
-                app-id = "^com.mitchellh.ghostty$";
-                title = "filepicker";
-              };
+              match._props = {app-id = "^filepicker$";};
               open-floating = true;
               default-column-width.fixed = 1600;
               default-window-height.fixed = 900;
