@@ -31,6 +31,7 @@
       programs.zed-editor = {
         enable = true;
         userSettings = {
+          helix_mode = true;
           buffer_font_family = "JetBrainsMono Nerd Font";
           session.trust_all_worktrees = true;
           collaboration_panel.button = false;
