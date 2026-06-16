@@ -8,7 +8,10 @@
     noctalia.url = "github:noctalia-dev/noctalia";
     musnix.url = "github:musnix/musnix";
     discordPatch.url = "github:LuckShiba/nixpkgs/discord-vk";
+    yazi.url = "github:sxyazi/yazi";
 
+    nix-yazi-plugins.url = "github:lordkekz/nix-yazi-plugins";
+    nix-yazi-plugins.inputs.nixpkgs.follows = "nixpkgs";
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
     lanzaboote.url = "github:nix-community/lanzaboote/v1.0.0";
