@@ -1,7 +1,5 @@
-{...}: {
+{inputs, ...}: {
   flake.nixosModules.yazi = {pkgs, ...}: let
-    starshipTheme = fromTOML (builtins.readFile ./starship.toml);
-    starshipCfg = (pkgs.formats.toml {}).generate "starship-yazi.toml" (starshipTheme // {character.disabled = true;});
     plug = on: run: desc: {
       inherit on desc;
       run = "plugin ${run}";
@@ -23,17 +21,19 @@
     '';
 
     home-manager.users.grey = {...}: {
+      imports = [inputs.nix-yazi-plugins.legacyPackages.${pkgs.stdenv.hostPlatform.system}.homeManagerModules.default];
       xdg.configFile."xdg-desktop-portal-termfilechooser/config".text = ''
         [filechooser]
         cmd=${pkgs.xdg-desktop-portal-termfilechooser}/share/xdg-desktop-portal-termfilechooser/yazi-wrapper.sh
         default_dir=$HOME
-        env=TERMCMD=${pkgs.ghostty}/bin/ghostty --background-opacity=0.6 --class=yazi-filepicker --title=filepicker -e
+        env=TERMCMD=${pkgs.kitty}/bin/kitty -o background_opacity=0.6 -o cursor_trail=0 --class=filepicker
       '';
 
+      home.packages = with pkgs; [trash-cli];
       programs.yazi = {
         enable = true;
+        package = pkgs.lib.mkForce inputs.yazi.packages.${pkgs.stdenv.hostPlatform.system}.default;
         enableFishIntegration = true;
-        extraPackages = with pkgs; [ripdrag trash-cli];
         settings.mgr.ratio = [1 2 5];
         settings.mgr.sort_by = "natural";
         settings.opener.edit = [
@@ -43,30 +43,41 @@
           }
         ];
 
-        plugins = with pkgs.yaziPlugins; {
-          inherit smart-enter jump-to-char full-border mount toggle-pane compress restore starship;
-        };
-
-        keymap.mgr.prepend_keymap = [
-          (plug ["l"] "smart-enter" "Enter dir or open file")
-          (plug ["f"] "jump-to-char" "Jump to filename starting with char")
-          (plug ["C"] "compress" "Compress selected files")
-          (plug ["u"] "restore" "Restore last deleted file")
-          (plug ["M"] "mount" "Mount manager")
-          (plug ["<A-p>"] "toggle-pane min-preview" "Hide/show preview pane")
-          (plug ["<A-m>"] "toggle-pane max-preview" "Maximize/restore preview pane")
+        settings.plugin.prepend_fetchers = pkgs.lib.mkForce [
           {
-            on = ["<A-d>"];
-            run = ''shell -- ripdrag --and-exit --target --all "$@" | while read -r fp; do cp -nR "$fp" .; done'';
-            desc = "Drag-and-drop (bidirectional)";
+            url = "*";
+            run = "git";
+            group = "git";
+          }
+          {
+            url = "*/";
+            run = "git";
+            group = "git";
           }
         ];
 
-        initLua = ''
-          require("full-border"):setup({ type = ui.Border.ROUNDED })
-          require("smart-enter"):setup({ open_multi = true })
-          require("starship"):setup({ config_file = "${starshipCfg}" })
-        '';
+        yaziPlugins.enable = true;
+        yaziPlugins.plugins = {
+          starship.enable = true;
+          full-border.enable = true;
+          recycle-bin.enable = true;
+          smart-enter.enable = true;
+          jump-to-char.enable = true;
+          git.enable = true;
+          #relative-motions = {
+          #  enable = true;
+          #  show_numbers = "relative_absolute";
+          #  show_motion = true;
+          #};
+        };
+
+        plugins = with pkgs.yaziPlugins; {inherit mount toggle-pane compress;};
+        keymap.mgr.prepend_keymap = [
+          (plug ["C"] "compress" "Compress selected files")
+          (plug ["M"] "mount" "Mount manager")
+          (plug ["<A-p>"] "toggle-pane min-preview" "Hide/show preview pane")
+          (plug ["<A-m>"] "toggle-pane max-preview" "Maximize/restore preview pane")
+        ];
       };
     };
   };
