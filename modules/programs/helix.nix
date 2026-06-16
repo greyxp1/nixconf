@@ -5,11 +5,7 @@
         enable = true;
         settings = {
           theme = lib.mkForce "catppuccin_transparent";
-          editor.cursor-shape = {
-            normal = "underline";
-            insert = "bar";
-            select = "underline";
-          };
+          editor.cursor-shape.normal = "bar";
         };
 
         themes.catppuccin_transparent = {
