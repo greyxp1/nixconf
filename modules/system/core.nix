@@ -39,6 +39,7 @@
           stateVersion = "26.05";
           packages = with pkgs; [
             inputs.helium.packages.${stdenv.hostPlatform.system}.default
+            inputs.waytator.packages.${stdenv.hostPlatform.system}.default
             parsec-bin
           ];
         };
