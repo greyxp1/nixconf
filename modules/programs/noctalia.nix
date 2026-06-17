@@ -29,7 +29,6 @@
             end = ["tray" "notifications"];
             margin_edge = 0;
             margin_ends = 550;
-            margin_h = 10;
             position = "right";
             radius_bottom_left = 16;
             radius_bottom_right = 0;
