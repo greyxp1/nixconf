@@ -8,6 +8,7 @@
     services.greetd.settings.default_session.command = "uwsm start niri-uwsm.desktop";
     services.greetd.settings.default_session.user = "grey";
     environment.variables.UWSM_SILENT_START = "2";
+    xdg.portal.config.niri.default = ["gnome"];
     programs.niri = {
       enable = true;
       package = pkgs.niri-unstable;
