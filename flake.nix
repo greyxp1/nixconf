@@ -9,7 +9,10 @@
     musnix.url = "github:musnix/musnix";
     discordPatch.url = "github:LuckShiba/nixpkgs/discord-vk";
     yazi.url = "github:sxyazi/yazi";
+    nyxexprs.url = "github:notashelf/nyxexprs";
 
+    waytator.url = "github:linusammon/waytator/flake";
+    waytator.inputs.nixpkgs.follows = "nixpkgs";
     nix-yazi-plugins.url = "github:lordkekz/nix-yazi-plugins";
     nix-yazi-plugins.inputs.nixpkgs.follows = "nixpkgs";
     disko.url = "github:nix-community/disko";
