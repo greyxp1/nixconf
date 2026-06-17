@@ -1,5 +1,6 @@
 {inputs, ...}: {
   flake.nixosModules.shell = {pkgs, ...}: {
+    nixpkgs.overlays = [inputs.nyxexprs.overlays.default];
     programs.nh = {
       enable = true;
       flake = "/home/grey/nixconf";
@@ -63,6 +64,9 @@
           fzf
           tlrc
           ripgrep
+          microfetch
+          btop
+          ani-cli
         ];
       };
     };
