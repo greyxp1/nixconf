@@ -25,6 +25,8 @@
           [sticky.discord-vc]
           app_id = "^discord$"
           title = "^VC[^|]*$"
+          [sticky.niri-pin]
+          title = "^Niri-Pin-Surface$"
         '';
 
         systemd.user.services.nsticky = {
