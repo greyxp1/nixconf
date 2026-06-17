@@ -2,33 +2,7 @@
   flake.nixosModules.zed = {...}: {
     programs.nix-ld.enable = true;
     home-manager.users.grey = {pkgs, ...}: {
-      home.packages = with pkgs; [
-        nixd
-        nil
-        alejandra
-        statix
-        deadnix
-      ];
-
-      xdg.configFile."zed/tasks.json".text = builtins.toJSON [
-        {
-          label = "statix check";
-          command = "statix check $ZED_FILE";
-        }
-        {
-          label = "statix fix";
-          command = "statix fix $ZED_FILE";
-        }
-        {
-          label = "deadnix";
-          command = "deadnix $ZED_FILE";
-        }
-        {
-          label = "deadnix fix";
-          command = "deadnix --edit $ZED_FILE";
-        }
-      ];
-
+      home.packages = with pkgs; [nixd nil alejandra];
       programs.zed-editor = {
         enable = true;
         userSettings = {
@@ -48,7 +22,6 @@
           colorize_brackets = true;
           languages.Nix.formatter.external.command = "alejandra";
           languages.Nix.formatter.external.arguments = ["--quiet" "--"];
-
           lsp = {
             nixd.initialization_options.formatting.command = ["alejandra" "--quiet" "--"];
             nixd.initialization_options.nixos.expr =
