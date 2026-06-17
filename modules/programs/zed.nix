@@ -1,5 +1,6 @@
 {...}: {
   flake.nixosModules.zed = {...}: {
+    programs.nix-ld.enable = true;
     home-manager.users.grey = {pkgs, ...}: {
       home.packages = with pkgs; [
         nixd
@@ -31,7 +32,7 @@
       programs.zed-editor = {
         enable = true;
         userSettings = {
-          helix_mode = true;
+          #helix_mode = true;
           buffer_font_family = "JetBrainsMono Nerd Font";
           session.trust_all_worktrees = true;
           collaboration_panel.button = false;
@@ -65,6 +66,7 @@
           "toml"
           "glsl"
           "ini"
+          "lua"
         ];
       };
     };
