@@ -9,7 +9,7 @@
           rebuild = "nh os switch";
           update = "nh os switch --update";
           home = "sudo systemctl restart home-manager-grey.service";
-          clean = "nh clean all --optimise";
+          clean = "nh clean all --optimise --keep-one";
           cat = "bat";
           ls = "eza --no-filesize";
           ll = "eza --total-size";
