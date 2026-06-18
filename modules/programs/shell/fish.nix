@@ -20,7 +20,10 @@
         };
         functions = {
           clear = "command clear; printf '\\033[3J'";
-          fish_user_key_bindings = "bind \\r _nl_enter; bind \\cl 'clear; commandline -f repaint'";
+          fish_user_key_bindings = ''
+            bind \\r _nl_enter; bind \\cl 'clear; commandline -f repaint';
+            bind \\t _fifc; bind -M insert \\t _fifc;
+          '';
           enroll = ''
             if not test -f ~/.age/key.txt
               echo "Paste your AGE-SECRET-KEY then press Ctrl+D:"
@@ -47,12 +50,24 @@
         };
         interactiveShellInit = ''
           set -g fish_greeting
+          set -gx fifc_editor helix
           function _nl --on-event fish_postexec; echo; end
           function _nl_enter
             string length -q -- (commandline); or echo
             commandline -f execute
           end
         '';
+
+        plugins =
+          map (pkg: {
+            name = pkg.pname;
+            src = pkg.src;
+          }) (with pkgs.fishPlugins; [
+            fzf-fish
+            autopair
+            done
+            fifc
+          ]);
       };
     };
   };
