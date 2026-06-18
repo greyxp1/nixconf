@@ -30,8 +30,10 @@
     };
 
     system = {
-      activationScripts.ssh-dir.text = "install -d -m 700 -o grey -g users /home/grey/.ssh";
-      activationScripts.ssh-dir.deps = ["users"];
+      activationScripts.ssh-dir = {
+        text = "install -d -m 700 -o grey -g users /home/grey/.ssh";
+        deps = ["users"];
+      };
     };
 
     services.openssh = {
