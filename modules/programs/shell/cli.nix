@@ -14,30 +14,44 @@
         programs = {
           nix-index.enable = true;
           nix-index-database.comma.enable = true;
-          bat.enable = true;
-          bat.config.style = "numbers,changes,rule,snip";
-          bat.config.paging = "never";
-          starship.enable = true;
-          starship.settings = fromTOML (builtins.readFile ./starship.toml);
-          zoxide.enable = true;
-          zoxide.options = ["--cmd cd"];
-          eza.enable = true;
-          eza.extraOptions = [
-            "-l"
-            "--icons"
-            "--git"
-            "--group-directories-first"
-            "--time-style=relative"
-            "--no-user"
-            "--no-permissions"
-          ];
 
-          bottom.enable = true;
-          bottom.settings.flags = {
-            group_processes = true;
-            process_memory_as_value = true;
-            case_sensitive = false;
-            regex = true;
+          bat = {
+            enable = true;
+            config.style = "numbers,changes,rule,snip";
+            config.paging = "never";
+          };
+
+          starship = {
+            enable = true;
+            settings = fromTOML (builtins.readFile ./starship.toml);
+          };
+
+          zoxide = {
+            enable = true;
+            options = ["--cmd cd"];
+          };
+
+          eza = {
+            enable = true;
+            extraOptions = [
+              "-l"
+              "--icons"
+              "--git"
+              "--group-directories-first"
+              "--time-style=relative"
+              "--no-user"
+              "--no-permissions"
+            ];
+          };
+
+          bottom = {
+            enable = true;
+            settings.flags = {
+              group_processes = true;
+              process_memory_as_value = true;
+              case_sensitive = false;
+              regex = true;
+            };
           };
         };
 
@@ -62,6 +76,8 @@
           codex
           nerd-fonts.jetbrains-mono
           fzf
+          fd
+          jq # needed by done plugin
           tlrc
           ripgrep
           microfetch
