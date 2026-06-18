@@ -8,28 +8,38 @@
 
         discord = {
           enable = true;
-          commandLineArgs = [
-            "--enable-features=VaapiVideoDecoder"
-            "--enable-blink-features=MiddleClickAutoscroll"
-            "--ozone-platform-hint=auto"
-          ];
           vencord.enable = false;
           equicord.enable = true;
-          settings.MINIMIZE_TO_TRAY = false;
-          settings.openasar.setup = true;
-          settings.openasar.quickstart = true;
+          settings = {
+            MINIMIZE_TO_TRAY = false;
+            openasar = {
+              setup = true;
+              quickstart = true;
+            };
+          };
 
           package =
             (import inputs.discordPatch {
               system = pkgs.stdenv.hostPlatform.system;
               config.allowUnfree = true;
             }).discord;
+
+          commandLineArgs = [
+            "--enable-features=VaapiVideoDecoder"
+            "--enable-blink-features=MiddleClickAutoscroll"
+            "--ozone-platform-hint=auto"
+          ];
         };
 
-        userPlugins.FakeDeafen = ./plugins/FakeDeafen;
-        userPlugins.BetterAudioDefaults = ./plugins/BetterAudioDefaults;
-        extraConfig.plugins.BetterAudioDefaults.enable = true;
-        extraConfig.plugins.FakeDeafen.enable = true;
+        userPlugins = {
+          FakeDeafen = ./plugins/FakeDeafen;
+          BetterAudioDefaults = ./plugins/BetterAudioDefaults;
+        };
+
+        extraConfig.plugins = {
+          BetterAudioDefaults.enable = true;
+          FakeDeafen.enable = true;
+        };
 
         config = {
           transparent = true;
@@ -40,15 +50,11 @@
             betterSettings.enable = true;
             betterUploadButton.enable = true;
             blockKrisp.enable = true;
-            callTimer.enable = true;
-            callTimer.format = "human";
             clearUrls.enable = true;
             consoleJanitor.enable = true;
             copyFileContents.enable = true;
             copyStickerLinks.enable = true;
             crashHandler.enable = true;
-            declutter.enable = true;
-            declutter.removeShopAboveDms = true;
             disableCallIdle.enable = true;
             expressionCloner.enable = true;
             fakeNitro.enable = true;
@@ -56,8 +62,6 @@
             fixFileExtensions.enable = true;
             fixImagesQuality.enable = true;
             fixYoutubeEmbeds.enable = true;
-            followVoiceUser.enable = true;
-            followVoiceUser.onlyWhenInVoice = false;
             fullSearchContext.enable = true;
             fullVcpfp.enable = true;
             gifPaste.enable = true;
@@ -69,8 +73,6 @@
             messageClickActions.enable = true;
             micLoopbackTester.enable = true;
             moreUserTags.enable = true;
-            newGuildSettings.enable = true;
-            newGuildSettings.messages = 1;
             newPluginsManager.enable = true;
             noDevtoolsWarning.enable = true;
             noF1.enable = true;
@@ -85,8 +87,6 @@
             pinIcon.enable = true;
             platformIndicators.enable = true;
             previewMessage.enable = true;
-            quoter.enable = true;
-            quoter.watermark = "Made by greyxp1";
             reactErrorDecoder.enable = true;
             relationshipNotifier.enable = true;
             remixRevived.enable = true;
@@ -178,6 +178,31 @@
               enable = true;
               format = "png";
               imgSize = "4096";
+            };
+
+            callTimer = {
+              enable = true;
+              format = "human";
+            };
+
+            declutter = {
+              enable = true;
+              removeShopAboveDms = true;
+            };
+
+            followVoiceUser = {
+              enable = true;
+              onlyWhenInVoice = false;
+            };
+
+            newGuildSettings = {
+              enable = true;
+              messages = 1;
+            };
+
+            quoter = {
+              enable = true;
+              watermark = "Made by greyxp1";
             };
           };
         };

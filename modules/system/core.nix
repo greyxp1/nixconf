@@ -5,25 +5,39 @@
     networking.networkmanager.enable = true;
     nixpkgs.config.allowUnfree = true;
     documentation.nixos.enable = false;
-    system.nixos.label = config.networking.hostName;
-    system.stateVersion = "25.11";
     systemd.network.wait-online.enable = false;
-    security.polkit.enable = true;
-    security.sudo.wheelNeedsPassword = false;
     services.flatpak.enable = true;
-    nix.settings.trusted-users = ["root" "@wheel"];
-    nix.settings.experimental-features = ["nix-command" "flakes"];
-    users.users.root.initialHashedPassword = "";
-    users.users.grey = {
-      isNormalUser = true;
-      extraGroups = ["networkmanager" "wheel" "input" "seat"];
-      initialPassword = "123";
+
+    users.users = {
+      root.initialHashedPassword = "";
+      grey = {
+        isNormalUser = true;
+        extraGroups = ["networkmanager" "wheel" "input" "seat"];
+        initialPassword = "123";
+      };
     };
 
     hardware = {
       enableRedistributableFirmware = true;
-      graphics.enable = true;
-      graphics.enable32Bit = true;
+      graphics = {
+        enable = true;
+        enable32Bit = true;
+      };
+    };
+
+    system = {
+      nixos.label = config.networking.hostName;
+      stateVersion = "26.05";
+    };
+
+    security = {
+      polkit.enable = true;
+      sudo.wheelNeedsPassword = false;
+    };
+
+    nix.settings = {
+      trusted-users = ["root" "@wheel"];
+      experimental-features = ["nix-command" "flakes"];
     };
 
     home-manager = {

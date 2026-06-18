@@ -10,12 +10,16 @@
     home-manager.sharedModules = [
       {
         systemd.user.services.oniri = {
-          Unit.Description = "oniri tiling layout helper";
-          Unit.After = ["graphical-session.target"];
-          Unit.PartOf = ["graphical-session.target"];
-          Service.ExecStart = "${oniri}/bin/oniri --tiling-layout --edges-maximizing";
-          Service.Restart = "on-failure";
           Install.WantedBy = ["graphical-session.target"];
+          Unit = {
+            Description = "oniri tiling layout helper";
+            After = ["graphical-session.target"];
+            PartOf = ["graphical-session.target"];
+          };
+          Service = {
+            ExecStart = "${oniri}/bin/oniri --tiling-layout --edges-maximizing";
+            Restart = "on-failure";
+          };
         };
       }
     ];

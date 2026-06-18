@@ -3,8 +3,6 @@
     home-manager.users.grey = {...}: {
       programs.kitty = {
         enable = true;
-        font.name = "JetBrainsMono Nerd Font";
-        font.size = 14;
         settings = {
           cursor_blink_interval = 0;
           cursor_shape_unfocused = "unchanged";
@@ -26,6 +24,11 @@
             "combine : launch "
             + "--stdin-source=@screen_scrollback "
             + "--type=clipboard : launch --type=overlay true";
+        };
+
+        font = {
+          name = "JetBrainsMono Nerd Font";
+          size = 14;
         };
       };
     };

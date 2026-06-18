@@ -22,12 +22,16 @@
 
         gtk = {
           enable = true;
-          iconTheme.name = "Adwaita";
-          iconTheme.package = pkgs.adwaita-icon-theme;
-          theme.name = "catppuccin-mocha-mauve-standard";
-          theme.package = pkgs.catppuccin-gtk.override {
-            accents = ["mauve"];
-            variant = "mocha";
+          iconTheme = {
+            name = "Adwaita";
+            package = pkgs.adwaita-icon-theme;
+          };
+          theme = {
+            name = "catppuccin-mocha-mauve-standard";
+            package = pkgs.catppuccin-gtk.override {
+              accents = ["mauve"];
+              variant = "mocha";
+            };
           };
         };
       };

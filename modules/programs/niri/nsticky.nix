@@ -30,12 +30,17 @@
         '';
 
         systemd.user.services.nsticky = {
-          Unit.Description = "nsticky sticky window manager";
-          Unit.After = ["graphical-session.target"];
-          Unit.PartOf = ["graphical-session.target"];
-          Service.ExecStart = "${nsticky}/bin/nsticky";
-          Service.Restart = "on-failure";
           Install.WantedBy = ["graphical-session.target"];
+          Unit = {
+            Description = "nsticky sticky window manager";
+            After = ["graphical-session.target"];
+            PartOf = ["graphical-session.target"];
+          };
+
+          Service = {
+            ExecStart = "${nsticky}/bin/nsticky";
+            Restart = "on-failure";
+          };
         };
 
         wayland.windowManager.niri.settings.binds = let

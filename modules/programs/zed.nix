@@ -13,20 +13,34 @@
           window_decorations = "server";
           project_panel.dock = "left";
           git_panel.dock = "left";
-          telemetry.diagnostics = false;
-          telemetry.metrics = false;
-          agent.sidebar_side = "right";
-          agent.dock = "right";
-          inlay_hints.enabled = true;
-          inlay_hints.show_other_hints = false;
+
+          telemetry = {
+            diagnostics = false;
+            metrics = false;
+          };
+          agent = {
+            sidebar_side = "right";
+            dock = "right";
+          };
+
+          inlay_hints = {
+            enabled = true;
+            show_other_hints = false;
+          };
+
           colorize_brackets = true;
-          languages.Nix.formatter.external.command = "alejandra";
-          languages.Nix.formatter.external.arguments = ["--quiet" "--"];
+          languages = {
+            Nix.formatter.external.command = "alejandra";
+            Nix.formatter.external.arguments = ["--quiet" "--"];
+          };
+
           lsp = {
-            nixd.initialization_options.formatting.command = ["alejandra" "--quiet" "--"];
-            nixd.initialization_options.nixos.expr =
-              "(builtins.getFlake \"path:/home/grey/nixconf\")"
-              + ".nixosConfigurations.desktop.options";
+            nixd = {
+              initialization_options.formatting.command = ["alejandra" "--quiet" "--"];
+              initialization_options.nixos.expr =
+                "(builtins.getFlake \"path:/home/grey/nixconf\")"
+                + ".nixosConfigurations.desktop.options";
+            };
             nil.initialization_options.formatting.command = ["alejandra" "--quiet" "--"];
           };
         };

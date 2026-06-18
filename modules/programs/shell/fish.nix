@@ -18,6 +18,7 @@
           lt = "eza --tree --no-time --no-filesize";
           llt = "eza --tree --total-size";
         };
+
         functions = {
           clear = "command clear; printf '\\033[3J'";
           fish_user_key_bindings = ''
@@ -48,6 +49,7 @@
             git -c core.sshCommand="ssh -o StrictHostKeyChecking=accept-new" push
           '';
         };
+
         interactiveShellInit = ''
           set -g fish_greeting
           set -gx fifc_editor helix

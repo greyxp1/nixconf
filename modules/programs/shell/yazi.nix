@@ -34,41 +34,48 @@
         enable = true;
         package = pkgs.lib.mkForce inputs.yazi.packages.${pkgs.stdenv.hostPlatform.system}.default;
         enableFishIntegration = true;
-        settings.mgr.ratio = [1 2 5];
-        settings.mgr.sort_by = "natural";
-        settings.opener.edit = [
-          {
-            run = ''hx "$@"'';
-            block = true;
-          }
-        ];
+        settings = {
+          mgr = {
+            ratio = [1 2 5];
+            sort_by = "natural";
+          };
 
-        settings.plugin.prepend_fetchers = pkgs.lib.mkForce [
-          {
-            url = "*";
-            run = "git";
-            group = "git";
-          }
-          {
-            url = "*/";
-            run = "git";
-            group = "git";
-          }
-        ];
+          opener.edit = [
+            {
+              run = ''hx "$@"'';
+              block = true;
+            }
+          ];
 
-        yaziPlugins.enable = true;
-        yaziPlugins.plugins = {
-          starship.enable = true;
-          full-border.enable = true;
-          recycle-bin.enable = true;
-          smart-enter.enable = true;
-          jump-to-char.enable = true;
-          git.enable = true;
-          #relative-motions = {
-          #  enable = true;
-          #  show_numbers = "relative_absolute";
-          #  show_motion = true;
-          #};
+          plugin.prepend_fetchers = pkgs.lib.mkForce [
+            {
+              url = "*";
+              run = "git";
+              group = "git";
+            }
+            {
+              url = "*/";
+              run = "git";
+              group = "git";
+            }
+          ];
+        };
+
+        yaziPlugins = {
+          enable = true;
+          plugins = {
+            starship.enable = true;
+            full-border.enable = true;
+            recycle-bin.enable = true;
+            smart-enter.enable = true;
+            jump-to-char.enable = true;
+            git.enable = true;
+            #relative-motions = {
+            #  enable = true;
+            #  show_numbers = "relative_absolute";
+            #  show_motion = true;
+            #};
+          };
         };
 
         plugins = with pkgs.yaziPlugins; {inherit mount toggle-pane compress;};

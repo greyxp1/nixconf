@@ -1,13 +1,16 @@
 {...}: {
   flake.nixosModules.performance = {lib, ...}: {
-    zramSwap.enable = true;
-    zramSwap.algorithm = "zstd";
     services.irqbalance.enable = true;
     nix.settings = {
       max-jobs = "auto";
       cores = 0;
       http-connections = 128;
       download-buffer-size = 536870912;
+    };
+
+    zramSwap = {
+      enable = true;
+      algorithm = "zstd";
     };
 
     boot.kernel.sysctl = {
