@@ -17,7 +17,7 @@
     nix-yazi-plugins.inputs.nixpkgs.follows = "nixpkgs";
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
-    lanzaboote.url = "github:nix-community/lanzaboote/v1.0.0";
+    lanzaboote.url = "github:nix-community/lanzaboote/0403b4b7e8b2612657f0053a4c315e6c43eee9e6";
     lanzaboote.inputs.nixpkgs.follows = "nixpkgs";
     flake-parts.url = "github:hercules-ci/flake-parts";
     flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs";
@@ -27,7 +27,6 @@
     ragenix.inputs.nixpkgs.follows = "nixpkgs";
     niri-nix.url = "git+https://codeberg.org/BANanaD3V/niri-nix";
     niri-nix.inputs.nixpkgs.follows = "nixpkgs";
-    #niri-autoselect-portal.url = "git+https://codeberg.org/debugloop/niri-autoselect-portal.git?ref=main";
     nsticky.url = "github:lonerOrz/nsticky";
     nsticky.inputs.nixpkgs.follows = "nixpkgs";
     oniri.url = "github:Antiz96/oniri";
