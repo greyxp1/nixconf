@@ -101,6 +101,8 @@
             unindent.enable = true;
             userVoiceShow.enable = true;
             voiceChannelLog.enable = true;
+            webContextMenus.enable = true;
+            webKeybinds.enable = true;
             webScreenShareFixes.enable = true;
             whoReacted.enable = true;
             whosWatching.enable = true;
