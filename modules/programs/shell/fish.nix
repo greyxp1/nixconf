@@ -6,25 +6,26 @@
       programs.fish = {
         enable = true;
         shellAliases = {
+        };
+
+        shellAbbrs = {
           rebuild = "nh os switch";
           update = "nh os switch --update";
           home = "sudo systemctl restart home-manager-grey.service";
           clean = "nh clean all --optimise --keep-one";
           cat = "bat";
-          ls = "eza --no-filesize";
-          ll = "eza --total-size";
-          la = "eza -a --no-filesize";
-          lla = "eza -a --total-size";
-          lt = "eza --tree --no-time --no-filesize";
-          llt = "eza --tree --total-size";
+
+          ls = "ls --no-filesize";
+          ll = "ll --total-size";
+          la = "la --no-filesize";
+          lla = "la --total-size";
+          lt = "lt --no-time --no-filesize";
+          llt = "lt --total-size";
         };
 
         functions = {
           clear = "command clear; printf '\\033[3J'";
-          fish_user_key_bindings = ''
-            bind \\r _nl_enter; bind \\cl 'clear; commandline -f repaint';
-            bind \\t _fifc; bind -M insert \\t _fifc;
-          '';
+          fish_user_key_bindings = "bind \\r _nl_enter; bind \\cl 'clear; commandline -f repaint'";
           enroll = ''
             if not test -f ~/.age/key.txt
               echo "Paste your AGE-SECRET-KEY then press Ctrl+D:"
