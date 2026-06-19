@@ -99,7 +99,6 @@
 
           widget = {
             recorder.type = "noctalia/screen_recorder:recorder";
-            tray.hidden = ["chrome_status_icon_1"];
             workspaces.display = "none";
           };
         };
