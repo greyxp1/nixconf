@@ -1,40 +1,65 @@
 {...}: {
   flake.nixosModules.niri-pin = {pkgs, ...}: let
-    mpvInputConf = pkgs.writeText "input-pin.conf" ''
-      WHEEL_UP add window-scale 0.05
+    inputConf = pkgs.writeText "mpv-pin-input.conf" ''
+      WHEEL_UP add window-scale  0.05
       WHEEL_DOWN add window-scale -0.05
-      Shift+WHEEL_UP add window-scale 0.01
+      Shift+WHEEL_UP add window-scale  0.01
       Shift+WHEEL_DOWN add window-scale -0.01
-      MBTN_LEFT_DBL ignore
       MBTN_RIGHT quit
-    '';
-
-    niri-pin-to-screen = pkgs.writeScriptBin "niri-pin-to-screen" ''
-      #!${pkgs.dash}/bin/dash
-      GEOMETRY=$(${pkgs.slurp}/bin/slurp -c "#ff0000ff" -b "#00000044" -w 1)
-      [ -z "$GEOMETRY" ] && exit 0
-      TEMP=$(${pkgs.coreutils}/bin/mktemp --tmpdir niri-pin-XXXXXX.png)
-      ${pkgs.grim}/bin/grim -g "$GEOMETRY" "$TEMP"
-      ${pkgs.util-linux}/bin/setsid ${pkgs.mpv}/bin/mpv \
-        --no-config \
-        --no-border \
-        --osc=no \
-        --osd-level=0 \
-        --ao=null \
-        --sub-auto=no \
-        --vo=wlshm \
-        --autofit-larger=100%x100% \
-        --keep-open=yes \
-        --image-display-duration=inf \
-        --input-conf="${mpvInputConf}" \
-        --title=Niri-Pin-Surface \
-        "$TEMP" >/dev/null 2>&1 &
-      ( ${pkgs.coreutils}/bin/sleep 2 && rm -f "$TEMP" ) &
     '';
   in {
     home-manager.sharedModules = [
       {
-        home.packages = [niri-pin-to-screen];
+        home.packages = [
+          pkgs.jq
+          (pkgs.writeScriptBin "niri-pin-to-screen" ''
+            #!${pkgs.dash}/bin/dash
+            set -eu
+            PIPE=$(${pkgs.coreutils}/bin/mktemp -u)
+            ${pkgs.coreutils}/bin/mkfifo "$PIPE"
+
+            cleanup() {
+              rm -f "$PIPE"
+              kill "$STREAM_PID" 2>/dev/null || true
+              kill "$TIMER_PID" 2>/dev/null || true
+            }
+            trap cleanup EXIT
+
+            ${pkgs.niri-unstable}/bin/niri msg --json event-stream > "$PIPE" &
+            STREAM_PID=$!
+            exec 3< "$PIPE"
+
+            ${pkgs.niri-unstable}/bin/niri msg action screenshot
+
+            ( ${pkgs.coreutils}/bin/sleep 15 && kill "$STREAM_PID" 2>/dev/null ) &
+            TIMER_PID=$!
+
+            SCREENSHOT=
+            while IFS= read -r LINE <&3; do
+              P=$(printf '%s\n' "$LINE" \
+                | ${pkgs.jq}/bin/jq -r '.ScreenshotCaptured.path? // empty' 2>/dev/null \
+                || true)
+              [ -n "$P" ] && SCREENSHOT="$P" && break
+            done
+
+            exec 3<&-
+            kill "$TIMER_PID" 2>/dev/null || true
+            kill "$STREAM_PID" 2>/dev/null || true
+            [ -z "$SCREENSHOT" ] && exit 0
+
+            ${pkgs.mpv}/bin/mpv \
+              --no-config --no-border --osc=no --osd-level=0 \
+              --ao=null --sub-auto=no \
+              --vo=gpu --gpu-api=opengl --keepaspect=no \
+              --autofit-larger=100%x100% \
+              --keep-open=yes --image-display-duration=inf \
+              --input-conf="${inputConf}" \
+              --title=Niri-Pin-Surface \
+              "$SCREENSHOT"
+            rm -f "$SCREENSHOT"
+          '')
+        ];
+
         wayland.windowManager.niri.settings = {
           window-rule = [
             {
@@ -42,14 +67,11 @@
               open-floating = true;
               border.off = {};
               focus-ring.off = {};
-              clip-to-geometry = true;
             }
           ];
-
-          binds = let
-            bind = action: {_props.repeat = false;} // action;
-          in {
-            "Shift+Print" = bind {spawn = "niri-pin-to-screen";};
+          binds."Shift+Print" = {
+            _props.repeat = false;
+            spawn = "niri-pin-to-screen";
           };
         };
       }
