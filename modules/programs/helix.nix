@@ -1,11 +1,48 @@
 {...}: {
   flake.nixosModules.helix = {...}: {
+    environment.variables.EDITOR = "hx";
+    environment.variables.VISUAL = "hx";
+    programs.nano.enable = false;
     home-manager.users.grey = {
       pkgs,
       lib,
       ...
     }: {
       home.packages = with pkgs; [nixd efm-langserver statix deadnix jq alejandra];
+      programs.helix = {
+        enable = true;
+        settings = {
+          theme = lib.mkForce "catppuccin_transparent";
+          editor = {
+            cursor-shape.normal = "bar";
+            auto-format = true;
+          };
+        };
+
+        themes.catppuccin_transparent = {
+          inherits = "catppuccin_mocha";
+          "ui.background" = {bg = "none";};
+        };
+
+        languages = {
+          language-server.efm.command = "efm-langserver";
+          language = [
+            {
+              name = "nix";
+              auto-format = true;
+              formatter.command = "/home/grey/.local/bin/nix-format";
+              language-servers = [
+                {
+                  name = "efm";
+                  only-features = ["diagnostics"];
+                }
+                "nixd"
+              ];
+            }
+          ];
+        };
+      };
+
       home.file.".local/bin/nix-format" = {
         executable = true;
         text = ''
@@ -44,41 +81,6 @@
               lint-formats: ['%f:%l:%c: %m']
               lint-source: deadnix
       '';
-
-      programs.helix = {
-        enable = true;
-        settings = {
-          theme = lib.mkForce "catppuccin_transparent";
-          editor = {
-            cursor-shape.normal = "bar";
-            auto-format = true;
-          };
-        };
-
-        themes.catppuccin_transparent = {
-          inherits = "catppuccin_mocha";
-          "ui.background" = {bg = "none";};
-        };
-
-        languages = {
-          language-server.efm.command = "efm-langserver";
-
-          language = [
-            {
-              name = "nix";
-              auto-format = true;
-              formatter.command = "/home/grey/.local/bin/nix-format";
-              language-servers = [
-                {
-                  name = "efm";
-                  only-features = ["diagnostics"];
-                }
-                "nixd"
-              ];
-            }
-          ];
-        };
-      };
     };
   };
 }
