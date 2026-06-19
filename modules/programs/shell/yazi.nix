@@ -29,10 +29,9 @@
         env=TERMCMD=${pkgs.kitty}/bin/kitty -o background_opacity=0.6 -o cursor_trail=0 --class=filepicker
       '';
 
-      home.packages = with pkgs; [trash-cli];
+      home.packages = with pkgs; [trash-cli ripdrag];
       programs.yazi = {
         enable = true;
-        package = pkgs.lib.mkForce inputs.yazi.packages.${pkgs.stdenv.hostPlatform.system}.default;
         enableFishIntegration = true;
         settings = {
           mgr = {
@@ -40,10 +39,11 @@
             sort_by = "natural";
           };
 
-          opener.edit = [
+          opener.play = [
             {
-              run = ''hx "$@"'';
-              block = true;
+              run = ''mpv --force-window -- "$@"'';
+              orphan = true;
+              for = "unix";
             }
           ];
 
@@ -66,10 +66,14 @@
           plugins = {
             starship.enable = true;
             full-border.enable = true;
-            recycle-bin.enable = true;
             smart-enter.enable = true;
             jump-to-char.enable = true;
             git.enable = true;
+            recycle-bin = {
+              enable = true;
+              keys.open.on = ["R"];
+            };
+
             #relative-motions = {
             #  enable = true;
             #  show_numbers = "relative_absolute";
@@ -78,12 +82,14 @@
           };
         };
 
-        plugins = with pkgs.yaziPlugins; {inherit mount toggle-pane compress;};
+        plugins = with pkgs.yaziPlugins; {inherit mount toggle-pane compress drag;};
+        initLua = "require('smart-enter'):setup({ open_multi = true })";
         keymap.mgr.prepend_keymap = [
           (plug ["C"] "compress" "Compress selected files")
           (plug ["M"] "mount" "Mount manager")
           (plug ["<A-p>"] "toggle-pane min-preview" "Hide/show preview pane")
           (plug ["<A-m>"] "toggle-pane max-preview" "Maximize/restore preview pane")
+          (plug ["<A-d>"] "drag" "Drag selected files")
         ];
       };
     };
