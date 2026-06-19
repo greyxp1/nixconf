@@ -66,12 +66,17 @@
           plugins = {
             starship.enable = true;
             full-border.enable = true;
-            smart-enter.enable = true;
             jump-to-char.enable = true;
             git.enable = true;
+
             recycle-bin = {
               enable = true;
               keys.open.on = ["R"];
+            };
+
+            smart-enter = {
+              enable = true;
+              open_multi = true;
             };
 
             #relative-motions = {
@@ -83,7 +88,6 @@
         };
 
         plugins = with pkgs.yaziPlugins; {inherit mount toggle-pane compress drag;};
-        initLua = "require('smart-enter'):setup({ open_multi = true })";
         keymap.mgr.prepend_keymap = [
           (plug ["C"] "compress" "Compress selected files")
           (plug ["M"] "mount" "Mount manager")
