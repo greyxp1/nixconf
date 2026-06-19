@@ -6,9 +6,9 @@
     import-tree.url = "github:vic/import-tree";
     catppuccin.url = "github:catppuccin/nix";
     noctalia.url = "github:noctalia-dev/noctalia";
+    #noctalia.url = "path:/home/grey/noctalia";
     musnix.url = "github:musnix/musnix";
     discordPatch.url = "github:LuckShiba/nixpkgs/discord-vk";
-    yazi.url = "github:sxyazi/yazi";
     nyxexprs.url = "github:notashelf/nyxexprs";
 
     waytator = {
@@ -17,7 +17,8 @@
     };
 
     nix-yazi-plugins = {
-      url = "github:lordkekz/nix-yazi-plugins";
+      #url = "github:lordkekz/nix-yazi-plugins";
+      url = "github:greyxp1/nix-yazi-plugins";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
