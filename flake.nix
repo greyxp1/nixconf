@@ -8,7 +8,6 @@
     noctalia.url = "github:noctalia-dev/noctalia";
     #noctalia.url = "path:/home/grey/noctalia";
     musnix.url = "github:musnix/musnix";
-    discordPatch.url = "github:LuckShiba/nixpkgs/discord-vk";
     nyxexprs.url = "github:notashelf/nyxexprs";
 
     waytator = {
@@ -63,7 +62,7 @@
     };
 
     helium = {
-      url = "github:AlvaroParker/helium-nix";
+      url = "gitlab:AlexLov/helium-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
