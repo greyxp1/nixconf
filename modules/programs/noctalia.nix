@@ -98,6 +98,7 @@
           };
 
           widget = {
+            tray.hidden = ["chrome_status_icon_1::Discord"];
             recorder.type = "noctalia/screen_recorder:recorder";
             workspaces.display = "none";
           };
