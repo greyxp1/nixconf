@@ -16,7 +16,6 @@
           autoEnable = true;
           flavor = "mocha";
           accent = "mauve";
-          starship.enable = false;
           gtk.icon.enable = false;
         };
 
