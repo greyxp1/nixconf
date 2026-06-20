@@ -36,7 +36,8 @@
         settings = {
           mgr = {
             ratio = [1 2 5];
-            sort_by = "natural";
+            sort_by = "mtime";
+            sort_reverse = true;
           };
 
           opener.play = [
