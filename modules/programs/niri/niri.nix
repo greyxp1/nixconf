@@ -158,7 +158,7 @@
               }
               # Opacity exceptions
               {
-                match._props."app-id" = "^steam$|^dev.zed.Zed$";
+                match._props."app-id" = "^steam$";
                 opacity = 0.81;
               }
               # Workspace assignments
