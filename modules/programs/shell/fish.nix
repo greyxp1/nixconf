@@ -10,7 +10,6 @@
 
         shellAbbrs = {
           rebuild = "nh os switch";
-          update = "nh os switch --update";
           home = "sudo systemctl restart home-manager-grey.service";
           clean = "nh clean all --optimise --keep-one";
           cat = "bat";
