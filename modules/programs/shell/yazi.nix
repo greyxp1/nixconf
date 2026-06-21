@@ -42,6 +42,34 @@
         env=TERMCMD=${pkgs.kitty}/bin/kitty -o background_opacity=0.6 -o cursor_trail=0 --class=filepicker
       '';
 
+      xdg.configFile."yazi/init.lua".text = ''
+        require("keep-preferences"):setup({
+          path_preferences = {
+            {
+              path = "^/home/grey/Downloads",
+              defaults = {
+                sort_by = "mtime",
+                sort_reverse = true,
+              },
+            },
+            {
+              path = "^/home/grey/Pictures",
+              defaults = {
+                sort_by = "mtime",
+                sort_reverse = true,
+              },
+            },
+            {
+              path = "^/home/grey/Videos",
+              defaults = {
+                sort_by = "mtime",
+                sort_reverse = true,
+              },
+            },
+          },
+        })
+      '';
+
       home.packages = with pkgs; [trash-cli ripdrag];
       programs.yazi = {
         enable = true;
@@ -49,8 +77,7 @@
         settings = {
           mgr = {
             ratio = [1 2 5];
-            sort_by = "mtime";
-            sort_reverse = true;
+            sort_by = "natural";
           };
 
           opener.play = [
@@ -58,19 +85,6 @@
               run = ''mpv --force-window -- "$@"'';
               orphan = true;
               for = "unix";
-            }
-          ];
-
-          plugin.prepend_fetchers = pkgs.lib.mkForce [
-            {
-              url = "*";
-              run = "git";
-              group = "git";
-            }
-            {
-              url = "*/";
-              run = "git";
-              group = "git";
             }
           ];
         };
@@ -81,7 +95,6 @@
             starship.enable = true;
             full-border.enable = true;
             jump-to-char.enable = true;
-            git.enable = true;
 
             recycle-bin = {
               enable = true;
@@ -101,7 +114,7 @@
           };
         };
 
-        plugins = with pkgs.yaziPlugins; {inherit mount toggle-pane compress drag;};
+        plugins = with pkgs.yaziPlugins; {inherit mount toggle-pane compress drag keep-preferences;};
         keymap.mgr.prepend_keymap = [
           (plug ["C"] "compress" "Compress selected files")
           (plug ["M"] "mount" "Mount manager")
