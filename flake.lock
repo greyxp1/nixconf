@@ -190,22 +190,6 @@
         "type": "github"
       }
     },
-    "discordPatch": {
-      "locked": {
-        "lastModified": 1781205785,
-        "narHash": "sha256-ZsqGzg2hD8e40wwc1kgJGt2qgI8dsp7uDR9OiTGGPbc=",
-        "owner": "LuckShiba",
-        "repo": "nixpkgs",
-        "rev": "36e2217e8c30e59f1708e44df9bf00c31565e476",
-        "type": "github"
-      },
-      "original": {
-        "owner": "LuckShiba",
-        "ref": "discord-vk",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "disko": {
       "inputs": {
         "nixpkgs": [
@@ -618,11 +602,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1781906751,
-        "narHash": "sha256-6Ld1PqmptFtFKblE+SynhRgyBApUWcmrISetWqWHeeo=",
+        "lastModified": 1781989573,
+        "narHash": "sha256-npfH7Zv7t1akX/ArqCNro4zU4ViPlghLaPnbEfHbCxk=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "37f21dfa5d27e71b75bacd9418b156f9265e312e",
+        "rev": "78e7d8b13ecd7f5256a5c11ce216876164099d9f",
         "type": "github"
       },
       "original": {
@@ -1179,11 +1163,11 @@
         "nixpkgs": "nixpkgs_5"
       },
       "locked": {
-        "lastModified": 1781936527,
-        "narHash": "sha256-8YwEZ/AyStePmt73kCNBhH+gTaCGBeHgatMCnsC5DpE=",
+        "lastModified": 1781999442,
+        "narHash": "sha256-c7wlXyyph+d3b39ejdK0PTkoa65vo8NVCKZAC/4HcCA=",
         "owner": "noctalia-dev",
         "repo": "noctalia",
-        "rev": "7b0b222231107d8713cc2558c6caac09f9db8451",
+        "rev": "dac2fe2f30273ee90b253bea35006b7c1d45096c",
         "type": "github"
       },
       "original": {
@@ -1254,11 +1238,11 @@
     "oniri": {
       "flake": false,
       "locked": {
-        "lastModified": 1781808189,
-        "narHash": "sha256-6JmTMNrigkLNEwW7eewCiaPn5wuLi2tnKd4HLMLCKzQ=",
+        "lastModified": 1781996119,
+        "narHash": "sha256-8HBTt8y7cwx6Rucgv0u8pJlNV1ywiz8ENi/JZHpIBKM=",
         "owner": "Antiz96",
         "repo": "oniri",
-        "rev": "8501b83bf66017b6dd14fb42decd9634460e912b",
+        "rev": "31d32e4ffef032b22431c0fce165b30bbd7d9ac5",
         "type": "github"
       },
       "original": {
@@ -1332,7 +1316,6 @@
     "root": {
       "inputs": {
         "catppuccin": "catppuccin",
-        "discordPatch": "discordPatch",
         "disko": "disko",
         "flake-parts": "flake-parts",
         "helium": "helium",
