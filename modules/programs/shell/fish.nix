@@ -14,7 +14,6 @@
           home = "sudo systemctl restart home-manager-grey.service";
           clean = "nh clean all --optimise --keep-one";
           cat = "bat";
-          melt = "nix-melt ~/nixconf";
 
           ls = "ls --no-filesize";
           ll = "ll --total-size";
