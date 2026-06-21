@@ -121,6 +121,18 @@
           (plug ["<A-p>"] "toggle-pane min-preview" "Hide/show preview pane")
           (plug ["<A-m>"] "toggle-pane max-preview" "Maximize/restore preview pane")
           (plug ["<A-d>"] "drag" "Drag selected files")
+
+          {
+            on = ["s"];
+            run = ''shell 'file=$(fd --type f --follow . ~ | fzf --preview "bat --color=always {}") && [ -n "$file" ] && ya emit reveal "$file"' --block'';
+            desc = "Global file search (Excluding hidden)";
+          }
+
+          {
+            on = ["S"];
+            run = ''shell 'res=$(rg --column --line-number --no-heading --color=always --smart-case "" ~ 2>/dev/null | fzf --ansi --delimiter : --preview "bat --color=always --highlight-line {2} {1}") && [ -n "$res" ] && ya emit reveal "$(echo "$res" | cut -d: -f1)"' --block'';
+            desc = "Global content search (Excluding hidden)";
+          }
         ];
       };
     };
