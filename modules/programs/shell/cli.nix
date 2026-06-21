@@ -79,6 +79,7 @@
           btop
           ani-cli
           nix-melt
+          swayimg
         ];
       };
     };
