@@ -64,6 +64,7 @@
         '';
 
         home.packages = with pkgs; [
+          inputs.tack.packages.${stdenv.hostPlatform.system}.default
           curl
           zip
           unzip

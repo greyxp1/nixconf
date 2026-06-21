@@ -1,0 +1,92 @@
+# edit by hand or with tack add / rm / alias
+
+[shorturls]
+gh = "github:{path}"
+
+[all_follow]
+nixpkgs = ["nixpkgs-unstable"]
+
+# inputs.<name> fields
+#   url             required, shorturl ok, ?rev=<sha> pins an exact commit
+#   type            flake (default), fetch, or fixed
+#   flake           legacy false means type = "fetch"
+#   follows         { child = "pin" } override map
+#   exclude_follow  all_follow names to skip
+#   dir             subdir holding flake.nix
+#   submodules      fetch git submodules
+#   unpack          fixed-only tarball or file
+
+[inputs.nixpkgs]
+url = "gh:nixos/nixpkgs/nixos-unstable"
+
+[inputs.tack]
+url = "gh:manic-systems/tack"
+
+[inputs.nix-cachyos-kernel]
+url = "gh:xddxdd/nix-cachyos-kernel/release"
+
+[inputs.preservation]
+url = "gh:nix-community/preservation"
+
+[inputs.import-tree]
+url = "gh:vic/import-tree"
+
+[inputs.catppuccin]
+url = "gh:catppuccin/nix"
+
+[inputs.noctalia]
+url = "gh:noctalia-dev/noctalia"
+
+[inputs.musnix]
+url = "gh:musnix/musnix"
+
+[inputs.nyxexprs]
+url = "gh:notashelf/nyxexprs"
+
+#[inputs.videoclip]
+#url = "path:/home/grey/videoclip"
+#type = "fetch"
+
+[inputs.waytator]
+url = "gh:linusammon/waytator/flake"
+
+[inputs.nix-yazi-plugins]
+url = "gh:greyxp1/nix-yazi-plugins"
+
+[inputs.disko]
+url = "gh:nix-community/disko"
+
+[inputs.lanzaboote]
+url = "gh:nix-community/lanzaboote/0403b4b7e8b2612657f0053a4c315e6c43eee9e6"
+
+[inputs.flake-parts]
+url = "gh:hercules-ci/flake-parts"
+follows = { nixpkgs-lib = "nixpkgs" }
+
+[inputs.home-manager]
+url = "gh:nix-community/home-manager"
+
+[inputs.ragenix]
+url = "gh:yaxitech/ragenix"
+
+[inputs.niri-nix]
+url = "git+https://codeberg.org/BANanaD3V/niri-nix"
+
+[inputs.nsticky]
+url = "gh:lonerOrz/nsticky"
+
+[inputs.oniri]
+url = "gh:Antiz96/oniri"
+type = "fetch"
+
+[inputs.helium]
+url = "gitlab:AlexLov/helium-flake"
+
+[inputs.nixcord]
+url = "gh:kaylorben/nixcord"
+
+[inputs.nix-index-database]
+url = "gh:nix-community/nix-index-database"
+
+[inputs.mac-style-plymouth]
+url = "gh:SergioRibera/s4rchiso-plymouth-theme"
