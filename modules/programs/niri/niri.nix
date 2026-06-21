@@ -32,7 +32,7 @@
           windowManager.niri.settings = {
             spawn-at-startup = map (cmd: {_args = [cmd];}) ["helium" "zeditor" "discord"];
             workspace = map (ws: {_args = [ws];}) ["browser" "default" "chat" "stage"];
-            screenshot-path = "~/Pictures/Screenshots/%Y-%m-%d %H-%M-%S.png";
+            screenshot-path = "~/Pictures/Screenshots/%y-%m-%d-%H-%M-%S.png";
             prefer-no-csd = {};
             debug.honor-xdg-activation-with-invalid-serial = {};
             overview.workspace-shadow.off = {};
