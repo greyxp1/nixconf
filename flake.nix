@@ -6,7 +6,6 @@
     import-tree.url = "github:vic/import-tree";
     catppuccin.url = "github:catppuccin/nix";
     noctalia.url = "github:noctalia-dev/noctalia";
-    #noctalia.url = "path:/home/grey/noctalia";
     musnix.url = "github:musnix/musnix";
     nyxexprs.url = "github:notashelf/nyxexprs";
 
