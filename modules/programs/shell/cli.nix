@@ -78,6 +78,7 @@
           microfetch
           btop
           ani-cli
+          nix-melt
         ];
       };
     };
