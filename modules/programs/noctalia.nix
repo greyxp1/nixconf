@@ -56,8 +56,10 @@
 
           plugin_settings."noctalia/screen_recorder" = {
             color_range = "full";
-            filename_pattern = "%Y%m%d_%H%M%S";
+            filename_pattern = "%y-%m-%d-%H-%M-%S";
             replay_enabled = true;
+            replay_duration = 120;
+            replay_filename_pattern = "%y-%m-%d-%H-%M-%S";
             restore_portal = true;
             video_codec = "av1";
           };
@@ -76,6 +78,12 @@
                 kind = "git";
                 location = "https://github.com/noctalia-dev/community-plugins";
                 name = "community";
+              }
+              {
+                auto_update = true;
+                kind = "path";
+                location = "~/screen-recorder";
+                name = "screen-recorder";
               }
             ];
           };
