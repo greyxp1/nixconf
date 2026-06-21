@@ -20,7 +20,7 @@
           confirm_os_window_close = 0;
           scrollback_lines = 10000;
           enable_audio_bell = "no";
-          "map ctrl+shift+a" =
+          "map ctrl+y" =
             "combine : launch "
             + "--stdin-source=@screen_scrollback "
             + "--type=clipboard : launch --type=overlay true";
