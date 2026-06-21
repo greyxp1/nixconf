@@ -91,7 +91,7 @@
             binds = {
               # Apps
               "Mod+Return" = bind {spawn = "kitty";};
-              "Mod+E" = bind {spawn-sh = "kitty -o cursor_trail=0 -e yazi";};
+              "Mod+E" = bind {spawn-sh = "kitty -o cursor_trail=0 fish -c 'y; fish'";};
               "Mod+B" = bind {spawn = "helium";};
               "Mod+D" = bind {spawn = "discord";};
               "Mod+Z" = bind {spawn = "zeditor";};
@@ -99,7 +99,7 @@
               # Noctalia panels
               "Mod+Escape" = bind {spawn-sh = "noctalia msg panel-toggle session";};
               "Mod+C" = bind {spawn-sh = "noctalia msg panel-toggle control-center";};
-              "Mod+S" = bind {spawn-sh = "noctalia msg panel-toggle launcher";};
+              "Alt+Space" = bind {spawn-sh = "noctalia msg panel-toggle launcher";};
               "Mod+V" = bind {spawn-sh = "noctalia msg panel-toggle clipboard";};
               "Mod+Print" = bind {spawn-sh = "noctalia msg plugin noctalia/screen_recorder:service all replay-save";};
 
