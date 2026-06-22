@@ -41,8 +41,8 @@
             nix run .#vaultix.app.x86_64-linux.renc
             git add modules/system/hosts/$host/configuration.nix secrets/cache/
             git commit -m "chore: enroll $host"
-            git -c core.sshCommand="ssh -o StrictHostKeyChecking=accept-new" push
             nh os switch
+            git -c core.sshCommand="ssh -o StrictHostKeyChecking=accept-new" push
           '';
         };
 
