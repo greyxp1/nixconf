@@ -35,9 +35,9 @@
     "type": "github",
     "owner": "nix-community",
     "repo": "home-manager",
-    "rev": "d1ccd0721ec599866622665f3651e19e6e2d4c6a",
-    "narHash": "sha256-xBRAhYLEXcjp8hM2tkkTTLb6PWU7VDxDoogl25g7Ezs=",
-    "lastModified": 1782051614
+    "rev": "d8dac1f668fd861369571be3678ec75b1573e7e3",
+    "narHash": "sha256-+vMR3KPBVoY9nJrQI9qje5H1vmv51dJgMYkUuYimtJg=",
+    "lastModified": 1782103446
   },
   "import-tree": {
     "type": "github",
@@ -123,9 +123,9 @@
     "type": "github",
     "owner": "noctalia-dev",
     "repo": "noctalia",
-    "rev": "ae8eb0de92d5fbda14638e7ff08bc3f272d32007",
-    "narHash": "sha256-AxE/xFKL9Pa1euwVL35B3DinIKELNK5BUikl9HGBtl4=",
-    "lastModified": 1782078330
+    "rev": "ca1d21108bf23ca33a2cd77f4ec6b43907ab64f1",
+    "narHash": "sha256-Xx7VQE7EIgSwnvRMoIEZ79+oNccc5mbG4udNliQyzwg=",
+    "lastModified": 1782105555
   },
   "nsticky": {
     "type": "github",
@@ -171,17 +171,17 @@
     "type": "github",
     "owner": "manic-systems",
     "repo": "tack",
-    "rev": "a834318b7fe7371fce1eaf9c309caeadf57cf9af",
-    "narHash": "sha256-KhJb0NWLhj8AkD8uWEbXt179YlFLemk0OgOltw4jEk8=",
-    "lastModified": 1782001225
+    "rev": "d61ffcb1ea96fe0bb4157aabc0ad9a337a376417",
+    "narHash": "sha256-HOie9E1cVjloXbRt+Frz8ZalsU/sklhklBr2yHyclm8=",
+    "lastModified": 1782105670
   },
   "videoclip": {
     "type": "path",
     "path": "/home/grey/videoclip",
-    "lastModified": 1782073038,
-    "mtimeNanos": 1782073038357027981,
-    "treeSize": 470597,
-    "treeEntries": 112
+    "lastModified": 1782107044,
+    "mtimeNanos": 1782107044836777247,
+    "treeSize": 316854,
+    "treeEntries": 61
   },
   "waytator": {
     "type": "github",
