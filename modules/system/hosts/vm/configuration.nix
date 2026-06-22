@@ -9,6 +9,7 @@ in {
     }: {
       networking.hostName = "vm";
       custom.disk.device = import ./_device.nix;
+      vaultix.settings.hostPubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII0dPxbgu7poPhZOGFL5EKD5Xymq+IIflIsYltV5+uMH";
 
       boot = {
         kernelModules = ["virtio_gpu"];

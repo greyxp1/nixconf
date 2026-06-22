@@ -33,21 +33,16 @@
               cat > ~/.age/key.txt
               chmod 600 ~/.age/key.txt
             end
-            nh os switch
             set -l host (hostname)
             set -l new_key (cut -d' ' -f1-2 /etc/ssh/ssh_host_ed25519_key.pub)
-            set -l secrets ~/nixconf/secrets/secrets.nix
-            if grep -q "# $host" $secrets
-              sed -i "s|\"ssh-ed25519 [^\"]*\" # $host|\"$new_key\" # $host|" $secrets
-            else
-              sed -i "/^\s*\];/i\\    \"$new_key\" # $host" $secrets
-            end
             cd ~/nixconf
             git remote set-url origin git@github.com:greyxp1/nixconf.git
-            ragenix --rules secrets/secrets.nix -r -i ~/.age/key.txt
-            git add secrets/
+            sed -i "s|hostPubkey = \"[^\"]*\"|hostPubkey = \"$new_key\"|" modules/system/hosts/$host/configuration.nix
+            nix run .#vaultix.app.x86_64-linux.renc
+            git add modules/system/hosts/$host/configuration.nix secrets/cache/
             git commit -m "chore: enroll $host"
             git -c core.sshCommand="ssh -o StrictHostKeyChecking=accept-new" push
+            nh os switch
           '';
         };
 

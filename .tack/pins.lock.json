@@ -159,14 +159,6 @@
     "narHash": "sha256-mMI9IanU+Xw+pVogD2oT0I2kTmvz2Un/Apc5+CwUpEY=",
     "lastModified": 1757436102
   },
-  "ragenix": {
-    "type": "github",
-    "owner": "yaxitech",
-    "repo": "ragenix",
-    "rev": "83bccfdea758241999f32869fb6b36f7ac72f1ac",
-    "narHash": "sha256-VCNVjjuRvrKPiYYwqhE3BAKIaReiKXGpxGp27lZ0MFM=",
-    "lastModified": 1761832913
-  },
   "tack": {
     "type": "github",
     "owner": "manic-systems",
@@ -175,13 +167,13 @@
     "narHash": "sha256-HOie9E1cVjloXbRt+Frz8ZalsU/sklhklBr2yHyclm8=",
     "lastModified": 1782105670
   },
-  "videoclip": {
-    "type": "path",
-    "path": "/home/grey/videoclip",
-    "lastModified": 1782107044,
-    "mtimeNanos": 1782107044836777247,
-    "treeSize": 316854,
-    "treeEntries": 61
+  "vaultix": {
+    "type": "github",
+    "owner": "milieuim",
+    "repo": "vaultix",
+    "rev": "17bb95fd1c096a6f3ff6d240003440dda18e98e7",
+    "narHash": "sha256-bzakmnHZ4P0IRaDYk/q4JdR/My8klp7iZcialGOtE2A=",
+    "lastModified": 1781183600
   },
   "waytator": {
     "type": "github",
