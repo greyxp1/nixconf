@@ -4,7 +4,7 @@
       pname = "oniri";
       version = "0-unstable";
       src = inputs.oniri;
-      cargoHash = "sha256-8DBL5NvKEiQ7Uh4kFhUynSWc39d+nlu86UZYzHXR8yg=";
+      cargoHash = "sha256-8tMWDPJqbhzG06JlmcT/1QpOX3550Eb7ScR+tcHa8+M=";
     };
   in {
     home-manager.sharedModules = [
