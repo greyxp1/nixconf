@@ -17,7 +17,7 @@ in {
     }: {
       networking.hostName = "desktop";
       custom.disk.device = import ./_device.nix;
-      vaultix.settings.hostPubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOrbBuRQjEzkHhyonE0NnxilUW2dOZTAqTB95YVMXJG9";
+      vaultix.settings.hostPubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBj6OFIuHhETkuhCwCsAHp1YDD2uBdZRSd+TTntkgp96";
 
       # Kernel
       nixpkgs.overlays = [inputs.nix-cachyos-kernel.overlays.pinned];
