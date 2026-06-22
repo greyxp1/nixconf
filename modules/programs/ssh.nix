@@ -19,9 +19,10 @@
       mode = "600";
     };
 
-    system.activationScripts.ssh-dir = {
-      text = "install -d -m 700 -o grey -g users /home/grey/.ssh";
-      deps = ["users"];
+    systemd.tmpfiles.settings.ssh-dir."/home/grey/.ssh".d = {
+      mode = "0700";
+      user = "grey";
+      group = "users";
     };
 
     services.openssh = {
