@@ -21,6 +21,7 @@
             "lodcanccmfbpjjpnngindkkmiehimile" # Control Panel for YouTube
             "eaeedemddlledlghhjebjgdmhjekgegd" # PiP View
             "knemcdpkggnbhpoaaagmjiigenifejfo" # Claude Usage Tracker
+            "dkdnancajokhfclpjpplkhlkbhaeejob" # Claude QoL
             "eimadpbcbfnmbkopoojfekhnkhdbieeh" # Dark Reader
             "effdbpeggelllpfkjppbokhmmiinhlmg" # Better Lyrics
             "mcambpfmpjnncfoodejdmehedbkjepmi" # Equicord
