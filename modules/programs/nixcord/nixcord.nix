@@ -8,7 +8,6 @@
 
         discord = {
           enable = true;
-          vencord.enable = false;
           equicord.enable = true;
           settings = {
             #SKIP_HOST_UPDATE = true;
@@ -69,7 +68,6 @@
             memberCount.enable = true;
             messageClickActions.enable = true;
             micLoopbackTester.enable = true;
-            moreUserTags.enable = true;
             newPluginsManager.enable = true;
             noDevtoolsWarning.enable = true;
             noF1.enable = true;
@@ -146,6 +144,13 @@
               ignoreSelf = true;
               separatedDiffs = true;
               showEditDiffs = true;
+            };
+
+            moreUserTags = {
+              enable = true;
+              dontShowBotTag = true;
+              noAppsAllowed = true;
+              tagSettings.voiceModerator.showInChat = false;
             };
 
             voiceRejoin = {
