@@ -21,6 +21,7 @@
             diagnostics = false;
             metrics = false;
           };
+
           agent = {
             sidebar_side = "right";
             dock = "right";
