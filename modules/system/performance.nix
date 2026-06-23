@@ -5,7 +5,7 @@
       max-jobs = "auto";
       cores = 0;
       http-connections = 128;
-      download-buffer-size = 536870912;
+      nar-buffer-size = 536870912;
     };
 
     zramSwap = {
