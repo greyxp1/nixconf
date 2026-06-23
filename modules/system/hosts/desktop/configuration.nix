@@ -1,20 +1,14 @@
-{inputs, ...}: let
-  mkHost = import ../_mkHost.nix inputs;
-in {
+{inputs, ...}: let mkHost = import ../_mkHost.nix inputs; in {
   flake.nixosConfigurations.desktop = mkHost {
     extraModules = [
       inputs.lanzaboote.nixosModules.lanzaboote
       ./_audio.nix
       ./_virt.nix
-      ./steam/_steam.nix
-      ./steam/kovaaks/_kovaaks.nix
+      ./gaming/_gaming.nix
+      ./gaming/kovaaks/_kovaaks.nix
       ./_nvidia.nix
     ];
-    hostModule = {
-      pkgs,
-      lib,
-      ...
-    }: {
+    hostModule = {pkgs, lib, ...}: {
       networking.hostName = "desktop";
       custom.disk.device = import ./_device.nix;
 
@@ -44,15 +38,18 @@ in {
       };
 
       # Secure Boot
-      boot.loader.systemd-boot.enable = lib.mkForce false;
-      boot.lanzaboote = {
-        enable = true;
-        autoGenerateKeys.enable = true;
-        pkiBundle = "/var/lib/sbctl";
-        autoEnrollKeys.enable = true;
-        autoEnrollKeys.autoReboot = true;
+      boot = {
+        loader.systemd-boot.enable = lib.mkForce false;
+        lanzaboote = {
+          enable = true;
+          autoGenerateKeys.enable = true;
+          pkiBundle = "/var/lib/sbctl";
+          autoEnrollKeys.enable = true;
+          autoEnrollKeys.autoReboot = true;
+        };
       };
 
+      environment.systemPackages = [pkgs.sbctl];
       system.activationScripts.sbctl-keys = {
         text = ''
           if [ ! -d /var/lib/sbctl ]; then
@@ -60,8 +57,6 @@ in {
           fi
         '';
       };
-
-      environment.systemPackages = [pkgs.sbctl];
     };
   };
 }

@@ -1,8 +1,5 @@
 {pkgs, ...}: {
   programs = {
-    gamemode.enable = true;
-    gamemode.settings.general.renice = 10;
-
     steam = {
       enable = true;
       extraCompatPackages = [pkgs.proton-ge-bin];
@@ -14,6 +11,11 @@
       enable = true;
       capSysNice = true;
       env.ENABLE_GAMESCOPE_WSI = "1"; # NVIDIA-specific
+    };
+
+    gamemode = {
+      enable = true;
+      settings.general.renice = 10;
     };
   };
 
