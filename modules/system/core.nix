@@ -1,5 +1,9 @@
 {inputs, ...}: {
-  flake.nixosModules.core = {config, ...}: {
+  flake.nixosModules.core = {
+    config,
+    pkgs,
+    ...
+  }: {
     imports = [inputs.home-manager.nixosModules.home-manager];
     time.timeZone = "America/Montreal";
     networking.networkmanager.enable = true;
@@ -35,9 +39,12 @@
       sudo.wheelNeedsPassword = false;
     };
 
-    nix.settings = {
-      trusted-users = ["root" "@wheel"];
-      experimental-features = ["nix-command" "flakes"];
+    nix = {
+      package = pkgs.lix;
+      settings = {
+        trusted-users = ["root" "@wheel"];
+        experimental-features = ["nix-command" "flakes"];
+      };
     };
 
     home-manager = {
