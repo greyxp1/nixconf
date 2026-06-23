@@ -1,5 +1,5 @@
 {...}: {
-  flake.nixosModules.shell = {...}: {
+  flake.nixosModules.starship = {...}: {
     home-manager = {
       users.grey = {...}: {
         catppuccin.starship.enable = false;

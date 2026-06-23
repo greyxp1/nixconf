@@ -1,5 +1,5 @@
 {...}: {
-  flake.nixosModules.shell = {pkgs, ...}: {
+  flake.nixosModules.fish = {pkgs, ...}: {
     programs.fish.enable = true;
     users.users.grey.shell = pkgs.fish;
     home-manager.users.grey = {...}: {

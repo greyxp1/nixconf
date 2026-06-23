@@ -1,5 +1,5 @@
 {inputs, ...}: {
-  flake.nixosModules.shell = {pkgs, ...}: {
+  flake.nixosModules.cli = {pkgs, ...}: {
     nixpkgs.overlays = [inputs.nyxexprs.overlays.default];
     programs.nh = {
       enable = true;
