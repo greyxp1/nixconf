@@ -1,8 +1,7 @@
-{...}: {
-  flake.nixosModules.zed = {...}: {
+_: {
+  flake.nixosModules.zed = _: {
     programs.nix-ld.enable = true;
-    home-manager.users.grey = {pkgs, ...}: {
-      home.packages = with pkgs; [nixd nil alejandra];
+    home-manager.users.grey = _: {
       catppuccin.zed.enable = false;
       programs.zed-editor = {
         enable = true;
@@ -33,19 +32,9 @@
             show_other_hints = false;
           };
 
-          languages = {
-            Nix.formatter.external.command = "alejandra";
-            Nix.formatter.external.arguments = ["--quiet" "--"];
-          };
-
-          lsp = {
-            nixd = {
-              initialization_options.formatting.command = ["alejandra" "--quiet" "--"];
-              initialization_options.nixos.expr =
-                "(builtins.getFlake \"path:/home/grey/nixconf\")"
-                + ".nixosConfigurations.desktop.options";
-            };
-            nil.initialization_options.formatting.command = ["alejandra" "--quiet" "--"];
+          languages.Nix = {
+            formatter.external.command = "nix-format";
+            language_servers = ["nixd" "!nil"];
           };
 
           language_models.openai_compatible.FreeLLMAPI = {
