@@ -6,6 +6,7 @@
     nixpkgs.config.allowUnfree = true;
     documentation.nixos.enable = false;
     systemd.network.wait-online.enable = false;
+    services.flatpak.enable = true;
 
     users.users = {
       root.initialHashedPassword = "";
@@ -37,11 +38,6 @@
     nix.settings = {
       trusted-users = ["root" "@wheel"];
       experimental-features = ["nix-command" "flakes"];
-    };
-
-    services = {
-      userborn.enable = true;
-      flatpak.enable = true;
     };
 
     home-manager = {
