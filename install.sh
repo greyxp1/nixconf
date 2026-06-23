@@ -5,32 +5,6 @@ REPO="https://github.com/greyxp1/nixconf.git"
 WORK_DIR="/tmp/nixconf"
 HOST="${1:-}"
 
-SUBSTITUTERS=(
-  "https://cache.nixos.org"
-  "https://nix-community.cachix.org"
-  "https://niri-nix.cachix.org"
-  "https://noctalia.cachix.org"
-  "https://attic.xuyh0120.win/lantian"
-  "https://cache.garnix.io"
-  "https://catppuccin.cachix.org"
-)
-
-TRUSTED_KEYS=(
-  "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-  "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-  "niri-nix.cachix.org-1:SvFtqpDcf7Sm1SMJdby1/+Y+6f3Yt3/3PMcSTKPJNJ0="
-  "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
-  "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
-  "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
-  "catppuccin.cachix.org-1:noG/4HkbhJb+lUAdKrph6LaozJvAeEEZj4N732IysmU="
-)
-
-NIX_OPTS=(
-  --option download-buffer-size 536870912
-  --option substituters   "${SUBSTITUTERS[*]}"
-  --option trusted-public-keys "${TRUSTED_KEYS[*]}"
-)
-
 # Returns the most stable device path for a given block device:
 # prefers /dev/disk/by-id/<name> (excluding partition entries),
 # falls back to the raw /dev/... path if no by-id symlink exists (e.g. VirtIO).
@@ -62,6 +36,19 @@ trap 'sudo swapoff -a 2>/dev/null || true; sudo umount -R /mnt 2>/dev/null || tr
 echo "==> Fetching config..."
 rm -rf "$WORK_DIR" && git clone -q "$REPO" "$WORK_DIR"
 exec < /dev/tty
+
+cache_attr() {
+  nix eval --raw \
+    --impure \
+    --extra-experimental-features "nix-command" \
+    --expr "builtins.concatStringsSep \" \" (import $WORK_DIR/modules/system/_cache.nix).\"$1\""
+}
+
+NIX_OPTS=(
+  --option download-buffer-size 536870912
+  --option substituters "$(cache_attr substituters)"
+  --option trusted-public-keys "$(cache_attr trusted-public-keys)"
+)
 
 [[ -d /sys/firmware/efi/efivars ]] || { echo "UEFI required"; exit 1; }
 

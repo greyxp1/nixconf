@@ -41,10 +41,12 @@
 
     nix = {
       package = pkgs.lix;
-      settings = {
-        trusted-users = ["@wheel"];
-        experimental-features = ["nix-command" "flakes"];
-      };
+      settings =
+        {
+          trusted-users = ["@wheel"];
+          experimental-features = ["nix-command" "flakes"];
+        }
+        // import ./_cache.nix;
     };
 
     home-manager = {
