@@ -35,9 +35,9 @@
     "type": "github",
     "owner": "nix-community",
     "repo": "home-manager",
-    "rev": "979bfee6e1a7996fc395270d54c9b59e88762494",
-    "narHash": "sha256-dh0RDcJ17Rubgk3hGTugYmTu6rnUPfRu5vA7MA1Pdo0=",
-    "lastModified": 1782134359
+    "rev": "471a1d2f840eb7fcbdfd541d99c13a64096f46db",
+    "narHash": "sha256-SA7LyrayyZBvtzZnesnSLV7haciFuVLeZaX2hd5v4j4=",
+    "lastModified": 1782166451
   },
   "import-tree": {
     "type": "github",
@@ -51,9 +51,9 @@
     "type": "github",
     "owner": "nix-community",
     "repo": "lanzaboote",
-    "rev": "0403b4b7e8b2612657f0053a4c315e6c43eee9e6",
-    "narHash": "sha256-4JLkQvN7/f77TyxXXtoEuUfovMqMLOgWpBaLMNX1dns=",
-    "lastModified": 1781181476
+    "rev": "7c9a54a7f87b4539ddbd8bda09a8a5f5f9361aa9",
+    "narHash": "sha256-hqijVSEETttmo8Okql9/LG0Ua34hdciKW1a5zzlj8mU=",
+    "lastModified": 1782141370
   },
   "mac-style-plymouth": {
     "type": "github",
@@ -83,9 +83,9 @@
     "type": "github",
     "owner": "xddxdd",
     "repo": "nix-cachyos-kernel",
-    "rev": "756ed060ca6adcdf3e65371e3725b89c58a1354d",
-    "narHash": "sha256-Vujeg1QyOCnEMCNV1U7aFDllD0w2lEl8c0uJyKM+cOI=",
-    "lastModified": 1782068713
+    "rev": "f0b6b9acd227ed4822b0dfa55998919a55d466e6",
+    "narHash": "sha256-255zJue+y2e3nfTj8WJgn9/YWc5ntyrNSu8iUVAegT8=",
+    "lastModified": 1782159764
   },
   "nix-index-database": {
     "type": "github",
@@ -123,9 +123,9 @@
     "type": "github",
     "owner": "noctalia-dev",
     "repo": "noctalia",
-    "rev": "02d81c7da9c69659f3a7390a41140f6b1b0523c3",
-    "narHash": "sha256-cgFDhjLraNBn9SKFLlvIy2izrg4qBff2ntUXLQEHhVM=",
-    "lastModified": 1782140732
+    "rev": "a5eeef13338167fb85ecf8ea7c2fabb4c5536010",
+    "narHash": "sha256-grcnLF0vfw1mJOSIy+4BuWGBdbOwGo611dQk4qLgAp8=",
+    "lastModified": 1782186359
   },
   "nsticky": {
     "type": "github",
@@ -174,6 +174,14 @@
     "rev": "17bb95fd1c096a6f3ff6d240003440dda18e98e7",
     "narHash": "sha256-bzakmnHZ4P0IRaDYk/q4JdR/My8klp7iZcialGOtE2A=",
     "lastModified": 1781183600
+  },
+  "videoclip": {
+    "type": "github",
+    "owner": "greyxp1",
+    "repo": "videoclip",
+    "rev": "9e3472481218ae9bf03bd3316df185776bfbbe3d",
+    "narHash": "sha256-DX0NNBQ++/SdQuF32GRmfZ0OvNwAlTs2956xqxdj8+E=",
+    "lastModified": 1782194323
   },
   "waytator": {
     "type": "github",
