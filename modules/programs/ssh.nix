@@ -13,29 +13,23 @@ in {
         IdentityFile ~/.ssh/id_ed25519
     '';
   in {
-    home-manager.users.grey = {...}: {
+    home-manager.users.grey = {lib, ...}: {
       services.ssh-agent.enable = true;
+
+      home.activation.gitSshKey = lib.hm.dag.entryAfter ["writeBoundary"] ''
+        ${pkgs.coreutils}/bin/install -d -m 0700 "$HOME/.ssh"
+
+        ${pkgs.coreutils}/bin/install -m 0600 ${sshConfig} "$HOME/.ssh/config"
+
+        if [ -f "${gitKey}" ]; then
+          ${pkgs.coreutils}/bin/install -m 0600 "${gitKey}" "$HOME/.ssh/id_ed25519"
+        fi
+
+        if [ -f "${gitPubKey}" ]; then
+          ${pkgs.coreutils}/bin/install -m 0644 "${gitPubKey}" "$HOME/.ssh/id_ed25519.pub"
+        fi
+      '';
     };
-
-    systemd.tmpfiles.settings.ssh-dir."/home/grey/.ssh".d = {
-      mode = "0700";
-      user = "grey";
-      group = "users";
-    };
-
-    system.activationScripts.git-ssh-key.text = ''
-      ${pkgs.coreutils}/bin/install -d -m 0700 -o grey -g users /home/grey/.ssh
-
-      ${pkgs.coreutils}/bin/install -m 0600 -o grey -g users ${sshConfig} /home/grey/.ssh/config
-
-      if [ -f "${gitKey}" ]; then
-        ${pkgs.coreutils}/bin/install -D -m 0600 -o grey -g users "${gitKey}" /home/grey/.ssh/id_ed25519
-      fi
-
-      if [ -f "${gitPubKey}" ]; then
-        ${pkgs.coreutils}/bin/install -D -m 0644 -o grey -g users "${gitPubKey}" /home/grey/.ssh/id_ed25519.pub
-      fi
-    '';
 
     services.openssh = {
       enable = true;
