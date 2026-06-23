@@ -42,7 +42,7 @@
     nix = {
       package = pkgs.lix;
       settings = {
-        trusted-users = ["root" "@wheel"];
+        trusted-users = ["@wheel"];
         experimental-features = ["nix-command" "flakes"];
       };
     };
