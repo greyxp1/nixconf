@@ -167,14 +167,6 @@
     "narHash": "sha256-HOie9E1cVjloXbRt+Frz8ZalsU/sklhklBr2yHyclm8=",
     "lastModified": 1782105670
   },
-  "vaultix": {
-    "type": "github",
-    "owner": "milieuim",
-    "repo": "vaultix",
-    "rev": "17bb95fd1c096a6f3ff6d240003440dda18e98e7",
-    "narHash": "sha256-bzakmnHZ4P0IRaDYk/q4JdR/My8klp7iZcialGOtE2A=",
-    "lastModified": 1781183600
-  },
   "videoclip": {
     "type": "github",
     "owner": "greyxp1",

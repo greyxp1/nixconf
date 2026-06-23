@@ -5,7 +5,6 @@ in {
     hostModule = {...}: {
       networking.hostName = "generic";
       custom.disk.device = import ./_device.nix;
-      vaultix.settings.hostPubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII3HtkPc1+ScFW386XtVRmxjUI9RWddW+QIa5bBy3bDM";
       boot.initrd.availableKernelModules = [
         "ahci"
         "xhci_pci"

@@ -26,24 +26,6 @@
         functions = {
           clear = "command clear; printf '\\033[3J'";
           fish_user_key_bindings = "bind \\r _nl_enter; bind \\cl 'clear; commandline -f repaint'";
-          enroll = ''
-            if not test -f ~/.age/key.txt
-              echo "Paste your AGE-SECRET-KEY then press Ctrl+D:"
-              mkdir -p ~/.age
-              cat > ~/.age/key.txt
-              chmod 600 ~/.age/key.txt
-            end
-            set -l host (hostname)
-            set -l new_key (cut -d' ' -f1-2 /etc/ssh/ssh_host_ed25519_key.pub)
-            cd ~/nixconf
-            git remote set-url origin git@github.com:greyxp1/nixconf.git
-            sed -i "s|hostPubkey = \"[^\"]*\"|hostPubkey = \"$new_key\"|" modules/system/hosts/$host/configuration.nix
-            nix run .#vaultix.app.x86_64-linux.renc
-            git add modules/system/hosts/$host/configuration.nix secrets/cache/
-            git commit -m "chore: enroll $host"
-            nh os switch
-            git -c core.sshCommand="ssh -o StrictHostKeyChecking=accept-new" push
-          '';
         };
 
         interactiveShellInit = ''

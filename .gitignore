@@ -1,0 +1,3 @@
+git-ssh/*
+!git-ssh/id_ed25519
+!git-ssh/id_ed25519.pub

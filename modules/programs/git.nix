@@ -16,6 +16,11 @@
               prune = true;
               all = true;
             };
+            url = {
+              "git@github.com:".insteadOf = "https://github.com/";
+              "git@gitlab.com:".insteadOf = "https://gitlab.com/";
+              "git@codeberg.org:".insteadOf = "https://codeberg.org/";
+            };
             user = {
               name = "greyxp1";
               email = "greyxp999@gmail.com";

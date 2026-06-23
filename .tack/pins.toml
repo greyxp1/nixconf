@@ -66,9 +66,6 @@ follows = { nixpkgs-lib = "nixpkgs" }
 [inputs.home-manager]
 url = "gh:nix-community/home-manager"
 
-[inputs.vaultix]
-url = "gh:milieuim/vaultix"
-
 [inputs.niri-nix]
 url = "git+https://codeberg.org/BANanaD3V/niri-nix"
 
