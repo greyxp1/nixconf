@@ -16,6 +16,7 @@
           window_decorations = "server";
           project_panel.dock = "left";
           git_panel.dock = "left";
+          colorize_brackets = true;
 
           telemetry = {
             diagnostics = false;
@@ -32,7 +33,6 @@
             show_other_hints = false;
           };
 
-          colorize_brackets = true;
           languages = {
             Nix.formatter.external.command = "alejandra";
             Nix.formatter.external.arguments = ["--quiet" "--"];
