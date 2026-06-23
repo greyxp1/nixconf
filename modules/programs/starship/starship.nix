@@ -1,7 +1,7 @@
-{...}: {
-  flake.nixosModules.starship = {...}: {
+_: {
+  flake.nixosModules.starship = _: {
     home-manager = {
-      users.grey = {...}: {
+      users.grey = _: {
         catppuccin.starship.enable = false;
         programs.starship = {
           enable = true;

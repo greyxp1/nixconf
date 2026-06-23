@@ -1,5 +1,5 @@
 {inputs, ...}: {
-  flake.nixosModules.theme = {...}: {
+  flake.nixosModules.theme = _: {
     home-manager = {
       sharedModules = [inputs.catppuccin.homeModules.catppuccin];
       users.grey = {pkgs, ...}: {

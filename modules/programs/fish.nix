@@ -1,8 +1,8 @@
-{...}: {
+_: {
   flake.nixosModules.fish = {pkgs, ...}: {
     programs.fish.enable = true;
     users.users.grey.shell = pkgs.fish;
-    home-manager.users.grey = {...}: {
+    home-manager.users.grey = _: {
       programs.fish = {
         enable = true;
         shellAliases = {
@@ -38,16 +38,15 @@
           end
         '';
 
-        plugins =
-          map (pkg: {
-            name = pkg.pname;
-            src = pkg.src;
-          }) (with pkgs.fishPlugins; [
-            fzf-fish
-            autopair
-            done
-            fifc
-          ]);
+        plugins = map (pkg: {
+          name = pkg.pname;
+          inherit (pkg) src;
+        }) (with pkgs.fishPlugins; [
+          fzf-fish
+          autopair
+          done
+          fifc
+        ]);
       };
     };
   };

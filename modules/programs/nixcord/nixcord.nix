@@ -1,7 +1,7 @@
 {inputs, ...}: {
-  flake.nixosModules.nixcord = {...}: {
+  flake.nixosModules.nixcord = _: {
     home-manager.sharedModules = [inputs.nixcord.homeModules.nixcord];
-    home-manager.users.grey = {...}: {
+    home-manager.users.grey = _: {
       programs.nixcord = {
         enable = true;
         quickCss = builtins.readFile ./theme.css;

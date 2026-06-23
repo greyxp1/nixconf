@@ -1,8 +1,4 @@
-{
-  pkgs,
-  lib,
-  ...
-}: {
+{pkgs, lib, ...}: {
   environment.systemPackages = [pkgs.nvidia-vaapi-driver];
   boot = {
     initrd.kernelModules = ["nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm"];
@@ -21,8 +17,10 @@
     open = true;
     modesetting.enable = true;
     nvidiaSettings = false;
-    powerManagement.enable = true;
-    powerManagement.finegrained = false;
     #nvidiaPersistenced = true;
+    powerManagement = {
+      enable = true;
+      finegrained = false;
+    };
   };
 }

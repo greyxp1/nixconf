@@ -1,6 +1,6 @@
-{...}: {
-  flake.nixosModules.git = {...}: {
-    home-manager.users.grey = {...}: {
+_: {
+  flake.nixosModules.git = _: {
+    home-manager.users.grey = _: {
       programs = {
         git = {
           enable = true;

@@ -1,9 +1,5 @@
 {inputs, ...}: {
-  flake.nixosModules.core = {
-    config,
-    pkgs,
-    ...
-  }: {
+  flake.nixosModules.core = {config, pkgs, ...}: {
     imports = [inputs.home-manager.nixosModules.home-manager];
     time.timeZone = "America/Montreal";
     networking.networkmanager.enable = true;
@@ -41,12 +37,10 @@
 
     nix = {
       package = pkgs.lix;
-      settings =
-        {
-          trusted-users = ["@wheel"];
-          experimental-features = ["nix-command" "flakes"];
-        }
-        // import ./_cache.nix;
+      settings = {
+        trusted-users = ["@wheel"];
+        experimental-features = ["nix-command" "flakes"];
+      } // import ./_cache.nix;
     };
 
     home-manager = {

@@ -30,11 +30,8 @@ _: {
       ];
 
       programs = {
-        helix.languages.language-server.nixd.config.options.nixos.expr =
-          "(builtins.getFlake \"path:/home/grey/nixconf\")" + ".nixosConfigurations.desktop.options";
-
-        zed-editor.userSettings.lsp.nixd.initialization_options.nixos.expr =
-          "(builtins.getFlake \"path:/home/grey/nixconf\")" + ".nixosConfigurations.desktop.options";
+        helix.languages.language-server.nixd.config.options.nixos.expr = "(builtins.getFlake \"path:/home/grey/nixconf\")" + ".nixosConfigurations.desktop.options";
+        zed-editor.userSettings.lsp.nixd.initialization_options.nixos.expr = "(builtins.getFlake \"path:/home/grey/nixconf\")" + ".nixosConfigurations.desktop.options";
       };
     };
   };

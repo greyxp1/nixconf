@@ -60,12 +60,11 @@
       runAsRoot = true;
       package = pkgs.qemu_kvm.overrideAttrs (old: {
         nativeBuildInputs = (old.nativeBuildInputs or []) ++ [pkgs.makeWrapper];
-        postInstall =
-          (old.postInstall or "")
-          + ''
-            wrapProgram $out/bin/qemu-system-x86_64 \
-              --prefix LD_LIBRARY_PATH : /run/opengl-driver/lib
-          '';
+        postInstall = (old.postInstall or "")
+        + ''
+          wrapProgram $out/bin/qemu-system-x86_64 \
+            --prefix LD_LIBRARY_PATH : /run/opengl-driver/lib
+        '';
       });
       verbatimConfig = ''
         cgroup_device_acl = [

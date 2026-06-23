@@ -1,8 +1,6 @@
 {
   outputs = {self, ...} @ args: let
-    tackInputs = (import ./.tack) {
-      overrides = args.tackOverrides or {};
-    };
+    tackInputs = (import ./.tack) {overrides = args.tackOverrides or {};};
     inputs = tackInputs // {inherit self;};
   in
     inputs.flake-parts.lib.mkFlake {inherit inputs;} {

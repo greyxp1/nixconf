@@ -1,6 +1,6 @@
-{...}: {
-  flake.nixosModules.kitty = {...}: {
-    home-manager.users.grey = {...}: {
+_: {
+  flake.nixosModules.kitty = _: {
+    home-manager.users.grey = _: {
       programs.kitty = {
         enable = true;
         settings = {
@@ -20,10 +20,9 @@
           confirm_os_window_close = 0;
           scrollback_lines = 10000;
           enable_audio_bell = "no";
-          "map ctrl+y" =
-            "combine : launch "
-            + "--stdin-source=@screen_scrollback "
-            + "--type=clipboard : launch --type=overlay true";
+          "map ctrl+y" = "combine : launch "
+          + "--stdin-source=@screen_scrollback "
+          + "--type=clipboard : launch --type=overlay true";
         };
 
         font = {

@@ -21,11 +21,7 @@
       });
     '';
 
-    home-manager.users.grey = {
-      pkgs,
-      lib,
-      ...
-    }: {
+    home-manager.users.grey = {pkgs, lib, ...}: {
       imports = [inputs.nix-yazi-plugins.legacyPackages.${system}.homeManagerModules.default];
       home.activation.catppuccinYaziNoIcons = lib.hm.dag.entryAfter ["writeBoundary"] ''
         theme_file="$HOME/.config/yazi/theme.toml"

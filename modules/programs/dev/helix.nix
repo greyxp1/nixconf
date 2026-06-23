@@ -3,7 +3,7 @@ _: {
     environment.variables.EDITOR = "hx";
     environment.variables.VISUAL = "hx";
     programs.nano.enable = false;
-    home-manager.users.grey = { lib, ... }: {
+    home-manager.users.grey = {lib, ...}: {
       programs.helix = {
         enable = true;
         settings = {
@@ -26,7 +26,7 @@ _: {
             name = "nix";
             auto-format = true;
             formatter.command = "nix-format";
-            language-servers = [ "nixd" ];
+            language-servers = ["nixd"];
           }
         ];
       };

@@ -50,11 +50,7 @@
     };
   };
 in {
-  flake.nixosModules.filesystem = {
-    lib,
-    config,
-    ...
-  }: {
+  flake.nixosModules.filesystem = {lib, config, ...}: {
     imports = [
       inputs.disko.nixosModules.disko
       inputs.preservation.nixosModules.preservation

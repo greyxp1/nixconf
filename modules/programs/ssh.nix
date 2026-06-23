@@ -1,4 +1,4 @@
-{...}: let
+_: let
   gitKey = "/home/grey/nixconf/git-ssh/id_ed25519";
   gitPubKey = "/home/grey/nixconf/git-ssh/id_ed25519.pub";
 in {

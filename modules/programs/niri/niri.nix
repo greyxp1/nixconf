@@ -1,7 +1,5 @@
 {inputs, ...}: {
-  flake.nixosModules.niri = {pkgs, ...}: let
-    bind = action: {_props.repeat = false;} // action;
-  in {
+  flake.nixosModules.niri = {pkgs, ...}: let bind = action: {_props.repeat = false;} // action; in {
     imports = [inputs.niri-nix.nixosModules.default];
     nixpkgs.overlays = [inputs.niri-nix.overlays.niri-nix];
     environment.variables.UWSM_SILENT_START = "2";

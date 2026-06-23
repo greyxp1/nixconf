@@ -9,7 +9,7 @@
 
     home-manager = {
       sharedModules = [inputs.nix-index-database.homeModules.nix-index];
-      users.grey = {...}: {
+      users.grey = _: {
         programs = {
           nix-index.enable = true;
           nix-index-database.comma.enable = true;
