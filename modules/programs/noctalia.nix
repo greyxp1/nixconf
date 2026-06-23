@@ -61,7 +61,7 @@
             replay_duration = 120;
             replay_filename_pattern = "%y-%m-%d-%H-%M-%S";
             restore_portal = true;
-            video_codec = "av1";
+            video_codec = "aac";
           };
 
           plugins = {
