@@ -43,9 +43,9 @@ url = "gh:musnix/musnix"
 [inputs.nyxexprs]
 url = "gh:notashelf/nyxexprs"
 
-#[inputs.videoclip]
-#url = "path:/home/grey/videoclip"
-#type = "fetch"
+[inputs.videoclip]
+url = "gh:greyxp1/videoclip"
+type = "fetch"
 
 [inputs.waytator]
 url = "gh:linusammon/waytator/flake"
