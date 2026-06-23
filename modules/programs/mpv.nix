@@ -1,21 +1,19 @@
-{...}: {
+{inputs, ...}: {
   flake.nixosModules.mpv = {...}: {
     home-manager.users.grey = {pkgs, ...}: {
       catppuccin.mpv.enable = false;
+      xdg.configFile."mpv/scripts/videoclip".source = inputs.videoclip;
       programs.mpv = {
         enable = true;
         package = pkgs.mpv.override {
           scripts = with pkgs.mpvScripts; [
             modernz
             thumbfast
-            encode
             mpris
             visualizer
             #evafast
           ];
         };
-
-        bindings = {c = "script-message-to encode set-timestamp encode_clip";};
 
         config = {
           vo = "gpu-next";
@@ -42,11 +40,14 @@
         sub_margins=no
       '';
 
-      xdg.configFile."mpv/script-opts/encode_clip.conf".text = ''
-        output_directory=
-        output_format=$f_$s-$e.$x
-        codec=-c:v libx264 -crf 16 -preset slow -colorspace bt709 -color_primaries bt709 -color_trc bt709 -pix_fmt yuv420p -c:a libopus -b:a 128k -sn
-        print=yes
+      xdg.configFile."mpv/script-opts/videoclip.conf".text = ''
+        video_quality=16
+        preset=veryslow
+        video_bitrate=20M
+        video_width=-2
+        video_height=-2
+        audio_format=aac
+        audio_bitrate=256k
       '';
 
       xdg.configFile."mpv/scripts/short-loop.lua".text = ''
