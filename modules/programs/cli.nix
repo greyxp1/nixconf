@@ -1,6 +1,5 @@
 {inputs, ...}: {
   flake.nixosModules.cli = {pkgs, ...}: {
-    nixpkgs.overlays = [inputs.nyxexprs.overlays.default];
     programs.nh = {
       enable = true;
       flake = "/home/grey/nixconf";

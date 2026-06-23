@@ -40,9 +40,6 @@ url = "gh:noctalia-dev/noctalia"
 [inputs.musnix]
 url = "gh:musnix/musnix"
 
-[inputs.nyxexprs]
-url = "gh:notashelf/nyxexprs"
-
 [inputs.videoclip]
 url = "gh:greyxp1/videoclip"
 type = "fetch"
