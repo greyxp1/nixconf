@@ -74,7 +74,7 @@ url = "gh:Antiz96/oniri"
 type = "fetch"
 
 [inputs.helium]
-url = "gitlab:AlexLov/helium-flake"
+url = "gh:greyxp1/helium-flake"
 
 [inputs.nixcord]
 url = "gh:FlameFlag/nixcord/dev"
