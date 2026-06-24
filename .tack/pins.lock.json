@@ -24,12 +24,12 @@
     "lastModified": 1778716662
   },
   "helium": {
-    "type": "gitlab",
-    "owner": "AlexLov",
+    "type": "github",
+    "owner": "greyxp1",
     "repo": "helium-flake",
-    "rev": "e6d8c971694730226b7aa68771f6c92d81d27b04",
-    "narHash": "sha256-FEweBiRIACOsTSxqFPEE+rm8XysjqyKxjVUrFR2X3pI=",
-    "lastModified": 1779710701
+    "rev": "1aedc0bc2683ee59fe7ebfb60fc459b75447c435",
+    "narHash": "sha256-4rrc85wKYO4RCCz+36bIBiIdeffMIDNhilYMYL6apqg=",
+    "lastModified": 1782299475
   },
   "home-manager": {
     "type": "github",
