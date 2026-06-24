@@ -1,9 +1,13 @@
 _: {
   flake.nixosModules.nix-language = _: {
-    home-manager.users.grey = {pkgs, ...}: let
-      formatProjects = ["/home/grey/nixconf"];
-      formatProjectPatterns = builtins.concatStringsSep "|" (map (project: "${project}/*") formatProjects);
-      nixosOptionsExpr = "(builtins.getFlake \"path:/home/grey/nixconf\")" + ".nixosConfigurations.desktop.options";
+    home-manager.users.grey = {config, pkgs, ...}: let
+      formatProjects = ["nixconf"];
+      formatProjectPatterns = builtins.concatStringsSep "|" (
+        map (project: "${config.home.homeDirectory}/${project}/*") formatProjects
+      );
+      nixosOptionsExpr =
+        "(builtins.getFlake \"path:/home/grey/nixconf\")"
+        + ".nixosConfigurations.desktop.options";
       alejandra = pkgs.alejandra.overrideAttrs (prev: {
         patches = (prev.patches or []) ++ [./alejandra.patch];
         doCheck = false;
