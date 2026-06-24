@@ -1,5 +1,5 @@
 {inputs, ...}: {
-  flake.nixosModules.mpv = {...}: {
+  flake.nixosModules.mpv = _: {
     home-manager.users.grey = {pkgs, ...}: {
       catppuccin.mpv.enable = false;
       xdg.configFile."mpv/scripts/videoclip".source = inputs.videoclip;
