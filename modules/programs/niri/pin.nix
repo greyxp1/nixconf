@@ -65,7 +65,6 @@ _: {
             {
               match._props.title = "^Niri-Pin-Surface$";
               open-floating = true;
-              border.off = {};
               focus-ring.off = {};
             }
           ];
