@@ -38,24 +38,17 @@
       };
 
       # Secure Boot
+      environment.systemPackages = [pkgs.sbctl];
       boot = {
         loader.systemd-boot.enable = lib.mkForce false;
         lanzaboote = {
           enable = true;
           autoGenerateKeys.enable = true;
           pkiBundle = "/var/lib/sbctl";
+          configurationLimit = 10;
           autoEnrollKeys.enable = true;
           autoEnrollKeys.autoReboot = true;
         };
-      };
-
-      environment.systemPackages = [pkgs.sbctl];
-      system.activationScripts.sbctl-keys = {
-        text = ''
-          if [ ! -d /var/lib/sbctl ]; then
-            ${pkgs.sbctl}/bin/sbctl create-keys
-          fi
-        '';
       };
     };
   };
