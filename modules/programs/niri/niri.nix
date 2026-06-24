@@ -186,6 +186,7 @@
                 ];
                 exclude._props.title = "(?i).*discord$";
                 open-floating = true;
+                focus-ring.off = {};
                 default-column-width.fixed = 1024; # 768 x 432
                 default-window-height.fixed = 576;
                 default-floating-position._props = {
