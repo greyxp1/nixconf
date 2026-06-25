@@ -5,11 +5,8 @@
       programs.helium = {
         enable = true;
         defaultBrowser = true;
-
-        flags = [
-          "--ozone-platform-hint=auto"
-          "--enable-features=HeliumMiddleClickAutoscroll"
-        ];
+        extraPolicies.RestoreOnStartup = 1;
+        flags = ["--enable-features=HeliumMiddleClickAutoscroll"];
 
         extensions = {
           sponsorBlock.id = "mnjggcdmjocbbbhaepdhchncahnbgone";
@@ -34,23 +31,28 @@
         };
 
         preferences = {
-          browser.show_forward_button = false;
+          ntp.shortcust_visible = false;
+          auto_pin_new_tab_groups = false;
+          bookmark_bar.show_tab_groups = false;
+
           helium.browser = {
             layout = 2;
+            centered_location_bar = true;
+            mru_tab_cycling = true;
             show_avatar_button = false;
             show_back_button = false;
             show_reload_button = false;
+            rounded_frame = false;
             show_vertical_tabs_collapse_button = false;
             zen_mode = true;
             zen_mode_sidebar_pinned = true;
             zen_mode_top_chrome_pinned = true;
           };
-          #bookmark_bar = {
-          #  show_apps_shortcut = false;
-          #  show_managed_bookmarks = false;
-          #  show_on_all_tabs = false;
-          #  show_tab_groups = false;
-          #};
+
+          browser = {
+            show_forward_button = false;
+            custom_chrome_frame = false;
+          };
         };
       };
     };
