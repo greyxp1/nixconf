@@ -99,9 +99,12 @@
             show_location = false;
             screen_corners.enabled = true;
             panel = {
-              control_center_placement = "centered";
+              control_center_placement = "floating";
+              control_center_position = "center";
               launcher_categories = false;
-              session_placement = "centered";
+              launcher_session_search = true;
+              session_placement = "floating";
+              session_position = "center";
               transparency_mode = "soft";
             };
           };
