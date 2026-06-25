@@ -72,7 +72,7 @@
             noDevtoolsWarning.enable = true;
             noF1.enable = true;
             noMiddleClickPaste.enable = true;
-            noMosaic.enable = true;
+            #noMosaic.enable = true;
             noNitroUpsell.enable = true;
             noOnboardingDelay.enable = true;
             noPushToTalk.enable = true;
