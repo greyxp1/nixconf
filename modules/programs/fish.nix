@@ -12,7 +12,6 @@ _: {
           rebuild = "nh os switch";
           update = "cd ~/nixconf && tack update && nh os switch";
           home = "sudo systemctl restart home-manager-grey.service";
-          clean = "nh clean all --optimise --keep-one";
           cat = "bat";
 
           ls = "ls --no-filesize";
