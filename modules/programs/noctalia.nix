@@ -22,10 +22,11 @@
           location.auto_locate = true;
           wallpaper.default.path = ../../assets/wallpapers/wheat.jpg;
           bar.default = {
+            enabled = true;
             auto_hide = true;
             background_opacity = 0.81;
+            start = ["recorder"];
             center = ["workspaces"];
-            enabled = true;
             end = ["tray" "notifications"];
             margin_edge = 0;
             margin_ends = 550;
@@ -36,8 +37,8 @@
             radius_top_right = 0;
             reserve_space = false;
             scale = 1.4;
-            start = ["recorder"];
             thickness = 42;
+            show_on_workspace_switch = false;
           };
 
           control_center.shortcuts = [
