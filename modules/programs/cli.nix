@@ -3,8 +3,11 @@
     programs.nh = {
       enable = true;
       flake = "/home/grey/nixconf";
-      clean.enable = true;
-      clean.extraArgs = "--keep-since 2d --keep 3";
+      clean = {
+        enable = true;
+        dates = "daily";
+        extraArgs = "--optimise --keep 10";
+      };
     };
 
     home-manager = {
