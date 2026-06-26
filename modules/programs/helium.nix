@@ -16,6 +16,7 @@
           claudeQoL.id = "dkdnancajokhfclpjpplkhlkbhaeejob";
           betterLyrics.id = "effdbpeggelllpfkjppbokhmmiinhlmg";
           equicord.id = "mcambpfmpjnncfoodejdmehedbkjepmi";
+          re-start.id = "fdodcmjeojbmcgmhcgcelffcekhicnop";
 
           protonPass.id = "ghmbeldphafepmbegfdlkpapadhbakde";
           protonPass.pin = true;
