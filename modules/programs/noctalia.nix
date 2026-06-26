@@ -1,19 +1,13 @@
 {inputs, ...}: {
-  flake.nixosModules.noctalia = {pkgs, ...}: let
-    noctaliaPkg = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;
-  in {
+  flake.nixosModules.noctalia = {pkgs, ...}: {
     environment.systemPackages = [pkgs.gpu-screen-recorder];
     home-manager.users.grey = {
       imports = [inputs.noctalia.homeModules.default];
-      systemd.user.services.noctalia.Service.ExecStartPost = [
-        "${pkgs.coreutils}/bin/sleep 5"
-        "${noctaliaPkg}/bin/noctalia msg plugin noctalia/screen_recorder:service all replay-start"
-      ];
       programs.noctalia = {
         enable = true;
-        package = noctaliaPkg;
         systemd.enable = true;
         settings = {
+          hooks.started = "noctalia msg plugin noctalia/screen_recorder:service all replay-start";
           desktop_widgets.enabled = false;
           dock.position = "bottom";
           notification.background_opacity = 0.81;
@@ -21,6 +15,7 @@
           theme.builtin = "Catppuccin";
           location.auto_locate = true;
           wallpaper.default.path = ../../assets/wallpapers/wheat.jpg;
+
           bar.default = {
             enabled = true;
             auto_hide = true;
@@ -83,8 +78,8 @@
               }
               {
                 auto_update = true;
-                kind = "path";
-                location = "~/screen-recorder";
+                kind = "git";
+                location = "https://github.com/greyxp1/screen-recorder";
                 name = "screen-recorder";
               }
             ];
