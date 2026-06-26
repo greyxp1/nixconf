@@ -2,18 +2,7 @@
   flake.nixosModules.niri = {pkgs, ...}: let bind = action: {_props.repeat = false;} // action; in {
     imports = [inputs.niri-nix.nixosModules.default];
     nixpkgs.overlays = [inputs.niri-nix.overlays.niri-nix];
-    environment.variables.UWSM_SILENT_START = "2";
     xdg.portal.config.niri.default = ["gnome"];
-
-    services = {
-      greetd = {
-        enable = true;
-        settings.default_session = {
-          command = "uwsm start niri-uwsm.desktop";
-          user = "grey";
-        };
-      };
-    };
 
     programs.niri = {
       enable = true;
