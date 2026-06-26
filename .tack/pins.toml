@@ -35,7 +35,7 @@ url = "gh:vic/import-tree"
 url = "gh:catppuccin/nix"
 
 [inputs.noctalia]
-url = "gh:noctalia-dev/noctalia"
+url = "gh:noctalia-dev/noctalia/cachix"
 
 [inputs.musnix]
 url = "gh:musnix/musnix"
