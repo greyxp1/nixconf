@@ -3,9 +3,9 @@
     "type": "github",
     "owner": "catppuccin",
     "repo": "nix",
-    "rev": "e98afe2dfd950bda4e6a8ef32bb563ec2f04505a",
-    "narHash": "sha256-x6vIJpJziw3Hs0JKKDP+AeRPWwqyMDOmK6I26tqbYj4=",
-    "lastModified": 1782117778
+    "rev": "3f3b3511f9c433b93f20b24be32de01f675b046d",
+    "narHash": "sha256-HPzOASBxx1bAnPREm4syM5oTb8ls2qbudkLW4BTB94s=",
+    "lastModified": 1782462517
   },
   "disko": {
     "type": "github",
@@ -123,9 +123,17 @@
     "type": "github",
     "owner": "noctalia-dev",
     "repo": "noctalia",
-    "rev": "b4b74ef9d83be43a5c22ce41286159703a19b13d",
-    "narHash": "sha256-+B1qeN/ducHvZxpFiMdj/Pojy9zvhRu0b7u4jjvfYfc=",
-    "lastModified": 1782419232
+    "rev": "4263897d054bd56f23e26cee3bda63bcd011c56b",
+    "narHash": "sha256-i6LyUBzvPSwnDk29dKGL0s0rTszLQaVXi4g2tnv6LvY=",
+    "lastModified": 1782462073
+  },
+  "noctalia-greeter": {
+    "type": "github",
+    "owner": "noctalia-dev",
+    "repo": "noctalia-greeter",
+    "rev": "ff35479bc920469fe371611915d7b20624237672",
+    "narHash": "sha256-/M/0qSuGh3Jc2KwcwxlSSURNxFnB8GtytVPKlVi5r90=",
+    "lastModified": 1782384482
   },
   "nsticky": {
     "type": "github",
