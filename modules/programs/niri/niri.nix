@@ -95,7 +95,6 @@
               "Mod+Z" = bind {spawn = "zeditor";};
 
               # Noctalia panels
-              "Mod+Escape" = bind {spawn-sh = "noctalia msg panel-toggle session";};
               "Mod+C" = bind {spawn-sh = "noctalia msg panel-toggle control-center";};
               "Alt+Space" = bind {spawn-sh = "noctalia msg panel-toggle launcher";};
               "Mod+V" = bind {spawn-sh = "noctalia msg panel-toggle clipboard";};
