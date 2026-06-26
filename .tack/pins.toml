@@ -76,6 +76,9 @@ type = "fetch"
 [inputs.helium]
 url = "gh:greyxp1/helium-flake"
 
+[inputs.noctalia-greeter]
+url = "gh:noctalia-dev/noctalia-greeter"
+
 [inputs.nixcord]
 url = "gh:FlameFlag/nixcord/dev"
 
