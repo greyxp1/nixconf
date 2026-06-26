@@ -27,9 +27,9 @@
     "type": "github",
     "owner": "greyxp1",
     "repo": "helium-flake",
-    "rev": "f1774f213f941dc37b820f6767e2b597c98c5330",
-    "narHash": "sha256-GtxiGRdGbDniRawCQTN+yjD/1ch0E2jp6NIN0aa10ko=",
-    "lastModified": 1782428154
+    "rev": "d38f8155bf23d0c9470b11a6133eddc67454d62f",
+    "narHash": "sha256-cBt8X7RVXDP8ZSoiSppwdnPSXvPkJx2YjKPAJhlSLK4=",
+    "lastModified": 1782434189
   },
   "home-manager": {
     "type": "github",
