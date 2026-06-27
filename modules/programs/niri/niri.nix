@@ -17,7 +17,7 @@
         wayland = {
           windowManager.niri.enable = true;
           windowManager.niri.settings = {
-            spawn-at-startup = map (cmd: {_args = [cmd];}) ["helium" "zeditor" "discord"];
+            spawn-at-startup = map (cmd: {_args = [cmd];}) ["discord"];
             workspace = map (ws: {_args = [ws];}) ["browser" "default" "chat" "stage"];
             screenshot-path = "~/Pictures/Screenshots/%y-%m-%d-%H-%M-%S.png";
             prefer-no-csd = {};
