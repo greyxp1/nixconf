@@ -1,18 +1,9 @@
-{inputs, ...}: {
-  flake.nixosModules.boot = {pkgs, ...}: {
-    nixpkgs.overlays = [inputs.mac-style-plymouth.overlays.default];
-
+_: {
+  flake.nixosModules.boot = _: {
     boot = {
-      plymouth = {
-        enable = true;
-        theme = "mac-style";
-        themePackages = [pkgs.mac-style-plymouth];
-      };
-
       supportedFilesystems = ["btrfs"];
       initrd = {
         supportedFilesystems = ["btrfs"];
-        systemd.enable = true;
         verbose = false;
       };
 
