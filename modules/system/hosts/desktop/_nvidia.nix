@@ -1,10 +1,9 @@
 {pkgs, lib, ...}: {
   environment.systemPackages = [pkgs.nvidia-vaapi-driver];
   boot = {
-    initrd.kernelModules = ["nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm"];
     kernelParams = [
       "nvidia_drm.modeset=1"
-      #"nvidia.NVreg_RegistryDwords=PerfLevelSrc=0x2222"
+      "nvidia.NVreg_RegistryDwords=PerfLevelSrc=0x2222"
     ];
   };
 
@@ -17,7 +16,7 @@
     open = true;
     modesetting.enable = true;
     nvidiaSettings = false;
-    #nvidiaPersistenced = true;
+    nvidiaPersistenced = true;
     powerManagement = {
       enable = true;
       finegrained = false;
