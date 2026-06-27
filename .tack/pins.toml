@@ -37,6 +37,9 @@ url = "gh:catppuccin/nix"
 [inputs.noctalia]
 url = "gh:noctalia-dev/noctalia/cachix"
 
+[inputs.noctalia-greeter]
+url = "gh:noctalia-dev/noctalia-greeter"
+
 [inputs.musnix]
 url = "gh:musnix/musnix"
 
@@ -76,11 +79,8 @@ type = "fetch"
 [inputs.helium]
 url = "gh:greyxp1/helium-flake"
 
-[inputs.noctalia-greeter]
-url = "gh:noctalia-dev/noctalia-greeter"
-
 [inputs.nixcord]
-url = "gh:FlameFlag/nixcord/dev"
+url = "gh:FlameFlag/nixcord"
 
 [inputs.nix-index-database]
 url = "gh:nix-community/nix-index-database"
