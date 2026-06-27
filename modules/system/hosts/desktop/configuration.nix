@@ -17,9 +17,20 @@
       boot.kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest-lto-x86_64-v3;
 
       # AMD CPU
-      boot.kernelParams = ["amd_pstate=active"];
       powerManagement.cpuFreqGovernor = "performance";
       hardware.cpu.amd.updateMicrocode = true;
+      boot.kernelParams = [
+        "amd_pstate=active" # AMD CPU freq scaling driver
+        "8250.nr_uarts=0" # suppress legacy COM port probes
+        "nowatchdog" # disable hardware watchdog drivers
+        "nmi_watchdog=0" # disable NMI watchdog
+      ];
+
+      # Disable TPM
+      systemd.services = {
+        systemd-tpm2-setup.enable = false;
+        systemd-tpm2-setup-early.enable = false;
+      };
 
       # Boot / initrd
       boot = {
