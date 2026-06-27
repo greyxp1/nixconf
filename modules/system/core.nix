@@ -7,6 +7,8 @@
     documentation.nixos.enable = false;
     systemd.network.wait-online.enable = false;
     services.flatpak.enable = true;
+    services.journald.extraConfig = "SystemMaxUse=500M\nMaxFileSec=1week";
+    programs.nix-ld.enable = true;
 
     users.users = {
       root.initialHashedPassword = "";
@@ -40,6 +42,9 @@
       settings = {
         trusted-users = ["@wheel"];
         experimental-features = ["nix-command" "flakes"];
+        warn-dirty = false;
+        auto-optimise-store = true;
+        min-free = 536870912;
       } // import ./_cache.nix;
     };
 
