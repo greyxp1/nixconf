@@ -1,6 +1,5 @@
 _: {
   flake.nixosModules.zed = _: {
-    programs.nix-ld.enable = true;
     home-manager.users.grey = _: {
       catppuccin.zed.enable = false;
       programs.zed-editor = {
