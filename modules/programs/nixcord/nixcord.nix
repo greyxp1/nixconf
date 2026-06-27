@@ -10,9 +10,9 @@
           enable = true;
           equicord.enable = true;
           settings = {
-            #SKIP_HOST_UPDATE = true;
-            #SKIP_MODULE_UPDATE = true;
-            #USE_NEW_UPDATER = false;
+            SKIP_HOST_UPDATE = true;
+            SKIP_MODULE_UPDATE = true;
+            USE_NEW_UPDATER = false;
             MINIMIZE_TO_TRAY = false;
             openasar = {
               setup = true;
