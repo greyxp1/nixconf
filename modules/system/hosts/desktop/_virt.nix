@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{pkgs, lib, ...}: {
   environment.systemPackages = with pkgs; [
     spice-gtk
     (writeScriptBin "create-nixos-vm" ''
@@ -78,18 +78,22 @@
     };
   };
 
-  systemd.services.libvirt-default-network = {
-    description = "Autostart libvirt default network";
-    after = ["libvirtd.service"];
-    requires = ["libvirtd.service"];
-    wantedBy = ["multi-user.target"];
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-      ExecStart = pkgs.writeShellScript "libvirt-net-start" ''
-        ${pkgs.libvirt}/bin/virsh net-autostart default || true
-        ${pkgs.libvirt}/bin/virsh net-start default 2>/dev/null || true
-      '';
+  systemd.services = {
+    libvirtd.wantedBy = lib.mkForce [];
+    libvirt-default-network = {
+      description = "Autostart libvirt default network";
+      after = ["libvirtd.service"];
+      requires = ["libvirtd.service"];
+      partOf = ["libvirtd.service"];
+      wantedBy = lib.mkForce [];
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+        ExecStart = pkgs.writeShellScript "libvirt-net-start" ''
+          ${pkgs.libvirt}/bin/virsh net-autostart default || true
+          ${pkgs.libvirt}/bin/virsh net-start default 2>/dev/null || true
+        '';
+      };
     };
   };
 }
