@@ -18,72 +18,59 @@ nixpkgs = ["nixpkgs-unstable"]
 
 [inputs.nixpkgs]
 url = "gh:nixos/nixpkgs/nixos-unstable"
-
 [inputs.tack]
 url = "gh:manic-systems/tack"
-
-[inputs.nix-cachyos-kernel]
-url = "gh:xddxdd/nix-cachyos-kernel/release"
-
 [inputs.preservation]
 url = "gh:nix-community/preservation"
-
 [inputs.import-tree]
 url = "gh:vic/import-tree"
-
-[inputs.catppuccin]
-url = "gh:catppuccin/nix"
-
-[inputs.noctalia]
-url = "gh:noctalia-dev/noctalia/cachix"
-
 [inputs.noctalia-greeter]
 url = "gh:noctalia-dev/noctalia-greeter"
-
 [inputs.musnix]
 url = "gh:musnix/musnix"
+[inputs.waytator]
+url = "gh:linusammon/waytator/flake"
+[inputs.nix-yazi-plugins]
+url = "gh:greyxp1/nix-yazi-plugins"
+[inputs.disko]
+url = "gh:nix-community/disko"
+[inputs.lanzaboote]
+url = "gh:nix-community/lanzaboote/v1.1.0"
+[inputs.home-manager]
+url = "gh:nix-community/home-manager"
+[inputs.nsticky]
+url = "gh:lonerOrz/nsticky"
+[inputs.helium]
+url = "gh:greyxp1/helium-flake"
+[inputs.nixcord]
+url = "gh:FlameFlag/nixcord"
+[inputs.nix-index-database]
+url = "gh:nix-community/nix-index-database"
 
 [inputs.videoclip]
 url = "gh:greyxp1/videoclip"
 type = "fetch"
 
-[inputs.waytator]
-url = "gh:linusammon/waytator/flake"
-
-[inputs.nix-yazi-plugins]
-url = "gh:greyxp1/nix-yazi-plugins"
-
-[inputs.disko]
-url = "gh:nix-community/disko"
-
-[inputs.lanzaboote]
-url = "gh:nix-community/lanzaboote/v1.1.0"
+[inputs.oniri]
+url = "gh:Antiz96/oniri"
+type = "fetch"
 
 [inputs.flake-parts]
 url = "gh:hercules-ci/flake-parts"
 follows = { nixpkgs-lib = "nixpkgs" }
 
-[inputs.home-manager]
-url = "gh:nix-community/home-manager"
+[inputs.nix-cachyos-kernel]
+url = "gh:xddxdd/nix-cachyos-kernel/release"
+exclude_follow = ["nixpkgs"]
 
 [inputs.niri-nix]
 url = "git+https://codeberg.org/BANanaD3V/niri-nix"
+exclude_follow = ["nixpkgs"]
 
-[inputs.nsticky]
-url = "gh:lonerOrz/nsticky"
+[inputs.noctalia]
+url = "gh:noctalia-dev/noctalia/cachix"
+exclude_follow = ["nixpkgs"]
 
-[inputs.oniri]
-url = "gh:Antiz96/oniri"
-type = "fetch"
-
-[inputs.helium]
-url = "gh:greyxp1/helium-flake"
-
-[inputs.nixcord]
-url = "gh:FlameFlag/nixcord"
-
-[inputs.nix-index-database]
-url = "gh:nix-community/nix-index-database"
-
-[inputs.mac-style-plymouth]
-url = "gh:SergioRibera/s4rchiso-plymouth-theme"
+[inputs.catppuccin]
+url = "gh:catppuccin/nix"
+exclude_follow = ["nixpkgs"]
