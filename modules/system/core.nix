@@ -1,6 +1,5 @@
-{inputs, ...}: {
+_: {
   flake.nixosModules.core = {config, pkgs, ...}: {
-    imports = [inputs.home-manager.nixosModules.home-manager];
     time.timeZone = "America/Montreal";
     networking.networkmanager.enable = true;
     nixpkgs.config.allowUnfree = true;
@@ -46,25 +45,6 @@
         auto-optimise-store = true;
         min-free = 536870912;
       } // import ./_cache.nix;
-    };
-
-    home-manager = {
-      useGlobalPkgs = true;
-      useUserPackages = true;
-      backupFileExtension = "backup";
-      overwriteBackup = true;
-      users.grey = {pkgs, ...}: {
-        xdg.enable = true;
-        home = {
-          username = "grey";
-          homeDirectory = "/home/grey";
-          stateVersion = "26.05";
-          packages = with pkgs; [
-            inputs.waytator.packages.${stdenv.hostPlatform.system}.default
-            parsec-bin
-          ];
-        };
-      };
     };
   };
 }

@@ -1,5 +1,5 @@
 {inputs, ...}: {
-  flake.nixosModules.niri = {pkgs, ...}: {
+  flake.nixosModules.greeter = {pkgs, ...}: {
     imports = [inputs.noctalia-greeter.nixosModules.default];
     programs.noctalia-greeter = {
       enable = true;

@@ -1,16 +1,14 @@
 {inputs, ...}: let mkHost = import ../_mkHost.nix inputs; in {
   flake.nixosConfigurations.desktop = mkHost {
-    extraModules = [
-      inputs.lanzaboote.nixosModules.lanzaboote
-      ./_audio.nix
-      ./_virt.nix
-      ./gaming/_gaming.nix
-      ./gaming/kovaaks/_kovaaks.nix
-      ./_nvidia.nix
-    ];
+    extraModules = [inputs.lanzaboote.nixosModules.lanzaboote];
     hostModule = {pkgs, lib, ...}: {
       networking.hostName = "desktop";
       custom.disk.device = import ./_device.nix;
+      custom.audio.enable = true;
+      custom.gaming.enable = true;
+      custom.kovaaks.enable = true;
+      custom.nvidia.enable = true;
+      custom.virt.enable = true;
 
       # Kernel
       nixpkgs.overlays = [inputs.nix-cachyos-kernel.overlays.pinned];
