@@ -1,6 +1,4 @@
-{config, inputs, lib, ...}: let
-  flakeConfig = config;
-in {
+{config, inputs, lib, ...}: {
   options.flake.homeModules = lib.mkOption {
     type = lib.types.lazyAttrsOf lib.types.raw;
     default = {};
@@ -20,7 +18,7 @@ in {
       overwriteBackup = true;
       extraSpecialArgs = {inherit inputs;};
       users.grey = {...}: {
-        imports = builtins.attrValues flakeConfig.flake.homeModules;
+        imports = builtins.attrValues config.flake.homeModules;
         xdg.enable = true;
         home = {
           username = "grey";

@@ -1,9 +1,7 @@
-{config, ...}: let flakeConfig =
-  config; in {
-  flake.nixosModules.kovaaks = {config, lib, ...}: let cfg =
-    config.custom.kovaaks; in {
+{config, ...}: let flakeConfig = config; in {
+  flake.nixosModules.kovaaks = {config, lib, ...}: {
     options.custom.kovaaks.enable = lib.mkEnableOption "Kovaak's config";
-    config = lib.mkIf cfg.enable {
+    config = lib.mkIf config.custom.kovaaks.enable {
       system.activationScripts.kovaaks-perms = {
         deps = ["users"];
         text = ''

@@ -1,8 +1,7 @@
 {
-  flake.nixosModules.nvidia = {config, lib, pkgs, ...}: let cfg =
-    config.custom.nvidia; in {
+  flake.nixosModules.nvidia = {config, lib, pkgs, ...}: {
     options.custom.nvidia.enable = lib.mkEnableOption "NVIDIA graphics";
-    config = lib.mkIf cfg.enable {
+    config = lib.mkIf config.custom.nvidia.enable {
       environment.systemPackages = [pkgs.nvidia-vaapi-driver];
 
       boot.kernelParams = [

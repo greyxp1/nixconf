@@ -1,6 +1,5 @@
 {
   flake.nixosModules.mic = {config, lib, pkgs, ...}: let
-    cfg = config.custom.audio;
     initScript = pkgs.writeTextFile {
       name = "at2005usb-init";
       executable = true;
@@ -20,7 +19,7 @@
   in {
     options.custom.audio.enable = lib.mkEnableOption "desktop audio setup";
 
-    config = lib.mkIf cfg.enable {
+    config = lib.mkIf config.custom.audio.enable {
       systemd.services.at2005usb-init = {
         description = "Set AT2005USB hardware mixer levels";
         after = ["sound.target" "pipewire.service" "pipewire-pulse.service" "wireplumber.service"];

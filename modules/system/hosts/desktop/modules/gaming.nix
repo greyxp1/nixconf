@@ -1,9 +1,8 @@
-{config, ...}: let flakeConfig =
-  config; in {
-  flake.nixosModules.gaming = {config, lib, pkgs, ...}: let cfg =
-    config.custom.gaming; in {
+{config, ...}: let flakeConfig = config; in {
+  flake.nixosModules.gaming = {config, lib, pkgs, ...}: {
     options.custom.gaming.enable = lib.mkEnableOption "gaming setup";
-    config = lib.mkIf cfg.enable {
+    config = lib.mkIf config.custom.gaming.enable {
+      home-manager.users.grey.imports = [flakeConfig.flake.homeProfiles.gaming];
       programs = {
         steam = {
           enable = true;
@@ -23,12 +22,11 @@
           settings.general.renice = 10;
         };
       };
-
-      home-manager.users.grey.imports = [flakeConfig.flake.homeProfiles.gaming];
     };
   };
 
   flake.homeProfiles.gaming = {pkgs, ...}: {
+    home.packages = [pkgs.umu-launcher];
     programs.mangohud = {
       enable = true;
       enableSessionWide = false;
@@ -45,7 +43,5 @@
         background_alpha = "0.4";
       };
     };
-
-    home.packages = [pkgs.umu-launcher];
   };
 }

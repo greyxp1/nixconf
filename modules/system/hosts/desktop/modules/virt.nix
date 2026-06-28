@@ -1,8 +1,7 @@
 {
-  flake.nixosModules.virt = {config, lib, pkgs, ...}: let cfg =
-    config.custom.virt; in {
+  flake.nixosModules.virt = {config, lib, pkgs, ...}: {
     options.custom.virt.enable = lib.mkEnableOption "virtualization tools";
-    config = lib.mkIf cfg.enable {
+    config = lib.mkIf config.custom.virt.enable {
       environment.systemPackages = with pkgs; [
         spice-gtk
         (writeScriptBin "create-nixos-vm" ''
