@@ -64,12 +64,12 @@
           plugins = {
             enabled = ["noctalia/screen_recorder"];
             source = [
-              {
-                auto_update = true;
-                kind = "git";
-                location = "https://github.com/noctalia-dev/official-plugins";
-                name = "official";
-              }
+              #{
+              #  auto_update = true;
+              #  kind = "git";
+              #  location = "https://github.com/noctalia-dev/official-plugins";
+              #  name = "official";
+              #}
               {
                 auto_update = true;
                 kind = "git";
@@ -79,8 +79,8 @@
               {
                 auto_update = true;
                 kind = "git";
-                location = "https://github.com/greyxp1/screen-recorder";
-                name = "screen-recorder";
+                location = "https://github.com/greyxp1/official-plugins";
+                name = "official";
               }
             ];
           };
