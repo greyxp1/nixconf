@@ -1,5 +1,5 @@
 {inputs, ...}: {
-  flake.nixosModules.helium = {...}: {imports = [inputs.helium.nixosModules.helium];};
+  flake.nixosModules.helium = {imports = [inputs.helium.nixosModules.helium];};
   flake.homeModules.helium = {
     programs.helium = {
       enable = true;
