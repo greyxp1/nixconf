@@ -5,21 +5,19 @@ _: {
     home-manager.users.grey = _: {
       programs.fish = {
         enable = true;
-        shellAliases = {
-        };
 
         shellAbbrs = {
           rebuild = "nh os switch";
           update = "cd ~/nixconf && tack update && nh os switch";
           home = "sudo systemctl restart home-manager-grey.service";
           clean = "nh clean all --optimise --keep 1";
-
           ls = "ls --no-filesize";
           ll = "ll --total-size";
           la = "la --no-filesize";
           lla = "la --total-size";
           lt = "lt --no-time --no-filesize";
           llt = "lt --total-size";
+          ff = "microfetch";
         };
 
         functions = {
@@ -43,8 +41,6 @@ _: {
         }) (with pkgs.fishPlugins; [
           fzf-fish
           autopair
-          done
-          fifc
         ]);
       };
     };
