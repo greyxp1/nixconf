@@ -12,7 +12,7 @@ $directory\
 [ ](fg:color_bg2 bg:color_bg4)\
 $git_branch\
 $git_status\
-[](fg:color_bg4 bg:color_bg5)\
+[ ](fg:color_bg4 bg:color_bg5)\
 $cmd_duration\
 [](fg:color_bg5)\
 $character\
