@@ -25,11 +25,7 @@
             overview.workspace-shadow.off = {};
             hotkey-overlay.skip-at-startup = {};
             gestures.hot-corners.off = {};
-
-            cursor = {
-              hide-after-inactive-ms = 3000;
-              hide-when-typing = {};
-            };
+            cursor.hide-after-inactive-ms = 3000;
 
             blur = {
               noise = 0.03;
