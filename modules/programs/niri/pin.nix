@@ -1,4 +1,4 @@
-_: {
+{
   flake.homeModules.niri-pin = {pkgs, ...}: {
     home.packages = [
       pkgs.jq

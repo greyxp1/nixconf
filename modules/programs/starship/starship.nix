@@ -1,5 +1,5 @@
-_: {
-  flake.homeModules.starship = _: {
+{
+  flake.homeModules.starship = {
     catppuccin.starship.enable = false;
     programs.starship = {
       enable = true;

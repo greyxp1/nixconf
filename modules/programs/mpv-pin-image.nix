@@ -1,4 +1,4 @@
-_: {
+{
   flake.homeModules.mpv-pin-image = {pkgs, ...}: let
     inputConf = pkgs.writeText "mpv-pin-input.conf" ''
       WHEEL_UP add window-scale  0.05

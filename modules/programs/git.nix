@@ -1,5 +1,5 @@
-_: {
-  flake.homeModules.git = _: {
+{
+  flake.homeModules.git = {
     programs = {
       git = {
         enable = true;

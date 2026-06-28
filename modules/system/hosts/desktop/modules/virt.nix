@@ -1,4 +1,4 @@
-_: {
+{
   flake.nixosModules.virt = {config, lib, pkgs, ...}: let cfg =
     config.custom.virt; in {
     options.custom.virt.enable = lib.mkEnableOption "virtualization tools";

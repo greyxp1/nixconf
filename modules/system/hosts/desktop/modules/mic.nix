@@ -1,4 +1,4 @@
-_: {
+{
   flake.nixosModules.mic = {config, lib, pkgs, ...}: let
     cfg = config.custom.audio;
     initScript = pkgs.writeTextFile {

@@ -1,4 +1,4 @@
-_: {
+{
   flake.nixosModules.performance = {lib, ...}: {
     services.irqbalance.enable = true;
     nix.settings = {

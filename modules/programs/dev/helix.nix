@@ -1,5 +1,5 @@
-_: {
-  flake.nixosModules.helix = _: {
+{
+  flake.nixosModules.helix = {
     environment.variables.EDITOR = "hx";
     environment.variables.VISUAL = "hx";
     programs.nano.enable = false;

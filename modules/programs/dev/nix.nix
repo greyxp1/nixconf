@@ -1,4 +1,4 @@
-_: {
+{
   flake.homeModules.nix-language = {config, pkgs, ...}: let
     formatProjects = ["nixconf" "helium-flake"];
     formatProjectPatterns = builtins.concatStringsSep "|" (

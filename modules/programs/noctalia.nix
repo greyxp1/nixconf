@@ -3,7 +3,7 @@
     environment.systemPackages = [pkgs.gpu-screen-recorder];
   };
 
-  flake.homeModules.noctalia = _: {
+  flake.homeModules.noctalia = {
     imports = [inputs.noctalia.homeModules.default];
     programs.noctalia = {
       enable = true;

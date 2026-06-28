@@ -1,4 +1,4 @@
-_: {
+{
   flake.nixosModules.fish = {pkgs, ...}: {
     programs.fish.enable = true;
     users.users.grey.shell = pkgs.fish;

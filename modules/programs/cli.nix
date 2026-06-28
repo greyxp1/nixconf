@@ -1,5 +1,5 @@
 {inputs, ...}: {
-  flake.nixosModules.cli = _: {
+  flake.nixosModules.cli = {
     programs.nh = {
       enable = true;
       flake = "/home/grey/nixconf";

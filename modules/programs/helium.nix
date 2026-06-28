@@ -1,6 +1,6 @@
 {inputs, ...}: {
   flake.nixosModules.helium = {...}: {imports = [inputs.helium.nixosModules.helium];};
-  flake.homeModules.helium = _: {
+  flake.homeModules.helium = {
     programs.helium = {
       enable = true;
       defaultBrowser = true;

@@ -1,8 +1,8 @@
-_: let
+let
   gitKey = "/home/grey/nixconf/git-ssh/id_ed25519";
   gitPubKey = "/home/grey/nixconf/git-ssh/id_ed25519.pub";
 in {
-  flake.nixosModules.ssh = _: {
+  flake.nixosModules.ssh = {
     services.openssh = {
       enable = true;
       openFirewall = false;

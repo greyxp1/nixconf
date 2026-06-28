@@ -1,4 +1,4 @@
-_: {
+{
   flake.nixosModules.nvidia = {config, lib, pkgs, ...}: let cfg =
     config.custom.nvidia; in {
     options.custom.nvidia.enable = lib.mkEnableOption "NVIDIA graphics";

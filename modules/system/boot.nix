@@ -1,5 +1,5 @@
-_: {
-  flake.nixosModules.boot = _: {
+{
+  flake.nixosModules.boot = {
     boot = {
       supportedFilesystems = ["btrfs"];
       initrd = {

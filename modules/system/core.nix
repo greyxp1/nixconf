@@ -1,4 +1,4 @@
-_: {
+{
   flake.nixosModules.core = {config, pkgs, ...}: {
     time.timeZone = "America/Montreal";
     networking.networkmanager.enable = true;

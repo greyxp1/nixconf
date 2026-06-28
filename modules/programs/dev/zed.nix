@@ -1,5 +1,5 @@
-_: {
-  flake.homeModules.zed = _: {
+{
+  flake.homeModules.zed = {
     catppuccin.zed.enable = false;
     programs.zed-editor = {
       enable = true;
