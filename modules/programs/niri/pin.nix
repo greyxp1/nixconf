@@ -1,13 +1,5 @@
 _: {
-  flake.nixosModules.niri-pin = {pkgs, ...}: let
-    inputConf = pkgs.writeText "mpv-pin-input.conf" ''
-      WHEEL_UP add window-scale  0.05
-      WHEEL_DOWN add window-scale -0.05
-      Shift+WHEEL_UP add window-scale  0.01
-      Shift+WHEEL_DOWN add window-scale -0.01
-      MBTN_RIGHT quit
-    '';
-  in {
+  flake.nixosModules.niri-pin = {pkgs, ...}: {
     home-manager.sharedModules = [
       {
         home.packages = [
@@ -47,15 +39,7 @@ _: {
             kill "$STREAM_PID" 2>/dev/null || true
             [ -z "$SCREENSHOT" ] && exit 0
 
-            ${pkgs.mpv}/bin/mpv \
-              --no-config --no-border --osc=no --osd-level=0 \
-              --ao=null --sub-auto=no \
-              --vo=gpu --gpu-api=opengl --keepaspect=no \
-              --autofit-larger=100%x100% \
-              --keep-open=yes --image-display-duration=inf \
-              --input-conf="${inputConf}" \
-              --title=Niri-Pin-Surface \
-              "$SCREENSHOT"
+            mpv-pin-image Niri-Pin-Surface "$SCREENSHOT"
             rm -f "$SCREENSHOT"
           '')
         ];

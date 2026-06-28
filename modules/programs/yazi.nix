@@ -76,13 +76,21 @@
             sort_by = "natural";
           };
 
-          opener.play = [
-            {
-              run = ''mpv --force-window -- "$@"'';
-              orphan = true;
-              for = "unix";
-            }
-          ];
+          opener = {
+            play = [
+              {
+                run = ''mpv --force-window -- "$@"'';
+                orphan = true;
+              }
+            ];
+            open = [
+              {
+                mime = "image/*";
+                run = "mpv-pin-image Niri-Pin-Surface -- \"$@\"";
+                orphan = true;
+              }
+            ];
+          };
         };
 
         yaziPlugins = {
