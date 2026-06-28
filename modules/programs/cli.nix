@@ -50,6 +50,11 @@
               regex = true;
             };
           };
+
+          opencode = {
+            enable = true;
+            settings.permission = "allow";
+          };
         };
 
         xdg.configFile."tlrc/config.toml".text = ''
@@ -75,13 +80,10 @@
           nerd-fonts.jetbrains-mono
           fzf
           fd
-          jq # needed by done plugin
           tlrc
           ripgrep
           microfetch
-          btop
           ani-cli
-          swayimg
         ];
       };
     };
