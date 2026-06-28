@@ -32,12 +32,14 @@ diff -ruN a/src/alejandra/src/rules/bin_op.rs b/src/alejandra/src/rules/bin_op.r
 diff -ruN a/src/alejandra/src/rules/key_value.rs b/src/alejandra/src/rules/key_value.rs
 --- a/src/alejandra/src/rules/key_value.rs
 +++ b/src/alejandra/src/rules/key_value.rs
-@@ -93,6 +93,8 @@
+@@ -93,6 +93,10 @@
          } else if matches!(
              child_expr.kind(),
              rnix::SyntaxKind::NODE_ASSERT
 +                | rnix::SyntaxKind::NODE_APPLY
 +                | rnix::SyntaxKind::NODE_BIN_OP
++                | rnix::SyntaxKind::NODE_IDENT
++                | rnix::SyntaxKind::NODE_SELECT
                  | rnix::SyntaxKind::NODE_ATTR_SET
                  | rnix::SyntaxKind::NODE_PAREN
                  | rnix::SyntaxKind::NODE_LAMBDA
