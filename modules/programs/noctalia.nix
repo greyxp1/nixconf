@@ -69,14 +69,14 @@
             {
               auto_update = true;
               kind = "git";
-              location = "https://github.com/noctalia-dev/community-plugins";
-              name = "community";
+              location = "https://github.com/noctalia-dev/official-plugins";
+              name = "official";
             }
             {
               auto_update = true;
               kind = "git";
-              location = "https://github.com/greyxp1/official-plugins";
-              name = "official";
+              location = "https://github.com/noctalia-dev/community-plugins";
+              name = "community";
             }
           ];
         };
