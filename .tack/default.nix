@@ -32,45 +32,61 @@ let
 
     # flatten `target = [aliases]` rows alongside `alias = "target"` rows
     all_follow = foldl' (
-      acc: key: let val = all_follow_raw.${key}; in if isList val
-      then
-        acc
-        // {${key} = key;}
-        // listToAttrs (
-          map (a: {
-            name = a;
-            value = key;
-          })
-          val
-        )
-      else if isString val
-      then acc // {${key} = val;}
-      else acc
+      acc: key: let
+        val = all_follow_raw.${key};
+      in
+        if isList val
+        then
+          acc
+          // {
+            ${key} = key;
+          }
+          // listToAttrs (
+            map (a: {
+              name = a;
+              value = key;
+            })
+            val
+          )
+        else if isString val
+        then acc // {${key} = val;}
+        else acc
     ) {} (attrNames all_follow_raw);
 
-    knownTypes = ["github" "gitlab" "git" "tarball" "path" "indirect"];
+    knownTypes = [
+      "github"
+      "gitlab"
+      "git"
+      "tarball"
+      "path"
+      "indirect"
+    ];
 
     # path nodes are convenience pins, so return the live local path directly
     # because fetchTree rejects unlocked paths in pure eval
     fetchPin = name:
       if !(lock ? ${name})
       then throw "tack: pin '${name}' has no lock entry; run tack update"
-      else let node = lock.${name}; in if (node.type or "") == "path"
-      then
-        {
-          outPath =
-            if substring 0 1 node.path == "/"
-            then node.path
-            else ./. + ("/" + node.path);
-          lastModified = node.lastModified or 0;
-        } // (
-          if node ? narHash
-          then {inherit (node) narHash;}
-          else {}
-        )
-      else if !(elem (node.type or "") knownTypes)
-      then throw "tack: unknown lock type '${node.type or "?"}' for pin '${name}'"
-      else fetchTree node;
+      else let
+        node = lock.${name};
+      in
+        if (node.type or "") == "path"
+        then
+          {
+            outPath =
+              if substring 0 1 node.path == "/"
+              then node.path
+              else ./. + ("/" + node.path);
+            lastModified = node.lastModified or 0;
+          }
+          // (
+            if node ? narHash
+            then {inherit (node) narHash;}
+            else {}
+          )
+        else if !(elem (node.type or "") knownTypes)
+        then throw "tack: unknown lock type '${node.type or "?"}' for pin '${name}'"
+        else fetchTree node;
 
     fetchFixed = name: entry: let
       raw = derivation {
@@ -112,56 +128,66 @@ let
         then throw "tack: follows path dead-end: node '${nodeName}' has no input '${key}'"
         else walkPath upLock (resolveSpec upLock inputs.${key}) (tail path);
 
-    followsFor = pin: let rules = removeAttrs all_follow (pin.exclude_follow or []); in {
+    followsFor = pin: let
+      rules = removeAttrs all_follow (pin.exclude_follow or []);
+    in {
       level = rules // (pin.follows or {});
       deep = rules;
     };
 
-    resolveFollows = mapAttrs (_: target: self.${target} or (throw "tack: follows target '${target}' is not a pin"));
+    resolveFollows = mapAttrs (
+      _: target: self.${target} or (throw "tack: follows target '${target}' is not a pin")
+    );
 
     # follows key is `flake:name`, `tack:name`, or bare `name`
     # project onto one side, rekeyed to bare names
     followsForSide = side: follows:
       listToAttrs (
         concatMap (
-          key: let m = match "(flake|tack):(.*)" key; in if m == null
-          then [
-            {
-              name = key;
-              value = follows.${key};
-            }
-          ]
-          else if head m == side
-          then [
-            {
-              name = elemAt m 1;
-              value = follows.${key};
-            }
-          ]
-          else []
+          key: let
+            m = match "(flake|tack):(.*)" key;
+          in
+            if m == null
+            then [
+              {
+                name = key;
+                value = follows.${key};
+              }
+            ]
+            else if head m == side
+            then [
+              {
+                name = elemAt m 1;
+                value = follows.${key};
+              }
+            ]
+            else []
         ) (attrNames follows)
       );
 
-    mkCallerInputs = upLock: nodeName: rawInputs: levelFollows: deepFollows: let resolved = resolveFollows levelFollows; in mapAttrs (
-      n: _decl:
-        resolved.${
-          n
-        } or (
-          if upLock != null
-          then let
-            ref = (upLock.nodes.${nodeName}.inputs or {}).${n}
+    mkCallerInputs = upLock: nodeName: rawInputs: levelFollows: deepFollows: let
+      resolved = resolveFollows levelFollows;
+    in
+      mapAttrs (
+        n: _decl:
+          resolved.${
+            n
+          } or (
+            if upLock != null
+            then let
+              ref = (upLock.nodes.${nodeName}.inputs or {}).${n}
                     or (throw "tack: input '${n}' declared but not in flake.lock node '${nodeName}'");
-            childName = resolveSpec upLock ref;
-            childNode = upLock.nodes.${childName};
-            childSrc = fetchTree childNode.locked;
-          in
-            if childNode.flake or true
-            then evalTransitive upLock childName childSrc deepFollows
-            else childSrc
-          else throw "tack: no flake.lock; cannot resolve input '${n}'"
-        )
-    )
-    rawInputs;
+              childName = resolveSpec upLock ref;
+              childNode = upLock.nodes.${childName};
+              childSrc = fetchTree childNode.locked;
+            in
+              if childNode.flake or true
+              then evalTransitive upLock childName childSrc deepFollows
+              else childSrc
+            else throw "tack: no flake.lock; cannot resolve input '${n}'"
+          )
+      )
+      rawInputs;
 
     mkFlakeResult = sourceInfo: flakeDir: callerInputs: outputs:
       outputs
@@ -204,9 +230,12 @@ let
 
       outputs = raw.outputs (callerInputs // extraArgs // {self = result;});
 
-      result = let base = mkFlakeResult sourceInfo flakeDir callerInputs outputs; in if hasTack && tackOverrides != {} && !supportsOverrides
-      then trace "tack: ${flakeDir}: not marked recomposable (set [tack] recomposable = true); overrides will not reach upstream" base
-      else base;
+      result = let
+        base = mkFlakeResult sourceInfo flakeDir callerInputs outputs;
+      in
+        if hasTack && tackOverrides != {} && !supportsOverrides
+        then trace "tack: ${flakeDir}: not marked recomposable (set [tack] recomposable = true); overrides will not reach upstream" base
+        else base;
     in
       result;
 
@@ -272,9 +301,12 @@ let
     in
       if pinType == "fixed"
       then fetchFixed name lock.${name}
-      else let sourceInfo = fetchPin name; in if pinType == "flake"
-      then evalTopFlake sourceInfo pin
-      else evalFetch sourceInfo pin subdir;
+      else let
+        sourceInfo = fetchPin name;
+      in
+        if pinType == "flake"
+        then evalTopFlake sourceInfo pin
+        else evalFetch sourceInfo pin subdir;
 
     declared = pins.inputs or {};
 
@@ -287,9 +319,12 @@ let
       }) (attrValues all_follow)
     );
     autoNames = filter (n: !(declared ? ${n}) && autoTargets ? ${n}) (attrNames lock);
-    autoPin = name: let sourceInfo = fetchPin name; in if pathExists (sourceInfo.outPath + "/flake.nix")
-    then evalTopFlake sourceInfo {}
-    else sourceInfo;
+    autoPin = name: let
+      sourceInfo = fetchPin name;
+    in
+      if pathExists (sourceInfo.outPath + "/flake.nix")
+      then evalTopFlake sourceInfo {}
+      else sourceInfo;
 
     self = (mapAttrs loadPin declared)
     // listToAttrs (
@@ -298,7 +333,8 @@ let
         value = autoPin name;
       })
       autoNames
-    ) // overrides;
+    )
+    // overrides;
   in
     self // {__functor = _: call;};
 in
