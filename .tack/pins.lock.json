@@ -1,4 +1,10 @@
 {
+  "beaker": {
+    "type": "tarball",
+    "url": "https://git.bwaaa.monster/beaker/snapshot/master.tar.gz",
+    "narHash": "sha256-3aMH1YblnpiXKdkQVMRLmMZ5/8G7vB4HAfLg7+izyHg=",
+    "lastModified": 1782711142
+  },
   "catppuccin": {
     "type": "github",
     "owner": "catppuccin",
@@ -115,9 +121,9 @@
     "type": "github",
     "owner": "noctalia-dev",
     "repo": "noctalia",
-    "rev": "c6f09a8f436b21d4a932e778807d7bf707eab9b7",
-    "narHash": "sha256-QDvOk7HbXcPK9DCy+5oHbsoJ0I4ko1iw11rDb7BFL4I=",
-    "lastModified": 1782703496
+    "rev": "8c70e95e0af0f359878529631d75fc1ab0d3bd6d",
+    "narHash": "sha256-9nEW0HmJhBnx18relGPey+5mAOP43AoJ1O9ybUJFhrA=",
+    "lastModified": 1782707326
   },
   "noctalia-greeter": {
     "type": "github",
@@ -134,6 +140,12 @@
     "rev": "9283991ca603cf3d5c3dbb4561e1b302bde15a10",
     "narHash": "sha256-buKbqhHImR98FiGETy3hlO7klaEX8R+pKjZuQPzWMYo=",
     "lastModified": 1781653575
+  },
+  "omnisearch": {
+    "type": "tarball",
+    "url": "https://git.bwaaa.monster/omnisearch/snapshot/master.tar.gz",
+    "narHash": "sha256-cx6ChdOEi6KYL1qxLtavKaiqP7t2jDJyh3hsqXmMAkA=",
+    "lastModified": 1782711142
   },
   "oniri": {
     "type": "github",
