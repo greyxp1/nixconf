@@ -86,6 +86,7 @@
       ripgrep
       microfetch
       ani-cli
+      pandora-launcher
     ];
   };
 }
