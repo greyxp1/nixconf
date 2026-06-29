@@ -3,6 +3,7 @@
     hostModule = {
       networking.hostName = "generic";
       custom.disk.device = import ./_device.nix;
+      boot.kernelModules = ["kvm-amd" "kvm-intel"];
       boot.initrd.availableKernelModules = [
         "ahci"
         "xhci_pci"
@@ -12,10 +13,6 @@
         "sd_mod"
         "virtio_pci"
         "virtio_blk"
-      ];
-      boot.kernelModules = [
-        "kvm-amd"
-        "kvm-intel"
       ];
     };
   };

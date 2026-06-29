@@ -22,7 +22,12 @@
     config = lib.mkIf config.custom.audio.enable {
       systemd.services.at2005usb-init = {
         description = "Set AT2005USB hardware mixer levels";
-        after = ["sound.target" "pipewire.service" "pipewire-pulse.service" "wireplumber.service"];
+        after = [
+          "sound.target"
+          "pipewire.service"
+          "pipewire-pulse.service"
+          "wireplumber.service"
+        ];
         wantedBy = ["multi-user.target"];
         serviceConfig = {
           Type = "oneshot";

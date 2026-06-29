@@ -18,9 +18,7 @@
 
       themes.catppuccin_transparent = {
         inherits = "catppuccin_mocha";
-        "ui.background" = {
-          bg = "none";
-        };
+        "ui.background" = {bg = "none";};
       };
 
       languages.language = [

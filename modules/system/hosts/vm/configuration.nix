@@ -26,10 +26,7 @@
       # greetd must run niri-session after seatd is up
       systemd.services.greetd = {
         wants = ["seatd.service"];
-        after = lib.mkForce [
-          "multi-user.target"
-          "seatd.service"
-        ];
+        after = lib.mkForce ["multi-user.target" "seatd.service"];
       };
 
       hardware.graphics = {
