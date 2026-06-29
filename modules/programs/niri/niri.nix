@@ -129,19 +129,17 @@
             background-effect.xray = false;
           }
           {
-            match._props."app-id" = "^steam$";
-            opacity = 0.81;
-          }
-          {
             match._props."app-id" = "^helium$";
             open-on-workspace = "browser";
           }
           {
             match._props."app-id" = "^dev.zed.Zed$|^steam$";
             open-on-workspace = "default";
+            open-fullscreen = false;
           }
           {
-            match._props."app-id" = "^steam_app_.*$";
+            match._props."app-id" = "^steam_app_.*$|^terraria*$";
+            exclude._props."app-id" = "^steam$";
             open-fullscreen = true;
             open-on-workspace = "default";
           }
