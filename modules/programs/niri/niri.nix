@@ -138,7 +138,7 @@
             open-fullscreen = false;
           }
           {
-            match._props."app-id" = "^steam_app_.*$|^terraria*$";
+            match._props."app-id" = "^steam_app_.*$|Terraria|^Minecraft";
             exclude._props."app-id" = "^steam$";
             open-fullscreen = true;
             open-on-workspace = "default";
