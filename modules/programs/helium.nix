@@ -1,11 +1,22 @@
 {inputs, ...}: {
-  flake.nixosModules.helium = {imports = [inputs.helium.nixosModules.helium];};
+  flake.nixosModules.helium = {
+    services.omnisearch.enable = true;
+    imports = [
+      inputs.helium.nixosModules.helium
+      inputs.omnisearch.nixosModules.default
+    ];
+  };
   flake.homeModules.helium = {
     programs.helium = {
       enable = true;
       defaultBrowser = true;
-      extraPolicies.RestoreOnStartup = 1;
       flags = ["--enable-features=HeliumMiddleClickAutoscroll"];
+      extraPolicies = {
+        RestoreOnStartup = 1;
+        DefaultSearchProviderEnabled = true;
+        DefaultSearchProviderName = "Omnisearch";
+        DefaultSearchProviderSearchURL = "http://localhost:8087/search?q={searchTerms}";
+      };
 
       extensions = {
         sponsorBlock.id = "mnjggcdmjocbbbhaepdhchncahnbgone";
@@ -16,18 +27,12 @@
         betterLyrics.id = "effdbpegglllpfkjppbokhmmiinhlmg";
         equicord.id = "mcambpfmpjnncfoodejdmehedbkjepmi";
         re-start.id = "fdodcmjeojbmcgmhcgcelffcekhicnop";
-
         protonPass.id = "ghmbeldphafepmbegfdlkpapadhbakde";
         protonPass.pin = true;
-
         raindrop.id = "ldgfbffkinooeloadekpmfoklnobpien";
         raindrop.pin = true;
-
         pipView.id = "eaeedemddlledlghhjebjgdmhjekgegd";
         pipView.pin = true;
-
-        darkReader.id = "eimadpbcbfnmbkopoojfekhnkhdbieeh";
-        darkReader.pin = true;
       };
 
       preferences = {
@@ -46,7 +51,7 @@
           show_vertical_tabs_collapse_button = false;
           zen_mode = true;
           zen_mode_sidebar_pinned = true;
-          zen_mode_top_chrome_pinned = true;
+          vertical_right_aligned = true;
         };
 
         browser = {
