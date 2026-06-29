@@ -4,7 +4,7 @@
       pname = "oniri";
       version = "0-unstable";
       src = inputs.oniri;
-      cargoHash = "sha256-vE6wf0eseWuE/z0XjuLBNbjtE37eHUXi6hrT231Qi0U=";
+      cargoHash = "sha256-skewlsFQ0ajw9dgqqnisc/gLtEjKXgzD652IbRql0rc=";
     };
   in {
     systemd.user.services.oniri = {
