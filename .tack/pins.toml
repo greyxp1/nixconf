@@ -55,6 +55,14 @@ type = "fetch"
 url = "gh:Antiz96/oniri"
 type = "fetch"
 
+[inputs.omnisearch]
+url = "https://git.bwaaa.monster/omnisearch/snapshot/master.tar.gz"
+follows = { beaker-src = "beaker" }
+
+[inputs.beaker]
+url = "https://git.bwaaa.monster/beaker/snapshot/master.tar.gz"
+type = "fetch"
+
 [inputs.flake-parts]
 url = "gh:hercules-ci/flake-parts"
 follows = { nixpkgs-lib = "nixpkgs" }
