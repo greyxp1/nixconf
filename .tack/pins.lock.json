@@ -29,6 +29,14 @@
     "narHash": "sha256-m1Yf0wZ8j1OHjTc2UwHwyQRSnNeSgLJOd7q5Y45hzi4=",
     "lastModified": 1778716662
   },
+  "fred": {
+    "type": "github",
+    "owner": "polygonalbones",
+    "repo": "fred-flake",
+    "rev": "a6103f9569cfcb231389b7da236dbd84f028d5a7",
+    "narHash": "sha256-hF8eqVgMVMwoug9rwYcvGy9PxeIMzT27xryXnJnSxLQ=",
+    "lastModified": 1781279862
+  },
   "helium": {
     "type": "github",
     "owner": "greyxp1",
@@ -41,9 +49,9 @@
     "type": "github",
     "owner": "nix-community",
     "repo": "home-manager",
-    "rev": "789a35fbdeb3c46b260096daa0b321c11be527ea",
-    "narHash": "sha256-8/MG4Su7PhnynrmsVO61IeAfrK7GuUEu+E+gwbhy1QQ=",
-    "lastModified": 1782702263
+    "rev": "5d72a29fc36ac21adae6ae35568fe5ee6700850f",
+    "narHash": "sha256-slFTUgDy0KTPA4LBAmC/9SngDq8GCPdX+ZR0yQHHN1E=",
+    "lastModified": 1782749631
   },
   "import-tree": {
     "type": "github",
@@ -105,25 +113,25 @@
     "type": "github",
     "owner": "FlameFlag",
     "repo": "nixcord",
-    "rev": "6db6f545223015523d72e9727811a3569ef4b099",
-    "narHash": "sha256-7IX/sy/gvDxPCBze4q5dbux6kxF90hc5PIO8u2c2tqk=",
-    "lastModified": 1782670213
+    "rev": "f5779b250d56a6e28960088edba47974c29f070b",
+    "narHash": "sha256-jTY4hJUGOBNyDiGW2rlB1bAqBNxK1WGXZXx4wQ0NzBk=",
+    "lastModified": 1782781938
   },
   "nixpkgs": {
     "type": "github",
     "owner": "nixos",
     "repo": "nixpkgs",
-    "rev": "e73de5be04e0eff4190a1432b946d469c794e7b4",
-    "narHash": "sha256-pGvFkM8N0xEkIIXDe5YYfbEAvHrk4IxBrjB/x8OomhE=",
-    "lastModified": 1782467914
+    "rev": "b5aa0fbd538984f6e3d201be0005b4463d8b09f8",
+    "narHash": "sha256-oPXCU/SSUokcGaJREHibG1CBX3+s/W7orDWQOZDsEeQ=",
+    "lastModified": 1782723713
   },
   "noctalia": {
     "type": "github",
     "owner": "noctalia-dev",
     "repo": "noctalia",
-    "rev": "8c70e95e0af0f359878529631d75fc1ab0d3bd6d",
-    "narHash": "sha256-9nEW0HmJhBnx18relGPey+5mAOP43AoJ1O9ybUJFhrA=",
-    "lastModified": 1782707326
+    "rev": "c5042b9edf23fae3d90b7c8ae291ed9b577001dd",
+    "narHash": "sha256-OyNnY+o3WZfnjeYxce/0wX3ANu0Bk5mN1BRbzCCjNVc=",
+    "lastModified": 1782788501
   },
   "noctalia-greeter": {
     "type": "github",
@@ -151,9 +159,9 @@
     "type": "github",
     "owner": "Antiz96",
     "repo": "oniri",
-    "rev": "8fdcd8e409f320dcdf147a8b037bb06c33279c54",
-    "narHash": "sha256-SaMSmA+zz1NWP7cMCKagmg8owR2V5sy5OKZAFBgqm3U=",
-    "lastModified": 1782598641
+    "rev": "8845cc3d6c861283fd96ce1671ab1a2afec1319d",
+    "narHash": "sha256-WMpligQDwgir9msLq+EUZFGXEwRZQ+DDn6i0iMLkPOU=",
+    "lastModified": 1782762969
   },
   "preservation": {
     "type": "github",
