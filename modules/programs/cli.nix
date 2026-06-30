@@ -88,6 +88,7 @@
       ani-cli
       pandora-launcher
       lazygit
+      wl-clipboard
     ];
   };
 }
