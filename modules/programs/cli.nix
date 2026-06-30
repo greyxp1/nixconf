@@ -87,6 +87,7 @@
       microfetch
       ani-cli
       pandora-launcher
+      lazygit
     ];
   };
 }
