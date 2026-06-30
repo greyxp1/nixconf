@@ -72,7 +72,7 @@
 
         binds = {
           "Mod+Return" = bind {spawn = "kitty";};
-          "Mod+E" = bind {spawn-sh = "kitty -o cursor_trail=0 fish -c 'y; fish'";};
+          "Mod+E" = bind {spawn-sh = "kitty fish -c 'y; fish'";};
           "Mod+B" = bind {spawn = "helium";};
           "Mod+D" = bind {spawn = "discord";};
           "Mod+Z" = bind {spawn = "zeditor";};
