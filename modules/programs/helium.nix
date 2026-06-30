@@ -8,6 +8,7 @@
       enable = true;
       defaultBrowser = true;
       flags = ["--enable-features=HeliumMiddleClickAutoscroll"];
+
       extraPolicies = {
         RestoreOnStartup = 1;
         DefaultSearchProviderEnabled = true;
