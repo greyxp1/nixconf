@@ -1,11 +1,10 @@
 {
-  flake.homeModules.nix-language = {config, pkgs, ...}: let
+  flake.homeModules.nix-language = {config,osConfig,pkgs,...}: let
     formatProjects = ["nixconf" "helium-flake"];
     formatProjectPatterns = builtins.concatStringsSep "|" (
       map (project: "${config.home.homeDirectory}/${project}/*") formatProjects
     );
-    nixosOptionsExpr = "(builtins.getFlake \"path:/home/grey/nixconf\")"
-    + ".nixosConfigurations.desktop.options";
+    hostName = osConfig.networking.hostName;
     alejandra = pkgs.alejandra.overrideAttrs (prev: {
       patches = (prev.patches or []) ++ [./alejandra.patch];
       doCheck = false;
@@ -29,7 +28,18 @@
       '';
     };
   in {
-    home.packages = with pkgs; [nix-format nixd];
-    programs.helix.languages.language-server.nixd.config.options.nixos.expr = nixosOptionsExpr;
+    programs.helix.languages = {
+      language-server.nixd.command = "${pkgs.nixd}/bin/nixd";
+      language-server.nixd.config.options.nixos.expr =
+        "(builtins.getFlake \"path:${config.home.homeDirectory}/nixconf\")"
+        + ".nixosConfigurations.${hostName}.options";
+      language = [
+        {
+          name = "nix";
+          formatter.command = "${nix-format}/bin/nix-format";
+          language-servers = ["nixd"];
+        }
+      ];
+    };
   };
 }

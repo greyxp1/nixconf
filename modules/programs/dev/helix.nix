@@ -21,15 +21,6 @@
         inherits = "catppuccin_mocha";
         "ui.background" = {bg = "none";};
       };
-
-      languages.language = [
-        {
-          name = "nix";
-          auto-format = true;
-          formatter.command = "nix-format";
-          language-servers = ["nixd"];
-        }
-      ];
     };
   };
 }
