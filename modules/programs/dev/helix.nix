@@ -13,6 +13,7 @@
         editor = {
           cursor-shape.normal = "bar";
           auto-format = true;
+          default-yank-register = "+";
         };
       };
 
