@@ -1,25 +1,32 @@
 {
-  flake.nixosModules.helix = {
-    environment.variables.EDITOR = "hx";
-    environment.variables.VISUAL = "hx";
-    programs.nano.enable = false;
-  };
-
-  flake.homeModules.helix = {lib, ...}: {
+  flake.homeModules.helix = {lib, pkgs, ...}: {
+    home.packages = [ pkgs.lazygit ];
     programs.helix = {
       enable = true;
+      defaultEditor = true;
+
+      themes.catppuccin_transparent = {
+        inherits = "catppuccin_mocha";
+        "ui.background" = {bg = "none";};
+      };
+
       settings = {
         theme = lib.mkForce "catppuccin_transparent";
+
         editor = {
           cursor-shape.normal = "bar";
           auto-format = true;
           default-yank-register = "+";
         };
-      };
 
-      themes.catppuccin_transparent = {
-        inherits = "catppuccin_mocha";
-        "ui.background" = {bg = "none";};
+        keys.normal = {
+          "C-g" = [
+            ":new"
+            ":insert-output lazygit"
+            ":buffer-close!"
+            ":redraw"
+          ];
+        };
       };
     };
   };
