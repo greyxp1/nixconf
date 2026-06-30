@@ -78,7 +78,6 @@
       zip
       unzip
       wget
-      codex
       nerd-fonts.jetbrains-mono
       fzf
       fd
@@ -87,7 +86,6 @@
       microfetch
       ani-cli
       pandora-launcher
-      lazygit
       wl-clipboard
     ];
   };
