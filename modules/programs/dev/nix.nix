@@ -30,9 +30,6 @@
     };
   in {
     home.packages = with pkgs; [nix-format nixd];
-    programs = {
-      helix.languages.language-server.nixd.config.options.nixos.expr = nixosOptionsExpr;
-      zed-editor.userSettings.lsp.nixd.initialization_options.nixos.expr = nixosOptionsExpr;
-    };
+    programs.helix.languages.language-server.nixd.config.options.nixos.expr = nixosOptionsExpr;
   };
 }

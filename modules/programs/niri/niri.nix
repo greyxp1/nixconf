@@ -75,7 +75,6 @@
           "Mod+E" = bind {spawn-sh = "kitty fish -c 'y; fish'";};
           "Mod+B" = bind {spawn = "helium";};
           "Mod+D" = bind {spawn = "discord";};
-          "Mod+Z" = bind {spawn = "zeditor";};
 
           "Mod+C" = bind {spawn-sh = "noctalia msg panel-toggle control-center";};
           "Alt+Space" = bind {spawn-sh = "noctalia msg panel-toggle launcher";};
@@ -133,7 +132,7 @@
             open-on-workspace = "browser";
           }
           {
-            match._props."app-id" = "^dev.zed.Zed$|^steam$";
+            match._props."app-id" = "^steam$";
             open-on-workspace = "default";
             open-fullscreen = false;
           }
