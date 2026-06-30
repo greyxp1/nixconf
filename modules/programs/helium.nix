@@ -1,10 +1,7 @@
 {inputs, ...}: {
   flake.nixosModules.helium = {
+    imports = [inputs.helium.nixosModules.helium inputs.omnisearch.nixosModules.default];
     services.omnisearch.enable = true;
-    imports = [
-      inputs.helium.nixosModules.helium
-      inputs.omnisearch.nixosModules.default
-    ];
   };
   flake.homeModules.helium = {
     programs.helium = {
