@@ -36,7 +36,7 @@
       [filechooser]
       cmd=${pkgs.xdg-desktop-portal-termfilechooser}/share/xdg-desktop-portal-termfilechooser/yazi-wrapper.sh
       default_dir=$HOME
-      env=TERMCMD=${pkgs.kitty}/bin/kitty -o background_opacity=0.6 -o cursor_trail=0 --class=filepicker
+      env=TERMCMD=${pkgs.ghostty}/bin/ghostty --background-opacity=0.6 --title=filepicker -e
     '';
 
     xdg.configFile."yazi/init.lua".text = ''

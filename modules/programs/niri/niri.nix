@@ -71,8 +71,8 @@
         ];
 
         binds = {
-          "Mod+Return" = bind {spawn = "kitty";};
-          "Mod+E" = bind {spawn-sh = "kitty fish -c 'y; fish'";};
+          "Mod+Return" = bind {spawn = "ghostty";};
+          "Mod+E" = bind {spawn-sh = "ghostty -e fish -c 'y; fish'";};
           "Mod+B" = bind {spawn = "helium";};
           "Mod+D" = bind {spawn = "discord";};
 
@@ -164,7 +164,7 @@
             };
           }
           {
-            match._props = {app-id = "^filepicker$";};
+            match._props.title = "^filepicker$";
             open-floating = true;
             default-column-width.fixed = 1600;
             default-window-height.fixed = 900;
