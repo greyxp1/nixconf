@@ -53,14 +53,6 @@
     "narHash": "sha256-Jjuz5CmSkur8KvLDoGa+vylEp+RkQtv4mt/qcMznpH0=",
     "lastModified": 1778781969
   },
-  "lanzaboote": {
-    "type": "github",
-    "owner": "nix-community",
-    "repo": "lanzaboote",
-    "rev": "7c9a54a7f87b4539ddbd8bda09a8a5f5f9361aa9",
-    "narHash": "sha256-hqijVSEETttmo8Okql9/LG0Ua34hdciKW1a5zzlj8mU=",
-    "lastModified": 1782141370
-  },
   "musnix": {
     "type": "github",
     "owner": "musnix",
@@ -73,9 +65,9 @@
     "type": "git",
     "url": "https://codeberg.org/BANanaD3V/niri-nix",
     "ref": "HEAD",
-    "rev": "31d15bc6c5f3f84256335b34592cda2d4104c9eb",
-    "narHash": "sha256-0TF7/XeFQihYvwe4L1Y2ujpwyAIpgXwrt3jzOaw5Y6g=",
-    "lastModified": 1782519837
+    "rev": "cccef4df3e172c4945285cb93a2789b74bb1a31e",
+    "narHash": "sha256-XW5pblwi3OwT7rDZdR7yftZGLFx3drbSwMQqwz5vLJ8=",
+    "lastModified": 1783040321
   },
   "nix-cachyos-kernel": {
     "type": "github",
@@ -121,9 +113,9 @@
     "type": "github",
     "owner": "noctalia-dev",
     "repo": "noctalia",
-    "rev": "5fb7e57ae6b9137197bf1faca285a881e2bb76f1",
-    "narHash": "sha256-qFdhj5qZTzSKmIVQVOCygPOTduo6WT5GBqcseP1zlvU=",
-    "lastModified": 1783024300
+    "rev": "6e7aa3b4daaf13f3cd7c622b248efaba5c1c1eb3",
+    "narHash": "sha256-RHgZ1P0yWOvApgArWzKllRWC0ByNa5JfcywJddf3qVY=",
+    "lastModified": 1783039622
   },
   "noctalia-greeter": {
     "type": "github",
