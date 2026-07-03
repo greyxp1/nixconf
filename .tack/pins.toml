@@ -34,8 +34,6 @@ url = "gh:linusammon/waytator/flake"
 url = "gh:greyxp1/nix-yazi-plugins"
 [inputs.disko]
 url = "gh:nix-community/disko"
-[inputs.lanzaboote]
-url = "gh:nix-community/lanzaboote/v1.1.0"
 [inputs.home-manager]
 url = "gh:nix-community/home-manager"
 [inputs.nsticky]

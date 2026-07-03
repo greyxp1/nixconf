@@ -1,7 +1,6 @@
 {inputs, ...}: let mkHost = import ../_mkHost.nix inputs; in {
   flake.nixosConfigurations.desktop = mkHost {
-    extraModules = [inputs.lanzaboote.nixosModules.lanzaboote];
-    hostModule = {pkgs, lib, ...}: {
+    hostModule = {pkgs, ...}: {
       networking.hostName = "desktop";
       custom.disk.device = import ./_device.nix;
       custom.audio.enable = true;
@@ -43,20 +42,6 @@
             "usbhid"
             "sd_mod"
           ];
-        };
-      };
-
-      # Secure Boot
-      environment.systemPackages = [pkgs.sbctl];
-      boot = {
-        loader.systemd-boot.enable = lib.mkForce false;
-        lanzaboote = {
-          enable = true;
-          autoGenerateKeys.enable = true;
-          pkiBundle = "/var/lib/sbctl";
-          configurationLimit = 10;
-          autoEnrollKeys.enable = true;
-          autoEnrollKeys.autoReboot = true;
         };
       };
     };
