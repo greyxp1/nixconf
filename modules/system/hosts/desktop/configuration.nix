@@ -31,6 +31,11 @@
 
       # Boot / initrd
       boot = {
+        loader.systemd-boot.extraEntries."windows.conf" = ''
+          title Windows Boot Manager
+          efi /EFI/Microsoft/Boot/bootmgfw.efi
+        '';
+
         kernelModules = ["kvm-amd"];
         initrd = {
           systemd.network.wait-online.enable = false;

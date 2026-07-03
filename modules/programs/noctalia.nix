@@ -92,6 +92,20 @@
           show_location = false;
           screen_corners.enabled = true;
 
+          session.actions = [
+            {action = "reboot";}
+            {action = "shutdown";}
+            {action = "lock";}
+            {action = "logout";}
+            {
+              action = "command";
+              command = "systemctl reboot --boot-loader-entry=windows.conf";
+              enabled = true;
+              glyph = "brand-windows-filled";
+              label = "Windows";
+            }
+          ];
+
           panel = {
             control_center_placement = "floating";
             control_center_position = "center";
