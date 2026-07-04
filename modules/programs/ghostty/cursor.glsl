@@ -1,24 +1,18 @@
 const float EPS = 1e-9;
 const vec2 TL = vec2(-1.0, 1.0), TR = vec2(1.0, 1.0), BR = vec2(1.0, -1.0), BL = vec2(-1.0, -1.0);
-const float TRAIL_MIN_DISTANCE = 0.1;
-const float GLOW_COLOR_OVERRIDE_THRESHOLD = 0.1;
-const vec3 GLOW_COLOR_OVERRIDE_CURRENT = vec3(0.2, 0.4, 1.0);
-const vec3 GLOW_COLOR_OVERRIDE_PREVIOUS = vec3(0.4, 0.1, 1.0);
+const float TRAIL_MIN_DISTANCE2 = 0.01;
+const float GLOW_GREY_DEV2 = 0.03;
+const vec4 GLOW_COLOR_CURRENT = vec4(0.2, 0.4, 1.0, 1.0), GLOW_COLOR_PREVIOUS = vec4(0.4, 0.1, 1.0, 1.0);
 const float GLOW_COLOR_OFFSET_BRIGHTNESS = 0.5;
 const float GLOW_MIN_TRAVEL = 1.5;
 
 float sq(float x) { return x * x; }
 vec2 rectCenter(vec2 pos, vec2 size) { return pos + size * vec2(0.5, -0.5); }
+bool insideRect(vec2 p, vec2 c, vec2 h) { return all(lessThanEqual(abs(p - c), h)); }
 
-float rectSDF(vec2 p, vec2 c, vec2 h) {
-    vec2 d = abs(p - c) - h;
-    return length(max(d, 0.0)) + min(max(d.x, d.y), 0.0);
-}
+float rectSDF(vec2 p, vec2 c, vec2 h) { vec2 d = abs(p - c) - h; return length(max(d, 0.0)) + min(max(d.x, d.y), 0.0); }
 
-float sdSeg2(vec2 p, vec2 a) {
-    vec2 c = a * clamp(dot(p, a) / (dot(a, a) + EPS), 0.0, 1.0) - p;
-    return dot(c, c);
-}
+float sdSeg2(vec2 p, vec2 a) { vec2 c = a * clamp(dot(p, a) / (dot(a, a) + EPS), 0.0, 1.0) - p; return dot(c, c); }
 
 float sdTriangle(vec2 p, vec2 a, vec2 b, vec2 c) {
     a -= p;
@@ -35,45 +29,32 @@ float sdTrail(vec2 p, vec2 currPos, vec2 currSize, vec2 prevPos, vec2 prevSize, 
     vec2 prevCenter = rectCenter(prevPos, prevSize);
     vec2 move = currCenter - prevCenter;
 
-    bool nearbyPrev = dot(move, move) < sq(TRAIL_MIN_DISTANCE);
-    bool insidePrev = rectSDF(currCenter, prevCenter, prevSize * 0.5) <= 0.0;
+    bool nearbyPrev = dot(move, move) < TRAIL_MIN_DISTANCE2;
+    bool insidePrev = insideRect(currCenter, prevCenter, prevSize * 0.5);
 
     float rectDist = max(rectSDF(p, currCenter, currSize * 0.5), 0.0);
     if (nearbyPrev || insidePrev) return rectDist;
 
     vec2 h = currSize * 0.5;
     vec2 corners[4] = vec2[4](currCenter + h * TL, currCenter + h * TR, currCenter + h * BR, currCenter + h * BL);
-    vec2 triB = corners[0], triC = corners[0], dir = normalize(move);
-    float minRel = 1.0 / EPS, maxRel = -minRel;
+    vec2 triB = corners[0], triC = corners[0];
+    float minRel = 1e9, maxRel = -minRel;
     for (int i = 0; i < 4; ++i) {
         vec2 delta = corners[i] - prevCenter;
-        float rel = atan(dir.x * delta.y - dir.y * delta.x, dot(dir, delta));
-        if (rel < minRel) {
-            minRel = rel;
-            triB = corners[i];
-        }
-        if (rel > maxRel) {
-            maxRel = rel;
-            triC = corners[i];
-        }
+        float rel = (move.x * delta.y - move.y * delta.x) / max(dot(move, delta), EPS);
+        if (rel < minRel) { minRel = rel; triB = corners[i]; }
+        if (rel > maxRel) { maxRel = rel; triC = corners[i]; }
     }
 
     float triDist = max(sdTriangle(p, prevCenter, triB, triC), 0.0);
     return min(rectDist, mix(triDist, rectDist, t));
 }
 
-vec4 colorOverride(vec4 baseColor, vec4 overrideColor) {
-    vec3 dev = baseColor.rgb - vec3(dot(baseColor.rgb, vec3(1.0 / 3.0)));
-    return dot(dev, dev) < 3.0 * sq(GLOW_COLOR_OVERRIDE_THRESHOLD) ? overrideColor : baseColor;
-}
+vec4 colorOverride(vec4 baseColor, vec4 overrideColor) { vec3 dev = baseColor.rgb - vec3(dot(baseColor.rgb, vec3(1.0 / 3.0))); return dot(dev, dev) < GLOW_GREY_DEV2 ? overrideColor : baseColor; }
 
-vec3 sRGBToLinear(vec3 c) {
-    return mix(c / 12.92, pow((c + 0.055) / 1.055, vec3(2.4)), step(vec3(0.04045), c));
-}
+vec3 sRGBToLinear(vec3 c) { return mix(c / 12.92, pow((c + 0.055) / 1.055, vec3(2.4)), step(vec3(0.04045), c)); }
 
-vec2 px2n(vec2 v, float isPos) {
-    return (v * 2.0 - iResolution.xy * isPos) / iResolution.y;
-}
+vec2 px2n(vec2 v, float isPos) { return (v * 2.0 - iResolution.xy * isPos) / iResolution.y; }
 
 float px2n(float v) { return v * 2.0 / iResolution.y; }
 vec4 cursor2n(vec4 c) { return vec4(px2n(c.xy, 1.0), px2n(c.zw, 0.0)); }
@@ -99,19 +80,17 @@ float quadSDF(vec2 p, vec2 v0, vec2 v1, vec2 v2, vec2 v3) {
 }
 
 float cornerDur(float dv, float lead, float side, float trail) { return dv >= 0.5 ? lead : dv >= -0.5 ? side : trail; }
+float cornerProg(vec2 corner, vec2 s, float bias, float useBias, float t, float lead, float side, float trail) { return easeOutCirc(clamp(t / cornerDur(mix(dot(corner, s), bias, useBias), lead, side, trail), 0.0, 1.0)); }
 
 const float T_DUR = 0.15;
 const float T_SIZE = 0.8;
-const float T_DIST = 1.0;
 const float T_BLUR = 1.0;
-const float T_THK = 1.0;
-const float T_THKX = 0.9; // horizontal thickness
+const float T_THKX = 0.9;
 const float T_FADE = 5.0;
 
 const vec4 RIPPLE_COLOR = vec4(0.35, 0.36, 0.44, 0.8);
-const float R_DUR = 0.15;
 const float R_RAD = 0.5;
-const float R_THK = 0.5;
+const float R_HALF_THK = 0.25;
 const float R_TRIG = 0.5;
 const float R_BLUR = 3.5;
 const float R_START = 0.01;
@@ -119,18 +98,19 @@ const float R_START = 0.01;
 void mainImage(out vec4 fragColor, in vec2 fragCoord) {
     vec4 base = texture(iChannel0, fragCoord / iResolution.xy);
     fragColor = base;
+    float t = iTime - iTimeCursorChange;
+    if (iFocus != 0 && t > T_DUR) return;
+
     vec4 cc = cursor2n(iCurrentCursor);
     vec2 ctrCC = rectCenter(cc.xy, cc.zw);
 
     if (iFocus == 0) {
-        if (rectSDF(px2n(fragCoord, 1.0), ctrCC, cc.zw * 0.5) <= 0.0) {
+        if (insideRect(px2n(fragCoord, 1.0), ctrCC, cc.zw * 0.5)) {
             float sy = clamp(fragCoord.y - iCurrentCursor.w, 0.0, iResolution.y - 1.0);
             fragColor = texture(iChannel0, vec2(fragCoord.x, sy) / iResolution.xy);
         }
         return;
     }
-
-    float t = iTime - iTimeCursorChange;
 
     {
         vec2 invRes = 1.0 / iResolution.xy;
@@ -146,16 +126,16 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
         // Skip glow for typing and single-cell movement.
         if (dCenter2 > sq(glowMinTravel)) {
             float dSeg = dot(uv - prevCenter, deltaCenter) / (dCenter2 + EPS);
-            bool nearbyPrev = dCenter2 < sq(TRAIL_MIN_DISTANCE);
+            bool nearbyPrev = dCenter2 < TRAIL_MIN_DISTANCE2;
 
-            float tShape = 1.0 - pow(1.0 - clamp(t, 0.0, 1.0), 3);
+            float u = 1.0 - clamp(t, 0.0, 1.0), tShape = 1.0 - u * u * u;
             float tVisible = exp(-t * 50.0);
 
             float dTrail = sdTrail(uv, currPos, currSize, prevPos, prevSize, tShape);
             float dTip = nearbyPrev ? 0.0 : clamp(1.0 - abs(dSeg - 1.0), 0.0, 1.0);
 
-            vec4 currColor = colorOverride(iCurrentCursorColor, vec4(GLOW_COLOR_OVERRIDE_CURRENT, 1.0));
-            vec4 prevColor = colorOverride(iPreviousCursorColor, vec4(GLOW_COLOR_OVERRIDE_PREVIOUS, 1.0));
+            vec4 currColor = colorOverride(iCurrentCursorColor, GLOW_COLOR_CURRENT);
+            vec4 prevColor = colorOverride(iPreviousCursorColor, GLOW_COLOR_PREVIOUS);
             vec4 glowColor = mix(fragColor, mix(prevColor, currColor, dTip) + GLOW_COLOR_OFFSET_BRIGHTNESS, sq(dTip) * dTip);
             glowColor = mix(glowColor, fragColor, pow(smoothstep(0.0, 0.3, dTrail), 0.1));
 
@@ -176,18 +156,18 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
     vec2 move = ctrCC - ctrCP;
     float move2 = dot(move, move);
 
-    if (move2 > sq(cc.w * T_DIST) && t < T_DUR - 0.001) {
-        vec2 hl = cc.zw * 0.5 * vec2(T_THKX, T_THK);
-        vec2 hlP = cp.zw * 0.5 * vec2(T_THKX, T_THK);
+    if (move2 > sq(cc.w) && t < T_DUR - 0.001) {
+        vec2 hl = cc.zw * 0.5 * vec2(T_THKX, 1.0);
+        vec2 hlP = cp.zw * 0.5 * vec2(T_THKX, 1.0);
 
         float DL = T_DUR * (1.0 - T_SIZE), DT = T_DUR, DS = (DL + DT) * 0.5;
         vec2 s = sign(move);
         float mR = step(0.5, s.x), mL = step(0.5, -s.x);
 
-        float prog_tl = easeOutCirc(clamp(t / cornerDur(mix(dot(vec2(-1., 1.), s), -s.x, mL), DL, DS, DT), 0., 1.));
-        float prog_tr = easeOutCirc(clamp(t / cornerDur(mix(dot(vec2(1., 1.), s), s.x, mR), DL, DS, DT), 0., 1.));
-        float prog_br = easeOutCirc(clamp(t / cornerDur(mix(dot(vec2(1., -1.), s), s.x, mR), DL, DS, DT), 0., 1.));
-        float prog_bl = easeOutCirc(clamp(t / cornerDur(mix(dot(vec2(-1., -1.), s), -s.x, mL), DL, DS, DT), 0., 1.));
+        float prog_tl = cornerProg(TL, s, -s.x, mL, t, DL, DS, DT);
+        float prog_tr = cornerProg(TR, s, s.x, mR, t, DL, DS, DT);
+        float prog_br = cornerProg(BR, s, s.x, mR, t, DL, DS, DT);
+        float prog_bl = cornerProg(BL, s, -s.x, mL, t, DL, DS, DT);
 
         vec2 v_tl = mix(ctrCP + hlP * TL, ctrCC + hl * TL, prog_tl);
         vec2 v_tr = mix(ctrCP + hlP * TR, ctrCC + hl * TR, prog_tr);
@@ -203,13 +183,13 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
         vec4 trail = vec4(sRGBToLinear(iCurrentCursorColor.rgb), iCurrentCursorColor.a);
         trail.a *= fade;
         fragColor = mix(fragColor, vec4(trail.rgb, fragColor.a), trail.a * alpha);
-        fragColor = mix(fragColor, base, step(rectSDF(vu, ctrCC, cc.zw * 0.5), 0.0));
+        if (insideRect(vu, ctrCC, cc.zw * 0.5)) fragColor = base;
     }
 
-    float rP = t / R_DUR + R_START;
+    float rP = t / T_DUR + R_START;
     if (abs(cc.z - cp.z) >= max(cc.z, cp.z) * R_TRIG && rP >= 0.0 && rP < 1.0) {
         float ep = easeOutCirc(rP);
-        float sdfR = abs(distance(vu, ctrCC) - ep * cc.w * R_RAD) - cc.w * R_THK * 0.5;
+        float sdfR = abs(distance(vu, ctrCC) - ep * cc.w * R_RAD) - cc.w * R_HALF_THK;
         float aaPx = px2n(R_BLUR);
         float ring = (1.0 - smoothstep(-aaPx, aaPx, sdfR)) * sq(1.0 - rP);
         fragColor = mix(fragColor, RIPPLE_COLOR, ring * RIPPLE_COLOR.a);
