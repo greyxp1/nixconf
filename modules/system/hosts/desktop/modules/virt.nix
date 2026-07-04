@@ -48,6 +48,8 @@
 
       users.users.grey.extraGroups = ["libvirtd" "video" "render"];
 
+      networking.firewall.trustedInterfaces = ["virbr0"];
+
       programs = {
         virt-manager.enable = true;
         dconf.profiles.user.databases = [
