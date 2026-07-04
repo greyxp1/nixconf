@@ -1,8 +1,5 @@
 {inputs, ...}: {
-  flake.nixosModules.helium = {
-    imports = [inputs.helium.nixosModules.helium inputs.omnisearch.nixosModules.default];
-    services.omnisearch.enable = true;
-  };
+  flake.nixosModules.helium = {imports = [inputs.helium.nixosModules.helium];};
   flake.homeModules.helium = {
     programs.helium = {
       enable = true;
@@ -12,16 +9,15 @@
       extraPolicies = {
         RestoreOnStartup = 1;
         DefaultSearchProviderEnabled = true;
-        DefaultSearchProviderName = "Omnisearch";
-        DefaultSearchProviderSearchURL = "http://localhost:8087/search?q={searchTerms}";
+        DefaultSearchProviderName = "Google";
+        DefaultSearchProviderSearchURL = "https://www.google.com/search?q={searchTerms}";
+        DefaultSearchProviderSuggestURL = "https://www.google.com/complete/search?output=chrome&q={searchTerms}";
       };
 
       extensions = {
         sponsorBlock.id = "mnjggcdmjocbbbhaepdhchncahnbgone";
         deArrow.id = "enamippconapkdmgfgjchkhakpfinmaj";
         controlPanel.id = "lodcanccmfbpjjpnngindkkmiehimile";
-        claudeUsageTracker.id = "knemcdpkggnbhpoaaagmjiigenifejfo";
-        claudeQoL.id = "dkdnancajokhfclpjpplkhlkbhaeejob";
         betterLyrics.id = "effdbpegglllpfkjppbokhmmiinhlmg";
         equicord.id = "mcambpfmpjnncfoodejdmehedbkjepmi";
         re-start.id = "fdodcmjeojbmcgmhcgcelffcekhicnop";
