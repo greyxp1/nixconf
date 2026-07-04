@@ -57,10 +57,7 @@
         layout = {
           insert-hint.off = {};
           background-color = "transparent";
-          focus-ring = {
-            active-color = "#cba6f7";
-            width = 3;
-          };
+          focus-ring.active-color = "#cba6f7";
         };
 
         output = [
@@ -98,13 +95,18 @@
 
           "Mod+H" = bind {focus-column-left = {};};
           "Mod+L" = bind {focus-column-right = {};};
-          "Mod+J" = bind {focus-workspace-down = {};};
-          "Mod+K" = bind {focus-workspace-up = {};};
+          "Mod+J" = bind {focus-window-or-workspace-down = {};};
+          "Mod+K" = bind {focus-window-or-workspace-up = {};};
 
           "Mod+Shift+H" = bind {move-column-left = {};};
           "Mod+Shift+L" = bind {move-column-right = {};};
-          "Mod+Shift+J" = bind {move-column-to-workspace-down = {};};
-          "Mod+Shift+K" = bind {move-column-to-workspace-up = {};};
+          "Mod+Shift+J" = bind {move-window-down = {};};
+          "Mod+Shift+K" = bind {move-window-up = {};};
+
+          "Mod+Shift+ctrl+H" = bind {consume-or-expel-window-left = {};};
+          "Mod+Shift+ctrl+L" = bind {consume-or-expel-window-right = {};};
+          "Mod+Shift+ctrl+J" = bind {move-column-to-workspace-down = {};};
+          "Mod+Shift+ctrl+K" = bind {move-column-to-workspace-up = {};};
 
           "Mod+WheelScrollUp" = bind {focus-workspace-up = {};};
           "Mod+WheelScrollDown" = bind {focus-workspace-down = {};};
