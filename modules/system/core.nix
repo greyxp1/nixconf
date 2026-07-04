@@ -14,7 +14,6 @@
       grey = {
         isNormalUser = true;
         extraGroups = ["networkmanager" "wheel" "input" "seat"];
-        initialPassword = "123";
       };
     };
 
