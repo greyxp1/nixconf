@@ -17,6 +17,7 @@
     programs = {
       nix-index.enable = true;
       nix-index-database.comma.enable = true;
+      t3code.enable = true;
 
       bat = {
         enable = true;
@@ -51,11 +52,6 @@
           regex = true;
         };
       };
-
-      opencode = {
-        enable = true;
-        settings.permission = "allow";
-      };
     };
 
     xdg.configFile."tlrc/config.toml".text = ''
@@ -87,6 +83,7 @@
       ani-cli
       pandora-launcher
       wl-clipboard
+      codex
     ];
   };
 }
