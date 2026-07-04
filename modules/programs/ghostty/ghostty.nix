@@ -19,6 +19,13 @@
           selection-background = "#0078D7";
           custom-shader-animation = "always";
           custom-shader = ["${./cursor.glsl}"];
+          keybind = [
+            "ctrl+alt+h=goto_split:left"
+            "ctrl+alt+j=goto_split:down"
+            "ctrl+alt+k=goto_split:up"
+            "ctrl+alt+l=goto_split:right"
+            "ctrl+alt+y=select_all"
+          ];
         };
       };
     };
