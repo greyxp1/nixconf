@@ -1,9 +1,9 @@
 {
   "beaker": {
     "type": "tarball",
-    "url": "https://git.bwaaa.monster/beaker/snapshot/master.tar.gz",
+    "url": "https://git.bwaaa.monster/beaker/snapshot/360d6271e1a20d128430e52637d5d35f4c706ca5.tar.gz",
     "narHash": "sha256-3aMH1YblnpiXKdkQVMRLmMZ5/8G7vB4HAfLg7+izyHg=",
-    "lastModified": 1782711142
+    "lastModified": 1780436704
   },
   "catppuccin": {
     "type": "github",
@@ -135,9 +135,9 @@
   },
   "omnisearch": {
     "type": "tarball",
-    "url": "https://git.bwaaa.monster/omnisearch/snapshot/master.tar.gz",
-    "narHash": "sha256-cx6ChdOEi6KYL1qxLtavKaiqP7t2jDJyh3hsqXmMAkA=",
-    "lastModified": 1782711142
+    "url": "https://git.bwaaa.monster/omnisearch/snapshot/1b36b1a23e9e30474192128b40ca1dee23b25c2a.tar.gz",
+    "narHash": "sha256-TOTL6XPF3qeonm+Kh3rjQwAtt5MMkX8zskB/WhC4YhA=",
+    "lastModified": 1783184415
   },
   "oniri": {
     "type": "github",
