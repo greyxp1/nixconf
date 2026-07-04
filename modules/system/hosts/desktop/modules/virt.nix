@@ -19,6 +19,11 @@
             $VIRSH undefine "$1" --nvram --remove-all-storage 2>/dev/null || $VIRSH undefine "$1" --nvram
           fi
 
+          $VIRSH net-autostart default >/dev/null 2>&1 || true
+          $VIRSH net-start default >/dev/null 2>&1 || true
+          $VIRSH pool-autostart default >/dev/null 2>&1 || true
+          $VIRSH pool-start default >/dev/null 2>&1 || true
+
           echo "==> Creating '$1'..."
           virt-install \
             --connect qemu:///system \
@@ -57,6 +62,7 @@
 
       virtualisation.libvirtd = {
         enable = true;
+        firewallBackend = "nftables";
         onShutdown = "shutdown";
         onBoot = "ignore";
         qemu = {
@@ -81,22 +87,52 @@
         };
       };
 
-      systemd.services = {
+      systemd.sockets = {
         libvirtd.wantedBy = lib.mkForce [];
-        libvirt-default-network = {
-          description = "Autostart libvirt default network";
-          after = ["libvirtd.service"];
-          requires = ["libvirtd.service"];
-          partOf = ["libvirtd.service"];
-          wantedBy = lib.mkForce [];
-          serviceConfig = {
-            Type = "oneshot";
-            RemainAfterExit = true;
-            ExecStart = pkgs.writeShellScript "libvirt-net-start" ''
-              ${pkgs.libvirt}/bin/virsh net-autostart default || true
-              ${pkgs.libvirt}/bin/virsh net-start default 2>/dev/null || true
-            '';
-          };
+        libvirtd-ro.wantedBy = lib.mkForce [];
+        libvirtd-admin.wantedBy = lib.mkForce [];
+      }
+      // lib.genAttrs (
+        lib.concatMap (driver: [
+          "virt${driver}d"
+          "virt${driver}d-ro"
+          "virt${driver}d-admin"
+        ]) [
+          "qemu"
+          "interface"
+          "network"
+          "nodedev"
+          "nwfilter"
+          "storage"
+          "proxy"
+        ]
+      ) (_: {wantedBy = ["sockets.target"];});
+
+      systemd.services = {
+        libvirtd-config.serviceConfig.RemainAfterExit = true;
+        libvirtd.wantedBy = lib.mkForce [];
+        virtqemud = {
+          requires = ["libvirtd-config.service"];
+          after = ["libvirtd-config.service"];
+          path = [
+            config.virtualisation.libvirtd.qemu.package
+            pkgs.netcat
+          ];
+        };
+        virtnetworkd = {
+          requires = ["libvirtd-config.service"];
+          after = ["libvirtd-config.service"];
+          path = with pkgs; [
+            dnsmasq
+            iproute2
+            iptables
+            nftables
+          ];
+        };
+        virtstoraged = {
+          requires = ["libvirtd-config.service"];
+          after = ["libvirtd-config.service"];
+          path = [config.virtualisation.libvirtd.qemu.package];
         };
       };
     };
