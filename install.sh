@@ -23,7 +23,7 @@ if [[ -z "$HOST" ]]; then
   echo "  [0] desktop  — Nvidia, CachyOS kernel, Secure Boot"
   echo "  [1] vm       — QEMU/SPICE, standard kernel"
   echo "  [2] generic  — portable hardware, standard kernel"
-  read -rp "Choice: " n
+  read -rp "Choice: " n < /dev/tty
   case "$n" in
     0) HOST=desktop ;; 1) HOST=vm ;; 2) HOST=generic ;;
     *) echo "Invalid choice"; exit 1 ;;
@@ -35,7 +35,6 @@ trap 'sudo swapoff -a 2>/dev/null || true; sudo umount -R /mnt 2>/dev/null || tr
 
 echo "==> Fetching config..."
 rm -rf "$WORK_DIR" && git clone -q "$REPO" "$WORK_DIR"
-exec < /dev/tty
 
 cache_attr() {
   nix eval --raw \
@@ -66,7 +65,7 @@ else
     printf "  [%d] /dev/%s  %s  %s\n" "$i" "${DISKS[$i]}" \
       "$(lsblk -dno SIZE "/dev/${DISKS[$i]}")" "$(lsblk -dno MODEL "/dev/${DISKS[$i]}")"
   done
-  read -rp "Choice (WILL BE WIPED): " i
+  read -rp "Choice (WILL BE WIPED): " i < /dev/tty
   DEV="/dev/${DISKS[$i]}"
 fi
 
