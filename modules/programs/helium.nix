@@ -40,16 +40,12 @@
 
         helium.browser = {
           layout = 2;
-          centered_location_bar = true;
           mru_tab_cycling = true;
           show_avatar_button = false;
           show_back_button = false;
           show_reload_button = false;
           rounded_frame = false;
           show_vertical_tabs_collapse_button = false;
-          zen_mode = true;
-          zen_mode_sidebar_pinned = true;
-          vertical_right_aligned = true;
         };
 
         browser = {
