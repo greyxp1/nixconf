@@ -10,6 +10,8 @@
           [ -n "$1" ] && [ -n "$2" ] || { echo "Usage: create-nixos-vm <name> <iso>"; exit 1; }
 
           VIRSH="${pkgs.libvirt}/bin/virsh --connect qemu:///system"
+          OVMF_CODE=/run/libvirt/nix-ovmf/edk2-x86_64-code.fd
+          OVMF_VARS=/run/libvirt/nix-ovmf/edk2-i386-vars.fd
 
           if $VIRSH dominfo "$1" >/dev/null 2>&1; then
             printf "VM '%s' already exists. Destroy and recreate? [y/N] " "$1"
@@ -33,7 +35,7 @@
             --memorybacking source.type=memfd,access.mode=shared \
             --disk size=40,pool=default,bus=virtio \
             --os-variant=nixos-unstable \
-            --boot uefi \
+            --boot loader="$OVMF_CODE",loader.readonly=yes,loader.type=pflash,nvram.template="$OVMF_VARS" \
             --network network=default,model=virtio \
             --noautoconsole \
             --cdrom "$2" \
