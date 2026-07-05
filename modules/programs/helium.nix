@@ -34,14 +34,21 @@
         auto_pin_new_tab_groups = false;
         bookmark_bar.show_tab_groups = false;
 
-        helium.browser = {
-          layout = 2;
-          mru_tab_cycling = true;
-          show_avatar_button = false;
-          show_back_button = false;
-          show_reload_button = false;
-          rounded_frame = false;
-          show_vertical_tabs_collapse_button = false;
+        helium = {
+          browser = {
+            layout = 2;
+            mru_tab_cycling = true;
+            show_avatar_button = false;
+            show_back_button = false;
+            show_reload_button = false;
+            rounded_frame = false;
+            show_vertical_tabs_collapse_button = false;
+          };
+
+          services = {
+            scheme_version = 1;
+            user_consented = true;
+          };
         };
 
         browser = {
