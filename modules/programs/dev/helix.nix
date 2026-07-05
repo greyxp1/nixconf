@@ -14,7 +14,6 @@
           theme = lib.mkForce "catppuccin_transparent";
 
           editor = {
-            cursor-shape.normal = "bar";
             auto-format = true;
             default-yank-register = "+";
           };
