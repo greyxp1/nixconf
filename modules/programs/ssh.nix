@@ -18,7 +18,7 @@
         };
         "github.com gitlab.com codeberg.org" = {
           User = "git";
-          IdentityFile = "/run/secrets/git-ssh-key";
+          IdentityFile = "~/.ssh/id_ed25519";
         };
       };
     };

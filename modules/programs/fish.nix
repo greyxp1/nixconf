@@ -27,6 +27,13 @@
       functions = {
         clear = "command clear; printf '\\033[3J'";
         fish_user_key_bindings = "bind \\r _nl_enter; bind \\cl 'clear; commandline -f repaint'";
+        restore-ssh-key = ''
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          cat > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-add ~/.ssh/id_ed25519 2>/dev/null || true
+        '';
       };
 
       interactiveShellInit = ''

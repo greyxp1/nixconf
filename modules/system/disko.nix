@@ -114,7 +114,6 @@ in {
               file = "/etc/machine-id";
               inInitrd = true;
             }
-            "/etc/sops/age/keys.txt"
           ];
         };
       };

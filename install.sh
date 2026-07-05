@@ -4,7 +4,6 @@ set -euo pipefail
 REPO="https://github.com/greyxp1/nixconf.git"
 WORK_DIR="/tmp/nixconf"
 HOST="${1:-}"
-SOPS_AGE_KEY_FILE="${SOPS_AGE_KEY_FILE:-$HOME/.config/sops/age/keys.txt}"
 
 # Returns the most stable device path for a given block device:
 # prefers /dev/disk/by-id/<name> (excluding partition entries),
@@ -87,15 +86,6 @@ sudo nix run \
   --mode destroy,format,mount \
   --yes-wipe-all-disks \
   2>&1 | grep -E "^(error|Error|warning|Warning|==>)" || true
-
-if [[ -f "$SOPS_AGE_KEY_FILE" ]]; then
-  echo "==> Installing age key..."
-  sudo install -Dm600 "$SOPS_AGE_KEY_FILE" /mnt/persistent/etc/sops/age/keys.txt
-else
-  echo "Missing age key: $SOPS_AGE_KEY_FILE"
-  echo "Create it with: nix shell nixpkgs#age -c age-keygen -o ~/.config/sops/age/keys.txt"
-  exit 1
-fi
 
 echo "==> Installing NixOS ($HOST)..."
 sudo nixos-install \

@@ -10,12 +10,14 @@
     programs.nix-ld.enable = true;
 
     users.users = {
-      root.initialHashedPassword = "";
       grey = {
         isNormalUser = true;
         extraGroups = ["networkmanager" "wheel" "input" "seat"];
+        hashedPassword = "$y$j9T$Z9Tz04i5gNbpCTQRko1Tl/$4DLXu5Eb3zvlRPWFxFsiFTYmjylQRWguIu8fYkld.r7";
       };
     };
+
+    users.mutableUsers = false;
 
     hardware = {
       enableRedistributableFirmware = true;

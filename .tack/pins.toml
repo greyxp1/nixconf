@@ -72,6 +72,3 @@ exclude_follow = ["nixpkgs"]
 [inputs.catppuccin]
 url = "gh:catppuccin/nix"
 exclude_follow = ["nixpkgs"]
-
-[inputs.sops-nix]
-url = "github:Mic92/sops-nix"
