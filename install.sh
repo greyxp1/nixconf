@@ -4,7 +4,6 @@ set -euo pipefail
 REPO="https://github.com/greyxp1/nixconf.git"
 WORK_DIR="/tmp/nixconf"
 HOST="${1:-}"
-INSTALL_PASSWORD=""
 
 # Returns the most stable device path for a given block device:
 # prefers /dev/disk/by-id/<name> (excluding partition entries),
@@ -16,28 +15,6 @@ by_id() {
     [[ "$(readlink -f "$link")" == "$real" ]] && echo "$link" && return
   done < <(find /dev/disk/by-id/ -maxdepth 1 -type l ! -name '*-part*' 2>/dev/null)
   echo "$1"
-}
-
-prompt_password() {
-  local password confirm
-
-  while true; do
-    read -rsp "Password for user 'grey': " password < /dev/tty
-    echo
-    [[ -n "$password" ]] || { echo "Password cannot be empty"; continue; }
-
-    read -rsp "Confirm password: " confirm < /dev/tty
-    echo
-
-    [[ "$password" == "$confirm" ]] || {
-      echo "Passwords do not match"
-      continue
-    }
-
-    INSTALL_PASSWORD="$password"
-    unset password confirm
-    return
-  done
 }
 
 # Host selection
@@ -55,8 +32,6 @@ fi
 [[ "$HOST" =~ ^(desktop|vm|generic)$ ]] || { echo "Unknown host: $HOST"; exit 1; }
 
 trap 'sudo swapoff -a 2>/dev/null || true; sudo umount -R /mnt 2>/dev/null || true' EXIT
-
-prompt_password
 
 echo "==> Fetching config..."
 rm -rf "$WORK_DIR" && git clone -q "$REPO" "$WORK_DIR"
@@ -120,8 +95,11 @@ sudo nixos-install \
   "${NIX_OPTS[@]}"
 
 echo "==> Setting password for grey..."
-printf 'grey:%s\n' "$INSTALL_PASSWORD" | sudo chpasswd -R /mnt
-unset INSTALL_PASSWORD
+if command -v nixos-enter >/dev/null; then
+  sudo nixos-enter --root /mnt -c 'passwd grey'
+else
+  sudo chroot /mnt /run/current-system/sw/bin/passwd grey
+fi
 
 # The copied config already has the correct device baked in for future disko runs.
 echo "==> Copying nixconf..."
