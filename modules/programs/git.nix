@@ -16,9 +16,9 @@
             all = true;
           };
           url = {
-            "git@github.com:".insteadOf = "https://github.com/";
-            "git@gitlab.com:".insteadOf = "https://gitlab.com/";
-            "git@codeberg.org:".insteadOf = "https://codeberg.org/";
+            "git@github.com:".pushInsteadOf = "https://github.com/";
+            "git@gitlab.com:".pushInsteadOf = "https://gitlab.com/";
+            "git@codeberg.org:".pushInsteadOf = "https://codeberg.org/";
           };
           user = {
             name = "greyxp1";
