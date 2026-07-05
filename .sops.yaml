@@ -1,0 +1,7 @@
+keys:
+  - &grey age19nvpz2hmra2c0v0xq6xu96q4rxvghsx6r49qpw3rgkhnv2dt29hq7mpj2y
+creation_rules:
+  - path_regex: secrets/.*\.(yaml|yml)$
+    key_groups:
+      - age:
+          - *grey

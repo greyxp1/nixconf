@@ -6,7 +6,6 @@
         settings = {
           init.defaultBranch = "main";
           column.ui = "auto";
-          core.sshCommand = "ssh -F ~/.ssh/config";
           pull.rebase = true;
           branch.autosetuprebase = "always";
           push.autoSetupRemote = true;
