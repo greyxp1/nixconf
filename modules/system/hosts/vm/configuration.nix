@@ -1,6 +1,6 @@
 {inputs, ...}: let mkHost = import ../_mkHost.nix inputs; in {
   flake.nixosConfigurations.vm = mkHost {
-    hostModule = {pkgs, ...}: {
+    hostModule = {lib, pkgs, ...}: {
       networking.hostName = "vm";
       custom.disk.device = import ./_device.nix;
 
@@ -57,6 +57,11 @@
           WLR_NO_HARDWARE_CURSORS = "1";
           LIBSEAT_BACKEND = "seatd";
         };
+      };
+
+      home-manager.users.grey.programs.ghostty.settings = {
+        custom-shader = lib.mkForce [];
+        custom-shader-animation = lib.mkForce "never";
       };
     };
   };
