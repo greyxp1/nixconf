@@ -96,9 +96,9 @@ sudo nixos-install \
 
 echo "==> Setting password for grey..."
 if command -v nixos-enter >/dev/null; then
-  sudo nixos-enter --root /mnt -c 'passwd grey'
+  sudo nixos-enter --root /mnt -c 'passwd grey' < /dev/tty > /dev/tty
 else
-  sudo chroot /mnt /run/current-system/sw/bin/passwd grey
+  sudo chroot /mnt /run/current-system/sw/bin/passwd grey < /dev/tty > /dev/tty
 fi
 
 # The copied config already has the correct device baked in for future disko runs.
