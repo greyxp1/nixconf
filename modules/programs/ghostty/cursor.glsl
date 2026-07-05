@@ -99,18 +99,10 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
     vec4 base = texture(iChannel0, fragCoord / iResolution.xy);
     fragColor = base;
     float t = iTime - iTimeCursorChange;
-    if (iFocus != 0 && t > T_DUR) return;
+    if (iFocus == 0 || t > T_DUR) return;
 
     vec4 cc = cursor2n(iCurrentCursor);
     vec2 ctrCC = rectCenter(cc.xy, cc.zw);
-
-    if (iFocus == 0) {
-        if (insideRect(px2n(fragCoord, 1.0), ctrCC, cc.zw * 0.5)) {
-            float sy = clamp(fragCoord.y - iCurrentCursor.w, 0.0, iResolution.y - 1.0);
-            fragColor = texture(iChannel0, vec2(fragCoord.x, sy) / iResolution.xy);
-        }
-        return;
-    }
 
     {
         vec2 invRes = 1.0 / iResolution.xy;
