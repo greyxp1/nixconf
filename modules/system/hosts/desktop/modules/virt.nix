@@ -62,9 +62,7 @@
       ];
 
       users.users.grey.extraGroups = ["libvirtd" "video" "render"];
-
       networking.firewall.trustedInterfaces = ["virbr0"];
-
       programs = {
         virt-manager.enable = true;
         dconf.profiles.user.databases = [
@@ -101,8 +99,7 @@
         libvirtd.wantedBy = lib.mkForce [];
         libvirtd-ro.wantedBy = lib.mkForce [];
         libvirtd-admin.wantedBy = lib.mkForce [];
-      }
-      // lib.genAttrs (
+      } // lib.genAttrs (
         lib.concatMap (driver: [
           "virt${driver}d"
           "virt${driver}d-ro"
@@ -121,12 +118,8 @@
       systemd.services = {
         libvirtd-config.serviceConfig.RemainAfterExit = true;
         libvirtd.wantedBy = lib.mkForce [];
-        virtqemud = libvirtConfig // {
-          path = [
-            qemuPackage
-            pkgs.netcat
-          ];
-        };
+        virtqemud = libvirtConfig // {path = [qemuPackage pkgs.netcat];};
+        virtstoraged = libvirtConfig // {path = [qemuPackage];};
         virtnetworkd = libvirtConfig // {
           path = with pkgs; [
             dnsmasq
@@ -134,9 +127,6 @@
             iptables
             nftables
           ];
-        };
-        virtstoraged = libvirtConfig // {
-          path = [qemuPackage];
         };
       };
     };
