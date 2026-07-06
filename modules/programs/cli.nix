@@ -13,11 +13,9 @@
 
   flake.homeModules.cli = {pkgs, ...}: {
     imports = [inputs.nix-index-database.homeModules.nix-index];
-
     programs = {
       nix-index.enable = true;
       nix-index-database.comma.enable = true;
-      t3code.enable = true;
 
       bat = {
         enable = true;
@@ -52,6 +50,19 @@
           regex = true;
         };
       };
+
+      codex = {
+        enable = true;
+        plugins = [inputs.ponytail];
+        settings = {
+          approval_policy = "never";
+          sandbox_mode = "workspace-write";
+          check_for_update_on_startup = false;
+          notice.hide_full_access_warning = true;
+          projects = {"/home/grey".trust_level = "trusted";};
+          tui.show_tooltips = false;
+        };
+      };
     };
 
     xdg.configFile."tlrc/config.toml".text = ''
@@ -83,7 +94,6 @@
       ani-cli
       pandora-launcher
       wl-clipboard
-      codex
     ];
   };
 }
