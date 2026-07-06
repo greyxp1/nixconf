@@ -1,30 +1,43 @@
 {
-  flake.nixosModules.virt = {config, lib, pkgs, ...}: {
+  flake.nixosModules.virt = {config, lib, pkgs, ...}: let
+    libvirtConfig = {
+      requires = ["libvirtd-config.service"];
+      after = ["libvirtd-config.service"];
+    };
+    qemuPackage = pkgs.qemu_kvm.overrideAttrs (old: {
+      nativeBuildInputs = (old.nativeBuildInputs or []) ++ [pkgs.makeWrapper];
+      postInstall = (old.postInstall or "")
+      + ''
+        wrapProgram $out/bin/qemu-system-x86_64 \
+          --prefix LD_LIBRARY_PATH : /run/opengl-driver/lib
+      '';
+    });
+  in {
     options.custom.virt.enable = lib.mkEnableOption "virtualization tools";
     config = lib.mkIf config.custom.virt.enable {
-      environment.systemPackages = with pkgs; [
-        spice-gtk
-        (writeScriptBin "create-nixos-vm" ''
+      environment.systemPackages = [
+        (pkgs.writeScriptBin "create-nixos-vm" ''
           #!${pkgs.dash}/bin/dash
           set -eu
-          [ -n "$1" ] && [ -n "$2" ] || { echo "Usage: create-nixos-vm <name> <iso>"; exit 1; }
 
-          VIRSH="${pkgs.libvirt}/bin/virsh --connect qemu:///system"
+          [ "$#" -eq 2 ] || { echo "Usage: create-nixos-vm <name> <iso>" >&2; exit 2; }
+
           OVMF_CODE=/run/libvirt/nix-ovmf/edk2-x86_64-code.fd
           OVMF_VARS=/run/libvirt/nix-ovmf/edk2-i386-vars.fd
+          virsh() { ${pkgs.libvirt}/bin/virsh --connect qemu:///system "$@"; }
 
-          if $VIRSH dominfo "$1" >/dev/null 2>&1; then
+          if virsh dominfo "$1" >/dev/null 2>&1; then
             printf "VM '%s' already exists. Destroy and recreate? [y/N] " "$1"
             read -r answer
             case "$answer" in [yY]*) ;; *) exit 0 ;; esac
-            $VIRSH destroy "$1" 2>/dev/null || true
-            $VIRSH undefine "$1" --nvram --remove-all-storage 2>/dev/null || $VIRSH undefine "$1" --nvram
+            virsh destroy "$1" 2>/dev/null || true
+            virsh undefine "$1" --nvram --remove-all-storage 2>/dev/null || virsh undefine "$1" --nvram
           fi
 
-          $VIRSH net-autostart default >/dev/null 2>&1 || true
-          $VIRSH net-start default >/dev/null 2>&1 || true
-          $VIRSH pool-autostart default >/dev/null 2>&1 || true
-          $VIRSH pool-start default >/dev/null 2>&1 || true
+          virsh net-autostart default >/dev/null 2>&1 || true
+          virsh net-start default >/dev/null 2>&1 || true
+          virsh pool-autostart default >/dev/null 2>&1 || true
+          virsh pool-start default >/dev/null 2>&1 || true
 
           echo "==> Creating '$1'..."
           virt-install \
@@ -71,14 +84,7 @@
         onBoot = "ignore";
         qemu = {
           runAsRoot = true;
-          package = pkgs.qemu_kvm.overrideAttrs (old: {
-            nativeBuildInputs = (old.nativeBuildInputs or []) ++ [pkgs.makeWrapper];
-            postInstall = (old.postInstall or "")
-            + ''
-              wrapProgram $out/bin/qemu-system-x86_64 \
-                --prefix LD_LIBRARY_PATH : /run/opengl-driver/lib
-            '';
-          });
+          package = qemuPackage;
           verbatimConfig = ''
             cgroup_device_acl = [
               "/dev/null", "/dev/full", "/dev/zero",
@@ -115,17 +121,13 @@
       systemd.services = {
         libvirtd-config.serviceConfig.RemainAfterExit = true;
         libvirtd.wantedBy = lib.mkForce [];
-        virtqemud = {
-          requires = ["libvirtd-config.service"];
-          after = ["libvirtd-config.service"];
+        virtqemud = libvirtConfig // {
           path = [
-            config.virtualisation.libvirtd.qemu.package
+            qemuPackage
             pkgs.netcat
           ];
         };
-        virtnetworkd = {
-          requires = ["libvirtd-config.service"];
-          after = ["libvirtd-config.service"];
+        virtnetworkd = libvirtConfig // {
           path = with pkgs; [
             dnsmasq
             iproute2
@@ -133,10 +135,8 @@
             nftables
           ];
         };
-        virtstoraged = {
-          requires = ["libvirtd-config.service"];
-          after = ["libvirtd-config.service"];
-          path = [config.virtualisation.libvirtd.qemu.package];
+        virtstoraged = libvirtConfig // {
+          path = [qemuPackage];
         };
       };
     };
