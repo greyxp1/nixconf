@@ -175,6 +175,8 @@
             };
 
             lockscreen-widget-0000000000000003 = {
+              cx = 1280.0;
+              cy = 1360.0;
               output = "DP-2";
               type = "audio_visualizer";
               settings = {
