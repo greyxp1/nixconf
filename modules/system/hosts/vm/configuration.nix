@@ -5,7 +5,7 @@
       custom.disk.device = import ./_device.nix;
       environment.sessionVariables.LIBGL_ALWAYS_SOFTWARE = "true";
       hardware.graphics.enable = true;
-
+      services.qemuGuest.enable = true;
       boot = {
         kernelModules = ["virtio_gpu"];
         initrd.availableKernelModules = [
@@ -14,11 +14,6 @@
           "virtio_scsi"
           "sd_mod"
         ];
-      };
-
-      services = {
-        spice-vdagentd.enable = true;
-        qemuGuest.enable = true;
       };
     };
   };
