@@ -16,16 +16,6 @@
         ];
       };
 
-      services.seatd = {
-        enable = true;
-        group = "seat";
-      };
-
-      systemd.services.greetd = {
-        wants = ["seatd.service"];
-        after = ["seatd.service"];
-      };
-
       services = {
         spice-vdagentd.enable = true;
         qemuGuest.enable = true;
