@@ -5,15 +5,11 @@
       custom.disk.device = import ./_device.nix;
 
       boot = {
-        kernelParams = ["8250.nr_uarts=0"];
         kernelModules = ["virtio_gpu"];
         initrd.availableKernelModules = [
           "virtio_pci"
           "virtio_blk"
           "virtio_scsi"
-          "virtio_gpu"
-          "virtio_balloon"
-          "ahci"
           "sd_mod"
         ];
       };
@@ -28,10 +24,6 @@
       systemd.services.greetd = {
         wants = ["seatd.service"];
         after = ["seatd.service"];
-        environment = {
-          LIBSEAT_BACKEND = "seatd";
-          WLR_NO_HARDWARE_CURSORS = "1";
-        };
       };
 
       hardware.graphics = {
@@ -46,13 +38,8 @@
 
       environment = {
         systemPackages = with pkgs; [spice-vdagent];
-        sessionVariables = {
-          WLR_NO_HARDWARE_CURSORS = "1";
-          LIBSEAT_BACKEND = "seatd";
-          LIBGL_ALWAYS_SOFTWARE = "true";
-        };
+        sessionVariables.LIBGL_ALWAYS_SOFTWARE = "true";
       };
-
     };
   };
 }
