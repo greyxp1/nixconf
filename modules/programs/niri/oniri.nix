@@ -4,7 +4,7 @@
       pname = "oniri";
       version = "0-unstable";
       src = inputs.oniri;
-      cargoHash = "sha256-87EeF5fbYH+TQSTKhdidS0dUl7N+N1aMo+QTobaRQXw=";
+      cargoLock.lockFile = "${inputs.oniri}/Cargo.lock";
     };
   in {
     systemd.user.services.oniri = {
