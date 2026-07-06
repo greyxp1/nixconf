@@ -127,6 +127,14 @@
     "narHash": "sha256-WMpligQDwgir9msLq+EUZFGXEwRZQ+DDn6i0iMLkPOU=",
     "lastModified": 1782762969
   },
+  "ponytail": {
+    "type": "github",
+    "owner": "DietrichGebert",
+    "repo": "ponytail",
+    "rev": "40e50d9e03242aa5dd53ac771950f9127362b25f",
+    "narHash": "sha256-Pn6gPg0luOO0/I3dP4DzdvFn4Z7rjrK4Bbxf+4VBiYo=",
+    "lastModified": 1782948630
+  },
   "preservation": {
     "type": "github",
     "owner": "nix-community",
