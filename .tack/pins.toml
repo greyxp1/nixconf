@@ -24,8 +24,6 @@ url = "gh:manic-systems/tack"
 url = "gh:nix-community/preservation"
 [inputs.import-tree]
 url = "gh:vic/import-tree"
-[inputs.noctalia-greeter]
-url = "gh:noctalia-dev/noctalia-greeter"
 [inputs.musnix]
 url = "gh:musnix/musnix"
 [inputs.waytator]

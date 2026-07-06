@@ -111,14 +111,6 @@
     "narHash": "sha256-a6lwqp6biBIGFAO36pgKCSNvSICfX2n6v/sCGdjBk5w=",
     "lastModified": 1783192761
   },
-  "noctalia-greeter": {
-    "type": "github",
-    "owner": "noctalia-dev",
-    "repo": "noctalia-greeter",
-    "rev": "3dcf1e4f15be861de636bfd442da09db7db37ad2",
-    "narHash": "sha256-Ybd8jHtnbXJ6PPwq06cFXMzsDu7CC97eAQT5+/udjWQ=",
-    "lastModified": 1783150969
-  },
   "nsticky": {
     "type": "github",
     "owner": "lonerOrz",

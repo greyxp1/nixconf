@@ -3,6 +3,16 @@
     imports = [inputs.niri-nix.nixosModules.default];
     nixpkgs.overlays = [inputs.niri-nix.overlays.niri-nix];
     xdg.portal.config.niri.default = ["gnome"];
+    environment.variables.UWSM_SILENT_START = 2;
+
+    services.greetd = {
+      enable = true;
+      settings.default_session = {
+        command = "uwsm start niri-uwsm.desktop";
+        user = "grey";
+      };
+    };
+
     programs.niri = {
       enable = true;
       package = pkgs.niri-unstable;

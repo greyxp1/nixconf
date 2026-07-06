@@ -9,7 +9,6 @@
       enable = true;
       systemd.enable = true;
       settings = {
-        hooks.started = "noctalia msg plugin noctalia/screen_recorder:service all replay-start";
         desktop_widgets.enabled = false;
         dock.position = "bottom";
         notification.background_opacity = 0.81;
@@ -17,6 +16,11 @@
         theme.builtin = "Catppuccin";
         location.auto_locate = true;
         wallpaper.default.path = ../../assets/wallpapers/wheat.jpg;
+
+        hooks.started = ''
+          noctalia msg plugin noctalia/screen_recorder:service all replay-start;
+          noctalia msg session lock
+        '';
 
         bar.default = {
           enabled = true;
@@ -38,12 +42,15 @@
           show_on_workspace_switch = false;
         };
 
-        control_center.shortcuts = [
-          {type = "notification";}
-          {type = "clipboard";}
-          {type = "media";}
-          {type = "weather";}
-        ];
+        control_center = {
+          hidden_tabs = ["monitor" "power" "network" "bluetooth" "screen-time"];
+          shortcuts = [
+            {type = "notification";}
+            {type = "clipboard";}
+            {type = "media";}
+            {type = "weather";}
+          ];
+        };
 
         keybinds = {
           down = ["Ctrl+j"];
@@ -111,7 +118,7 @@
             control_center_position = "center";
             session_placement = "floating";
             session_position = "center";
-            transparency_mode = "soft";
+            transparency_mode = "glass";
           };
 
           launcher = {
@@ -124,6 +131,58 @@
           tray.hidden = ["chrome_status_icon_1::Discord"];
           recorder.type = "noctalia/screen_recorder:recorder";
           workspaces.display = "none";
+        };
+        
+        lockscreen.tint_intensity = 0.0;
+        lockscreen_widgets = {
+          enabled = true;
+          widget_order = [
+            "lockscreen-widget-0000000000000001"
+            "lockscreen-login-box@DP-2"
+            "lockscreen-widget-0000000000000003"
+          ];
+          widget = {
+            "lockscreen-login-box@DP-2" = {
+              box_height = 64.0;
+              box_width = 240.0;
+              cx = 1280.0;
+              cy = 768.0;
+              output = "DP-2";
+              type = "login_box";
+              settings = {
+                background_opacity = 0.9;
+                background_radius = 32.0;
+                input_opacity = 1.0;
+                input_radius = 32.0;
+                show_caps_lock = false;
+                show_keyboard_layout = false;
+                show_login_button = false;
+                show_password_hint = false;
+              };
+            };
+
+            lockscreen-widget-0000000000000001 = {
+              box_height = 192.0;
+              box_width = 528.0;
+              cx = 1280.0;
+              cy = 352.0;
+              output = "DP-2";
+              type = "clock";
+              settings = {
+                background = false;
+                center_text = true;
+              };
+            };
+
+            lockscreen-widget-0000000000000003 = {
+              output = "DP-2";
+              type = "audio_visualizer";
+              settings = {
+                background = false;
+                show_when_idle = false;
+              };
+            };
+          };
         };
       };
     };

@@ -24,13 +24,6 @@
       };
 
       users.users.greeter.extraGroups = ["seat" "video" "render"];
-      programs.noctalia-greeter.settings = {
-        output = {
-          name = "Virtual-1";
-          scale = 1.0;
-        };
-        cursor.size = 24;
-      };
 
       systemd.services.greetd = {
         wants = ["seatd.service"];
