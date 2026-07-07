@@ -26,7 +26,27 @@
 
       functions = {
         clear = "command clear; printf '\\033[3J'";
-        fish_user_key_bindings = "bind \\r _nl_enter; bind \\cl 'clear; commandline -f repaint'";
+
+        fish_user_key_bindings = ''
+          bind \r _nl_enter
+          bind \cl 'clear; commandline -f repaint'
+          bind \t accept-autosuggestion
+          bind ctrl-j _completion_down
+          bind ctrl-k _completion_up
+        '';
+
+        _completion_down = ''
+          commandline --paging-mode
+          and commandline -f down-line
+          or commandline -f complete
+        '';
+
+        _completion_up = ''
+          commandline --paging-mode
+          and commandline -f up-line
+          or commandline -f repaint
+        '';
+
         restore-ssh-key = ''
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
@@ -38,7 +58,6 @@
 
       interactiveShellInit = ''
         set -g fish_greeting
-        set -gx fifc_editor helix
         function _nl --on-event fish_postexec; echo; end
         function _nl_enter
           string length -q -- (commandline); or echo
@@ -51,7 +70,7 @@
         inherit (pkg) src;
       }) (with pkgs.fishPlugins; [
         fzf-fish
-        autopair
+        done
       ]);
     };
   };
