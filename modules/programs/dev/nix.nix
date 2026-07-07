@@ -36,6 +36,7 @@
       language = [
         {
           name = "nix";
+          auto-format = true;
           formatter.command = "${nix-format}/bin/nix-format";
           language-servers = ["nixd"];
         }
