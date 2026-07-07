@@ -16,6 +16,11 @@
           editor = {
             auto-format = true;
             default-yank-register = "+";
+            cursor-shape = {
+              normal = "bar";
+              insert = "bar";
+              select = "bar";
+            };
           };
 
           keys.normal = {
