@@ -52,6 +52,20 @@
         workflow = "none";
         webSearch.enabled = true;
       };
+
+      file.".pi/agent/extensions/done.ts".text = ''
+        import { spawn } from "node:child_process";
+        import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+
+        export default function (pi: ExtensionAPI) {
+          pi.on("agent_end", async () => {
+            spawn("${pkgs.libnotify}/bin/notify-send", ["Pi", "Done"], {
+              detached: true,
+              stdio: "ignore",
+            }).unref();
+          });
+        }
+      '';
     };
   };
 }
