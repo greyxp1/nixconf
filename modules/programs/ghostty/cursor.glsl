@@ -1,7 +1,7 @@
 const float EPS = 1e-9;
 const vec2 TL = vec2(-1.0, 1.0), TR = vec2(1.0, 1.0), BR = vec2(1.0, -1.0), BL = vec2(-1.0, -1.0);
 const float GLOW_COLOR_OFFSET_BRIGHTNESS = 0.5;
-const float GLOW_MIN_TRAVEL = 1.5;
+const float GLOW_MIN_TRAVEL = 10.0;
 
 float sq(float x) { return x * x; }
 vec2 rectCenter(vec2 pos, vec2 size) { return pos + size * vec2(0.5, -0.5); }
@@ -109,7 +109,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
         float dCenter2 = dot(deltaCenter, deltaCenter);
         float glowMinTravel = currSize.y * GLOW_MIN_TRAVEL;
 
-        // Skip glow for typing and single-cell movement.
+        // Glow only for long jumps; morph handles normal cursor moves.
         if (dCenter2 > sq(glowMinTravel)) {
             float dSeg = dot(uv - prevCenter, deltaCenter) / (dCenter2 + EPS);
             float u = 1.0 - clamp(t, 0.0, 1.0), tShape = 1.0 - u * u * u;
@@ -118,9 +118,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord) {
             float dTrail = sdTrail(uv, currPos, currSize, prevPos, prevSize, tShape);
             float dTip = clamp(1.0 - abs(dSeg - 1.0), 0.0, 1.0);
 
-            vec4 currColor = iCurrentCursorColor;
-            vec4 prevColor = iPreviousCursorColor;
-            vec4 glowColor = mix(fragColor, mix(prevColor, currColor, dTip) + GLOW_COLOR_OFFSET_BRIGHTNESS, sq(dTip) * dTip);
+            vec4 glowColor = mix(fragColor, mix(iPreviousCursorColor, iCurrentCursorColor, dTip) + GLOW_COLOR_OFFSET_BRIGHTNESS, sq(dTip) * dTip);
             glowColor = mix(glowColor, fragColor, pow(smoothstep(0.0, 0.3, dTrail), 0.1));
 
             vec4 trailColor = mix(vec4(1.0), glowColor, pow(smoothstep(0.0, 0.01, dTrail), 0.2));
