@@ -30,9 +30,17 @@
         fish_user_key_bindings = ''
           bind \r _nl_enter
           bind \cl 'clear; commandline -f repaint'
-          bind \t accept-autosuggestion
+          bind \t _accept_or_complete
           bind ctrl-j _completion_down
           bind ctrl-k _completion_up
+        '';
+
+        _accept_or_complete = ''
+          if commandline --showing-suggestion
+            commandline -f accept-autosuggestion
+          else
+            commandline -f complete
+          end
         '';
 
         _completion_down = ''
