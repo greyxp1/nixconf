@@ -70,3 +70,6 @@ exclude_follow = ["nixpkgs"]
 [inputs.catppuccin]
 url = "gh:catppuccin/nix"
 exclude_follow = ["nixpkgs"]
+
+[inputs.niri-autoselect-portal]
+url = "git+https://codeberg.org/debugloop/niri-autoselect-portal.git"
