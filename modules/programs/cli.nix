@@ -50,19 +50,6 @@
           regex = true;
         };
       };
-
-      codex = {
-        enable = true;
-        plugins = [inputs.ponytail];
-        settings = {
-          approval_policy = "never";
-          sandbox_mode = "workspace-write";
-          check_for_update_on_startup = false;
-          notice.hide_full_access_warning = true;
-          projects = {"/home/grey".trust_level = "trusted";};
-          tui.show_tooltips = false;
-        };
-      };
     };
 
     xdg.configFile."tlrc/config.toml".text = ''
