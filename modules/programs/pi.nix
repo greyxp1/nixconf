@@ -1,4 +1,4 @@
-{...}: {
+{
   flake.homeModules.pi = {pkgs, ...}: {
     programs.pi-coding-agent = {
       enable = true;
@@ -6,13 +6,17 @@
       settings = {
         enableSkillCommands = true;
         quietStartup = true;
-        editorPaddingX = 1;
-        theme = "catppuccin-mocha";
+        showHardwareCursor = true;
+        enableInstallTelemetry = false;
+        theme = "catppuccin-tui-mocha";
+        footer = {preset = "minimal";};
         packages = [
           "git:github.com/DietrichGebert/ponytail"
           "npm:pi-web-access@0.13.0"
-          "npm:@ujjwalgrover/pi-catppuccin"
-          "npm:@fgladisch/pi-footer"
+          "npm:@ayulab/pi-rewind"
+          "npm:@hypabolic/pi-hypa"
+          "npm:@smoose/pi-footer"
+          "npm:pi-catppuccin-tui"
         ];
       };
       keybindings = {
@@ -26,20 +30,28 @@
         "app.exit" = ["ctrl+c"];
       };
       context = ''
-        # Grey's Pi Context
-        Grey uses Pi for local NixOS configuration in `/home/grey/nixconf`.
-        Use `nh os switch` for rebuilds. Do not suggest raw `nixos-rebuild switch` unless asked.
-        Make the smallest correct declarative Nix change. Prefer existing modules over new files or abstractions.
-        Never revert unrelated user changes.
-        Do not run checks or tests after edits. Grey will rebuild and report any issues.
+        After changing Nix config, run `nh os switch >/tmp/nh-os-switch.log 2>&1 || { tail -120 /tmp/nh-os-switch.log; exit 1; }`.
+        Only run a tiny smoke test when it directly verifies the changed behavior.
+        Never revert unrelated user changes unless asked.
       '';
     };
 
-    home.file.".pi/web-search.json".text = builtins.toJSON {
-      provider = "auto";
-      allowBrowserCookies = false;
-      workflow = "none";
-      webSearch.enabled = true;
+    home = {
+      packages = [(pkgs.writeShellScriptBin "hypa" "exec \"$HOME/.pi/agent/npm/node_modules/@hypabolic/hypa/bin.js\" \"$@\"")];
+      sessionVariables.HYPA_PI_MODE = "replace";
+
+      file.".pi/agent/catppuccin-tui-state.json".text = builtins.toJSON {
+        indicator = true;
+        status = true;
+        footer = true;
+      };
+
+      file.".pi/web-search.json".text = builtins.toJSON {
+        provider = "auto";
+        allowBrowserCookies = false;
+        workflow = "none";
+        webSearch.enabled = true;
+      };
     };
   };
 }
