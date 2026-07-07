@@ -2,7 +2,6 @@
   flake.nixosModules.niri = {pkgs, ...}: {
     imports = [inputs.niri-nix.nixosModules.default];
     nixpkgs.overlays = [inputs.niri-nix.overlays.niri-nix];
-    xdg.portal.config.niri.default = ["gnome"];
     environment.variables.UWSM_SILENT_START = 2;
 
     services.greetd = {
@@ -99,9 +98,6 @@
           "Mod+R" = bind {switch-preset-column-width = {};};
           "Mod+Tab" = bind {toggle-overview = {};};
           "Print" = bind {screenshot = {};};
-
-          "Mod+Shift+C" = bind {set-dynamic-cast-window = {};};
-          "Mod+Ctrl+C" = bind {set-dynamic-cast-monitor = {};};
 
           "Mod+H" = bind {focus-column-left = {};};
           "Mod+L" = bind {focus-column-right = {};};
