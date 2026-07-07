@@ -43,10 +43,6 @@ url = "gh:4evy/nixcord"
 [inputs.nix-index-database]
 url = "gh:nix-community/nix-index-database"
 
-[inputs.ponytail]
-url = "gh:DietrichGebert/ponytail"
-type = "fetch"
-
 [inputs.videoclip]
 url = "gh:greyxp1/videoclip"
 type = "fetch"
