@@ -54,15 +54,26 @@
       };
 
       file.".pi/agent/extensions/done.ts".text = ''
-        import { spawn } from "node:child_process";
+        import { execFileSync } from "node:child_process";
         import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 
+        let startWindow: number | undefined;
+        const focusedWindow = () => {
+          try {
+            const out = execFileSync("${pkgs.niri-unstable}/bin/niri", ["msg", "--json", "focused-window"]);
+            const id = JSON.parse(out.toString()).id;
+            return typeof id === "number" ? id : undefined;
+          } catch {}
+        };
+
         export default function (pi: ExtensionAPI) {
-          pi.on("agent_end", async () => {
-            spawn("${pkgs.libnotify}/bin/notify-send", ["Pi", "Done"], {
-              detached: true,
-              stdio: "ignore",
-            }).unref();
+          pi.on("agent_start", () => startWindow = focusedWindow());
+          pi.on("agent_end", () => {
+            const endWindow = focusedWindow();
+            if (startWindow && endWindow && startWindow !== endWindow) {
+              process.stdout.write("\x1b]777;notify;Pi;Done\x1b\\");
+            }
+            startWindow = undefined;
           });
         }
       '';
