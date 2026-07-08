@@ -153,7 +153,7 @@
           {
             match._props."app-id" = "^discord$";
             open-on-workspace = "chat";
-            open-fullscreen = true;
+            open-maximized-to-edges = true;
           }
           {
             match = [
