@@ -23,30 +23,16 @@
         "nmi_watchdog=0" # disable NMI watchdog
       ];
 
-      # Disable TPM
-      systemd.services = {
-        systemd-tpm2-setup.enable = false;
-        systemd-tpm2-setup-early.enable = false;
-      };
-
-      # Boot / initrd
       boot = {
+        kernelModules = ["kvm-amd"];
         loader.systemd-boot.extraEntries."windows.conf" = ''
           title Windows Boot Manager
           efi /EFI/Microsoft/Boot/bootmgfw.efi
         '';
 
-        kernelModules = ["kvm-amd"];
         initrd = {
           systemd.network.wait-online.enable = false;
-          availableKernelModules = [
-            "nvme"
-            "xhci_pci"
-            "ahci"
-            "usb_storage"
-            "usbhid"
-            "sd_mod"
-          ];
+          availableKernelModules = ["nvme"];
         };
       };
     };
