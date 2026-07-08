@@ -1,5 +1,5 @@
 {inputs, ...}: let
-  mkLayout = device: {
+  mkLayout = {device, diskSwap ? false}: {
     disko.devices.disk.main = {
       type = "disk";
       inherit device;
@@ -19,10 +19,10 @@
           };
           swap = {
             size = "8G";
-            content = {
+            content = if diskSwap then {
               type = "swap";
               resumeDevice = true;
-            };
+            } else null;
           };
           root = {
             size = "100%";
@@ -50,11 +50,16 @@
     };
   };
 in {
-  flake.nixosModules.filesystem = {lib, config, ...}: {
+  flake.nixosModules.filesystem = {lib, config, ...}: let
+    diskSwap = config.networking.hostName == "vm";
+  in {
     imports = [
       inputs.disko.nixosModules.disko
       inputs.preservation.nixosModules.preservation
-      (mkLayout config.custom.disk.device)
+      (mkLayout {
+        inherit (config.custom.disk) device;
+        inherit diskSwap;
+      })
     ];
 
     options.custom.disk.device = lib.mkOption {
@@ -64,6 +69,7 @@ in {
     };
 
     config = {
+      boot.resumeDevice = lib.mkIf (!diskSwap) (lib.mkForce "");
       systemd.services.systemd-machine-id-commit.enable = false;
       fileSystems = lib.mkForce {
         "/" = {
@@ -121,8 +127,8 @@ in {
   };
 
   flake.diskoConfigurations = {
-    desktop = mkLayout (import ./hosts/desktop/_device.nix);
-    vm = mkLayout (import ./hosts/vm/_device.nix);
-    generic = mkLayout (import ./hosts/generic/_device.nix);
+    desktop = mkLayout {device = import ./hosts/desktop/_device.nix;};
+    vm = mkLayout {device = import ./hosts/vm/_device.nix; diskSwap = true;};
+    generic = mkLayout {device = import ./hosts/generic/_device.nix;};
   };
 }
