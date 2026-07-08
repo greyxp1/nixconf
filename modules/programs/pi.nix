@@ -11,7 +11,7 @@
         theme = "catppuccin-tui-mocha";
         footer = {preset = "minimal";};
         packages = [
-          "git:github.com/DietrichGebert/ponytail"
+          "npm:context-mode"
           "npm:pi-web-access@0.13.0"
           "npm:@ayulab/pi-rewind"
           "npm:@hypabolic/pi-hypa"
@@ -33,6 +33,7 @@
         After changing Nix config, run `nh os switch >/tmp/nh-os-switch.log 2>&1 || { tail -120 /tmp/nh-os-switch.log; exit 1; }`.
         Only run a tiny smoke test when it directly verifies the changed behavior.
         Never revert unrelated user changes unless asked.
+        Prefer YAGNI: reuse existing code, stdlib/native features, smallest safe diff, and concise answers.
       '';
     };
 
