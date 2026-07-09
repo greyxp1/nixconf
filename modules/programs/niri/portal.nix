@@ -7,7 +7,7 @@ in {
     imports = [inputs.niri-autoselect-portal.nixosModules.default];
     services.niri-autoselect-portal = {
       enable = true;
-      package = inputs.niri-autoselect-portal.packages.${pkgs.system}.default.overrideAttrs (old: {
+      package = inputs.niri-autoselect-portal.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
         postPatch = (old.postPatch or "")
         + ''
                   substituteInPlace main.go \
