@@ -17,13 +17,12 @@
   };
 
   flake.homeModules.yazi = {pkgs, lib, ...}: let
-    system = "x86_64-linux";
     plug = on: run: desc: {
       inherit on desc;
       run = "plugin ${run}";
     };
   in {
-    imports = [inputs.nix-yazi-plugins.legacyPackages.${system}.homeManagerModules.default];
+    imports = [inputs.nix-yazi-plugins.legacyPackages.x86_64-linux.homeManagerModules.default];
     home.activation.catppuccinYaziNoIcons = lib.hm.dag.entryAfter ["writeBoundary"] ''
       theme_file="$HOME/.config/yazi/theme.toml"
       if [ -e "$theme_file" ]; then
