@@ -62,6 +62,16 @@
           chmod 600 ~/.ssh/id_ed25519
           ssh-add ~/.ssh/id_ed25519 2>/dev/null || true
         '';
+
+        sync-windows-esp = ''
+          set -l win_esp /dev/disk/by-partuuid/95bb7bd9-3cd8-4eba-acc5-e395455bbc2e
+          set -l mnt (mktemp -d)
+          sudo mount $win_esp $mnt
+          and sudo cp -r $mnt/EFI/Microsoft /boot/EFI/
+          and sudo umount $mnt
+          and rmdir $mnt
+          and echo "Windows ESP synced to /boot/EFI/Microsoft"
+        '';
       };
 
       interactiveShellInit = ''
