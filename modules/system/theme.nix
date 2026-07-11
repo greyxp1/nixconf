@@ -3,6 +3,7 @@
     imports = [inputs.catppuccin.homeModules.catppuccin];
     dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
     home.pointerCursor = {
+      enable = true;
       package = pkgs.catppuccin-cursors.mochaMauve;
       name = "catppuccin-mocha-mauve-cursors";
       size = 24;
@@ -23,13 +24,13 @@
         name = "Adwaita";
         package = pkgs.adwaita-icon-theme;
       };
-      theme = {
-        name = "catppuccin-mocha-mauve-standard";
-        package = pkgs.catppuccin-gtk.override {
-          accents = ["mauve"];
-          variant = "mocha";
-        };
-      };
+      #theme = {
+      #  name = "catppuccin-mocha-mauve-standard";
+      #  package = pkgs.catppuccin-gtk.override {
+      #    accents = ["mauve"];
+      #    variant = "mocha";
+      #  };
+      #};
     };
   };
 }
