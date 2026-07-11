@@ -18,8 +18,6 @@ nixpkgs = ["nixpkgs-unstable"]
 
 [inputs.nixpkgs]
 url = "gh:nixos/nixpkgs/nixos-unstable"
-[inputs.tack]
-url = "gh:manic-systems/tack"
 [inputs.preservation]
 url = "gh:nix-community/preservation"
 [inputs.import-tree]

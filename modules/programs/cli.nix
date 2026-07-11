@@ -66,8 +66,8 @@
     '';
 
     home.packages = with pkgs; [
-      inputs.tack.packages.${stdenv.hostPlatform.system}.default
       inputs.waytator.packages.${stdenv.hostPlatform.system}.default
+      tack
       curl
       zip
       unzip
