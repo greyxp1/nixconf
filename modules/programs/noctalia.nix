@@ -15,12 +15,16 @@
         system.monitor.enabled = false;
         theme.builtin = "Catppuccin";
         location.auto_locate = true;
-        wallpaper.default.path = ../../assets/wallpapers/wheat.jpg;
 
         hooks.started = ''
           noctalia msg plugin noctalia/screen_recorder:service all replay-start;
           noctalia msg session lock
         '';
+
+        wallpaper = {
+          enable = true;
+          default.path = ../../assets/wallpapers/wheat.jpg;
+        };
 
         bar.default = {
           enabled = true;
