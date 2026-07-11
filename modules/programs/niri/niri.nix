@@ -140,13 +140,7 @@
             open-on-workspace = "browser";
           }
           {
-            match._props."app-id" = "^steam$";
-            open-on-workspace = "default";
-            open-fullscreen = false;
-          }
-          {
-            match._props."app-id" = "^steam_app_.*$|^Terraria|^Minecraft";
-            exclude._props."app-id" = "^steam$";
+            match._props."app-id" = "^Minecraft";
             open-fullscreen = true;
             open-on-workspace = "default";
           }
