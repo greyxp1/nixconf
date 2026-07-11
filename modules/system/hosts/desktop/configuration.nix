@@ -1,5 +1,6 @@
 {inputs, ...}: let mkHost = import ../_mkHost.nix inputs; in {
   flake.nixosConfigurations.desktop = mkHost {
+    extraModules = [inputs.chaotic.nixosModules.default];
     hostModule = {pkgs, ...}: {
       networking.hostName = "desktop";
       custom.disk.device = import ./_device.nix;
@@ -9,15 +10,13 @@
       custom.nvidia.enable = true;
       custom.virt.enable = true;
 
-      # Kernel
-      nixpkgs.overlays = [inputs.nix-cachyos-kernel.overlays.pinned];
-      boot.kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest-lto-x86_64-v3;
-
-      # AMD CPU
-      powerManagement.cpuFreqGovernor = "performance";
+      # Temporary fix for Chaotic-Nyx's stale nvidia_cachyos persistenced hash.
+      nixpkgs.overlays = [(final: _prev: {nvidia_cachyos = final.linuxPackages_cachyos.nvidiaPackages.new_feature;})];
+      services.scx.enable = true;
       hardware.cpu.amd.updateMicrocode = true;
       boot = {
-        kernelModules = ["kvm-amd"];
+        kernelPackages = pkgs.linuxPackages_cachyos;
+        kernelModules = ["kvm-amd" "ntsync"];
         kernelParams = [
           "amd_pstate=active" # AMD CPU freq scaling driver
           "8250.nr_uarts=0" # suppress legacy COM port probes
@@ -34,6 +33,11 @@
           title Windows Boot Manager
           efi /EFI/Microsoft/Boot/bootmgfw.efi
         '';
+      };
+
+      powerManagement = {
+        cpuFreqGovernor = "performance";
+        scsiLinkPolicy = "max_performance";
       };
     };
   };
