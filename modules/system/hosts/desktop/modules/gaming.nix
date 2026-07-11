@@ -6,41 +6,55 @@
       programs = {
         steam = {
           enable = true;
-          extraCompatPackages = [pkgs.proton-ge-bin];
           remotePlay.openFirewall = true;
-          dedicatedServer.openFirewall = true;
+          extraCompatPackages = [pkgs.proton-cachyos_x86_64_v3];
         };
 
+        gamemode.enable = true;
         gamescope = {
           enable = true;
-          capSysNice = true;
-          env.ENABLE_GAMESCOPE_WSI = "1";
-        };
-
-        gamemode = {
-          enable = true;
-          settings.general.renice = 10;
+          enableWsi = true;
         };
       };
     };
   };
 
-  flake.homeProfiles.gaming = {pkgs, ...}: {
-    home.packages = [pkgs.umu-launcher];
+  flake.homeProfiles.gaming = {pkgs, ...}: let
+    commonArgs = [
+      "-f"
+      "-W"
+      "2560"
+      "-H"
+      "1440"
+      "-r"
+      "170"
+      "--force-windows-fullscreen"
+      "--force-grab-cursor"
+      "--mangoapp"
+    ];
+    mkGamescope = name: args:
+      pkgs.writeShellScriptBin name ''
+        export LOW_LATENCY_LAYER=1
+        exec gamemoderun gamescope ${pkgs.lib.escapeShellArgs (commonArgs ++ args)} -- "$@"
+      '';
+  in {
+    home.packages = with pkgs; [
+      low-latency-layer
+      steamtinkerlaunch
+      #umu-launcher #for other launchers
+      (mkGamescope "comp" ["-w" "2560" "-h" "1440"])
+      (mkGamescope "dlss" ["-w" "2560" "-h" "1440" "--framerate-limit" "170"])
+      (mkGamescope "fsr" ["-w" "1920" "-h" "1080" "-F" "fsr" "--sharpness" "5" "--framerate-limit" "170"])
+    ];
+    catppuccin.mangohud.enable = false;
     programs.mangohud = {
       enable = true;
-      enableSessionWide = false;
       settings = {
         legacy_layout = false;
-        gpu_stats = true;
-        gpu_temp = true;
-        cpu_stats = true;
-        cpu_temp = true;
+        background_alpha = "0";
         fps = true;
-        frametime = true;
-        vulkan_driver = true;
-        font_size = 20;
-        background_alpha = "0.4";
+        fps_color_change = "F38BA8,F9E2AF,A6E3A1";
+        frame_timing = true;
       };
     };
   };
