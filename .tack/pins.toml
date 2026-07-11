@@ -53,8 +53,8 @@ type = "fetch"
 url = "gh:hercules-ci/flake-parts"
 follows = { nixpkgs-lib = "nixpkgs" }
 
-[inputs.nix-cachyos-kernel]
-url = "gh:xddxdd/nix-cachyos-kernel/release"
+[inputs.chaotic]
+url = "gh:chaotic-cx/nyx/nyxpkgs-unstable"
 exclude_follow = ["nixpkgs"]
 
 [inputs.niri-nix]
