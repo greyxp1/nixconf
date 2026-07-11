@@ -1,12 +1,18 @@
 {inputs, ...}: {
   flake.nixosModules.cli = {
-    programs.nh = {
-      enable = true;
-      flake = "/home/grey/nixconf";
-      clean = {
+    programs = {
+      nh = {
         enable = true;
-        dates = "daily";
-        extraArgs = "--optimise --keep 10";
+        flake = "/home/grey/nixconf";
+        clean = {
+          enable = true;
+          dates = "daily";
+          extraArgs = "--optimise --keep 10";
+        };
+      };
+      tack = {
+        enable = true;
+        nixConfTokens = true;
       };
     };
   };
@@ -67,7 +73,6 @@
 
     home.packages = with pkgs; [
       inputs.waytator.packages.${stdenv.hostPlatform.system}.default
-      tack
       curl
       zip
       unzip
