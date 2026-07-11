@@ -10,24 +10,29 @@
           extraCompatPackages = [pkgs.proton-cachyos_x86_64_v3];
         };
 
-        gamemode.enable = true;
+        gamemode = {
+          enable = true;
+          enableRenice = true;
+        };
+
         gamescope = {
           enable = true;
           enableWsi = true;
         };
       };
+
+      hardware.steam-hardware.enable = true;
+      services.udev.extraRules = ''
+        ACTION=="add|change", SUBSYSTEM=="block", ENV{DEVTYPE}=="disk", KERNEL=="nvme*n*", \
+          ATTR{queue/rotational}=="0", ATTR{queue/scheduler}="none"
+        KERNEL=="ntsync", MODE="0660", TAG+="uaccess"
+      '';
     };
   };
 
   flake.homeProfiles.gaming = {pkgs, ...}: let
-    commonArgs = [
-      "-f"
-      "-W"
-      "2560"
-      "-H"
-      "1440"
-      "-r"
-      "170"
+    commonArgs = ["-f" "-W" "2560" "-H" "1440" "-r" "170"]
+    ++ [
       "--force-windows-fullscreen"
       "--force-grab-cursor"
       "--mangoapp"
@@ -35,13 +40,11 @@
     mkGamescope = name: args:
       pkgs.writeShellScriptBin name ''
         export LOW_LATENCY_LAYER=1
-        exec gamemoderun gamescope ${pkgs.lib.escapeShellArgs (commonArgs ++ args)} -- "$@"
+        exec gamescope ${pkgs.lib.escapeShellArgs (commonArgs ++ args)} -- gamemoderun "$@"
       '';
   in {
     home.packages = with pkgs; [
       low-latency-layer
-      steamtinkerlaunch
-      #umu-launcher #for other launchers
       (mkGamescope "comp" ["-w" "2560" "-h" "1440"])
       (mkGamescope "dlss" ["-w" "2560" "-h" "1440" "--framerate-limit" "170"])
       (mkGamescope "fsr" ["-w" "1920" "-h" "1080" "-F" "fsr" "--sharpness" "5" "--framerate-limit" "170"])
