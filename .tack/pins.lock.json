@@ -7,6 +7,14 @@
     "narHash": "sha256-vmUhEF/jBCZJeK0dInOls+HOAR0yiiQusN1+FZKaJss=",
     "lastModified": 1783674541
   },
+  "chaotic": {
+    "type": "github",
+    "owner": "chaotic-cx",
+    "repo": "nyx",
+    "rev": "cf4dccb5ce65038f5811e70f7a9178a2ccffbf36",
+    "narHash": "sha256-EfLjt6Hpx1HNZF5fJoSlpgrdTosZK79VU7Da0DjiHNo=",
+    "lastModified": 1783746858
+  },
   "disko": {
     "type": "github",
     "owner": "nix-community",
@@ -70,14 +78,6 @@
     "rev": "f3329a1e5614510ee4a34abe443c19ea52d6e671",
     "narHash": "sha256-2KTAku4cwxHbLJi3rk/bfROkLIH4vg5qR+w3DXQCEFk=",
     "lastModified": 1783561039
-  },
-  "nix-cachyos-kernel": {
-    "type": "github",
-    "owner": "xddxdd",
-    "repo": "nix-cachyos-kernel",
-    "rev": "4673c8f6d48baf2ec3f14b6a9f8c4ecfb0810d6f",
-    "narHash": "sha256-w5ALD125oHIa5MVhoBXo3qx2ktvRvJ+1p8UScV9f8OI=",
-    "lastModified": 1783710455
   },
   "nix-index-database": {
     "type": "github",
