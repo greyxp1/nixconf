@@ -103,6 +103,7 @@
             {action = "reboot";}
             {action = "shutdown";}
             {action = "lock";}
+            {action = "lock_and_suspend";}
             {action = "logout";}
             {
               action = "command";
@@ -132,7 +133,7 @@
           recorder.type = "noctalia/screen_recorder:recorder";
           workspaces.display = "none";
         };
-        
+
         lockscreen.tint_intensity = 0.0;
         lockscreen_widgets = {
           enabled = true;
