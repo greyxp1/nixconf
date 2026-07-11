@@ -15,6 +15,7 @@
       };
 
       hardware.nvidia = {
+        package = pkgs.nvidia_cachyos;
         open = true;
         modesetting.enable = true;
         nvidiaSettings = false;
