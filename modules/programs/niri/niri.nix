@@ -25,7 +25,7 @@
     wayland.windowManager.niri = {
       enable = true;
       settings = {
-        spawn-at-startup = map (cmd: {_args = [cmd];}) ["discord"];
+        spawn-at-startup = map (cmd: {_args = [cmd];}) ["discord" "steam -silent"];
         workspace = map (ws: {_args = [ws];}) ["browser" "default" "chat" "stage"];
         screenshot-path = "~/Pictures/Screenshots/%y-%m-%d-%H-%M-%S.png";
         prefer-no-csd = {};
