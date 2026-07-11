@@ -43,9 +43,9 @@
     "type": "github",
     "owner": "nix-community",
     "repo": "home-manager",
-    "rev": "f938277527aa084929261879d50d9832b9eab6d3",
-    "narHash": "sha256-232L3Nku2nLch/TQHsJEIhiZJKr+VTehnVUs1NZ0SNc=",
-    "lastModified": 1783711151
+    "rev": "0992a2948749a61d54065e96df26d75d1b1da50f",
+    "narHash": "sha256-jncDHDD8REkePWvQmfH+ScPHxLL8LN4Hd/KjCdlLgD0=",
+    "lastModified": 1783800036
   },
   "import-tree": {
     "type": "github",
@@ -75,9 +75,9 @@
     "type": "git",
     "url": "https://codeberg.org/BANanaD3V/niri-nix",
     "ref": "HEAD",
-    "rev": "f3329a1e5614510ee4a34abe443c19ea52d6e671",
-    "narHash": "sha256-2KTAku4cwxHbLJi3rk/bfROkLIH4vg5qR+w3DXQCEFk=",
-    "lastModified": 1783561039
+    "rev": "841861b39dc0c4fe36ed2a92289b899fd4d956f2",
+    "narHash": "sha256-LE+2A+HUEH1m3TozkyV+ohCCu7I21Y51mM6RisTCbqU=",
+    "lastModified": 1783744348
   },
   "nix-index-database": {
     "type": "github",
@@ -99,9 +99,9 @@
     "type": "github",
     "owner": "4evy",
     "repo": "nixcord",
-    "rev": "a91ef4e6ceee6d6882c3c82dbedef75b29f23e25",
-    "narHash": "sha256-5gkLrDcQUGfEffhvGMv9olNHnnI/EwQ28WdneXxWCfo=",
-    "lastModified": 1783680430
+    "rev": "f3c556542c423b5e790a94d0337a80cede816620",
+    "narHash": "sha256-AzoohteEEymQ+m3fAXlQJ+mkFLQ9XjPRqSlgqJ7TLGY=",
+    "lastModified": 1783764089
   },
   "nixpkgs": {
     "type": "github",
@@ -115,9 +115,9 @@
     "type": "github",
     "owner": "noctalia-dev",
     "repo": "noctalia",
-    "rev": "230661e4077133e9c558c44280379e5e5e676fee",
-    "narHash": "sha256-OjFXZwOI0hOVCa/2ajnCID/sny5mgLg67hsTJ/BiphU=",
-    "lastModified": 1783702961
+    "rev": "4529cd3d65e61f7ec2000dedf3a84969a992b5a6",
+    "narHash": "sha256-nKkGrNbdpgE6viYJi4q5UZ57cSXs7bd96F2U4fFf29I=",
+    "lastModified": 1783795493
   },
   "nsticky": {
     "type": "github",
