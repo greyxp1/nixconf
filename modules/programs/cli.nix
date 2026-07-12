@@ -1,6 +1,7 @@
 {inputs, ...}: {
   flake.nixosModules.cli = {
     programs = {
+      tack.enable = true;
       nh = {
         enable = true;
         flake = "/home/grey/nixconf";
@@ -9,10 +10,6 @@
           dates = "daily";
           extraArgs = "--optimise --keep 10";
         };
-      };
-      tack = {
-        enable = true;
-        nixConfTokens = true;
       };
     };
   };
