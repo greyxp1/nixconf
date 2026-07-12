@@ -17,8 +17,12 @@
         location.auto_locate = true;
 
         hooks.started = ''
-          noctalia msg plugin noctalia/screen_recorder:service all replay-start;
           noctalia msg session lock
+          (
+            systemctl --user start xdg-desktop-portal.service xdg-desktop-portal-gnome.service \
+              niri-autoselect-portal.service &&
+            noctalia msg plugin noctalia/screen_recorder:service all replay-start
+          ) &
         '';
 
         wallpaper = {
