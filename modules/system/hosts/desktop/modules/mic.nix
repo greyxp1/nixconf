@@ -4,6 +4,7 @@
     stereo = ["FL" "FR"];
     micCard = "AT2005USB";
     micSource = "rnnoise_source";
+    rawMicSource = "alsa_input.usb-Audio-Technica_AT2005USB-00.analog-stereo";
     headphonesSink = "alsa_output.usb-Audio-Technica_AT2005USB-00.analog-stereo";
 
     initScript = pkgs.writeShellScript "at2005usb-init" ''
@@ -38,6 +39,11 @@
       flags = ["nofail"];
       inherit args;
     };
+
+    nodeRule = prop: node: {
+      matches = [{"node.name" = node;}];
+      actions.update-props.${prop} = true;
+    };
   in {
     options.custom.audio.enable = lib.mkEnableOption "desktop audio setup";
 
@@ -54,6 +60,14 @@
       };
 
       services.pipewire = {
+        wireplumber.extraConfig."51-audio-menu-cleanup"."monitor.alsa.rules" =
+          map (nodeRule "node.hidden") [headphonesSink rawMicSource]
+          ++ map (nodeRule "node.disabled") [
+            "alsa_output.pci-0000_07_00.1.hdmi-stereo"
+            "alsa_output.pci-0000_09_00.4.iec958-stereo"
+            "alsa_input.pci-0000_09_00.4.analog-stereo"
+          ];
+
         extraLadspaPackages = [pkgs.rnnoise-plugin];
         extraConfig.pipewire = {
           "50-rnnoise"."context.modules" = [
