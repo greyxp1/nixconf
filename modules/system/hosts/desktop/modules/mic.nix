@@ -79,7 +79,7 @@
                   type = "ladspa";
                   name = "rnnoise";
                   plugin = "librnnoise_ladspa";
-                  label = "noise_suppressor_mono";
+                  label = "noise_suppressor_stereo";
                   control = {
                     "VAD Threshold (%)" = 85.0;
                     "VAD Grace Period (ms)" = 200.0;
@@ -91,12 +91,14 @@
                 "node.name" = "capture.${micSource}";
                 "node.passive" = true;
                 "audio.rate" = rate;
+                "audio.position" = stereo;
               };
               "playback.props" = {
                 "node.name" = micSource;
                 "media.class" = "Audio/Source";
                 "node.description" = "RNNoise Microphone";
                 "audio.rate" = rate;
+                "audio.position" = stereo;
                 "priority.session" = 2000;
               };
             })
