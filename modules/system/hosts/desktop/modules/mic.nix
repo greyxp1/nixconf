@@ -68,7 +68,7 @@
             "alsa_input.pci-0000_09_00.4.analog-stereo"
           ];
 
-        extraLadspaPackages = [pkgs.rnnoise-plugin];
+        extraLadspaPackages = [pkgs.rnnoise-plugin.ladspa];
         extraConfig.pipewire = {
           "50-rnnoise"."context.modules" = [
             (filterChain {
