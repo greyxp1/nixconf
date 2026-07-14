@@ -55,9 +55,7 @@
           fakeNitro.enable = true;
           fixCodeblockGap.enable = true;
           fixFileExtensions.enable = true;
-          fixImagesQuality.enable = true;
           fixYoutubeEmbeds.enable = true;
-          fullSearchContext.enable = true;
           fullVcpfp.enable = true;
           gifPaste.enable = true;
           guildPickerDumper.enable = true;
@@ -66,7 +64,6 @@
           keepCurrentChannel.enable = true;
           memberCount.enable = true;
           messageClickActions.enable = true;
-          micLoopbackTester.enable = true;
           newPluginsManager.enable = true;
           noDevtoolsWarning.enable = true;
           noF1.enable = true;
@@ -99,9 +96,7 @@
           webKeybinds.enable = true;
           webScreenShareFixes.enable = true;
           whoReacted.enable = true;
-          whosWatching.enable = true;
           youtubeAdblock.enable = true;
-          zipPreview.enable = true;
 
           questify = {
             enable = true;
@@ -126,15 +121,6 @@
               WATCH_VIDEO_ON_MOBILE = true;
               ACHIEVEMENT_IN_ACTIVITY = true;
             };
-          };
-
-          messageLoggerEnhanced = {
-            enable = true;
-            attachmentSizeLimitInMegabytes = 500;
-            cacheMessagesFromServers = true;
-            ignoreSelf = true;
-            messageLimit = 0;
-            saveImages = true;
           };
 
           messageLogger = {
