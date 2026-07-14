@@ -93,7 +93,7 @@
 
           "Mod+Q" = bind {close-window = {};};
           "Mod+F" = bind {maximize-window-to-edges = {};};
-          "Mod+Shift+F" = bind {toggle-window-rule-opacity = {};};
+          "Mod+Shift+F" = bind {fullscreen-window = {};};
           "Mod+T" = bind {toggle-window-floating = {};};
           "Mod+R" = bind {switch-preset-column-width = {};};
           "Mod+Tab" = bind {toggle-overview = {};};
