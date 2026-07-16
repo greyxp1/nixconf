@@ -8,6 +8,8 @@
 
       extraPolicies = {
         RestoreOnStartup = 1;
+        HighEfficiencyModeEnabled = true;
+        MemorySaverModeSavings = 2;
         DefaultSearchProviderEnabled = true;
         DefaultSearchProviderName = "Google";
         DefaultSearchProviderSearchURL = "https://www.google.com/search?q={searchTerms}";
