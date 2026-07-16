@@ -53,6 +53,34 @@
           regex = true;
         };
       };
+
+      codex = {
+        enable = true;
+        settings = {
+          approval_policy = "on-request";
+          sandbox_mode = "danger-full-access";
+          check_for_update_on_startup = false;
+          model = "gpt-5.6-sol";
+          model_reasoning_effort = "high";
+          notice.hide_full_access_warning = true;
+          projects."/home/grey/nixconf".trust_level = "trusted";
+          tui.show_tooltips = false;
+          developer_instructions = ''
+            Default to YAGNI: reuse existing code and packages, avoid new dependencies
+            and custom implementations, and make the smallest correct diff.
+
+            Run at most one narrowly scoped verification command, and only when it
+            directly verifies the change. Do not run broad builds or full test suites
+            when a narrower check exists. If an activation command already builds or
+            validates the change, do not run a separate build first.
+          '';
+        };
+
+        context = ''
+          When editing Nix files in nixconf or helium-flake, use the custom `nix-format`
+          from modules/programs/dev/nix.nix, not stock Alejandra.
+        '';
+      };
     };
 
     xdg.configFile."tlrc/config.toml".text = ''
