@@ -18,8 +18,6 @@
         sponsorBlock.id = "mnjggcdmjocbbbhaepdhchncahnbgone";
         deArrow.id = "enamippconapkdmgfgjchkhakpfinmaj";
         controlPanel.id = "lodcanccmfbpjjpnngindkkmiehimile";
-        betterLyrics.id = "effdbpegglllpfkjppbokhmmiinhlmg";
-        equicord.id = "mcambpfmpjnncfoodejdmehedbkjepmi";
         re-start.id = "fdodcmjeojbmcgmhcgcelffcekhicnop";
         protonPass.id = "ghmbeldphafepmbegfdlkpapadhbakde";
         protonPass.pin = true;
