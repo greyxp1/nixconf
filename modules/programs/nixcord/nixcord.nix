@@ -3,7 +3,67 @@
     imports = [inputs.nixcord.homeModules.nixcord];
     programs.nixcord = {
       enable = true;
-      quickCss = builtins.readFile ./theme.css;
+      quickCss = ''
+        div[class^="winButtons_"] {display: none !important;}
+
+        .visual-refresh.theme-dark,
+        .visual-refresh .theme-dark {
+          --brand-500: #89b4fa;
+          --brand-530: #71a4f9;
+          --brand-560: #5895f8;
+          --text-default: #cdd6f4;
+          --text-muted: #a6adc8;
+          --text-link: #89b4fa;
+          --text-strong: #cdd6f4;
+          --text-subtle: #bac2de;
+          --channels-default: #969ebe;
+          --channel-icon: #969ebe;
+          --interactive-icon-default: #cdd6f4;
+          --interactive-text-default: #cdd6f4;
+          --interactive-muted: #6c7086;
+          --interactive-background-hover: rgba(147, 153, 178, 0.15);
+          --interactive-background-selected: rgba(108, 112, 134, 0.2);
+          --interactive-background-active: rgba(205, 214, 244, 0.17);
+          --background-base-lowest: #11111b;
+          --background-base-lower: #181825;
+          --background-base-low: #1c1c2b;
+          --background-surface-high: #1e1e2e;
+          --background-surface-higher: #2b2b3b;
+          --background-surface-highest: #313244;
+          --background-secondary-alt: #1c1c2b;
+          --background-mod-muted: rgba(88, 91, 112, 0.05);
+          --background-mod-normal: rgba(88, 91, 112, 0.15);
+          --background-mod-subtle: rgba(88, 91, 112, 0.25);
+          --background-mod-strong: rgba(88, 91, 112, 0.45);
+          --home-background: #1e1e2e;
+          --chat-background: #1e1e2e;
+          --chat-background-default: #1e1e2e;
+          --chat-border: #11111b;
+          --custom-channel-members-bg: #181825;
+          --channeltextarea-background: #181825;
+          --modal-background: #1e1e2e;
+          --modal-footer-background: #1e1e2e;
+          --input-background-default: #11111b;
+          --card-background-default: #313244;
+          --border-muted: #313244;
+          --border-strong: #181825;
+          --border-normal: #11111b;
+          --border-subtle: #1e1e2e;
+          --mention-foreground: #89b4fa;
+          --mention-background: rgba(137, 180, 250, 0.3);
+          --message-mentioned-background-default: rgba(249, 226, 175, 0.1);
+          --message-mentioned-background-hover: rgba(249, 226, 175, 0.08);
+          --message-background-hover: rgba(17, 17, 27, 0.3);
+          --status-positive: #a6e3a1;
+          --status-warning: #f9e2af;
+          --status-danger: #f38ba8;
+          --badge-notification-background: #f38ba8;
+          --scrollbar-thin-thumb: #89b4fa;
+          --scrollbar-thin-track: transparent;
+          --scrollbar-auto-thumb: #89b4fa;
+          --scrollbar-auto-track: #11111b;
+        }
+      '';
 
       discord = {
         enable = true;
@@ -31,18 +91,19 @@
         BetterAudioDefaults = ./plugins/BetterAudioDefaults;
       };
 
-      extraConfig.plugins = {
-        BetterAudioDefaults.enable = true;
-        FakeDeafen.enable = true;
+      extraConfig = {
+        enableOnlineThemes = false;
+        plugins = {
+          BetterAudioDefaults.enable = true;
+          FakeDeafen.enable = true;
+        };
       };
 
       config = {
-        transparent = true;
         useQuickCss = true;
         plugins = {
           alwaysTrust.enable = true;
           betterCommands.enable = true;
-          betterSettings.enable = true;
           betterUploadButton.enable = true;
           blockKrisp.enable = true;
           clearUrls.enable = true;
@@ -82,7 +143,6 @@
           relationshipNotifier.enable = true;
           remixRevived.enable = true;
           reverseImageSearch.enable = true;
-          roleColorEverywhere.enable = true;
           searchFix.enable = true;
           showAllMessageButtons.enable = true;
           sendTimestamps.enable = true;
@@ -123,12 +183,27 @@
             };
           };
 
+          declutter = {
+            enable = true;
+            removeAvatarDecoration = true;
+            removeNameplate = true;
+            removeProfileEffect = true;
+            removeClanTag = true;
+            removeShopAboveDms = true;
+            removeQuestsAboveDms = true;
+            removeServerBoostInfo = true;
+            removeBillingSettings = true;
+            removeGiftButton = true;
+            removeUnavailableEmojiPicker = true;
+          };
+
           messageLogger = {
             enable = true;
             collapseDeleted = true;
+            ignoreBots = true;
             ignoreSelf = true;
-            separatedDiffs = true;
-            showEditDiffs = true;
+            inlineEdits = false;
+            logEdits = false;
           };
 
           moreUserTags = {
@@ -147,7 +222,7 @@
 
           equibopStreamFixes = {
             enable = true;
-            minBitrate = 10000;
+            minBitrate = 6000;
             bitsPerPixelPct = 16;
           };
 
@@ -172,11 +247,6 @@
           callTimer = {
             enable = true;
             format = "human";
-          };
-
-          declutter = {
-            enable = true;
-            removeShopAboveDms = true;
           };
 
           followVoiceUser = {
