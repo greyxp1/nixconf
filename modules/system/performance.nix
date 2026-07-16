@@ -2,8 +2,6 @@
   flake.nixosModules.performance = {lib, ...}: {
     services.irqbalance.enable = true;
     nix.settings = {
-      max-jobs = "auto";
-      cores = 0;
       http-connections = 128;
       nar-buffer-size = 536870912;
     };
