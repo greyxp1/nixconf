@@ -8,7 +8,7 @@
       settings = {
         desktop_widgets.enabled = false;
         dock.position = "bottom";
-        notification.background_opacity = 0.81;
+        notification.background_opacity = 0.9;
         system.monitor.enabled = false;
         theme.builtin = "Catppuccin";
         location.auto_locate = true;
@@ -30,7 +30,7 @@
         bar.default = {
           enabled = true;
           auto_hide = true;
-          background_opacity = 0.81;
+          background_opacity = 0.9;
           start = ["recorder"];
           center = ["workspaces"];
           end = ["tray" "notifications"];
@@ -157,7 +157,6 @@
               output = "DP-2";
               type = "login_box";
               settings = {
-                background_opacity = 0.9;
                 background_radius = 32.0;
                 input_opacity = 1.0;
                 input_radius = 32.0;
