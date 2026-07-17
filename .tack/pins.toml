@@ -71,3 +71,7 @@ url = "git+https://codeberg.org/debugloop/niri-autoselect-portal.git"
 [inputs.smartcut]
 url = "gh:skeskinen/smartcut"
 type = "fetch"
+
+[inputs.prism-themes]
+url = "gh:PrismLauncher/Themes"
+type = "fetch"
