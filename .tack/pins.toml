@@ -41,10 +41,6 @@ url = "gh:4evy/nixcord"
 [inputs.nix-index-database]
 url = "gh:nix-community/nix-index-database"
 
-[inputs.videoclip]
-url = "gh:greyxp1/videoclip"
-type = "fetch"
-
 [inputs.oniri]
 url = "gh:Antiz96/oniri"
 type = "fetch"
@@ -71,3 +67,7 @@ exclude_follow = ["nixpkgs"]
 
 [inputs.niri-autoselect-portal]
 url = "git+https://codeberg.org/debugloop/niri-autoselect-portal.git"
+
+[inputs.smartcut]
+url = "gh:skeskinen/smartcut"
+type = "fetch"
