@@ -143,6 +143,14 @@
     "narHash": "sha256-mMI9IanU+Xw+pVogD2oT0I2kTmvz2Un/Apc5+CwUpEY=",
     "lastModified": 1757436102
   },
+  "prism-themes": {
+    "type": "github",
+    "owner": "PrismLauncher",
+    "repo": "Themes",
+    "rev": "9e921ca23a1838f87e0699517a77da5e92921a11",
+    "narHash": "sha256-V6mkItSVA/TSC0yWKvcps/ewAC0nSd1KSBr8Pvdv8z8=",
+    "lastModified": 1781557389
+  },
   "smartcut": {
     "type": "github",
     "owner": "skeskinen",
