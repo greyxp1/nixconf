@@ -25,9 +25,9 @@
       };
 
       config = {
-        vo = "gpu-next";
+        vo = "gpu";
         gpu-context = "wayland";
-        hwdec = "auto-copy-safe";
+        hwdec = "auto-safe";
         profile = "gpu-hq";
         cache = "yes";
         demuxer-max-bytes = "512MiB";
@@ -46,32 +46,33 @@
       layout=seekbar
       window_controls=no
       vidscale=no
-      scalewindowed=1.0
-      scalefullscreen=1.0
       sub_margins=no
-      showonpause=no
-      osc_fade_strength=0
-      window_fade_strength=0
     '';
 
     xdg.configFile."mpv/scripts/smartcut-controls.lua".text = ''
       local utils = require "mp.utils"
       local mark
+      local task
+      local cancelling
       local progress = mp.create_osd_overlay("ass-events")
+      local started
+      local progress_timer = mp.add_periodic_timer(1, function()
+        progress.data = ("{\\an8}Processing… %ds"):format(math.floor(mp.get_time() - started))
+        progress:update()
+      end)
+      progress_timer:kill()
 
       local function notify(message, duration)
         mp.msg.info(message)
         mp.osd_message(message, duration or 3)
       end
 
-      local function stamp(seconds)
-        local ms = math.floor(seconds * 1000)
-        return string.format("%02d-%02d-%02d-%03d",
-          math.floor(ms / 3600000), math.floor(ms / 60000) % 60,
-          math.floor(ms / 1000) % 60, ms % 1000)
-      end
-
       local function select_cut_point()
+        if task then
+          notify("Cut already processing")
+          return
+        end
+
         local time = mp.get_property_number("time-pos")
         if not time then
           notify("Cut failed: no video timestamp", 5)
@@ -97,17 +98,14 @@
           return
         end
 
-        local directory = utils.split_path(input)
-        local filename = mp.get_property("filename")
-        local stem = mp.get_property("filename/no-ext")
-        local extension = filename:match("(%.[^.]*)$") or ".mp4"
-        local output = utils.join_path(directory,
-          "CUT_" .. stem .. "_FROM_" .. stamp(start)
-            .. "_TO_" .. stamp(time) .. extension)
-        progress.data = "{\\an8}Processing…"
+        local directory, filename = utils.split_path(input)
+        local output = utils.join_path(directory, "cut_" .. filename)
+        started = mp.get_time()
+        progress.data = "{\\an8}Processing… 0s"
         progress:update()
+        progress_timer:resume()
 
-        mp.command_native_async({
+        task = mp.command_native_async({
           name = "subprocess",
           args = {
             "${smartcut}/bin/smartcut",
@@ -119,8 +117,16 @@
           playback_only = false,
           capture_stderr = true,
         }, function(success, result, error)
+          task = nil
+          progress_timer:kill()
           progress.data = ""
           progress:update()
+          if cancelling then
+            cancelling = nil
+            notify("Cut cancelled", 2)
+            return
+          end
+
           if success and result and result.status == 0 then
             notify("Cut complete: " .. output, 5)
             return
@@ -135,7 +141,10 @@
       end
 
       local function cancel_cut()
-        if mark then
+        if task then
+          cancelling = true
+          mp.abort_async_command(task)
+        elseif mark then
           mark = nil
           notify("Cut cancelled", 2)
         end
