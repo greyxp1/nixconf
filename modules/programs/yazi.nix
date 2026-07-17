@@ -86,7 +86,7 @@
           open = [
             {
               mime = "image/*";
-              run = "mpv-pin-image Niri-Pin-Surface -- \"$@\"";
+              run = ''niri-pin "$@"'';
               orphan = true;
             }
           ];
