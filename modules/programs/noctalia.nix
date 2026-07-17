@@ -1,9 +1,6 @@
 {inputs, ...}: {
-  flake.nixosModules.noctalia = {pkgs, ...}: {
-    environment.systemPackages = [pkgs.gpu-screen-recorder];
-  };
-
-  flake.homeModules.noctalia = {
+  flake.homeModules.noctalia = {pkgs, ...}: {
+    home.packages = with pkgs; [gpu-screen-recorder];
     imports = [inputs.noctalia.homeModules.default];
     programs.noctalia = {
       enable = true;
@@ -133,6 +130,7 @@
           launcher = {
             session_search = true;
             categories = false;
+            providers.session.global = true;
           };
         };
 
