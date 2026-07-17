@@ -4,7 +4,7 @@
       enable = true;
       settings = {
         cursor-style = "bar";
-        background-opacity = 0.81;
+        background-opacity = 0.9;
         font-size = 14;
         window-padding-x = 8;
         window-padding-y = 8;
@@ -14,7 +14,7 @@
         link-url = true;
         link-previews = true;
         clipboard-trim-trailing-spaces = true;
-        copy-on-select = "clipboard";
+        selection-background = "#0078D7";
         custom-shader-animation = "always";
         custom-shader = ["${./cursor.glsl}"];
         keybind = [
@@ -22,7 +22,6 @@
           "ctrl+alt+j=goto_split:down"
           "ctrl+alt+k=goto_split:up"
           "ctrl+alt+l=goto_split:right"
-          "ctrl+alt+y=select_all"
         ];
       };
     };
