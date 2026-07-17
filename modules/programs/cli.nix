@@ -97,7 +97,6 @@
     '';
 
     home.packages = with pkgs; [
-      inputs.waytator.packages.${stdenv.hostPlatform.system}.default
       curl
       zip
       unzip
