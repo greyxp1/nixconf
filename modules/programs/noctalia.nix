@@ -66,9 +66,9 @@
 
         plugin_settings."noctalia/screen_recorder" = {
           audio_source = "both";
-          color_range = "full";
           directory = "~/Videos";
           filename_pattern = "%y-%m-%d-%H-%M-%S";
+          quality = "ultra";
           replay_enabled = true;
           replay_duration = 120;
           replay_filename_pattern = "%y-%m-%d-%H-%M-%S";
