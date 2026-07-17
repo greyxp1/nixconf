@@ -16,7 +16,7 @@
       config = {
         vo = "gpu-next";
         gpu-context = "wayland";
-        hwdec = "auto-safe";
+        hwdec = "auto-copy-safe";
         profile = "gpu-hq";
         cache = "yes";
         demuxer-max-bytes = "512MiB";
@@ -36,6 +36,9 @@
       scalewindowed=1.0
       scalefullscreen=1.0
       sub_margins=no
+      showonpause=no
+      osc_fade_strength=0
+      window_fade_strength=0
     '';
 
     xdg.configFile."mpv/script-opts/videoclip.conf".text = ''
