@@ -4,6 +4,7 @@
     programs.nixcord = {
       enable = true;
       quickCss = ''
+        @import url(https://mwittrien.github.io/BetterDiscordAddons/Themes/EmojiReplace/base/Apple.css);
         div[class^="winButtons_"] {display: none !important;}
 
         .visual-refresh.theme-dark,
@@ -87,15 +88,19 @@
       };
 
       userPlugins = {
-        FakeDeafen = ./plugins/FakeDeafen;
-        BetterAudioDefaults = ./plugins/BetterAudioDefaults;
+        autoReact = ./plugins/AutoReact;
+        betterAudioDefaults = ./plugins/BetterAudioDefaults;
+        fakeDeafen = ./plugins/FakeDeafen;
+        localEdit = ./plugins/LocalEdit;
       };
 
       extraConfig = {
         enableOnlineThemes = false;
         plugins = {
-          BetterAudioDefaults.enable = true;
-          FakeDeafen.enable = true;
+          autoReact.enable = true;
+          betterAudioDefaults.enable = true;
+          fakeDeafen.enable = true;
+          localEdit.enable = true;
         };
       };
 
