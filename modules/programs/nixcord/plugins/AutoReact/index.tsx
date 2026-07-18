@@ -26,18 +26,24 @@ const settings = definePluginSettings({
     }
 });
 
+function cloneRules(): Rules {
+    return JSON.parse(JSON.stringify(settings.store.rules));
+}
+
 function setEmojis(rule: EmojiRule, id: string, emojis: EmojiList): void {
-    const values = { ...settings.store.rules[rule] };
+    const rules = cloneRules();
+    const values = rules[rule];
     if (emojis.length) values[id] = emojis;
     else delete values[id];
-    settings.store.rules = { ...settings.store.rules, [rule]: values };
+    settings.store.rules = rules;
 }
 
 function setUserIgnored(userId: string, ignored: boolean): void {
-    const users = { ...settings.store.rules.ignored };
+    const rules = cloneRules();
+    const users = rules.ignored;
     if (ignored) users[userId] = true;
     else delete users[userId];
-    settings.store.rules = { ...settings.store.rules, ignored: users };
+    settings.store.rules = rules;
 }
 
 async function addReactions(channelId: string, messageId: string, emojis: EmojiList): Promise<void> {
