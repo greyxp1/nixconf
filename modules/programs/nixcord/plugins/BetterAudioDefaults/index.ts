@@ -1,4 +1,3 @@
-// @ts-nocheck
 import definePlugin from "@utils/types";
 import { findByProps } from "@webpack";
 
