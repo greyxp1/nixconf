@@ -16,20 +16,14 @@
     '';
   };
 
-  flake.homeModules.yazi = {pkgs, lib, ...}: let
+  flake.homeModules.yazi = {pkgs, ...}: let
     plug = on: run: desc: {
       inherit on desc;
       run = "plugin ${run}";
     };
   in {
     imports = [inputs.nix-yazi-plugins.legacyPackages.x86_64-linux.homeManagerModules.default];
-    home.activation.catppuccinYaziNoIcons = lib.hm.dag.entryAfter ["writeBoundary"] ''
-      theme_file="$HOME/.config/yazi/theme.toml"
-      if [ -e "$theme_file" ]; then
-        $VERBOSE_ECHO "Stripping catppuccin/yazi icon table from theme.toml..."
-        $DRY_RUN_CMD bash -c "sed '/^\[icon\]/,\$d' \"\$(readlink -f "$theme_file")\" > \"$theme_file.tmp\" && mv \"$theme_file.tmp\" \"$theme_file\""
-      fi
-    '';
+    catppuccin.sources.yazi = "${inputs.catppuccin-yazi}/themes";
 
     xdg.configFile."xdg-desktop-portal-termfilechooser/config".text = ''
       [filechooser]
