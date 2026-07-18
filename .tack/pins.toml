@@ -16,6 +16,10 @@ nixpkgs = ["nixpkgs-unstable"]
 #   submodules      fetch git submodules
 #   unpack          fixed-only tarball or file
 
+[inputs.flake-parts]
+url = "gh:hercules-ci/flake-parts"
+follows = { nixpkgs-lib = "nixpkgs" }
+
 [inputs.nixpkgs]
 url = "gh:nixos/nixpkgs/nixos-unstable"
 [inputs.preservation]
@@ -40,38 +44,31 @@ url = "gh:greyxp1/helium-flake"
 url = "gh:4evy/nixcord"
 [inputs.nix-index-database]
 url = "gh:nix-community/nix-index-database"
-
-[inputs.oniri]
-url = "gh:Antiz96/oniri"
-type = "fetch"
-
-[inputs.flake-parts]
-url = "gh:hercules-ci/flake-parts"
-follows = { nixpkgs-lib = "nixpkgs" }
+[inputs.niri-autoselect-portal]
+url = "git+https://codeberg.org/debugloop/niri-autoselect-portal.git"
 
 [inputs.chaotic]
 url = "gh:chaotic-cx/nyx/nyxpkgs-unstable"
 exclude_follow = ["nixpkgs"]
-
 [inputs.niri-nix]
 url = "git+https://codeberg.org/BANanaD3V/niri-nix"
 exclude_follow = ["nixpkgs"]
-
 [inputs.noctalia]
 url = "gh:noctalia-dev/noctalia/cachix"
 exclude_follow = ["nixpkgs"]
-
 [inputs.catppuccin]
 url = "gh:catppuccin/nix"
 exclude_follow = ["nixpkgs"]
 
-[inputs.niri-autoselect-portal]
-url = "git+https://codeberg.org/debugloop/niri-autoselect-portal.git"
-
+[inputs.oniri]
+url = "gh:Antiz96/oniri"
+type = "fetch"
+[inputs.catppuccin-yazi]
+url = "gh:greyxp1/yazi"
+type = "fetch"
 [inputs.smartcut]
 url = "gh:skeskinen/smartcut"
 type = "fetch"
-
 [inputs.prism-themes]
 url = "gh:PrismLauncher/Themes"
 type = "fetch"
