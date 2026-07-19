@@ -3,7 +3,7 @@
     hostModule = {
       networking.hostName = "desktop";
       custom.disk.device = import ./_device.nix;
-      custom.audio.enable = true;
+      custom.at2005usb.enable = true;
       custom.gaming.enable = true;
       custom.kovaaks.enable = true;
       custom.nvidia.enable = true;
