@@ -63,14 +63,6 @@
     "narHash": "sha256-Dj51C0NWsglqRrCpdmMr2nFiYacFOid1Tor4H9yG2HY=",
     "lastModified": 1777848538
   },
-  "niri-autoselect-portal": {
-    "type": "git",
-    "url": "https://codeberg.org/debugloop/niri-autoselect-portal.git",
-    "ref": "HEAD",
-    "rev": "f9ea1e7bea532f1fb223f0a1955db6549c944a87",
-    "narHash": "sha256-fCP7nG0yLb4sDWClF0X1+TvDRSQEsrFc7G5TFRtNVpM=",
-    "lastModified": 1784472151
-  },
   "niri-nix": {
     "type": "git",
     "url": "https://codeberg.org/BANanaD3V/niri-nix",
