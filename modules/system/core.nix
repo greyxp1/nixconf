@@ -7,6 +7,7 @@
     systemd.network.wait-online.enable = false;
     programs.nix-ld.enable = true;
     services.flatpak.enable = true;
+    services.irqbalance.enable = true;
     services.journald.extraConfig = "SystemMaxUse=500M\nMaxFileSec=1week";
 
     services.pipewire = {
@@ -46,6 +47,12 @@
     system = {
       nixos.label = config.networking.hostName;
       stateVersion = "26.05";
+    };
+
+    zramSwap.enable = true;
+    boot.kernel.sysctl = {
+      "vm.swappiness" = 100;
+      "vm.page-cluster" = 0;
     };
 
     nix = {
