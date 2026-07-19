@@ -55,14 +55,6 @@
     "narHash": "sha256-iI88R3wHz8wTKQb5orvpc51L/Xr64AJyxid/0MKa/b8=",
     "lastModified": 1784254960
   },
-  "musnix": {
-    "type": "github",
-    "owner": "musnix",
-    "repo": "musnix",
-    "rev": "8548782f0d1d0928daa3fffde8a008f72219a3f3",
-    "narHash": "sha256-Dj51C0NWsglqRrCpdmMr2nFiYacFOid1Tor4H9yG2HY=",
-    "lastModified": 1777848538
-  },
   "niri-nix": {
     "type": "git",
     "url": "https://codeberg.org/BANanaD3V/niri-nix",
