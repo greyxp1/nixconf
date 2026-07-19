@@ -10,8 +10,6 @@
       custom.nvidia.enable = true;
       custom.virt.enable = true;
 
-      # Temporary fix for Chaotic-Nyx's stale nvidia_cachyos persistenced hash.
-      nixpkgs.overlays = [(final: _prev: {nvidia_cachyos = final.linuxPackages_cachyos.nvidiaPackages.new_feature;})];
       services.scx.enable = true;
       hardware.cpu.amd.updateMicrocode = true;
       boot = {
