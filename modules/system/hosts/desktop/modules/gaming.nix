@@ -39,12 +39,10 @@
     ];
     mkGamescope = name: args:
       pkgs.writeShellScriptBin name ''
-        export LOW_LATENCY_LAYER=1
         exec gamescope ${pkgs.lib.escapeShellArgs (commonArgs ++ args)} -- gamemoderun "$@"
       '';
   in {
     home.packages = with pkgs; [
-      low-latency-layer
       (mkGamescope "comp" ["-w" "2560" "-h" "1440"])
       (mkGamescope "dlss" ["-w" "2560" "-h" "1440" "--framerate-limit" "170"])
       (mkGamescope "fsr" ["-w" "1920" "-h" "1080" "-F" "fsr" "--sharpness" "5" "--framerate-limit" "170"])
