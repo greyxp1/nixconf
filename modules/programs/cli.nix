@@ -68,18 +68,13 @@
           developer_instructions = ''
             Default to YAGNI: reuse existing code and packages, avoid new dependencies
             and custom implementations, and make the smallest correct diff.
-
+            When editing Nix files in nixconf or helium-flake, use `nix-format`.
             Run at most one narrowly scoped verification command, and only when it
             directly verifies the change. Do not run broad builds or full test suites
             when a narrower check exists. If an activation command already builds or
             validates the change, do not run a separate build first.
           '';
         };
-
-        context = ''
-          When editing Nix files in nixconf or helium-flake, use the custom `nix-format`
-          from modules/programs/dev/nix.nix, not stock Alejandra.
-        '';
       };
     };
 
