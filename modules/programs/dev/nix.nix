@@ -1,5 +1,5 @@
 {
-  flake.homeModules.nix-language = {config,osConfig,pkgs,...}: let
+  flake.homeModules.nix-language = {config, osConfig, pkgs, ...}: let
     formatProjects = ["nixconf" "helium-flake"];
     formatProjectPatterns = builtins.concatStringsSep "|" (
       map (project: "${config.home.homeDirectory}/${project}/*") formatProjects
@@ -28,11 +28,12 @@
       '';
     };
   in {
+    home.packages = [nix-format];
+
     programs.helix.languages = {
       language-server.nixd.command = "${pkgs.nixd}/bin/nixd";
-      language-server.nixd.config.options.nixos.expr =
-        "(builtins.getFlake \"path:${config.home.homeDirectory}/nixconf\")"
-        + ".nixosConfigurations.${hostName}.options";
+      language-server.nixd.config.options.nixos.expr = "(builtins.getFlake \"path:${config.home.homeDirectory}/nixconf\")"
+      + ".nixosConfigurations.${hostName}.options";
       language = [
         {
           name = "nix";
