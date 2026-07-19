@@ -1,5 +1,5 @@
 {
-  flake.nixosModules.performance = {lib, ...}: {
+  flake.nixosModules.performance = {
     services.irqbalance.enable = true;
     nix.settings = {
       http-connections = 128;
@@ -12,7 +12,7 @@
     };
 
     boot.kernel.sysctl = {
-      "vm.swappiness" = lib.mkForce 100;
+      "vm.swappiness" = 100;
       "vm.page-cluster" = 0;
       "vm.dirty_ratio" = 10;
       "vm.dirty_background_ratio" = 5;
