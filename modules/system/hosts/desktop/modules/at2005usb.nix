@@ -1,5 +1,5 @@
 {
-  flake.nixosModules.mic = {config, lib, pkgs, ...}: let
+  flake.nixosModules.at2005usb = {config, lib, pkgs, ...}: let
     rate = 48000;
     stereo = ["FL" "FR"];
     micCard = "AT2005USB";
@@ -45,9 +45,9 @@
       actions.update-props.${prop} = true;
     };
   in {
-    options.custom.audio.enable = lib.mkEnableOption "desktop audio setup";
+    options.custom.at2005usb.enable = lib.mkEnableOption "AT2005USB audio setup";
 
-    config = lib.mkIf config.custom.audio.enable {
+    config = lib.mkIf config.custom.at2005usb.enable {
       systemd.services.at2005usb-init = {
         description = "Set AT2005USB hardware mixer levels";
         after = ["sound.target" "pipewire.service" "pipewire-pulse.service" "wireplumber.service"];
@@ -60,13 +60,19 @@
       };
 
       services.pipewire = {
-        wireplumber.extraConfig."51-audio-menu-cleanup"."monitor.alsa.rules" =
-          map (nodeRule "node.hidden") [headphonesSink rawMicSource]
-          ++ map (nodeRule "node.disabled") [
-            "alsa_output.pci-0000_07_00.1.hdmi-stereo"
-            "alsa_output.pci-0000_09_00.4.iec958-stereo"
-            "alsa_input.pci-0000_09_00.4.analog-stereo"
-          ];
+        wireplumber.extraConfig."50-at2005usb-soft-mixer"."monitor.alsa.rules" = [
+          {
+            matches = [{"device.name" = "alsa_card.usb-Audio-Technica_AT2005USB-00";}];
+            actions.update-props."api.alsa.soft-mixer" = true;
+          }
+        ];
+
+        wireplumber.extraConfig."51-audio-menu-cleanup"."monitor.alsa.rules" = map (nodeRule "node.hidden") [headphonesSink rawMicSource]
+        ++ map (nodeRule "node.disabled") [
+          "alsa_output.pci-0000_07_00.1.hdmi-stereo"
+          "alsa_output.pci-0000_09_00.4.iec958-stereo"
+          "alsa_input.pci-0000_09_00.4.analog-stereo"
+        ];
 
         extraLadspaPackages = [pkgs.rnnoise-plugin.ladspa];
         extraConfig.pipewire = {
