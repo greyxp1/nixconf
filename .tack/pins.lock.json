@@ -15,14 +15,6 @@
     "narHash": "sha256-rXw0CR6R9ftmfpfy0TVSe5WTwaGqt2dsBpgRK1YUGs0=",
     "lastModified": 1784352015
   },
-  "chaotic": {
-    "type": "github",
-    "owner": "chaotic-cx",
-    "repo": "nyx",
-    "rev": "aca54227a91e82ba94451d36b7939451c9e80de5",
-    "narHash": "sha256-nWXhj8aKb6CKoCeYcFGmonDFF4C+HEef2OWmNuLZwQc=",
-    "lastModified": 1784386056
-  },
   "disko": {
     "type": "github",
     "owner": "nix-community",
