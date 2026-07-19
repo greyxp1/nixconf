@@ -1,6 +1,5 @@
 {inputs, ...}: let mkHost = import ../_mkHost.nix inputs; in {
   flake.nixosConfigurations.desktop = mkHost {
-    extraModules = [inputs.chaotic.nixosModules.default];
     hostModule = {
       networking.hostName = "desktop";
       custom.disk.device = import ./_device.nix;
