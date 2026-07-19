@@ -44,8 +44,6 @@ url = "gh:greyxp1/helium-flake"
 url = "gh:4evy/nixcord"
 [inputs.nix-index-database]
 url = "gh:nix-community/nix-index-database"
-[inputs.niri-autoselect-portal]
-url = "git+https://codeberg.org/debugloop/niri-autoselect-portal.git"
 [inputs.niri-nix]
 url = "git+https://codeberg.org/BANanaD3V/niri-nix"
 exclude_follow = ["nixpkgs"]
