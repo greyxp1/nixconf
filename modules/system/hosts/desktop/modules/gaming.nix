@@ -7,7 +7,7 @@
         steam = {
           enable = true;
           remotePlay.openFirewall = true;
-          extraCompatPackages = [pkgs.proton-cachyos_x86_64_v3];
+          extraCompatPackages = [pkgs.proton-ge-bin];
         };
 
         gamemode = {
