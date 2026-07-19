@@ -1,7 +1,7 @@
 {inputs, ...}: let mkHost = import ../_mkHost.nix inputs; in {
   flake.nixosConfigurations.desktop = mkHost {
     extraModules = [inputs.chaotic.nixosModules.default];
-    hostModule = {pkgs, ...}: {
+    hostModule = {
       networking.hostName = "desktop";
       custom.disk.device = import ./_device.nix;
       custom.audio.enable = true;
@@ -13,7 +13,6 @@
       services.scx.enable = true;
       hardware.cpu.amd.updateMicrocode = true;
       boot = {
-        kernelPackages = pkgs.linuxPackages_cachyos;
         kernelModules = ["kvm-amd" "ntsync"];
         kernelParams = [
           "amd_pstate=active" # AMD CPU freq scaling driver
