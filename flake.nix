@@ -6,5 +6,6 @@
     inputs.flake-parts.lib.mkFlake {inherit inputs;} {
       imports = [(inputs.import-tree ./modules)];
       systems = ["x86_64-linux"];
+      perSystem = {system, ...}: {packages.disko = inputs.disko.packages.${system}.disko;};
     };
 }

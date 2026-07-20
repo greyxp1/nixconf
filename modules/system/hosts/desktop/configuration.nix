@@ -1,40 +1,39 @@
 {inputs, ...}: let mkHost = import ../_mkHost.nix inputs; in {
-  flake.nixosConfigurations.desktop = mkHost {
-    hostModule = {
-      networking.hostName = "desktop";
-      custom.disk.device = import ./_device.nix;
-      custom.at2005usb.enable = true;
-      custom.gaming.enable = true;
-      custom.kovaaks.enable = true;
-      custom.nvidia.enable = true;
-      custom.virt.enable = true;
+  flake.nixosConfigurations.desktop = mkHost "desktop" {
+    disko.devices.disk.main.device = import ./_device.nix;
+    services.scx.enable = true;
+    hardware.cpu.amd.updateMicrocode = true;
+    boot = {
+      kernelModules = ["kvm-amd" "ntsync"];
+      kernelParams = [
+        "amd_pstate=active" # AMD CPU freq scaling driver
+        "8250.nr_uarts=0" # suppress legacy COM port probes
+        "nowatchdog" # disable hardware watchdog drivers
+        "nmi_watchdog=0" # disable NMI watchdog
+      ];
 
-      services.scx.enable = true;
-      hardware.cpu.amd.updateMicrocode = true;
-      boot = {
-        kernelModules = ["kvm-amd" "ntsync"];
-        kernelParams = [
-          "amd_pstate=active" # AMD CPU freq scaling driver
-          "8250.nr_uarts=0" # suppress legacy COM port probes
-          "nowatchdog" # disable hardware watchdog drivers
-          "nmi_watchdog=0" # disable NMI watchdog
-        ];
-
-        initrd = {
-          systemd.network.wait-online.enable = false;
-          availableKernelModules = ["nvme"];
-        };
-
-        loader.systemd-boot.extraEntries."windows.conf" = ''
-          title Windows Boot Manager
-          efi /EFI/Microsoft/Boot/bootmgfw.efi
-        '';
+      initrd = {
+        systemd.network.wait-online.enable = false;
+        availableKernelModules = ["nvme"];
       };
 
-      powerManagement = {
-        cpuFreqGovernor = "performance";
-        scsiLinkPolicy = "max_performance";
-      };
+      loader.systemd-boot.extraEntries."windows.conf" = ''
+        title Windows Boot Manager
+        efi /EFI/Microsoft/Boot/bootmgfw.efi
+      '';
     };
+
+    powerManagement = {
+      cpuFreqGovernor = "performance";
+      scsiLinkPolicy = "max_performance";
+    };
+
+    imports = [
+      ./_modules/at2005usb.nix
+      ./_modules/gaming.nix
+      ./_modules/kovaaks/kovaaks.nix
+      ./_modules/nvidia.nix
+      ./_modules/virt.nix
+    ];
   };
 }

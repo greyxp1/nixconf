@@ -4,11 +4,6 @@
     default = {};
   };
 
-  options.flake.homeProfiles = lib.mkOption {
-    type = lib.types.lazyAttrsOf lib.types.raw;
-    default = {};
-  };
-
   config.flake.nixosModules.home = {...}: {
     imports = [inputs.home-manager.nixosModules.home-manager];
     home-manager = {
@@ -16,7 +11,6 @@
       useUserPackages = true;
       backupFileExtension = "backup";
       overwriteBackup = true;
-      extraSpecialArgs = {inherit inputs;};
       users.grey = {...}: {
         imports = builtins.attrValues config.flake.homeModules;
         xdg.enable = true;

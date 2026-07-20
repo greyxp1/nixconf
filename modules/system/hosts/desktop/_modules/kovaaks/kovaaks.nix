@@ -1,22 +1,16 @@
-{config, ...}: let flakeConfig = config; in {
-  flake.nixosModules.kovaaks = {config, lib, ...}: {
-    options.custom.kovaaks.enable = lib.mkEnableOption "Kovaak's config";
-    config = lib.mkIf config.custom.kovaaks.enable {
-      system.activationScripts.kovaaks-perms = {
-        deps = ["users"];
-        text = ''
-          dir="/home/grey/.local/share/Steam/steamapps/common/FPSAimTrainer/FPSAimTrainer"
-          if [ -d "$dir" ]; then
-            chown -R grey:users "$dir"
-            chmod -R u+w "$dir"
-          fi
-        '';
-      };
-      home-manager.users.grey.imports = [flakeConfig.flake.homeProfiles.kovaaks];
-    };
+_: {
+  system.activationScripts.kovaaks-perms = {
+    deps = ["users"];
+    text = ''
+      dir="/home/grey/.local/share/Steam/steamapps/common/FPSAimTrainer/FPSAimTrainer"
+      if [ -d "$dir" ]; then
+        chown -R grey:users "$dir"
+        chmod -R u+w "$dir"
+      fi
+    '';
   };
 
-  flake.homeProfiles.kovaaks = {lib, ...}: let
+  home-manager.users.grey = {lib, ...}: let
     src = ./config/.;
     dst = "$HOME/.local/share/Steam/steamapps/common/FPSAimTrainer/FPSAimTrainer";
   in {

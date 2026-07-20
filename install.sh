@@ -2,8 +2,14 @@
 set -euo pipefail
 
 REPO="https://github.com/greyxp1/nixconf.git"
-WORK_DIR="/tmp/nixconf"
 HOST="${1:-}"
+WORK_DIR=$(mktemp -d -t nixconf.XXXXXX)
+
+cleanup() {
+  sudo umount -R /mnt 2>/dev/null || true
+  rm -rf -- "$WORK_DIR"
+}
+trap cleanup EXIT
 
 # Returns the most stable device path for a given block device:
 # prefers /dev/disk/by-id/<name> (excluding partition entries),
@@ -31,10 +37,8 @@ if [[ -z "$HOST" ]]; then
 fi
 [[ "$HOST" =~ ^(desktop|vm|generic)$ ]] || { echo "Unknown host: $HOST"; exit 1; }
 
-trap 'sudo swapoff -a 2>/dev/null || true; sudo umount -R /mnt 2>/dev/null || true' EXIT
-
 echo "==> Fetching config..."
-rm -rf "$WORK_DIR" && git clone -q "$REPO" "$WORK_DIR"
+git clone -q "$REPO" "$WORK_DIR"
 
 cache_attr() {
   nix eval --raw \
@@ -66,11 +70,15 @@ else
       "$(lsblk -dno SIZE "/dev/${DISKS[$i]}")" "$(lsblk -dno MODEL "/dev/${DISKS[$i]}")"
   done
   read -rp "Choice (WILL BE WIPED): " i < /dev/tty
+  [[ "$i" =~ ^[0-9]+$ ]] && ((i < ${#DISKS[@]})) || { echo "Invalid choice"; exit 1; }
   DEV="/dev/${DISKS[$i]}"
 fi
 
-# Write device — single source of truth for both diskoConfigurations and custom.disk.device
 DEV_FINAL=$(by_id "$DEV")
+read -rp "Type WIPE to erase $DEV_FINAL: " confirm < /dev/tty
+[[ "$confirm" == "WIPE" ]] || { echo "Aborted"; exit 1; }
+
+# Write the device consumed directly by the host's Disko configuration.
 echo "\"$DEV_FINAL\"" > "$WORK_DIR/modules/system/hosts/$HOST/_device.nix"
 echo "==> Using device: $DEV_FINAL"
 
@@ -81,11 +89,11 @@ echo "==> Formatting ($HOST)..."
 sudo nix run \
   --extra-experimental-features "nix-command flakes" \
   "${NIX_OPTS[@]}" \
-  'github:nix-community/disko/latest' -- \
+  "$WORK_DIR#disko" -- \
   --flake "$WORK_DIR#$HOST" \
   --mode destroy,format,mount \
   --yes-wipe-all-disks \
-  2>&1 | grep -E "^(error|Error|warning|Warning|==>)" || true
+  2>&1 | sed -nE '/^(error|Error|warning|Warning|==>)/p'
 
 echo "==> Installing NixOS ($HOST)..."
 sudo nixos-install \
@@ -98,7 +106,7 @@ sudo nixos-install \
 echo "==> Copying nixconf..."
 sudo mkdir -p /mnt/home/grey
 sudo cp -rT "$WORK_DIR" /mnt/home/grey/nixconf
-sudo chown -R 1000:1000 /mnt/home/grey/nixconf
+sudo chown -R 1000:100 /mnt/home/grey/nixconf
 
 echo "==> Done! Rebooting..."
 sudo reboot

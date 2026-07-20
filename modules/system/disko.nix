@@ -1,8 +1,12 @@
-{inputs, ...}: let
-  mkLayout = {device, diskSwap ? false}: {
+{inputs, ...}: {
+  flake.nixosModules.filesystem = {
+    imports = [
+      inputs.disko.nixosModules.disko
+      inputs.preservation.nixosModules.preservation
+    ];
+
     disko.devices.disk.main = {
       type = "disk";
-      inherit device;
       content = {
         type = "gpt";
         partitions = {
@@ -13,22 +17,14 @@
               type = "filesystem";
               format = "vfat";
               mountpoint = "/boot";
-              extraArgs = ["-F" "32" "-n" "NIXBOOT"];
+              extraArgs = ["-F" "32"];
               mountOptions = ["umask=0077"];
             };
-          };
-          swap = {
-            size = "8G";
-            content = if diskSwap then {
-              type = "swap";
-              resumeDevice = true;
-            } else null;
           };
           root = {
             size = "100%";
             content = {
               type = "btrfs";
-              extraArgs = ["-f" "--label" "nixos"];
               subvolumes = {
                 "@nix" = {
                   mountpoint = "/nix";
@@ -48,87 +44,55 @@
         };
       };
     };
-  };
-in {
-  flake.nixosModules.filesystem = {lib, config, ...}: let
-    diskSwap = config.networking.hostName == "vm";
-  in {
-    imports = [
-      inputs.disko.nixosModules.disko
-      inputs.preservation.nixosModules.preservation
-      (mkLayout {
-        inherit (config.custom.disk) device;
-        inherit diskSwap;
-      })
-    ];
 
-    options.custom.disk.device = lib.mkOption {
-      type = lib.types.str;
-      default = "/dev/sda";
-      description = "Disk device for manual disko re-runs. Boot uses labels so this doesn't affect normal operation.";
+    systemd.suppressedSystemUnits = ["systemd-machine-id-commit.service"];
+    fileSystems = {
+      "/" = {
+        device = "none";
+        fsType = "tmpfs";
+        options = ["size=4G" "mode=755"];
+      };
+      "/nix".neededForBoot = true;
+      "/persistent".neededForBoot = true;
     };
 
-    config = {
-      boot.resumeDevice = lib.mkIf (!diskSwap) (lib.mkForce "");
-      systemd.services.systemd-machine-id-commit.enable = false;
-      fileSystems = lib.mkForce {
-        "/" = {
-          device = "none";
-          fsType = "tmpfs";
-          options = ["defaults" "size=4G" "mode=755"];
-        };
-        "/nix" = {
-          device = "LABEL=nixos";
-          fsType = "btrfs";
-          options = ["subvol=@nix" "compress=zstd" "noatime"];
-          neededForBoot = true;
-        };
-        "/home" = {
-          device = "LABEL=nixos";
-          fsType = "btrfs";
-          options = ["subvol=@home" "compress=zstd" "noatime"];
-        };
-        "/persistent" = {
-          device = "LABEL=nixos";
-          fsType = "btrfs";
-          options = ["subvol=@persistent" "compress=zstd" "noatime"];
-          neededForBoot = true;
-        };
-        "/boot" = {
-          device = "/dev/disk/by-label/NIXBOOT";
-          fsType = "vfat";
-          options = ["umask=0077"];
-        };
-      };
-
-      preservation = {
-        enable = true;
-        preserveAt."/persistent" = {
-          directories = [
-            {
-              directory = "/var/lib/nixos";
-              inInitrd = true;
-            }
-            "/var/lib/NetworkManager"
-            "/var/lib/bluetooth"
-            "/var/lib/libvirt"
-            "/var/lib/sbctl"
-            "/var/log"
-          ];
-          files = [
-            {
-              file = "/etc/machine-id";
-              inInitrd = true;
-            }
-          ];
-        };
+    preservation = {
+      enable = true;
+      preserveAt."/persistent" = {
+        directories = [
+          {
+            directory = "/var/lib/nixos";
+            inInitrd = true;
+          }
+          "/var/lib/NetworkManager"
+          "/var/lib/bluetooth"
+          "/var/lib/libvirt"
+          "/var/lib/sbctl"
+          "/var/log"
+        ];
+        files = [
+          {
+            file = "/etc/machine-id";
+            inInitrd = true;
+          }
+          {
+            file = "/etc/ssh/ssh_host_ed25519_key";
+            how = "symlink";
+            configureParent = true;
+          }
+          {
+            file = "/etc/ssh/ssh_host_rsa_key";
+            how = "symlink";
+            configureParent = true;
+          }
+          {
+            file = "/var/lib/systemd/random-seed";
+            how = "symlink";
+            inInitrd = true;
+            configureParent = true;
+          }
+        ];
       };
     };
-  };
-
-  flake.diskoConfigurations = {
-    desktop = mkLayout {device = import ./hosts/desktop/_device.nix;};
-    vm = mkLayout {device = import ./hosts/vm/_device.nix; diskSwap = true;};
-    generic = mkLayout {device = import ./hosts/generic/_device.nix;};
   };
 }

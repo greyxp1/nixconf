@@ -17,6 +17,7 @@
       mutableUsers = false;
       users.grey = {
         isNormalUser = true;
+        uid = 1000;
         extraGroups = ["networkmanager" "wheel"];
         hashedPassword = "$y$j9T$Z9Tz04i5gNbpCTQRko1Tl/$4DLXu5Eb3zvlRPWFxFsiFTYmjylQRWguIu8fYkld.r7";
       };
