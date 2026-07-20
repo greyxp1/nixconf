@@ -3,14 +3,6 @@
     requires = ["libvirtd-config.service"];
     after = ["libvirtd-config.service"];
   };
-  qemuPackage = pkgs.qemu_kvm.overrideAttrs (old: {
-    nativeBuildInputs = (old.nativeBuildInputs or []) ++ [pkgs.makeWrapper];
-    postInstall = (old.postInstall or "")
-    + ''
-      wrapProgram $out/bin/qemu-system-x86_64 \
-        --prefix LD_LIBRARY_PATH : /run/opengl-driver/lib
-    '';
-  });
 in {
   environment.systemPackages = [
     (pkgs.writeScriptBin "create-nixos-vm" ''
@@ -79,7 +71,7 @@ in {
     onBoot = "ignore";
     qemu = {
       runAsRoot = true;
-      package = qemuPackage;
+      package = pkgs.qemu_kvm;
       verbatimConfig = ''
         cgroup_device_acl = [
           "/dev/null", "/dev/full", "/dev/zero",
@@ -115,8 +107,11 @@ in {
   systemd.services = {
     libvirtd-config.serviceConfig.RemainAfterExit = true;
     libvirtd.wantedBy = lib.mkForce [];
-    virtqemud = libvirtConfig // {path = [qemuPackage pkgs.netcat];};
-    virtstoraged = libvirtConfig // {path = [qemuPackage];};
+    virtqemud = libvirtConfig // {
+      path = [pkgs.qemu_kvm pkgs.netcat];
+      environment.LD_LIBRARY_PATH = "/run/opengl-driver/lib";
+    };
+    virtstoraged = libvirtConfig // {path = [pkgs.qemu_kvm];};
     virtnetworkd = libvirtConfig // {
       path = with pkgs; [
         dnsmasq
