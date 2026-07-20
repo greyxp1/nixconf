@@ -61,7 +61,7 @@
         let startWindow: number | undefined;
         const focusedWindow = () => {
           try {
-            const out = execFileSync("${pkgs.niri-unstable}/bin/niri", ["msg", "--json", "focused-window"]);
+            const out = execFileSync("niri", ["msg", "--json", "focused-window"]);
             const id = JSON.parse(out.toString()).id;
             return typeof id === "number" ? id : undefined;
           } catch {}

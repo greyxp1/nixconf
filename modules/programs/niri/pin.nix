@@ -256,11 +256,11 @@
       trap cleanup EXIT
 
       ${pkgs.coreutils}/bin/mkfifo "$PIPE"
-      ${pkgs.niri-unstable}/bin/niri msg --json event-stream > "$PIPE" &
+      niri msg --json event-stream > "$PIPE" &
       STREAM_PID=$!
       exec 3< "$PIPE"
 
-      ${pkgs.niri-unstable}/bin/niri msg action screenshot --path "$SCREENSHOT"
+      niri msg action screenshot --path "$SCREENSHOT"
 
       ${pkgs.coreutils}/bin/timeout 15 ${pkgs.jq}/bin/jq -en \
         --arg path "$SCREENSHOT" \
@@ -303,7 +303,7 @@
     pickColor = pkgs.writeScriptBin "niri-pick-color" ''
       #!${pkgs.dash}/bin/dash
       set -eu
-      ${pkgs.niri-unstable}/bin/niri msg pick-color \
+      niri msg pick-color \
         | ${pkgs.wl-clipboard}/bin/wl-copy --type text/plain
     '';
   in {
