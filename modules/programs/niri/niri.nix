@@ -1,7 +1,6 @@
 {inputs, ...}: let bind = action: {_props.repeat = false;} // action; in {
-  flake.nixosModules.niri = {pkgs, ...}: {
+  flake.nixosModules.niri = {
     imports = [inputs.niri-nix.nixosModules.default];
-    nixpkgs.overlays = [inputs.niri-nix.overlays.niri-nix];
     xdg.portal.config.niri.default = ["gnome"];
     environment.variables.UWSM_SILENT_START = 2;
 
@@ -15,7 +14,6 @@
 
     programs.niri = {
       enable = true;
-      package = pkgs.niri-unstable;
       withUWSM = true;
     };
   };
