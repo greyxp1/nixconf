@@ -4,7 +4,6 @@
       networking.hostName = "vm";
       custom.disk.device = import ./_device.nix;
       environment.sessionVariables.LIBGL_ALWAYS_SOFTWARE = "true";
-      hardware.graphics.enable = true;
       services.qemuGuest.enable = true;
       boot = {
         kernelModules = ["virtio_gpu"];
