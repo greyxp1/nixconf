@@ -1,8 +1,7 @@
 {
-  flake.nixosModules.core = {config, pkgs, ...}: {
+  flake.nixosModules.nixos = {config, pkgs, ...}: {
     nixpkgs.config.allowUnfree = true;
     documentation.nixos.enable = false;
-    programs.nix-ld.enable = true;
 
     nix = {
       package = pkgs.lix;
