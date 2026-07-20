@@ -21,7 +21,11 @@
         };
       };
 
-      hardware.steam-hardware.enable = true;
+      hardware = {
+        graphics.enable32Bit = true;
+        steam-hardware.enable = true;
+      };
+      services.pipewire.alsa.support32Bit = true;
       services.udev.extraRules = ''
         ACTION=="add|change", SUBSYSTEM=="block", ENV{DEVTYPE}=="disk", KERNEL=="nvme*n*", \
           ATTR{queue/rotational}=="0", ATTR{queue/scheduler}="none"
