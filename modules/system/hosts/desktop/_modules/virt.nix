@@ -51,6 +51,7 @@ in {
   ];
 
   users.users.grey.extraGroups = ["libvirtd" "video" "render"];
+  preservation.preserveAt."/persistent".directories = ["/var/lib/libvirt"];
   networking.firewall.trustedInterfaces = ["virbr0"];
   programs = {
     virt-manager.enable = true;
