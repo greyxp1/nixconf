@@ -26,7 +26,7 @@ by_id() {
 # Host selection
 if [[ -z "$HOST" ]]; then
   echo "Select a host:"
-  echo "  [0] desktop  — Nvidia, CachyOS kernel, Secure Boot"
+  echo "  [0] desktop  — Nvidia, gaming, virtualization"
   echo "  [1] vm       — QEMU/SPICE, standard kernel"
   echo "  [2] generic  — portable hardware, standard kernel"
   read -rp "Choice: " n < /dev/tty
