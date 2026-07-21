@@ -1,34 +1,22 @@
 _: {
-  system.activationScripts.kovaaks-perms = {
-    deps = ["users"];
-    text = ''
-      dir="/home/grey/.local/share/Steam/steamapps/common/FPSAimTrainer/FPSAimTrainer"
-      if [ -d "$dir" ]; then
-        chown -R grey:users "$dir"
-        chmod -R u+w "$dir"
-      fi
-    '';
-  };
-
-  home-manager.users.grey = {lib, ...}: let
-    src = ./config/.;
-    dst = "$HOME/.local/share/Steam/steamapps/common/FPSAimTrainer/FPSAimTrainer";
+  home-manager.users.grey = {config, lib, ...}: let
+    src = ./config;
+    dst = "${config.home.homeDirectory}/.local/share/Steam/steamapps/common/FPSAimTrainer/FPSAimTrainer";
   in {
     home.activation.kovaaks = lib.hm.dag.entryAfter ["writeBoundary"] ''
       if [ -d "${dst}" ]; then
-        _stamp="${dst}/.nixconf-stamp"
-        if [ "$(cat "$_stamp" 2>/dev/null)" != "${src}" ]; then
-          $VERBOSE_ECHO "Deploying Kovaak's config (src: ${src})..."
-          $DRY_RUN_CMD rm -rf "${dst}/crosshairs"
-          $DRY_RUN_CMD cp -rT "${src}/crosshairs" "${dst}/crosshairs"
-          $DRY_RUN_CMD rm -rf "${dst}/Saved/SaveGames/Themes"
-          $DRY_RUN_CMD cp -rT "${src}/Themes" "${dst}/Saved/SaveGames/Themes"
-          $DRY_RUN_CMD install -Dm644 "${src}/PrimaryUserSettings.json" "${dst}/PrimaryUserSettings.json"
-          $DRY_RUN_CMD install -Dm644 "${src}/weaponsettings.ini" "${dst}/weaponsettings.ini"
-          [ -z "$DRY_RUN_CMD" ] && printf '%s' "${src}" > "$_stamp"
-        else
-          $VERBOSE_ECHO "Kovaak's config up to date, skipping."
-        fi
+        $DRY_RUN_CMD rm -rf \
+          "${dst}/crosshairs" \
+          "${dst}/Saved/SaveGames/Themes" \
+          "${dst}/.nixconf-stamp"
+        $DRY_RUN_CMD install -dm755 \
+          "${dst}/crosshairs" \
+          "${dst}/Saved/SaveGames/Themes"
+        $DRY_RUN_CMD install -m644 -t "${dst}" \
+          "${src}/PrimaryUserSettings.json" \
+          "${src}/weaponsettings.ini"
+        $DRY_RUN_CMD install -m644 -t "${dst}/crosshairs" "${src}/crosshairs/"*
+        $DRY_RUN_CMD install -m644 -t "${dst}/Saved/SaveGames/Themes" "${src}/Themes/"*
       fi
     '';
   };
