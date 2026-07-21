@@ -1,20 +1,19 @@
 {inputs, ...}: let bind = action: {_props.repeat = false;} // action; in {
-  flake.nixosModules.niri = {
-    imports = [inputs.niri-nix.nixosModules.default];
-    xdg.portal.config.niri.default = ["gnome"];
-    environment.variables.UWSM_SILENT_START = 2;
+  flake.nixosModules.niri = {lib, ...}: {
+    services.gnome.gnome-keyring.enable = lib.mkForce false;
+    xdg.portal.config.niri."org.freedesktop.impl.portal.Secret" = lib.mkForce "none";
 
     services.greetd = {
       enable = true;
       settings.default_session = {
-        command = "uwsm start niri-uwsm.desktop";
+        command = "niri-session";
         user = "grey";
       };
     };
 
     programs.niri = {
       enable = true;
-      withUWSM = true;
+      useNautilus = false;
     };
   };
 
@@ -76,8 +75,8 @@
         ];
 
         binds = {
-          "Mod+Return" = bind {spawn = "ghostty";};
-          "Mod+E" = bind {spawn-sh = "ghostty -e fish -c 'y; fish'";};
+          "Mod+Return" = bind {spawn._args = ["ghostty" "+new-window"];};
+          "Mod+E" = bind {spawn._args = ["ghostty" "+new-window" "-e" "fish" "-c" "y; fish"];};
           "Mod+B" = bind {spawn = "helium";};
           "Mod+D" = bind {spawn = "discord";};
 
