@@ -3,6 +3,7 @@
     disko.devices.disk.main.device = import ./_device.nix;
     services.scx.enable = true;
     hardware.cpu.amd.updateMicrocode = true;
+    powerManagement.cpuFreqGovernor = "performance";
     boot = {
       kernelModules = ["kvm-amd" "ntsync"];
       kernelParams = [
@@ -21,11 +22,6 @@
         title Windows Boot Manager
         efi /EFI/Microsoft/Boot/bootmgfw.efi
       '';
-    };
-
-    powerManagement = {
-      cpuFreqGovernor = "performance";
-      scsiLinkPolicy = "max_performance";
     };
 
     imports = [
