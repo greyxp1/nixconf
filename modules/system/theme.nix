@@ -3,7 +3,6 @@
     inherit (config.catppuccin) accent flavor;
   in {
     imports = [inputs.catppuccin.homeModules.catppuccin];
-    dconf.settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
 
     home.pointerCursor = {
       enable = true;
@@ -21,6 +20,7 @@
 
     gtk = {
       enable = true;
+      colorScheme = "dark";
       theme = {
         name = "catppuccin-${flavor}-${accent}-standard";
         package = pkgs.catppuccin-gtk.override {
