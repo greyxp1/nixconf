@@ -4,7 +4,7 @@
       enable = true;
       settings = {
         cursor-style = "bar";
-        background-opacity = 0.9;
+        background-opacity = 0.8;
         font-size = 14;
         window-padding-x = 8;
         window-padding-y = 8;
