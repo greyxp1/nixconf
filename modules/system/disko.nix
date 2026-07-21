@@ -65,9 +65,6 @@
             inInitrd = true;
           }
           "/var/lib/NetworkManager"
-          "/var/lib/bluetooth"
-          "/var/lib/libvirt"
-          "/var/lib/sbctl"
           "/var/log"
         ];
         files = [
