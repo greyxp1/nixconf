@@ -71,6 +71,7 @@
           {
             _args = ["DP-2"];
             mode = "2560x1440@170.071";
+            variable-refresh-rate = {};
           }
         ];
 
