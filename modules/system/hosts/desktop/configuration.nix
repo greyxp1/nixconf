@@ -26,7 +26,7 @@
 
     imports = [
       ./_modules/at2005usb.nix
-      ./_modules/gaming.nix
+      ./_modules/steam.nix
       ./_modules/kovaaks/kovaaks.nix
       ./_modules/nvidia.nix
       ./_modules/virt.nix
