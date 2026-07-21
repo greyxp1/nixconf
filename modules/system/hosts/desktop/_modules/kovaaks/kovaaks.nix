@@ -8,11 +8,7 @@
       if [ -d "${dst}" ]; then
         $DRY_RUN_CMD rm -rf \
           "${dst}/crosshairs" \
-          "${save}/Themes" \
-          "${dst}/PrimaryUserSettings.json" \
-          "${dst}/weaponsettings.ini" \
-          "${dst}/UI.json" \
-          "${dst}/.nixconf-stamp"
+          "${save}/Themes"
         $DRY_RUN_CMD install -dm755 \
           "${dst}/crosshairs" \
           "${save}/Themes"
