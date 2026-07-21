@@ -7,9 +7,9 @@ format = """
 $os\
 $username\
 $hostname\
-[ ](fg:color_bg1 bg:color_bg2)\
+[ ](fg:color_bg2 bg:color_bg3)\
 $directory\
-[ ](fg:color_bg2 bg:color_bg4)\
+[ ](fg:color_bg3 bg:color_bg4)\
 $git_branch\
 $git_status\
 [ ](fg:color_bg4 bg:color_bg5)\
@@ -52,7 +52,7 @@ ssh_only = true
 ssh_symbol = " "
 
 [directory]
-style = "bg:color_bg2 fg:color_white"
+style = "bg:color_bg3 fg:color_white"
 format = "[$path]($style)"
 truncation_length = 3
 truncation_symbol = "../"
