@@ -96,6 +96,7 @@
           model = "gpt-5.6-sol";
           model_reasoning_effort = "high";
           notice.hide_full_access_warning = true;
+          notice.hide_rate_limit_model_nudge = true;
           projects."/home/grey/nixconf".trust_level = "trusted";
           tui.show_tooltips = false;
           developer_instructions = ''
