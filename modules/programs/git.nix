@@ -7,14 +7,10 @@
           init.defaultBranch = "main";
           column.ui = "auto";
           pull.rebase = true;
-          branch.autosetuprebase = "always";
           push.autoSetupRemote = true;
           diff.algorithm = "histogram";
           merge.conflictstyle = "zdiff3";
-          fetch = {
-            prune = true;
-            all = true;
-          };
+          fetch.prune = true;
           url = {
             "git@github.com:".pushInsteadOf = "https://github.com/";
             "git@gitlab.com:".pushInsteadOf = "https://gitlab.com/";
