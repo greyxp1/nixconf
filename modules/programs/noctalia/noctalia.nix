@@ -24,7 +24,7 @@
 
         wallpaper = {
           enable = true;
-          default.path = ../../assets/wallpapers/wheat.jpg;
+          default.path = ./assets/wallpaper.jpg;
         };
 
         bar.default = {
@@ -94,7 +94,7 @@
         };
 
         shell = {
-          avatar_path = "/home/grey/nixconf/assets/user.jpg";
+          avatar_path = ./assets/user.jpg;
           launch_apps_as_systemd_services = true;
           password_style = "random";
           polkit_agent = true;
