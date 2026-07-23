@@ -15,6 +15,14 @@
     "narHash": "sha256-rXw0CR6R9ftmfpfy0TVSe5WTwaGqt2dsBpgRK1YUGs0=",
     "lastModified": 1784352015
   },
+  "cord-stash": {
+    "type": "github",
+    "owner": "greyxp1",
+    "repo": "cord-stash",
+    "rev": "37157a2df60cee3746264c059a29e46b06dc234a",
+    "narHash": "sha256-HrMnjtUDcHKGWKrkMYRI3ct6OgpE63rFkT6MaOB716c=",
+    "lastModified": 1784836000
+  },
   "disko": {
     "type": "github",
     "owner": "nix-community",
