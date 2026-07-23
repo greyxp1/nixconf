@@ -1,9 +1,4 @@
-{lib, pkgs, ...}: let
-  libvirtConfig = {
-    requires = ["libvirtd-config.service"];
-    after = ["libvirtd-config.service"];
-  };
-in {
+{lib, pkgs, ...}: {
   environment.systemPackages = [
     (pkgs.writeScriptBin "create-nixos-vm" ''
       #!${pkgs.dash}/bin/dash
@@ -85,41 +80,8 @@ in {
     };
   };
 
-  systemd.sockets = {
-    libvirtd.wantedBy = lib.mkForce [];
-    libvirtd-ro.wantedBy = lib.mkForce [];
-    libvirtd-admin.wantedBy = lib.mkForce [];
-  } // lib.genAttrs (
-    lib.concatMap (driver: [
-      "virt${driver}d"
-      "virt${driver}d-ro"
-      "virt${driver}d-admin"
-    ]) [
-      "qemu"
-      "interface"
-      "network"
-      "nodedev"
-      "nwfilter"
-      "storage"
-      "proxy"
-    ]
-  ) (_: {wantedBy = ["sockets.target"];});
-
-  systemd.services = {
-    libvirtd-config.serviceConfig.RemainAfterExit = true;
-    libvirtd.wantedBy = lib.mkForce [];
-    virtqemud = libvirtConfig // {
-      path = [pkgs.qemu_kvm pkgs.netcat];
-      environment.LD_LIBRARY_PATH = "/run/opengl-driver/lib";
-    };
-    virtstoraged = libvirtConfig // {path = [pkgs.qemu_kvm];};
-    virtnetworkd = libvirtConfig // {
-      path = with pkgs; [
-        dnsmasq
-        iproute2
-        iptables
-        nftables
-      ];
-    };
+  systemd.services.libvirtd = {
+    wantedBy = lib.mkForce [];
+    environment.LD_LIBRARY_PATH = "/run/opengl-driver/lib";
   };
 }
