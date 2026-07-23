@@ -4,9 +4,12 @@ set -euo pipefail
 REPO="https://github.com/greyxp1/nixconf.git"
 HOST="${1:-}"
 WORK_DIR=$(mktemp -d -t nixconf.XXXXXX)
+INSTALL_MANAGES_MNT=false
 
 cleanup() {
-  sudo umount -R /mnt 2>/dev/null || true
+  if [[ "$INSTALL_MANAGES_MNT" == true ]]; then
+    sudo umount -R /mnt 2>/dev/null || true
+  fi
   rm -rf -- "$WORK_DIR"
 }
 trap cleanup EXIT
@@ -86,6 +89,11 @@ echo "==> Using device: $DEV_FINAL"
 # nixos-install can use it. disko-install builds the entire closure into RAM
 # before touching the disk, which OOMs on low-memory VMs.
 echo "==> Formatting ($HOST)..."
+if findmnt -rn -o TARGET | awk '$0 == "/mnt" || index($0, "/mnt/") == 1 { found=1 } END { exit !found }'; then
+  echo "Refusing to replace existing mounts under /mnt"
+  exit 1
+fi
+INSTALL_MANAGES_MNT=true
 sudo nix run \
   --extra-experimental-features "nix-command flakes" \
   "${NIX_OPTS[@]}" \
