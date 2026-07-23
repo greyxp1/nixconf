@@ -64,3 +64,7 @@ type = "fetch"
 [inputs.prism-themes]
 url = "gh:PrismLauncher/Themes"
 type = "fetch"
+
+[inputs.cord-stash]
+url = "gh:greyxp1/cord-stash"
+type = "fetch"
