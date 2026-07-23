@@ -23,7 +23,7 @@
     wayland.windowManager.niri = {
       enable = true;
       settings = {
-        spawn-at-startup = map (cmd: {_args = [cmd];}) ["discord" "steam -silent"];
+        spawn-at-startup = map (cmd: {_args = [cmd];}) ["discord"];
         workspace = map (ws: {_args = [ws];}) ["browser" "default" "chat" "stage"];
         screenshot-path = "~/Pictures/Screenshots/%y-%m-%d-%H-%M-%S.png";
         prefer-no-csd = {};
@@ -66,14 +66,6 @@
           background-color = "transparent";
           focus-ring.active-color = "#cba6f7";
         };
-
-        output = [
-          {
-            _args = ["DP-2"];
-            mode = "2560x1440@170.071";
-            variable-refresh-rate = {};
-          }
-        ];
 
         binds = {
           "Mod+Return" = bind {spawn._args = ["ghostty" "+new-window"];};

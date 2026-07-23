@@ -31,5 +31,10 @@
       ./_modules/nvidia.nix
       ./_modules/virt.nix
     ];
+
+    home-manager.sharedModules = [
+      ./_modules/niri.nix
+      ./_modules/noctalia.nix
+    ];
   };
 }
