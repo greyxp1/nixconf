@@ -7,13 +7,6 @@
   headphonesSink = "alsa_output.usb-Audio-Technica_AT2005USB-00.analog-stereo";
 
   initScript = pkgs.writeShellScript "at2005usb-init" ''
-    i=0
-    while [ $i -lt 30 ]; do
-      ${pkgs.alsa-utils}/bin/aplay -l 2>/dev/null | grep -q ${micCard} && break
-      sleep 1
-      i=$((i + 1))
-    done
-
     ${pkgs.alsa-utils}/bin/amixer -c ${micCard} sset Speaker 100%
     ${pkgs.alsa-utils}/bin/amixer -c ${micCard} sset Mic playback 0%
     ${pkgs.alsa-utils}/bin/amixer -c ${micCard} sset Mic capture 100%
@@ -44,13 +37,14 @@
     actions.update-props.${prop} = true;
   };
 in {
+  services.udev.extraRules = ''
+    SUBSYSTEM=="sound", KERNEL=="controlC*", ATTRS{id}=="${micCard}", TAG+="systemd", ENV{SYSTEMD_WANTS}+="at2005usb-init.service"
+  '';
+
   systemd.services.at2005usb-init = {
     description = "Set AT2005USB hardware mixer levels";
-    after = ["sound.target" "pipewire.service" "pipewire-pulse.service" "wireplumber.service"];
-    wantedBy = ["multi-user.target"];
     serviceConfig = {
       Type = "oneshot";
-      RemainAfterExit = true;
       ExecStart = initScript;
     };
   };
