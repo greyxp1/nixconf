@@ -4,21 +4,23 @@
     default = {};
   };
 
-  config.flake.nixosModules.home = {...}: {
+  config.flake.nixosModules.home = {
     imports = [inputs.home-manager.nixosModules.home-manager];
     home-manager = {
       useGlobalPkgs = true;
       useUserPackages = true;
       backupFileExtension = "backup";
       overwriteBackup = true;
-      users.grey = {...}: {
-        imports = builtins.attrValues config.flake.homeModules;
-        xdg.enable = true;
-        home = {
-          username = "grey";
-          homeDirectory = "/home/grey";
-          stateVersion = "26.05";
-        };
+      sharedModules = [
+        {
+          imports = builtins.attrValues config.flake.homeModules;
+          xdg.enable = true;
+        }
+      ];
+      users.grey.home = {
+        username = "grey";
+        homeDirectory = "/home/grey";
+        stateVersion = "26.05";
       };
     };
   };
