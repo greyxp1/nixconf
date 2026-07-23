@@ -112,9 +112,9 @@ sudo nixos-install \
 
 # The copied config already has the correct device baked in for future disko runs.
 echo "==> Copying nixconf..."
-sudo mkdir -p /mnt/home/grey
-sudo cp -rT "$WORK_DIR" /mnt/home/grey/nixconf
-sudo chown -R 1000:100 /mnt/home/grey/nixconf
+sudo install -d -o 1000 -g 100 /mnt/home/grey/Projects
+sudo cp -rT "$WORK_DIR" /mnt/home/grey/Projects/nixconf
+sudo chown -R 1000:100 /mnt/home/grey/Projects/nixconf
 
 echo "==> Done! Rebooting..."
 sudo reboot

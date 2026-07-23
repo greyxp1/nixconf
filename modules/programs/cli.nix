@@ -4,7 +4,7 @@
       tack.enable = true;
       nh = {
         enable = true;
-        flake = "/home/grey/nixconf";
+        flake = "/home/grey/Projects/nixconf";
         clean = {
           enable = true;
           dates = "daily";
@@ -14,7 +14,7 @@
     };
   };
 
-  flake.homeModules.cli = {pkgs, ...}: {
+  flake.homeModules.cli = {osConfig, pkgs, ...}: {
     imports = [inputs.nix-index-database.homeModules.nix-index];
     programs = {
       nix-index.enable = true;
@@ -97,7 +97,7 @@
           model_reasoning_effort = "high";
           notice.hide_full_access_warning = true;
           notice.hide_rate_limit_model_nudge = true;
-          projects."/home/grey/nixconf".trust_level = "trusted";
+          projects.${osConfig.programs.nh.flake}.trust_level = "trusted";
           tui.show_tooltips = false;
           developer_instructions = ''
             Default to YAGNI: reuse existing code and packages, avoid new dependencies

@@ -1,8 +1,10 @@
 {
-  flake.homeModules.nix-language = {config, osConfig, pkgs, ...}: let
+  flake.homeModules.nix-language = {osConfig, pkgs, ...}: let
+    nixconfDir = osConfig.programs.nh.flake;
+    projectsDir = builtins.dirOf nixconfDir;
     formatProjects = ["nixconf" "helium-flake"];
     formatProjectPatterns = builtins.concatStringsSep "|" (
-      map (project: "${config.home.homeDirectory}/${project}/*") formatProjects
+      map (project: "${projectsDir}/${project}/*") formatProjects
     );
     hostName = osConfig.networking.hostName;
     alejandra = pkgs.alejandra.overrideAttrs (prev: {
@@ -32,7 +34,7 @@
 
     programs.helix.languages = {
       language-server.nixd.command = "${pkgs.nixd}/bin/nixd";
-      language-server.nixd.config.options.nixos.expr = "(builtins.getFlake \"path:${config.home.homeDirectory}/nixconf\")"
+      language-server.nixd.config.options.nixos.expr = "(builtins.getFlake \"path:${nixconfDir}\")"
       + ".nixosConfigurations.${hostName}.options";
       language = [
         {

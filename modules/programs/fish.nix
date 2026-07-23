@@ -4,13 +4,12 @@
     users.users.grey.shell = pkgs.fish;
   };
 
-  flake.homeModules.fish = {pkgs, ...}: {
+  flake.homeModules.fish = {osConfig, pkgs, ...}: {
     programs.fish = {
       enable = true;
 
       shellAbbrs = {
         rebuild = "nh os switch";
-        update = "cd ~/nixconf && tack update && nh os switch";
         home = "sudo systemctl restart home-manager-grey.service";
         clean = "nh clean all --optimise --keep 1";
         ls = "ls --no-filesize";
@@ -26,6 +25,19 @@
 
       functions = {
         clear = "command clear; printf '\\033[3J'";
+
+        update = ''
+          set -l previous_dir $PWD
+          cd ${osConfig.programs.nh.flake}
+          or return
+
+          tack update
+          and nh os switch
+          set -l update_status $status
+
+          cd "$previous_dir"
+          return $update_status
+        '';
 
         fish_user_key_bindings = ''
           bind \r _nl_enter
