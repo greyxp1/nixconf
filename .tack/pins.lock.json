@@ -63,6 +63,14 @@
     "narHash": "sha256-iI88R3wHz8wTKQb5orvpc51L/Xr64AJyxid/0MKa/b8=",
     "lastModified": 1784254960
   },
+  "kovaaks-config": {
+    "type": "github",
+    "owner": "greyxp1",
+    "repo": "kovaaks-config",
+    "rev": "628b6618b1b94ee5289efb6d908270ac3d84a906",
+    "narHash": "sha256-D+bdwP1OCMctzaEtghwhj5XKbd4iv3tL5dR9u7XAybY=",
+    "lastModified": 1784842832
+  },
   "niri-nix": {
     "type": "git",
     "url": "https://codeberg.org/BANanaD3V/niri-nix",
