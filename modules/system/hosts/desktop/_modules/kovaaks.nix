@@ -1,6 +1,6 @@
-{
+{inputs, ...}: {
   home-manager.users.grey = {config, lib, ...}: let
-    src = ./config;
+    src = inputs.kovaaks-config;
     dst = "${config.home.homeDirectory}/.local/share/Steam/steamapps/common/FPSAimTrainer/FPSAimTrainer";
     save = "${dst}/Saved/SaveGames";
   in {
@@ -13,9 +13,9 @@
           "${dst}/crosshairs" \
           "${save}/Themes"
         $DRY_RUN_CMD install -m644 -t "${save}" \
-          "${src}/PrimaryUserSettings.json" \
-          "${src}/weaponsettings.ini" \
-          "${src}/UI.json"
+          "${src}/settings/PrimaryUserSettings.json" \
+          "${src}/settings/weaponsettings.ini" \
+          "${src}/settings/UI.json"
         $DRY_RUN_CMD install -Dm644 \
           "${src}/sounds/rxSound22.ogg" \
           "${dst}/sounds/rxSound22.ogg"
