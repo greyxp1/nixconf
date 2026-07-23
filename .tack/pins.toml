@@ -68,3 +68,7 @@ type = "fetch"
 [inputs.cord-stash]
 url = "gh:greyxp1/cord-stash"
 type = "fetch"
+
+[inputs.kovaaks-config]
+url = "gh:greyxp1/kovaaks-config"
+type = "fetch"
