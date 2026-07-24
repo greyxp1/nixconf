@@ -18,11 +18,10 @@ trap cleanup EXIT
 # prefers /dev/disk/by-id/<name> (excluding partition entries),
 # falls back to the raw /dev/... path if no by-id symlink exists (e.g. VirtIO).
 by_id() {
-  local real
-  real=$(readlink -f "$1")
-  while IFS= read -r link; do
-    [[ "$(readlink -f "$link")" == "$real" ]] && echo "$link" && return
-  done < <(find /dev/disk/by-id/ -maxdepth 1 -type l ! -name '*-part*' 2>/dev/null)
+  local link
+  for link in /dev/disk/by-id/*; do
+    [[ "$link" != *-part* && "$link" -ef "$1" ]] && echo "$link" && return
+  done
   echo "$1"
 }
 
@@ -40,8 +39,37 @@ if [[ -z "$HOST" ]]; then
 fi
 [[ "$HOST" =~ ^(desktop|vm|generic)$ ]] || { echo "Unknown host: $HOST"; exit 1; }
 
+[[ -d /sys/firmware/efi/efivars ]] || { echo "UEFI required"; exit 1; }
+
+# Disk selection — exclude loop devices (-e 7) and the ISO boot disk
+ISO_DISK=$(findmnt -n -o SOURCE /iso 2>/dev/null | xargs -r lsblk -no PKNAME 2>/dev/null || true)
+mapfile -t DISKS < <(lsblk -dn -o NAME,TYPE -e 7 | awk -v iso="$ISO_DISK" '$2 == "disk" && $1 != iso { print $1 }')
+[[ ${#DISKS[@]} -gt 0 ]] || { echo "No disks found"; exit 1; }
+
+if [[ ${#DISKS[@]} -eq 1 ]]; then
+  DEV="/dev/${DISKS[0]}"
+  echo "==> Disk: $DEV $(lsblk -dno SIZE,MODEL "$DEV")"
+else
+  echo "Select a disk to install on:"
+  for i in "${!DISKS[@]}"; do
+    printf "  [%d] /dev/%s  %s\n" "$i" "${DISKS[$i]}" \
+      "$(lsblk -dno SIZE,MODEL "/dev/${DISKS[$i]}")"
+  done
+  read -rp "Choice (WILL BE WIPED): " i < /dev/tty
+  [[ "$i" =~ ^[0-9]+$ ]] && ((i < ${#DISKS[@]})) || { echo "Invalid choice"; exit 1; }
+  DEV="/dev/${DISKS[$i]}"
+fi
+
+DEV_FINAL=$(by_id "$DEV")
+read -rp "Type WIPE to erase $DEV_FINAL: " confirm < /dev/tty
+[[ "$confirm" == "WIPE" ]] || { echo "Aborted"; exit 1; }
+
 echo "==> Fetching config..."
 git clone -q "$REPO" "$WORK_DIR"
+
+# Write the device consumed directly by the host's Disko configuration.
+echo "\"$DEV_FINAL\"" > "$WORK_DIR/modules/system/hosts/$HOST/_device.nix"
+echo "==> Using device: $DEV_FINAL"
 
 cache_attr() {
   nix eval --raw \
@@ -56,38 +84,8 @@ NIX_OPTS=(
   --option trusted-public-keys "$(cache_attr trusted-public-keys)"
 )
 
-[[ -d /sys/firmware/efi/efivars ]] || { echo "UEFI required"; exit 1; }
-
-# Disk selection — exclude loop devices (-e 7) and the ISO boot disk
-ISO_DISK=$(findmnt -n -o SOURCE /iso 2>/dev/null | xargs -r lsblk -no PKNAME 2>/dev/null || true)
-mapfile -t DISKS < <(lsblk -dn -o NAME,TYPE -e 7 | awk '$2=="disk"{print $1}' | grep -v "^${ISO_DISK}$" || true)
-[[ ${#DISKS[@]} -gt 0 ]] || { echo "No disks found"; exit 1; }
-
-if [[ ${#DISKS[@]} -eq 1 ]]; then
-  DEV="/dev/${DISKS[0]}"
-  echo "==> Disk: $DEV $(lsblk -dno SIZE,MODEL "$DEV")"
-else
-  echo "Select a disk to install on:"
-  for i in "${!DISKS[@]}"; do
-    printf "  [%d] /dev/%s  %s  %s\n" "$i" "${DISKS[$i]}" \
-      "$(lsblk -dno SIZE "/dev/${DISKS[$i]}")" "$(lsblk -dno MODEL "/dev/${DISKS[$i]}")"
-  done
-  read -rp "Choice (WILL BE WIPED): " i < /dev/tty
-  [[ "$i" =~ ^[0-9]+$ ]] && ((i < ${#DISKS[@]})) || { echo "Invalid choice"; exit 1; }
-  DEV="/dev/${DISKS[$i]}"
-fi
-
-DEV_FINAL=$(by_id "$DEV")
-read -rp "Type WIPE to erase $DEV_FINAL: " confirm < /dev/tty
-[[ "$confirm" == "WIPE" ]] || { echo "Aborted"; exit 1; }
-
-# Write the device consumed directly by the host's Disko configuration.
-echo "\"$DEV_FINAL\"" > "$WORK_DIR/modules/system/hosts/$HOST/_device.nix"
-echo "==> Using device: $DEV_FINAL"
-
-# Two-step install: disko formats the disk and activates swap first, so that
-# nixos-install can use it. disko-install builds the entire closure into RAM
-# before touching the disk, which OOMs on low-memory VMs.
+# Disko formats and mounts first so nixos-install builds directly on the target;
+# disko-install can OOM low-memory VMs by building the closure in RAM.
 echo "==> Formatting ($HOST)..."
 if findmnt -rn -o TARGET | awk '$0 == "/mnt" || index($0, "/mnt/") == 1 { found=1 } END { exit !found }'; then
   echo "Refusing to replace existing mounts under /mnt"
@@ -100,8 +98,7 @@ sudo nix run \
   "$WORK_DIR#disko" -- \
   --flake "$WORK_DIR#$HOST" \
   --mode destroy,format,mount \
-  --yes-wipe-all-disks \
-  2>&1 | sed -nE '/^(error|Error|warning|Warning|==>)/p'
+  --yes-wipe-all-disks
 
 echo "==> Installing NixOS ($HOST)..."
 sudo nixos-install \
