@@ -55,9 +55,6 @@ exclude_follow = ["nixpkgs"]
 [inputs.oniri]
 url = "gh:Antiz96/oniri"
 type = "fetch"
-[inputs.catppuccin-yazi]
-url = "gh:greyxp1/yazi"
-type = "fetch"
 [inputs.smartcut]
 url = "gh:skeskinen/smartcut"
 type = "fetch"
