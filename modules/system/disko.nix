@@ -1,10 +1,6 @@
 {inputs, ...}: {
   flake.nixosModules.filesystem = {
-    imports = [
-      inputs.disko.nixosModules.disko
-      inputs.preservation.nixosModules.preservation
-    ];
-
+    imports = [inputs.disko.nixosModules.disko];
     disko.devices.disk.main = {
       type = "disk";
       content = {
@@ -42,51 +38,6 @@
             };
           };
         };
-      };
-    };
-
-    systemd.suppressedSystemUnits = ["systemd-machine-id-commit.service"];
-    fileSystems = {
-      "/" = {
-        device = "none";
-        fsType = "tmpfs";
-        options = ["size=4G" "mode=755"];
-      };
-      "/nix".neededForBoot = true;
-      "/persistent".neededForBoot = true;
-    };
-
-    preservation = {
-      enable = true;
-      preserveAt."/persistent" = {
-        directories = [
-          {
-            directory = "/var/lib/nixos";
-            inInitrd = true;
-          }
-          {
-            directory = "/var/lib/systemd";
-            inInitrd = true;
-          }
-          "/var/lib/NetworkManager"
-          "/var/log"
-        ];
-        files = [
-          {
-            file = "/etc/machine-id";
-            inInitrd = true;
-          }
-          {
-            file = "/etc/ssh/ssh_host_ed25519_key";
-            how = "symlink";
-            configureParent = true;
-          }
-          {
-            file = "/etc/ssh/ssh_host_rsa_key";
-            how = "symlink";
-            configureParent = true;
-          }
-        ];
       };
     };
   };
