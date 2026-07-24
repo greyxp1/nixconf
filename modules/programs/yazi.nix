@@ -1,5 +1,9 @@
 {inputs, ...}: {
-  flake.nixosModules.yazi = {pkgs, lib, ...}: {
+  flake.nixosModules.yazi = {
+    pkgs,
+    lib,
+    ...
+  }: {
     xdg.portal = {
       extraPortals = [pkgs.xdg-desktop-portal-termfilechooser];
       config.niri."org.freedesktop.impl.portal.FileChooser" = lib.mkForce ["termfilechooser"];

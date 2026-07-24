@@ -14,7 +14,11 @@
     };
   };
 
-  flake.homeModules.cli = {osConfig, pkgs, ...}: {
+  flake.homeModules.cli = {
+    osConfig,
+    pkgs,
+    ...
+  }: {
     imports = [inputs.nix-index-database.homeModules.nix-index];
     programs = {
       nix-index.enable = true;

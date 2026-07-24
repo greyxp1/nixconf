@@ -1,5 +1,9 @@
 {inputs, ...}: {
-  home-manager.users.grey = {config, lib, ...}: let
+  home-manager.users.grey = {
+    config,
+    lib,
+    ...
+  }: let
     src = inputs.kovaaks-config;
     dst = "${config.home.homeDirectory}/.local/share/Steam/steamapps/common/FPSAimTrainer/FPSAimTrainer";
     save = "${dst}/Saved/SaveGames";

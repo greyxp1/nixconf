@@ -4,7 +4,11 @@
     users.users.grey.shell = pkgs.fish;
   };
 
-  flake.homeModules.fish = {osConfig, pkgs, ...}: {
+  flake.homeModules.fish = {
+    osConfig,
+    pkgs,
+    ...
+  }: {
     programs.fish = {
       enable = true;
 
@@ -94,13 +98,14 @@
         end
       '';
 
-      plugins = map (pkg: {
-        name = pkg.pname;
-        inherit (pkg) src;
-      }) (with pkgs.fishPlugins; [
-        fzf-fish
-        done
-      ]);
+      plugins =
+        map (pkg: {
+          name = pkg.pname;
+          inherit (pkg) src;
+        }) (with pkgs.fishPlugins; [
+          fzf-fish
+          done
+        ]);
     };
   };
 }

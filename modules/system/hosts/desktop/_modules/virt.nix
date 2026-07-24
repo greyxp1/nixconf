@@ -1,4 +1,8 @@
-{lib, pkgs, ...}: {
+{
+  lib,
+  pkgs,
+  ...
+}: {
   environment.systemPackages = [
     (pkgs.writeScriptBin "create-nixos-vm" ''
       #!${pkgs.dash}/bin/dash

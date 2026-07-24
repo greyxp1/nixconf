@@ -1,4 +1,6 @@
-{inputs, ...}: let bind = action: {_props.repeat = false;} // action; in {
+{inputs, ...}: let
+  bind = action: {_props.repeat = false;} // action;
+in {
   flake.nixosModules.niri = {lib, ...}: {
     services.gnome.gnome-keyring.enable = lib.mkForce false;
     xdg.portal.config.niri."org.freedesktop.impl.portal.Secret" = lib.mkForce "none";

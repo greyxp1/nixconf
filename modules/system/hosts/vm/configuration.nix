@@ -1,4 +1,6 @@
-{inputs, ...}: let mkHost = import ../_mkHost.nix inputs; in {
+{inputs, ...}: let
+  mkHost = import ../_mkHost.nix inputs;
+in {
   flake.nixosConfigurations.vm = mkHost "vm" {
     environment.sessionVariables.LIBGL_ALWAYS_SOFTWARE = "true";
     services.qemuGuest.enable = true;

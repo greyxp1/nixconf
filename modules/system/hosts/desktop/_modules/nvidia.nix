@@ -1,4 +1,8 @@
-{lib, pkgs, ...}: {
+{
+  lib,
+  pkgs,
+  ...
+}: {
   environment.systemPackages = [pkgs.nvidia-vaapi-driver];
   hardware.nvidia = {
     open = true;

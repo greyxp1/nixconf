@@ -57,12 +57,13 @@ in {
       }
     ];
 
-    wireplumber.extraConfig."51-audio-menu-cleanup"."monitor.alsa.rules" = map (nodeRule "node.hidden") [headphonesSink rawMicSource]
-    ++ map (nodeRule "node.disabled") [
-      "alsa_output.pci-0000_07_00.1.hdmi-stereo"
-      "alsa_output.pci-0000_09_00.4.iec958-stereo"
-      "alsa_input.pci-0000_09_00.4.analog-stereo"
-    ];
+    wireplumber.extraConfig."51-audio-menu-cleanup"."monitor.alsa.rules" =
+      map (nodeRule "node.hidden") [headphonesSink rawMicSource]
+      ++ map (nodeRule "node.disabled") [
+        "alsa_output.pci-0000_07_00.1.hdmi-stereo"
+        "alsa_output.pci-0000_09_00.4.iec958-stereo"
+        "alsa_input.pci-0000_09_00.4.analog-stereo"
+      ];
 
     extraLadspaPackages = [pkgs.rnnoise-plugin.ladspa];
     extraConfig.pipewire = {

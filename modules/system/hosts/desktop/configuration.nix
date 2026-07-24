@@ -1,4 +1,6 @@
-{inputs, ...}: let mkHost = import ../_mkHost.nix inputs; in {
+{inputs, ...}: let
+  mkHost = import ../_mkHost.nix inputs;
+in {
   flake.nixosConfigurations.desktop = mkHost "desktop" {
     disko.devices.disk.main.device = import ./_device.nix;
     services.scx.enable = true;

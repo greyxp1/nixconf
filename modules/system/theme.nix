@@ -1,5 +1,9 @@
 {inputs, ...}: {
-  flake.homeModules.theme = {config, pkgs, ...}: let
+  flake.homeModules.theme = {
+    config,
+    pkgs,
+    ...
+  }: let
     inherit (config.catppuccin) accent flavor;
   in {
     imports = [inputs.catppuccin.homeModules.catppuccin];
