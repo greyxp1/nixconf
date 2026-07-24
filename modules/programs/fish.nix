@@ -19,8 +19,7 @@
         lt = "lt --no-time --no-filesize";
         llt = "lt --total-size";
         ff = "microfetch";
-        lg = "lazygit";
-        oc = "opencode";
+        codex = "codex resume --all";
       };
 
       functions = {
