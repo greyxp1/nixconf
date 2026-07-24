@@ -39,6 +39,14 @@
     "narHash": "sha256-vp6Y/Grm98ESt6ceOkWiHWyZRDV3J1RID4w+6NWK9yA=",
     "lastModified": 1782949081
   },
+  "ghostty-cursor-shader": {
+    "type": "github",
+    "owner": "greyxp1",
+    "repo": "ghostty-cursor-shader",
+    "rev": "ec23f704bda6e2e59b9e50b63df3914f3e6c518c",
+    "narHash": "sha256-UEQeUUzuz2u8xYd+DAqxk40KCk7TyG699Hzh91Lf3m0=",
+    "lastModified": 1784869948
+  },
   "helium": {
     "type": "github",
     "owner": "greyxp1",
