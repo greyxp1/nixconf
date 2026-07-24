@@ -9,8 +9,12 @@
 
     nix = {
       package = pkgs.lix;
+      daemonCPUSchedPolicy = "idle";
+      daemonIOSchedClass = "idle";
       settings =
         {
+          max-jobs = 2;
+          cores = 6;
           trusted-users = ["@wheel"];
           experimental-features = ["nix-command" "flakes"];
           warn-dirty = false;
