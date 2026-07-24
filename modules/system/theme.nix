@@ -1,25 +1,27 @@
 {inputs, ...}: {
   flake.homeModules.theme = {
     config,
+    lib,
     pkgs,
     ...
   }: let
     inherit (config.catppuccin) accent flavor;
+    catppuccinPackages = inputs.catppuccin.packages.${pkgs.stdenv.hostPlatform.system};
   in {
     imports = [inputs.catppuccin.homeModules.catppuccin];
-
-    home.pointerCursor = {
-      enable = true;
-      size = 24;
-      gtk.enable = true;
-    };
-
     catppuccin = {
       enable = true;
       autoEnable = true;
       flavor = "mocha";
       accent = "mauve";
       cursors.enable = true;
+      sources = lib.mkForce catppuccinPackages;
+    };
+
+    home.pointerCursor = {
+      enable = true;
+      size = 24;
+      gtk.enable = true;
     };
 
     gtk = {
