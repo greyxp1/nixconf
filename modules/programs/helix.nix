@@ -60,6 +60,7 @@
           language = [
             {
               name = "nix";
+              auto-format = true;
               formatter.command = "${nix-format}";
               language-servers = ["nixd"];
             }
