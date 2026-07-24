@@ -64,6 +64,10 @@
             directory = "/var/lib/nixos";
             inInitrd = true;
           }
+          {
+            directory = "/var/lib/systemd";
+            inInitrd = true;
+          }
           "/var/lib/NetworkManager"
           "/var/log"
         ];
@@ -80,12 +84,6 @@
           {
             file = "/etc/ssh/ssh_host_rsa_key";
             how = "symlink";
-            configureParent = true;
-          }
-          {
-            file = "/var/lib/systemd/random-seed";
-            how = "symlink";
-            inInitrd = true;
             configureParent = true;
           }
         ];
