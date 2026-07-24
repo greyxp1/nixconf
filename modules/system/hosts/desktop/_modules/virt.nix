@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  username,
   ...
 }: {
   environment.systemPackages = [
@@ -49,7 +50,7 @@
     '')
   ];
 
-  users.users.grey.extraGroups = ["libvirtd" "video" "render"];
+  users.users.${username}.extraGroups = ["libvirtd" "video" "render"];
   preservation.preserveAt."/persistent".directories = ["/var/lib/libvirt"];
   networking.firewall.trustedInterfaces = ["virbr0"];
   programs = {

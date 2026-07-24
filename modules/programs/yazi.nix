@@ -20,15 +20,17 @@
     '';
   };
 
-  flake.homeModules.yazi = {pkgs, ...}: let
+  flake.homeModules.yazi = {
+    config,
+    pkgs,
+    ...
+  }: let
     plug = on: run: desc: {
       inherit on desc;
       run = "plugin ${run}";
     };
   in {
     imports = [inputs.nix-yazi-plugins.legacyPackages.x86_64-linux.homeManagerModules.default];
-    catppuccin.sources.yazi = "${inputs.catppuccin-yazi}/themes";
-
     xdg.configFile."xdg-desktop-portal-termfilechooser/config".text = ''
       [filechooser]
       cmd=${pkgs.xdg-desktop-portal-termfilechooser}/share/xdg-desktop-portal-termfilechooser/yazi-wrapper.sh
@@ -40,21 +42,21 @@
       require("keep-preferences"):setup({
         path_preferences = {
           {
-            path = "^/home/grey/Downloads",
+            path = "^${config.home.homeDirectory}/Downloads",
             defaults = {
               sort_by = "mtime",
               sort_reverse = true,
             },
           },
           {
-            path = "^/home/grey/Pictures",
+            path = "^${config.home.homeDirectory}/Pictures",
             defaults = {
               sort_by = "mtime",
               sort_reverse = true,
             },
           },
           {
-            path = "^/home/grey/Videos",
+            path = "^${config.home.homeDirectory}/Videos",
             defaults = {
               sort_by = "mtime",
               sort_reverse = true,

@@ -1,7 +1,11 @@
 {inputs, ...}: let
   bind = action: {_props.repeat = false;} // action;
 in {
-  flake.nixosModules.niri = {lib, ...}: {
+  flake.nixosModules.niri = {
+    lib,
+    username,
+    ...
+  }: {
     services.gnome.gnome-keyring.enable = lib.mkForce false;
     xdg.portal.config.niri."org.freedesktop.impl.portal.Secret" = lib.mkForce "none";
 
@@ -9,7 +13,7 @@ in {
       enable = true;
       settings.default_session = {
         command = "niri-session";
-        user = "grey";
+        user = username;
       };
     };
 

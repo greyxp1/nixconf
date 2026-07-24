@@ -1,5 +1,5 @@
 {
-  flake.nixosModules.system = {
+  flake.nixosModules.system = {username, ...}: {
     time.timeZone = "America/Montreal";
     networking.networkmanager.enable = true;
 
@@ -15,7 +15,7 @@
 
     users = {
       mutableUsers = false;
-      users.grey = {
+      users.${username} = {
         isNormalUser = true;
         uid = 1000;
         extraGroups = ["networkmanager" "wheel"];

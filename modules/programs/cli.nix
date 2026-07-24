@@ -1,10 +1,10 @@
 {inputs, ...}: {
-  flake.nixosModules.cli = {
+  flake.nixosModules.cli = {homeDirectory, ...}: {
     programs = {
       tack.enable = true;
       nh = {
         enable = true;
-        flake = "/home/grey/Projects/nixconf";
+        flake = "${homeDirectory}/Projects/nixconf";
         clean = {
           enable = true;
           dates = "daily";

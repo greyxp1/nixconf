@@ -1,10 +1,15 @@
 {
-  flake.nixosModules.fish = {pkgs, ...}: {
+  flake.nixosModules.fish = {
+    pkgs,
+    username,
+    ...
+  }: {
     programs.fish.enable = true;
-    users.users.grey.shell = pkgs.fish;
+    users.users.${username}.shell = pkgs.fish;
   };
 
   flake.homeModules.fish = {
+    config,
     osConfig,
     pkgs,
     ...
@@ -14,7 +19,7 @@
 
       shellAbbrs = {
         rebuild = "nh os switch";
-        home = "sudo systemctl restart home-manager-grey.service";
+        home = "sudo systemctl restart home-manager-${config.home.username}.service";
         clean = "nh clean all --optimise --keep 1";
         ls = "ls --no-filesize";
         ll = "ll --total-size";
