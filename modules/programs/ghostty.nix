@@ -1,4 +1,4 @@
-{
+{inputs, ...}: {
   flake.homeModules.ghostty = {
     programs.ghostty = {
       enable = true;
@@ -16,7 +16,7 @@
         clipboard-trim-trailing-spaces = true;
         selection-background = "#0078D7";
         custom-shader-animation = "always";
-        custom-shader = ["${./cursor.glsl}"];
+        custom-shader = ["${inputs.ghostty-cursor-shader}/cursor.glsl"];
         keybind = [
           "ctrl+alt+h=goto_split:left"
           "ctrl+alt+j=goto_split:down"
