@@ -34,9 +34,6 @@ in {
       ./_modules/virt.nix
     ];
 
-    home-manager.sharedModules = [
-      ./_modules/niri.nix
-      ./_modules/noctalia.nix
-    ];
+    home-manager.sharedModules = [./_modules/noctalia.nix];
   };
 }
