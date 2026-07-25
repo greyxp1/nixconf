@@ -122,14 +122,19 @@ in {
             geometry-corner-radius = 16;
             clip-to-geometry = true;
             draw-border-with-background = false;
-
+          }
+          {
+            match._props."app-id" = "^com\\.mitchellh\\.ghostty$";
             background-effect = {
               blur = true;
               xray = true;
             };
           }
           {
-            match._props."is-floating" = true;
+            match._props = {
+              "app-id" = "^com\\.mitchellh\\.ghostty$";
+              "is-floating" = true;
+            };
             background-effect.xray = false;
           }
           {
