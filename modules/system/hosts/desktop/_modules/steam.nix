@@ -1,8 +1,29 @@
-{pkgs, ...}: {
+{
+  inputs,
+  pkgs,
+  ...
+}: {
+  imports = [inputs.chaotic.nixosModules.default];
+  programs.steam = {
+    enable = true;
+    extraCompatPackages = [pkgs.proton-cachyos];
+    package = pkgs.steam.override {
+      extraEnv = {
+        PROTON_ENABLE_WAYLAND = "1";
+        # DirectX 9–11
+        PROTON_DXVK_LOWLATENCY = "1";
+        DXVK_FRAME_RATE = "160";
+        DXVK_FRAME_PACE = "low-latency-vrr-167";
+        # DirectX 12
+        PROTON_VKD3D_LOWLATENCY = "1";
+        VKD3D_FRAME_RATE = "160";
+      };
+    };
+  };
+
   home-manager.sharedModules = [
     {
       programs.mangohud.enable = true;
-
       wayland.windowManager.niri.settings = {
         spawn-at-startup = [{_args = ["steam" "-silent"];}];
         output = [
@@ -26,10 +47,4 @@
       };
     }
   ];
-
-  programs.steam = {
-    enable = true;
-    extraCompatPackages = [pkgs.proton-ge-bin];
-    package = pkgs.steam.override {extraEnv.PROTON_ENABLE_WAYLAND = "1";};
-  };
 }
