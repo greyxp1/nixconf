@@ -3,7 +3,10 @@
 in {
   flake.nixosConfigurations.desktop = mkHost "desktop" {
     disko.devices.disk.main.device = import ./_device.nix;
-    services.scx.enable = true;
+    services.scx = {
+      enable = true;
+      scheduler = "scx_cosmos";
+    };
     hardware.cpu.amd.updateMicrocode = true;
     powerManagement.cpuFreqGovernor = "performance";
     boot = {
