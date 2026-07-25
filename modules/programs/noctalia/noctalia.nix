@@ -16,8 +16,7 @@
         hooks.started = ''
           noctalia msg session lock
           (
-            systemctl --user start xdg-desktop-portal.service xdg-desktop-portal-gnome.service \
-              niri-autoselect-portal.service &&
+            systemctl --user start xdg-desktop-portal.service xdg-desktop-portal-gnome.service &&
             noctalia msg plugin noctalia/screen_recorder:service all replay-start
           ) &
         '';
@@ -35,7 +34,7 @@
           center = ["workspaces"];
           end = ["tray" "notifications"];
           margin_edge = 0;
-          margin_ends = 550;
+          margin_ends = 600;
           position = "right";
           radius_bottom_left = 16;
           radius_bottom_right = 0;
@@ -128,7 +127,10 @@
         widget = {
           tray.hidden = ["chrome_status_icon_1::Discord"];
           recorder.type = "noctalia/screen_recorder:recorder";
-          workspaces.display = "none";
+          workspaces = {
+            display = "none";
+            hide_when_empty = true;
+          };
         };
       };
     };
