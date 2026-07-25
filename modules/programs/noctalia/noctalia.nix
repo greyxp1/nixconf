@@ -67,7 +67,8 @@
           audio_source = "both";
           directory = "~/Videos";
           filename_pattern = "%y-%m-%d-%H-%M-%S";
-          quality = "ultra";
+          video_qp = 10;
+          video_codec = "av1";
           replay_enabled = true;
           replay_duration = 120;
           replay_filename_pattern = "%y-%m-%d-%H-%M-%S";
@@ -80,7 +81,7 @@
             {
               auto_update = true;
               kind = "git";
-              location = "https://github.com/noctalia-dev/official-plugins";
+              location = "https://github.com/greyxp1/official-plugins";
               name = "official";
             }
             {
