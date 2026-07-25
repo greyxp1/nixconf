@@ -7,6 +7,14 @@
     "narHash": "sha256-VKatYOZwLQ+MuNkWH6/gZYxrNeSK1Mqb7mC0H1WSu+M=",
     "lastModified": 1784366307
   },
+  "chaotic": {
+    "type": "github",
+    "owner": "chaotic-cx",
+    "repo": "nyx",
+    "rev": "9274dc36b535421d2258c306dc96647bbd6392ff",
+    "narHash": "sha256-AnIwmvd9Qcw7S3WtQNylk+bdpS0mwqEpCb2TxhT40u4=",
+    "lastModified": 1784965575
+  },
   "cord-stash": {
     "type": "github",
     "owner": "greyxp1",
