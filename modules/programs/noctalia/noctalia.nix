@@ -12,19 +12,16 @@
         system.monitor.enabled = false;
         theme.builtin = "Catppuccin";
         location.auto_locate = true;
+        wallpaper.enabled = true;
         lockscreen.tint_intensity = 0.0;
         hooks.started = ''
+          noctalia msg wallpaper-set "${./assets/wallpaper.jpg}"
           noctalia msg session lock
           (
             systemctl --user start xdg-desktop-portal.service xdg-desktop-portal-gnome.service &&
             noctalia msg plugin noctalia/screen_recorder:service all replay-start
           ) &
         '';
-
-        wallpaper = {
-          enable = true;
-          default.path = ./assets/wallpaper.jpg;
-        };
 
         bar.default = {
           enabled = true;
@@ -76,16 +73,15 @@
         };
 
         plugins = {
+          auto_update = true;
           enabled = ["noctalia/screen_recorder"];
           source = [
             {
-              auto_update = true;
               kind = "git";
               location = "https://github.com/greyxp1/official-plugins";
               name = "official";
             }
             {
-              auto_update = true;
               kind = "git";
               location = "https://github.com/noctalia-dev/community-plugins";
               name = "community";
@@ -119,7 +115,6 @@
           };
 
           launcher = {
-            session_search = true;
             categories = false;
             providers.session.global = true;
           };
