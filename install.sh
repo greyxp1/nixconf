@@ -14,6 +14,8 @@ cleanup() {
 }
 trap cleanup EXIT
 
+PASSWORD_HASH=$(mkpasswd --method=yescrypt)
+
 # Returns the most stable device path for a given block device:
 # prefers /dev/disk/by-id/<name> (excluding partition entries),
 # falls back to the raw /dev/... path if no by-id symlink exists (e.g. VirtIO).
@@ -99,6 +101,11 @@ sudo nix run \
   --flake "$WORK_DIR#$HOST" \
   --mode destroy,format,mount \
   --yes-wipe-all-disks
+
+sudo install -d -m700 /mnt/persistent/passwords
+printf '%s\n' "$PASSWORD_HASH" | sudo tee /mnt/persistent/passwords/grey >/dev/null
+sudo chmod 600 /mnt/persistent/passwords/grey
+unset PASSWORD_HASH
 
 echo "==> Installing NixOS ($HOST)..."
 sudo nixos-install \
