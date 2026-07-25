@@ -1,18 +1,13 @@
 {inputs, ...}: {
+  perSystem = {system, ...}: {
+    packages.mpv-smartcut = inputs.mpv-smartcut.packages.${system}.default;
+  };
+
   flake.homeModules.mpv = {pkgs, ...}: let
-    smartcut = pkgs.python3Packages.buildPythonApplication {
-      pname = "smartcut";
-      version = "1.7";
-      pyproject = true;
-      src = inputs.smartcut;
-      build-system = with pkgs.python3Packages; [setuptools wheel];
-      dependencies = with pkgs.python3Packages; [av numpy tqdm];
-      pythonRelaxDeps = ["av"];
-      pythonImportsCheck = ["smartcut"];
-    };
+    mpv-smartcut = inputs.mpv-smartcut.packages.${pkgs.system}.default;
   in {
     catppuccin.mpv.enable = false;
-    home.packages = [smartcut];
+    home.packages = [mpv-smartcut];
     programs.mpv = {
       enable = true;
       package = pkgs.mpv.override {
@@ -50,111 +45,8 @@
         sub_margins=no
       '';
 
-      "mpv/scripts/smartcut-controls.lua".text = ''
-        local utils = require "mp.utils"
-        local mark
-        local task
-        local cancelling
-        local progress = mp.create_osd_overlay("ass-events")
-        local started
-        local progress_timer = mp.add_periodic_timer(1, function()
-          progress.data = ("{\\an8}Processing… %ds"):format(math.floor(mp.get_time() - started))
-          progress:update()
-        end)
-        progress_timer:kill()
-
-        local function notify(message, duration)
-          mp.msg.info(message)
-          mp.osd_message(message, duration or 3)
-        end
-
-        local function select_cut_point()
-          if task then
-            notify("Cut already processing")
-            return
-          end
-
-          local time = mp.get_property_number("time-pos")
-          if not time then
-            notify("Cut failed: no video timestamp", 5)
-            return
-          end
-
-          if not mark then
-            mark = time
-            notify("Cut start set")
-            return
-          end
-
-          local start = mark
-          mark = nil
-          if time <= start then
-            notify("Cut cancelled: end must be after start", 5)
-            return
-          end
-
-          local input = mp.get_property("path")
-          if not input or mp.get_property_bool("demuxer-via-network") then
-            notify("Cut failed: input is not a local file", 5)
-            return
-          end
-
-          local directory, filename = utils.split_path(input)
-          local output = utils.join_path(directory, "cut_" .. filename)
-          started = mp.get_time()
-          progress.data = "{\\an8}Processing… 0s"
-          progress:update()
-          progress_timer:resume()
-
-          task = mp.command_native_async({
-            name = "subprocess",
-            args = {
-              "${smartcut}/bin/smartcut",
-              input,
-              output,
-              "--keep",
-              start .. "," .. time,
-            },
-            playback_only = false,
-            capture_stderr = true,
-          }, function(success, result, error)
-            task = nil
-            progress_timer:kill()
-            progress.data = ""
-            progress:update()
-            if cancelling then
-              cancelling = nil
-              notify("Cut cancelled", 2)
-              return
-            end
-
-            if success and result and result.status == 0 then
-              notify("Cut complete: " .. output, 5)
-              return
-            end
-
-            local detail = error or result and
-              (result.stderr ~= "" and result.stderr or result.error_string)
-            detail = detail and tostring(detail):gsub("%s+$", "") or "unknown error"
-            mp.msg.error("Cut failed: " .. detail)
-            notify("Cut failed: " .. detail, 8)
-          end)
-        end
-
-        local function cancel_cut()
-          if task then
-            cancelling = true
-            mp.abort_async_command(task)
-          elseif mark then
-            mark = nil
-            notify("Cut cancelled", 2)
-          end
-        end
-
-        mp.add_forced_key_binding("c", "smartcut-select", select_cut_point)
-        mp.add_forced_key_binding("C", "smartcut-cancel", cancel_cut)
-        mp.register_event("file-loaded", function() mark = nil end)
-      '';
+      "mpv/scripts/mpv-smartcut.lua".source =
+        "${mpv-smartcut}/share/mpv/scripts/mpv-smartcut.lua";
 
       "mpv/scripts/short-loop.lua".text = ''
         local function has_real_video()

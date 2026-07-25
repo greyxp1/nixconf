@@ -58,9 +58,6 @@ exclude_follow = ["nixpkgs"]
 [inputs.oniri]
 url = "gh:Antiz96/oniri"
 type = "fetch"
-[inputs.smartcut]
-url = "gh:skeskinen/smartcut"
-type = "fetch"
 [inputs.prism-themes]
 url = "gh:PrismLauncher/Themes"
 type = "fetch"
@@ -76,3 +73,6 @@ type = "fetch"
 [inputs.kovaaks-config]
 url = "gh:greyxp1/kovaaks-config"
 type = "fetch"
+
+[inputs.mpv-smartcut]
+url = "gh:greyxp1/mpv-smartcut"
