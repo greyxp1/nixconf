@@ -28,7 +28,7 @@
         lt = "lt --no-time --no-filesize";
         llt = "lt --total-size";
         ff = "microfetch";
-        codex = "codex resume --all";
+        codex = "cd ${osConfig.programs.nh.flake}; codex resume --all";
       };
 
       functions = {
