@@ -12,16 +12,19 @@
         system.monitor.enabled = false;
         theme.builtin = "Catppuccin";
         location.auto_locate = true;
-        wallpaper.enabled = true;
         lockscreen.tint_intensity = 0.0;
         hooks.started = ''
-          noctalia msg wallpaper-set "${./assets/wallpaper.jpg}"
           noctalia msg session lock
           (
             systemctl --user start xdg-desktop-portal.service xdg-desktop-portal-gnome.service &&
             noctalia msg plugin noctalia/screen_recorder:service all replay-start
           ) &
         '';
+
+        wallpaper = {
+          enabled = true;
+          default.path = ./assets/wallpaper.jpg;
+        };
 
         bar.default = {
           enabled = true;
