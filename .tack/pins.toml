@@ -76,3 +76,6 @@ type = "fetch"
 
 [inputs.mpv-smartcut]
 url = "gh:greyxp1/mpv-smartcut"
+
+[inputs.ncr]
+url = "gh:greyxp1/ncr"
