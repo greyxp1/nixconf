@@ -3,6 +3,7 @@
 in {
   flake.nixosModules.niri = {
     lib,
+    pkgs,
     username,
     ...
   }: {
@@ -19,6 +20,7 @@ in {
 
     programs.niri = {
       enable = true;
+      package = inputs.niri-nix.packages.${pkgs.stdenv.hostPlatform.system}.niri-unstable;
       useNautilus = false;
     };
   };
@@ -28,6 +30,7 @@ in {
     home.packages = [pkgs.xwayland-satellite];
     wayland.windowManager.niri = {
       enable = true;
+      package = inputs.niri-nix.packages.${pkgs.stdenv.hostPlatform.system}.niri-unstable;
       settings = {
         spawn-at-startup = map (cmd: {_args = [cmd];}) ["discord"];
         workspace = map (ws: {_args = [ws];}) ["browser" "default" "chat" "stage"];
@@ -75,7 +78,7 @@ in {
 
         binds = {
           "Mod+Return" = bind {spawn._args = ["ghostty" "+new-window"];};
-          "Mod+E" = bind {spawn._args = ["ghostty" "+new-window" "-e" "fish" "-c" "y; fish"];};
+          "Mod+E" = bind {spawn._args = ["ghostty" "+new-window" "-e" "nu" "-c" "y; exec nu"];};
           "Mod+B" = bind {spawn = "helium";};
           "Mod+D" = bind {spawn = "discord";};
 
