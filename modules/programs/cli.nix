@@ -35,19 +35,6 @@
         options = ["--cmd cd"];
       };
 
-      eza = {
-        enable = true;
-        extraOptions = [
-          "-l"
-          "--icons"
-          "--git"
-          "--group-directories-first"
-          "--time-style=relative"
-          "--no-user"
-          "--no-permissions"
-        ];
-      };
-
       bottom = {
         enable = true;
         settings = {
