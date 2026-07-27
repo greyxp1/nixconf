@@ -69,7 +69,7 @@
     home.packages = with pkgs; [trash-cli ripdrag];
     programs.yazi = {
       enable = true;
-      enableFishIntegration = true;
+      enableNushellIntegration = true;
       settings = {
         mgr = {
           ratio = [1 2 5];
