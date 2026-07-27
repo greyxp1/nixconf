@@ -4,7 +4,7 @@
   };
 
   flake.homeModules.mpv = {pkgs, ...}: let
-    mpv-smartcut = inputs.mpv-smartcut.packages.${pkgs.system}.default;
+    mpv-smartcut = inputs.mpv-smartcut.packages.${pkgs.stdenv.hostPlatform.system}.default;
   in {
     catppuccin.mpv.enable = false;
     home.packages = [mpv-smartcut];
