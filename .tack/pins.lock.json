@@ -91,9 +91,9 @@
     "type": "github",
     "owner": "greyxp1",
     "repo": "ncr",
-    "rev": "95d38295da487e11311040d395ea6c1fbed5e0d1",
-    "narHash": "sha256-vW8QxFW59haiwEdgQTI1Vbqno51Km22M18//5l6uPJo=",
-    "lastModified": 1785114033
+    "rev": "d48ef6dfb169f7d2f9995aed9c8bc794f8c8cd18",
+    "narHash": "sha256-WuuWrA93vX6h2PL1Hu7rACgkHqs80Cax0SQFzgYPozg=",
+    "lastModified": 1785191513
   },
   "niri-nix": {
     "type": "git",
@@ -139,9 +139,9 @@
     "type": "github",
     "owner": "noctalia-dev",
     "repo": "noctalia",
-    "rev": "2a4bd5788bfe392a0cba9107443bd6985fe29fe7",
-    "narHash": "sha256-KiuZl97FCRlg5GlYhzuKhQykJZHE7IIfCZUknGsRloM=",
-    "lastModified": 1785173355
+    "rev": "9c4e96b9beaa99590c224010952d0d8564bfc51c",
+    "narHash": "sha256-lBHH/pKvCy2ffYToKLNO3/TW4q/y3gOLFIJsHthr3S0=",
+    "lastModified": 1785187597
   },
   "nsticky": {
     "type": "github",
