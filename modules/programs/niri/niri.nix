@@ -1,15 +1,14 @@
-{inputs, ...}: let
+let
   bind = action: {_props.repeat = false;} // action;
 in {
   flake.nixosModules.niri = {
     lib,
-    pkgs,
     username,
     ...
   }: {
     services.gnome.gnome-keyring.enable = lib.mkForce false;
     xdg.portal.config.niri."org.freedesktop.impl.portal.Secret" = lib.mkForce "none";
-
+    environment.pathsToLink = ["/share/applications" "/share/xdg-desktop-portal"];
     services.greetd = {
       enable = true;
       settings.default_session = {
@@ -18,22 +17,120 @@ in {
       };
     };
 
-    programs.niri = {
-      enable = true;
-      package = inputs.niri-nix.packages.${pkgs.stdenv.hostPlatform.system}.niri-unstable;
-      useNautilus = false;
-    };
+    nixpkgs.overlays = [
+      (final: prev: {
+        niri = prev.niri.override (prevArgs: {
+          libdisplay-info = prevArgs.libdisplay-info.overrideAttrs (finalAttrs: prevAttrs:
+            assert prevAttrs.version == "0.4.0"; {
+              version = "0.3.0";
+              src = final.fetchFromGitLab {
+                domain = "gitlab.freedesktop.org";
+                owner = "emersion";
+                repo = "libdisplay-info";
+                rev = finalAttrs.version;
+                sha256 = "sha256-nXf2KGovNKvcchlHlzKBkAOeySMJXgxMpbi5z9gLrdc=";
+              };
+            });
+        });
+      })
+    ];
   };
 
-  flake.homeModules.niri = {pkgs, ...}: {
-    imports = [inputs.niri-nix.homeModules.default];
-    home.packages = [pkgs.xwayland-satellite];
+  flake.homeModules.niri = _: {
     wayland.windowManager.niri = {
       enable = true;
-      package = inputs.niri-nix.packages.${pkgs.stdenv.hostPlatform.system}.niri-unstable;
       settings = {
-        spawn-at-startup = map (cmd: {_args = [cmd];}) ["discord"];
-        workspace = map (ws: {_args = [ws];}) ["browser" "default" "chat" "stage"];
+        _children = [
+          {spawn-at-startup._args = ["discord"];}
+          {workspace._args = ["browser"];}
+          {workspace._args = ["default"];}
+          {workspace._args = ["chat"];}
+          {workspace._args = ["stage"];}
+          {
+            window-rule = {
+              geometry-corner-radius = 16;
+              clip-to-geometry = true;
+              draw-border-with-background = false;
+            };
+          }
+          {
+            window-rule = {
+              match._props."app-id" = "^com\\\\.mitchellh\\\\.ghostty$";
+              background-effect = {
+                blur = true;
+                xray = true;
+              };
+            };
+          }
+          {
+            window-rule = {
+              match._props = {
+                "app-id" = "^com\\\\.mitchellh\\\\.ghostty$";
+                "is-floating" = true;
+              };
+              background-effect.xray = false;
+            };
+          }
+          {
+            window-rule = {
+              match._props."app-id" = "^helium$";
+              open-on-workspace = "browser";
+            };
+          }
+          {
+            window-rule = {
+              match._props."app-id" = "^Minecraft";
+              open-fullscreen = true;
+              open-on-workspace = "default";
+            };
+          }
+          {
+            window-rule = {
+              match._props."app-id" = "^discord$";
+              open-on-workspace = "chat";
+              open-maximized-to-edges = true;
+            };
+          }
+          {
+            window-rule = {
+              _children = [
+                {match._props."app-id" = "^discord$";}
+                {match._props.title = "^Picture in picture$";}
+                {match._props."app-id" = "^chrome-ldgfbffkinooeloadekpmfoklnobpien-Default$";}
+              ];
+              exclude._props.title = "(?i).*discord$";
+              open-floating = true;
+              focus-ring.off = {};
+              default-column-width.fixed = 1024;
+              default-window-height.fixed = 576;
+              default-floating-position._props = {
+                x = 10;
+                y = 10;
+                relative-to = "top-right";
+              };
+            };
+          }
+          {
+            window-rule = {
+              match._props.title = "^filepicker$";
+              open-floating = true;
+              default-column-width.fixed = 1600;
+              default-window-height.fixed = 900;
+            };
+          }
+          {
+            layer-rule = {
+              match._props.namespace = "^noctalia-wallpaper";
+              place-within-backdrop = true;
+            };
+          }
+          {
+            layer-rule = {
+              match._props.namespace = "^noctalia-(bar-[^\"]+|notification|dock|panel|osd)$";
+              background-effect.xray = false;
+            };
+          }
+        ];
         screenshot-path = "~/Pictures/Screenshots/%y-%m-%d-%H-%M-%S.png";
         prefer-no-csd = {};
         debug.honor-xdg-activation-with-invalid-serial = {};
@@ -119,76 +216,6 @@ in {
           "Mod+Shift+WheelScrollUp" = bind {focus-column-left = {};};
           "Mod+Shift+WheelScrollDown" = bind {focus-column-right = {};};
         };
-
-        window-rule = [
-          {
-            geometry-corner-radius = 16;
-            clip-to-geometry = true;
-            draw-border-with-background = false;
-          }
-          {
-            match._props."app-id" = "^com\\.mitchellh\\.ghostty$";
-            background-effect = {
-              blur = true;
-              xray = true;
-            };
-          }
-          {
-            match._props = {
-              "app-id" = "^com\\.mitchellh\\.ghostty$";
-              "is-floating" = true;
-            };
-            background-effect.xray = false;
-          }
-          {
-            match._props."app-id" = "^helium$";
-            open-on-workspace = "browser";
-          }
-          {
-            match._props."app-id" = "^Minecraft";
-            open-fullscreen = true;
-            open-on-workspace = "default";
-          }
-          {
-            match._props."app-id" = "^discord$";
-            open-on-workspace = "chat";
-            open-maximized-to-edges = true;
-          }
-          {
-            match = [
-              {_props."app-id" = "^discord$";}
-              {_props.title = "^Picture in picture$";}
-              {_props."app-id" = "^chrome-ldgfbffkinooeloadekpmfoklnobpien-Default$";}
-            ];
-            exclude._props.title = "(?i).*discord$";
-            open-floating = true;
-            focus-ring.off = {};
-            default-column-width.fixed = 1024;
-            default-window-height.fixed = 576;
-            default-floating-position._props = {
-              x = 10;
-              y = 10;
-              relative-to = "top-right";
-            };
-          }
-          {
-            match._props.title = "^filepicker$";
-            open-floating = true;
-            default-column-width.fixed = 1600;
-            default-window-height.fixed = 900;
-          }
-        ];
-
-        layer-rule = [
-          {
-            match._props.namespace = "^noctalia-wallpaper";
-            place-within-backdrop = true;
-          }
-          {
-            match._props.namespace = "^noctalia-(bar-[^\"]+|notification|dock|panel|osd)$";
-            background-effect.xray = false;
-          }
-        ];
       };
     };
   };

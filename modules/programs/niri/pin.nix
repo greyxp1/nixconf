@@ -332,20 +332,24 @@
     };
 
     wayland.windowManager.niri.settings = {
-      window-rule = [
+      _children = [
         {
-          match._props."app-id" = "^niri-pin$";
-          open-floating = true;
-          focus-ring.off = {};
-          border = {
-            on = {};
-            active-color = "#cba6f7";
-            inactive-color = "#cba6f7";
+          window-rule = {
+            match._props."app-id" = "^niri-pin$";
+            open-floating = true;
+            focus-ring.off = {};
+            border = {
+              on = {};
+              active-color = "#cba6f7";
+              inactive-color = "#cba6f7";
+            };
           };
         }
         {
-          match._props."app-id" = "^dev\\.faetalize\\.waytator$";
-          open-floating = true;
+          window-rule = {
+            match._props."app-id" = "^dev\\\\.faetalize\\\\.waytator$";
+            open-floating = true;
+          };
         }
       ];
       binds = {
