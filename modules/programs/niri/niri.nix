@@ -78,7 +78,7 @@ in {
 
         binds = {
           "Mod+Return" = bind {spawn._args = ["ghostty" "+new-window"];};
-          "Mod+E" = bind {spawn._args = ["ghostty" "+new-window" "-e" "nu" "-c" "y; exec nu"];};
+          "Mod+E" = bind {spawn._args = ["ghostty" "+new-window" "-e" "nu" "-e" "y"];};
           "Mod+B" = bind {spawn = "helium";};
           "Mod+D" = bind {spawn = "discord";};
 
