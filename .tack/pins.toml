@@ -34,8 +34,6 @@ url = "gh:greyxp1/nix-yazi-plugins"
 url = "gh:nix-community/disko"
 [inputs.home-manager]
 url = "gh:nix-community/home-manager"
-[inputs.nsticky]
-url = "gh:lonerOrz/nsticky"
 [inputs.helium]
 url = "gh:greyxp1/helium-flake"
 [inputs.nixcord]
