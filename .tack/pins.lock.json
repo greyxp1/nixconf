@@ -51,9 +51,9 @@
     "type": "github",
     "owner": "greyxp1",
     "repo": "helium-flake",
-    "rev": "c31b8d5230544ea81222b02b7aca53a3c616e093",
-    "narHash": "sha256-1wMGMMozWvU+5OZuBja/70HFTFe6H9dJKuKIbVej83g=",
-    "lastModified": 1784970778
+    "rev": "0a47f3d097ab52c0bccba096442cb07415a1fd2a",
+    "narHash": "sha256-u6Vmb04pQIfC61AmRsPG0WC0oBQQl1ot55R83YTAD6E=",
+    "lastModified": 1785343489
   },
   "home-manager": {
     "type": "github",
@@ -95,14 +95,6 @@
     "narHash": "sha256-yn/rwSLt+sJWNx8CgHwucO2xRRx0jTLMlPRliElpBBs=",
     "lastModified": 1785192944
   },
-  "niri-nix": {
-    "type": "git",
-    "url": "https://codeberg.org/BANanaD3V/niri-nix",
-    "ref": "HEAD",
-    "rev": "670bdd2fead1a0aa9b609330cf0bcde2ce8d1a19",
-    "narHash": "sha256-vJ6PIBIGO3kc23yOzc8+PndcI0SaQ67QvATSz29/XfQ=",
-    "lastModified": 1785259600
-  },
   "nix-index-database": {
     "type": "github",
     "owner": "nix-community",
@@ -142,14 +134,6 @@
     "rev": "c7b4a798d0bfd3eaee8d2d5f9adc48b74da5b017",
     "narHash": "sha256-zrvk11Vxa2Hpy1TP+zzdIHMXTUgP4wNM+rglW9T3+xA=",
     "lastModified": 1785259009
-  },
-  "nsticky": {
-    "type": "github",
-    "owner": "lonerOrz",
-    "repo": "nsticky",
-    "rev": "ce76c3816e4cd993b14b0b7da00bb549d4d2f7f3",
-    "narHash": "sha256-hIZ1CSwm7gWQsORip4Sh//swiGHBKjDgRquT+PTUfgE=",
-    "lastModified": 1784681092
   },
   "oniri": {
     "type": "github",
