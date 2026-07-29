@@ -26,8 +26,9 @@ url = "gh:nixos/nixpkgs/nixos-unstable"
 url = "gh:nix-community/preservation"
 [inputs.import-tree]
 url = "gh:vic/import-tree"
-[inputs.waytator]
-url = "gh:linusammon/waytator/flake"
+[inputs.swash]
+url = "gh:ItsLemmy/swash"
+type = "fetch"
 [inputs.nix-yazi-plugins]
 url = "gh:greyxp1/nix-yazi-plugins"
 [inputs.disko]

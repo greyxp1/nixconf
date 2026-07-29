@@ -215,7 +215,7 @@
       }
     '';
 
-    waytator = inputs.waytator.packages.${pkgs.stdenv.hostPlatform.system}.default;
+    swash = pkgs.callPackage "${inputs.swash}/nix/package.nix" {};
 
     niriPin = pkgs.stdenv.mkDerivation {
       pname = "niri-pin";
@@ -289,7 +289,7 @@
       OUTPUT="$OUTPUT_DIR/$(${pkgs.coreutils}/bin/date +'%y-%m-%d-%H-%M-%S').png"
       ${pkgs.coreutils}/bin/mkdir -p -- "$OUTPUT_DIR"
       ${pkgs.coreutils}/bin/cp -- "$SCREENSHOT" "$OUTPUT"
-      ${waytator}/bin/waytator "$OUTPUT"
+      ${swash}/bin/swash "$OUTPUT"
     '';
 
     ocr = pkgs.writeScriptBin "niri-region-ocr" ''
@@ -309,7 +309,7 @@
   in {
     home.packages = [
       pkgs.jq
-      waytator
+      swash
       niriPin
       pin
       edit
@@ -347,7 +347,7 @@
         }
         {
           window-rule = {
-            match._props."app-id" = "^dev\\\\.faetalize\\\\.waytator$";
+            match._props."app-id" = "^dev\\\\.lemmy\\\\.swash$";
             open-floating = true;
           };
         }

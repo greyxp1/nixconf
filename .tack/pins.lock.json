@@ -159,12 +159,12 @@
     "narHash": "sha256-V6mkItSVA/TSC0yWKvcps/ewAC0nSd1KSBr8Pvdv8z8=",
     "lastModified": 1781557389
   },
-  "waytator": {
+  "swash": {
     "type": "github",
-    "owner": "linusammon",
-    "repo": "waytator",
-    "rev": "9224e0942d7a33637eed2a371865fe80d5d59c53",
-    "narHash": "sha256-yji1GdWUhHFwpmuM4ajTziMwClHIyawGtynmEmJJshY=",
-    "lastModified": 1777553488
+    "owner": "ItsLemmy",
+    "repo": "swash",
+    "rev": "edc5e0b825ae7c8254d1f885ad13042e75a8d891",
+    "narHash": "sha256-AXNUcDW6jrSqgCt61De1q0hlZIitBaZqB3EsHeJaIgc=",
+    "lastModified": 1785074280
   }
 }
