@@ -62,7 +62,6 @@
           {workspace._args = ["browser"];}
           {workspace._args = ["default"];}
           {workspace._args = ["chat"];}
-          {workspace._args = ["stage"];}
         ];
 
         recent-windows = {
