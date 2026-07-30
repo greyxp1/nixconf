@@ -10,7 +10,7 @@
       }
       {
         window-rule = {
-          match._props."app-id" = "^com\\\\.mitchellh\\\\.ghostty$";
+          match._props."app-id" = "^com\\.mitchellh\\.ghostty$";
           background-effect = {
             blur = true;
             xray = true;
@@ -20,7 +20,7 @@
       {
         window-rule = {
           match._props = {
-            "app-id" = "^com\\\\.mitchellh\\\\.ghostty$";
+            "app-id" = "^com\\.mitchellh\\.ghostty$";
             "is-floating" = true;
           };
           background-effect.xray = false;
