@@ -124,11 +124,12 @@
         };
 
         widget = {
-          tray.hidden = ["chrome_status_icon_1::Discord"];
           recorder.type = "noctalia/screen_recorder:recorder";
-          workspaces = {
-            display = "none";
-            hide_when_empty = true;
+          workspaces.display = "none";
+          tray = {
+            drawer = true;
+            drawer_item_size = 24.0;
+            hidden = ["chrome_status_icon_1::Discord"];
           };
         };
       };
