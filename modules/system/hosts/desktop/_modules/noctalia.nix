@@ -28,6 +28,7 @@
             show_caps_lock = false;
             show_keyboard_layout = false;
             show_login_button = false;
+            show_unlock_hint = false;
           };
         };
 
