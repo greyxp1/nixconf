@@ -7,6 +7,7 @@ in {
 
     programs.nixcord = {
       enable = true;
+      useGlobalPkgs = true;
       quickCss = builtins.readFile (cordStashPath "themes/catppuccin-mocha.css");
 
       discord = {
