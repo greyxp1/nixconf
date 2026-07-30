@@ -8,7 +8,9 @@
     enable = true;
     extraCompatPackages = [pkgs.proton-cachyos];
     package = pkgs.steam.override {
+      extraArgs = "-silent";
       extraEnv = {
+        #STEAM_ENABLE_SHADER_CACHE_MANAGEMENT = "0";
         PROTON_ENABLE_WAYLAND = "1";
         # DirectX 9–11
         PROTON_DXVK_LOWLATENCY = "1";
@@ -25,7 +27,6 @@
     {
       programs.mangohud.enable = true;
       wayland.windowManager.niri.settings._children = [
-        {spawn-at-startup._args = ["steam" "-silent"];}
         {
           output = {
             _args = ["DP-2"];
