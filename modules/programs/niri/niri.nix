@@ -14,24 +14,6 @@
         user = username;
       };
     };
-
-    nixpkgs.overlays = [
-      (final: prev: {
-        niri = prev.niri.override (prevArgs: {
-          libdisplay-info = prevArgs.libdisplay-info.overrideAttrs (finalAttrs: prevAttrs:
-            assert prevAttrs.version == "0.4.0"; {
-              version = "0.3.0";
-              src = final.fetchFromGitLab {
-                domain = "gitlab.freedesktop.org";
-                owner = "emersion";
-                repo = "libdisplay-info";
-                rev = finalAttrs.version;
-                sha256 = "sha256-nXf2KGovNKvcchlHlzKBkAOeySMJXgxMpbi5z9gLrdc=";
-              };
-            });
-        });
-      })
-    ];
   };
 
   flake.homeModules.niri = {
