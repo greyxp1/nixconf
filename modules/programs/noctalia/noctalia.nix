@@ -133,6 +133,7 @@
           };
 
           workspaces = {
+            change_color_on_hover = false;
             display = "none";
             scroll_repeat = "steps";
           };
