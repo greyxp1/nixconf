@@ -1,5 +1,6 @@
 {inputs, ...}: {
   flake.nixosModules.cli = {homeDirectory, ...}: {
+    networking.firewall.allowedTCPPorts = [3773];
     programs = {
       tack.enable = true;
       nh = {
@@ -14,15 +15,12 @@
     };
   };
 
-  flake.homeModules.cli = {
-    osConfig,
-    pkgs,
-    ...
-  }: {
+  flake.homeModules.cli = {pkgs, ...}: {
     imports = [inputs.nix-index-database.homeModules.nix-index];
     programs = {
       nix-index.enable = true;
       nix-index-database.comma.enable = true;
+      t3code.enable = true;
 
       bat = {
         enable = true;
@@ -75,29 +73,6 @@
               ];
             }
           ];
-        };
-      };
-
-      codex = {
-        enable = true;
-        settings = {
-          approval_policy = "on-request";
-          sandbox_mode = "danger-full-access";
-          check_for_update_on_startup = false;
-          model = "gpt-5.6-sol";
-          model_reasoning_effort = "high";
-          notice.hide_full_access_warning = true;
-          notice.hide_rate_limit_model_nudge = true;
-          projects.${osConfig.programs.nh.flake}.trust_level = "trusted";
-          tui.show_tooltips = false;
-          developer_instructions = ''
-            Default to YAGNI: reuse existing code and packages, avoid new dependencies
-            and custom implementations, and make the smallest correct diff.
-            Run at most one narrowly scoped verification command, and only when it
-            directly verifies the change. Do not run broad builds or full test suites
-            when a narrower check exists. If an activation command already builds or
-            validates the change, do not run a separate build first.
-          '';
         };
       };
     };
