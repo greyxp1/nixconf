@@ -131,9 +131,9 @@
     "type": "github",
     "owner": "noctalia-dev",
     "repo": "noctalia",
-    "rev": "74ae1cb5f7048a9c024903788bc6ad7f45e907fc",
-    "narHash": "sha256-XimkvVE08sY7EAmpPWx2kE6YKhPA8HcW+LrjCwf09rw=",
-    "lastModified": 1785377861
+    "rev": "b72f49f42a9934712657a8b56eafbe06692b3790",
+    "narHash": "sha256-UTGuSFC8koFos8uaI968HUkcPB6IgqKIE3XhgMi05EY=",
+    "lastModified": 1785385380
   },
   "oniri": {
     "type": "github",
