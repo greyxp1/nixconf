@@ -110,7 +110,6 @@ in {
           declutter = {
             enable = true;
             removeAvatarDecoration = true;
-            removeQuestsAboveDms = true;
             removeShopAboveDms = true;
           };
 
