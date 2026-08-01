@@ -34,19 +34,6 @@
       };
     };
 
-    xdg.configFile."tlrc/config.toml".text = ''
-      [output]
-      show_title = false
-      compact = true
-      option_style = "short"
-
-      [style]
-      bullet.color = "blue"
-      example.color = "green"
-      placeholder.color = { hex = "#fab387" } # Peach
-      placeholder.italic = true
-    '';
-
     home.packages = with pkgs; [
       curl
       zip
@@ -55,7 +42,6 @@
       nerd-fonts.jetbrains-mono
       fzf
       fd
-      tlrc
       ripgrep
       microfetch
       ani-cli
