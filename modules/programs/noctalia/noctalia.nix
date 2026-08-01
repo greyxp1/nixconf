@@ -7,7 +7,6 @@
       systemd.enable = true;
       settings = {
         desktop_widgets.enabled = false;
-        dock.position = "bottom";
         notification.background_opacity = 0.9;
         system.monitor.enabled = false;
         theme.builtin = "Catppuccin";
@@ -22,18 +21,15 @@
         '';
 
         wallpaper = {
-          enabled = true;
           default.path = ./assets/wallpaper.jpg;
         };
 
         bar.default = {
-          enabled = true;
           auto_hide = true;
           background_opacity = 0.9;
           start = ["recorder"];
           center = ["workspaces"];
           end = ["tray" "notifications"];
-          margin_edge = 0;
           margin_ends = 580;
           position = "right";
           radius_bottom_left = 16;
@@ -75,29 +71,13 @@
           restore_portal = true;
         };
 
-        plugins = {
-          auto_update = true;
-          enabled = ["noctalia/screen_recorder"];
-          source = [
-            {
-              kind = "git";
-              location = "https://github.com/greyxp1/official-plugins";
-              name = "official";
-            }
-            {
-              kind = "git";
-              location = "https://github.com/noctalia-dev/community-plugins";
-              name = "community";
-            }
-          ];
-        };
+        plugins.enabled = ["noctalia/screen_recorder"];
 
         shell = {
           avatar_path = ./assets/user.jpg;
           launch_apps_as_systemd_services = true;
           password_style = "random";
           polkit_agent = true;
-          settings_show_advanced = true;
           setup_wizard_enabled = false;
           show_location = false;
           screen_corners.enabled = true;
@@ -134,8 +114,8 @@
 
           workspaces = {
             change_color_on_hover = false;
-            display = "none";
             scroll_repeat = "steps";
+            show_labels = false;
           };
         };
       };

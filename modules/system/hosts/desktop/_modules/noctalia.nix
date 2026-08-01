@@ -4,7 +4,6 @@
       {
         action = "command";
         command = "systemctl reboot --boot-loader-entry=windows.conf";
-        enabled = true;
         glyph = "brand-windows-filled";
         label = "Windows";
       }
