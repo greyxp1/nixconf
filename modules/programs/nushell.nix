@@ -28,6 +28,7 @@
 
       extraConfig = ''
         $env.__skip_prompt_spacing = true
+        $env.config.hooks.display_output = { table --icons --index false}
 
         def --env clear [] {
           ^clear
