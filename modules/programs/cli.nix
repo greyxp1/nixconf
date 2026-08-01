@@ -39,12 +39,10 @@
       zip
       unzip
       wget
-      nerd-fonts.jetbrains-mono
       fzf
       fd
       ripgrep
       microfetch
-      ani-cli
       pandora-launcher
       wl-clipboard
       inputs.ncr.packages.${pkgs.stdenv.hostPlatform.system}.default
