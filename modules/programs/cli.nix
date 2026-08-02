@@ -44,7 +44,6 @@
       ripgrep
       microfetch
       pandora-launcher
-      wl-clipboard
       inputs.ncr.packages.${pkgs.stdenv.hostPlatform.system}.default
     ];
   };
