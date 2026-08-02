@@ -3,7 +3,6 @@
     programs.ghostty = {
       enable = true;
       settings = {
-        cursor-style = "bar";
         background-opacity = 0.8;
         font-size = 14;
         window-padding-x = 8;
