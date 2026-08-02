@@ -48,9 +48,6 @@ exclude_follow = ["nixpkgs"]
 [inputs.catppuccin]
 url = "gh:catppuccin/nix"
 exclude_follow = ["nixpkgs"]
-[inputs.chaotic]
-url = "gh:chaotic-cx/nyx/nyxpkgs-unstable"
-exclude_follow = ["nixpkgs"]
 
 [inputs.oniri]
 url = "gh:Antiz96/oniri"
