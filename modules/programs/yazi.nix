@@ -85,7 +85,7 @@
           open = [
             {
               mime = "image/*";
-              run = ''niri-pin "$@"'';
+              run = ''perch "$@"'';
               orphan = true;
             }
           ];
