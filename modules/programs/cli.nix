@@ -1,10 +1,11 @@
 {inputs, ...}: {
   flake.nixosModules.cli = {homeDirectory, ...}: {
+    imports = [inputs.ncr.nixosModules.default];
     networking.firewall.allowedTCPPorts = [3773];
     programs = {
+      ncr.enable = true;
       tack.enable = true;
       nh = {
-        enable = true;
         flake = "${homeDirectory}/Projects/nixconf";
         clean = {
           enable = true;
@@ -44,7 +45,6 @@
       ripgrep
       microfetch
       pandora-launcher
-      inputs.ncr.packages.${pkgs.stdenv.hostPlatform.system}.default
     ];
   };
 }
