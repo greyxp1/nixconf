@@ -26,9 +26,6 @@ url = "gh:nixos/nixpkgs/nixos-unstable"
 url = "gh:nix-community/preservation"
 [inputs.import-tree]
 url = "gh:vic/import-tree"
-[inputs.swash]
-url = "gh:ItsLemmy/swash"
-type = "fetch"
 [inputs.nix-yazi-plugins]
 url = "gh:greyxp1/nix-yazi-plugins"
 [inputs.disko]
@@ -48,12 +45,13 @@ exclude_follow = ["nixpkgs"]
 [inputs.catppuccin]
 url = "gh:catppuccin/nix"
 exclude_follow = ["nixpkgs"]
+[inputs.mpv-smartcut]
+url = "gh:greyxp1/mpv-smartcut"
+[inputs.ncr]
+url = "gh:greyxp1/ncr"
 
 [inputs.oniri]
 url = "gh:Antiz96/oniri"
-type = "fetch"
-[inputs.prism-themes]
-url = "gh:PrismLauncher/Themes"
 type = "fetch"
 
 [inputs.cord-stash]
@@ -68,8 +66,8 @@ type = "fetch"
 url = "gh:greyxp1/kovaaks-config"
 type = "fetch"
 
-[inputs.mpv-smartcut]
-url = "gh:greyxp1/mpv-smartcut"
+[inputs.perch]
+url = "git+file:///home/grey/Projects/perch"
 
-[inputs.ncr]
-url = "gh:greyxp1/ncr"
+[inputs.swash]
+url = "git+file:///home/grey/Projects/swash"
