@@ -7,6 +7,14 @@
     "narHash": "sha256-JgUmb34d3Zv1W5fYukqEUEDHSaWhw7WV9HVUXOmOCaA=",
     "lastModified": 1785485193
   },
+  "chameleos": {
+    "type": "git",
+    "url": "file:///home/grey/Projects/chameleos",
+    "ref": "HEAD",
+    "rev": "426224383761dde66c130f302d1118c9b4150ea4",
+    "narHash": "sha256-buh5/hjxt97PG2GxkV6fSFRNefDW0Z5Kwq9AFcRYsvY=",
+    "lastModified": 1785857363
+  },
   "cord-stash": {
     "type": "github",
     "owner": "greyxp1",
@@ -123,9 +131,9 @@
     "type": "github",
     "owner": "nixos",
     "repo": "nixpkgs",
-    "rev": "643809054d65fdd466a63e3155b8c498cb483c04",
-    "narHash": "sha256-vUfIeBEfpbAfZ5zjgIkYk7eHBeVfCYVjLbWnMkseYnk=",
-    "lastModified": 1785692966
+    "rev": "e72e4f299401a3689d4b3d5fc6496b11db7064eb",
+    "narHash": "sha256-8fsyqeO+mJqvIzeO4xIpgJe/f7MTbbVTEC6RT6WSXNs=",
+    "lastModified": 1785828668
   },
   "noctalia": {
     "type": "github",
@@ -158,13 +166,5 @@
     "rev": "93416f4614ad2dfed5b0dcf12f27e57d27a5ab11",
     "narHash": "sha256-mMI9IanU+Xw+pVogD2oT0I2kTmvz2Un/Apc5+CwUpEY=",
     "lastModified": 1757436102
-  },
-  "swash": {
-    "type": "git",
-    "url": "file:///home/grey/Projects/swash",
-    "ref": "HEAD",
-    "rev": "b93fbc51d448b6fb6eb78d671df29e03d4f7387e",
-    "narHash": "sha256-k0/oHylkuPOwkmECMdcV+8xmUHY+T2QKRr5AQZu86TY=",
-    "lastModified": 1785781517
   }
 }
