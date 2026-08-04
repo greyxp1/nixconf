@@ -11,9 +11,9 @@
     "type": "git",
     "url": "file:///home/grey/Projects/chameleos",
     "ref": "HEAD",
-    "rev": "426224383761dde66c130f302d1118c9b4150ea4",
-    "narHash": "sha256-buh5/hjxt97PG2GxkV6fSFRNefDW0Z5Kwq9AFcRYsvY=",
-    "lastModified": 1785857363
+    "rev": "e73128dcdd8d6eb518199d3ce4b91feb47e8424f",
+    "narHash": "sha256-ixVVrJ292n2gp0NOE5sygBgnWu8RBLvuRCMPwfQobDY=",
+    "lastModified": 1785859762
   },
   "cord-stash": {
     "type": "github",
