@@ -70,5 +70,5 @@ type = "fetch"
 url = "gh:greyxp1/kovaaks-config"
 type = "fetch"
 
-[inputs.swash]
-url = "git+file:///home/grey/Projects/swash"
+[inputs.chameleos]
+url = "git+file:///home/grey/Projects/chameleos"
