@@ -49,6 +49,10 @@ exclude_follow = ["nixpkgs"]
 url = "gh:greyxp1/mpv-smartcut"
 [inputs.ncr]
 url = "gh:greyxp1/ncr"
+[inputs.niri]
+url = "gh:greyxp1/niri"
+[inputs.perch]
+url = "gh:greyxp1/perch"
 
 [inputs.oniri]
 url = "gh:Antiz96/oniri"
@@ -65,9 +69,6 @@ type = "fetch"
 [inputs.kovaaks-config]
 url = "gh:greyxp1/kovaaks-config"
 type = "fetch"
-
-[inputs.perch]
-url = "git+file:///home/grey/Projects/perch"
 
 [inputs.swash]
 url = "git+file:///home/grey/Projects/swash"
