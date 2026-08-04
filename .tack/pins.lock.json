@@ -83,9 +83,17 @@
     "type": "github",
     "owner": "greyxp1",
     "repo": "ncr",
-    "rev": "7074c60a4313e91d5c9eddbadc3558d50bbf79dd",
-    "narHash": "sha256-FD5sIW6ffLjUxZC4orHnlO4gaWtFUtC+MnLJ0i4tMQM=",
-    "lastModified": 1785733845
+    "rev": "8d5d4682e46812e4ee280e319cdae6938c90e690",
+    "narHash": "sha256-RUGX0m8LquEbxfAS2j5v6Bfl8mNNfsnz7kkeQYhzVhU=",
+    "lastModified": 1785735832
+  },
+  "niri": {
+    "type": "github",
+    "owner": "greyxp1",
+    "repo": "niri",
+    "rev": "77099888670b098927e77e84b2f5ed26b9d6d9f0",
+    "narHash": "sha256-N+Hcs89FAmwiK9q5VG0XgrXAdpjllZd0FsmhzSF1vbA=",
+    "lastModified": 1785811436
   },
   "nix-index-database": {
     "type": "github",
@@ -107,41 +115,41 @@
     "type": "github",
     "owner": "4evy",
     "repo": "nixcord",
-    "rev": "0f75b94c6c3372db57be5d2271a8412c7166ee48",
-    "narHash": "sha256-PhWz4jDxk8OOJAZYKEmO3PQpC/rk5ouo9qjMNrb3uCc=",
-    "lastModified": 1785730852
+    "rev": "c2d7410937e517e4d40fe0fd9a3873a8d08a249b",
+    "narHash": "sha256-flAhSIdh6FbpQ7PZTWDzfskCgMBBqRMR9EFNiQjLbAY=",
+    "lastModified": 1785840384
   },
   "nixpkgs": {
     "type": "github",
     "owner": "nixos",
     "repo": "nixpkgs",
-    "rev": "148bab9c1c3c53136ecb44a6ea356a0ed5b39b06",
-    "narHash": "sha256-KoTsyMQqnXQZq8deCEnu4QkyldkwH/bpMMhUcfMdGIw=",
-    "lastModified": 1785571196
+    "rev": "643809054d65fdd466a63e3155b8c498cb483c04",
+    "narHash": "sha256-vUfIeBEfpbAfZ5zjgIkYk7eHBeVfCYVjLbWnMkseYnk=",
+    "lastModified": 1785692966
   },
   "noctalia": {
     "type": "github",
     "owner": "noctalia-dev",
     "repo": "noctalia",
-    "rev": "5aae077a3563da6fda3fc2a2b8ce9162e3a42019",
-    "narHash": "sha256-H70rICsCS/cx4KR1Qryln9HJd0iVekP+8or3OCKvPT0=",
-    "lastModified": 1785707827
+    "rev": "e41c99439605df6d2fa62409139f96ded6ac7345",
+    "narHash": "sha256-QbFIduUhpNIucJy/WcwRxsvTQocnwIXlSwnYEjmGMSQ=",
+    "lastModified": 1785809412
   },
   "oniri": {
     "type": "github",
     "owner": "Antiz96",
     "repo": "oniri",
-    "rev": "fc8b670527864a4701d7a4960ba8daf8570fd99c",
-    "narHash": "sha256-CrSXWN86CfQOo0Ha2LJRjWvTjxZDooAuWRWzRsCzUao=",
-    "lastModified": 1785534183
+    "rev": "30a949368edb2eb45e36556c890b75cfdf4c9f21",
+    "narHash": "sha256-AACMt6pTJwvFKmVZ7TIkXLisPOcteAEL3Pkxm0X8FpM=",
+    "lastModified": 1785755576
   },
   "perch": {
-    "type": "git",
-    "url": "file:///home/grey/Projects/perch",
-    "ref": "HEAD",
-    "rev": "e781fd5aef329bf490753625ceb98b7cee86ebb9",
-    "narHash": "sha256-Ivac0E6fmkCmKyc50ZI2L1OwaL5MCR9R5PGgEwWqWTQ=",
-    "lastModified": 1785785763
+    "type": "github",
+    "owner": "greyxp1",
+    "repo": "perch",
+    "rev": "1c28c75c1f69adf711447822c8ae613581d2d593",
+    "narHash": "sha256-iGjOGMsaj/GnG4IFc/ciohR+FR8A7VsfK68rqvzxe+g=",
+    "lastModified": 1785840579
   },
   "preservation": {
     "type": "github",
