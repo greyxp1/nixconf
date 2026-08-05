@@ -17,7 +17,8 @@
         helium.browser = {
           show_back_button = false;
           show_reload_button = false;
-          vertical_right_aligned = true;
+          zen_mode = true;
+          zen_mode_sidebar_pinned = true;
         };
 
         browser = {
