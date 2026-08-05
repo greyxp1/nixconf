@@ -35,6 +35,19 @@
       };
     };
 
+    xdg.configFile."tlrc/config.toml".text = ''
+      [output]
+      show_title = false
+      compact = true
+      option_style = "short"
+
+      [style]
+      bullet.color = "blue"
+      example.color = "green"
+      placeholder.color = { hex = "#fab387" } # Peach
+      placeholder.italic = true
+    '';
+
     home.packages = with pkgs; [
       curl
       zip
@@ -42,6 +55,7 @@
       wget
       fzf
       fd
+      tlrc
       ripgrep
       microfetch
       pandora-launcher
