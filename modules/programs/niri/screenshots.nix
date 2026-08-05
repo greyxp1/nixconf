@@ -20,7 +20,7 @@
         "Mod+Shift+C" = bind "niri msg pick-color | wl-copy";
         "Shift+Print" = capture "perch -";
         "Ctrl+Print" = capture "tesseract stdin stdout | wl-copy";
-        "Alt+Print" = bind "chamel toggle";
+        "Mod+A" = bind "chamel toggle";
       };
 
       _children = [
