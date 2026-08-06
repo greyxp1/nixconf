@@ -32,6 +32,7 @@
           editor = {
             auto-format = true;
             default-yank-register = "+";
+            continue-comments = false;
             cursor-shape = {
               normal = "bar";
               insert = "bar";
