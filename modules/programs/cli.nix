@@ -1,17 +1,26 @@
 {inputs, ...}: {
-  flake.nixosModules.cli = {homeDirectory, ...}: {
+  flake.nixosModules.cli = {
+    homeDirectory,
+    config,
+    ...
+  }: {
     imports = [inputs.ncr.nixosModules.default];
     networking.firewall.allowedTCPPorts = [3773];
     programs = {
-      ncr.enable = true;
       tack.enable = true;
       nh = {
+        enable = true;
         flake = "${homeDirectory}/Projects/nixconf";
         clean = {
           enable = true;
           dates = "daily";
           extraArgs = "--optimise --keep 10";
         };
+      };
+
+      ncr = {
+        enable = true;
+        flake = config.programs.nh.flake;
       };
     };
   };
@@ -22,6 +31,10 @@
       nix-index.enable = true;
       nix-index-database.comma.enable = true;
       t3code.enable = true;
+      opencode = {
+        enable = true;
+        settings.permission = "allow";
+      };
 
       bat = {
         enable = true;

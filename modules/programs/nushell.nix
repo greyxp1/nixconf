@@ -21,7 +21,7 @@
         rebuild = "nh os switch";
         update = "do { cd ${osConfig.programs.nh.flake}; ^tack update; ^nh os switch }";
         home = "sudo systemctl restart home-manager-${config.home.username}.service";
-        clean = "nh clean all --optimise --keep 1";
+        clean = "do { ^nh clean all --optimise --keep 1; ^ncr --warm-only }";
         codex = "do { cd ${osConfig.programs.nh.flake}; ^codex resume --all }";
       };
 
