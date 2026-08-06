@@ -5,6 +5,7 @@
     ...
   }: {
     xdg.portal = {
+      enable = true;
       extraPortals = [pkgs.xdg-desktop-portal-termfilechooser];
       config.niri."org.freedesktop.impl.portal.FileChooser" = lib.mkForce ["termfilechooser"];
     };
@@ -29,6 +30,7 @@
       inherit on desc;
       run = "plugin ${run}";
     };
+
   in {
     imports = [inputs.nix-yazi-plugins.legacyPackages.x86_64-linux.homeManagerModules.default];
     xdg.configFile."xdg-desktop-portal-termfilechooser/config".text = ''
