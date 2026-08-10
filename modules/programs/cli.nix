@@ -1,16 +1,12 @@
 {inputs, ...}: {
-  flake.nixosModules.cli = {
-    homeDirectory,
-    config,
-    ...
-  }: {
+  flake.nixosModules.cli = {config, ...}: {
     imports = [inputs.ncr.nixosModules.default];
     networking.firewall.allowedTCPPorts = [3773];
     programs = {
       tack.enable = true;
       nh = {
         enable = true;
-        flake = "${homeDirectory}/Projects/nixconf";
+        flake = config.flake.location;
         clean = {
           enable = true;
           dates = "daily";
@@ -20,7 +16,7 @@
 
       ncr = {
         enable = true;
-        flake = config.programs.nh.flake;
+        flake = config.flake.location;
       };
     };
   };

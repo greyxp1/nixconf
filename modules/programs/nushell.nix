@@ -8,21 +8,17 @@
     users.users.${username}.shell = pkgs.nushell;
   };
 
-  flake.homeModules.nushell = {
-    config,
-    osConfig,
-    ...
-  }: {
+  flake.homeModules.nushell = {config, ...}: {
     programs.nushell = {
       enable = true;
       environmentVariables = config.home.sessionVariables;
       settings.show_banner = false;
       shellAliases = {
         rebuild = "nh os switch";
-        update = "do { cd ${osConfig.programs.nh.flake}; ^tack update; ^nh os switch }";
+        update = "do { cd ${config.flake.location}; ^tack update; ^nh os switch }";
         home = "sudo systemctl restart home-manager-${config.home.username}.service";
         clean = "do { ^nh clean all --optimise --keep 1; ^ncr --warm-only }";
-        codex = "do { cd ${osConfig.programs.nh.flake}; ^codex resume --all }";
+        codex = "do { cd ${config.flake.location}; ^codex resume --all }";
       };
 
       extraConfig = ''
