@@ -22,11 +22,6 @@ in {
         systemd.network.wait-online.enable = false;
         availableKernelModules = ["nvme"];
       };
-
-      loader.systemd-boot.extraEntries."windows.conf" = ''
-        title Windows Boot Manager
-        efi /EFI/Microsoft/Boot/bootmgfw.efi
-      '';
     };
 
     imports = [
