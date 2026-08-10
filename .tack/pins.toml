@@ -72,3 +72,6 @@ type = "fetch"
 
 [inputs.chameleos]
 url = "git+file:///home/grey/Projects/chameleos"
+
+[inputs.nix-flatpak]
+url = "gh:gmodena/nix-flatpak"
