@@ -28,6 +28,7 @@ in {
       ./_modules/at2005usb.nix
       ./_modules/steam.nix
       ./_modules/kovaaks.nix
+      ./_modules/sober.nix
       ./_modules/nvidia.nix
       ./_modules/virt.nix
     ];
