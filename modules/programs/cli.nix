@@ -27,10 +27,6 @@
       nix-index.enable = true;
       nix-index-database.comma.enable = true;
       t3code.enable = true;
-      opencode = {
-        enable = true;
-        settings.permission = "allow";
-      };
 
       bat = {
         enable = true;
