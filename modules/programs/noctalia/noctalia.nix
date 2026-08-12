@@ -15,7 +15,7 @@
         hooks.started = ''
           noctalia msg session lock
           (
-            systemctl --user start xdg-desktop-portal.service xdg-desktop-portal-gnome.service &&
+            systemctl --user start xdg-desktop-portal.service niri-screenshare.service &&
             noctalia msg plugin noctalia/screen_recorder:service all replay-start
           ) &
         '';
