@@ -8,19 +8,19 @@
     };
   in {
     imports = [
-      inputs.chameleos.homeModules.default
+      inputs.vellum.homeModules.default
       inputs.perch.homeModules.default
     ];
 
-    services.chameleos.enable = true;
+    services.vellum.enable = true;
     programs.perch.enable = true;
     home.packages = [tesseract pkgs.wl-clipboard];
     wayland.windowManager.niri.settings = {
       binds = {
         "Mod+Shift+C" = bind "niri msg pick-color | wl-copy";
         "Shift+Print" = capture "perch -";
-        "Ctrl+Print" = capture "tesseract stdin stdout | wl-copy";
-        "Mod+A" = bind "chamel toggle";
+        "Ctrl+Print" = capture "tesseract - - | wl-copy";
+        "Mod+A" = bind "vellum toggle";
       };
 
       _children = [
