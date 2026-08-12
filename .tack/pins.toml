@@ -70,8 +70,8 @@ type = "fetch"
 url = "gh:greyxp1/kovaaks-config"
 type = "fetch"
 
-[inputs.chameleos]
-url = "git+file:///home/grey/Projects/chameleos"
+[inputs.vellum]
+url = "git+file:///home/grey/Projects/vellum"
 
 [inputs.nix-flatpak]
 url = "gh:gmodena/nix-flatpak"
