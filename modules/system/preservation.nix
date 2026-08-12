@@ -15,6 +15,7 @@
             inInitrd = true;
           }
           "/var/lib/NetworkManager"
+          "/var/lib/flatpak"
           "/var/log"
         ];
         files = [
