@@ -100,6 +100,7 @@ in {
           webKeybinds.enable = true;
           webScreenShareFixes.enable = true;
           whoReacted.enable = true;
+          whosWatching.enable = true;
           youtubeAdblock.enable = true;
 
           callTimer = {
