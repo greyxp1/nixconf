@@ -7,14 +7,6 @@
     "narHash": "sha256-Bn1EFvCd74JZXJs3pxUdfEMhls3/yuJre4O1owI6oe8=",
     "lastModified": 1786309022
   },
-  "chameleos": {
-    "type": "git",
-    "url": "file:///home/grey/Projects/chameleos",
-    "ref": "HEAD",
-    "rev": "f48e732c4baf76abd6bb944438a94731d435beee",
-    "narHash": "sha256-JL04XPyfQQAbB0n1dyHRyS3eKQmYr3w1wTL/oYdjWGU=",
-    "lastModified": 1786426253
-  },
   "cord-stash": {
     "type": "github",
     "owner": "greyxp1",
@@ -139,17 +131,17 @@
     "type": "github",
     "owner": "nixos",
     "repo": "nixpkgs",
-    "rev": "279b4a8275f032c566576b3f181fa0f27197f588",
-    "narHash": "sha256-8S3Kcxs7D4UtxJxSJZz0m14CGhuW0MxfrIwJxeGWGnQ=",
-    "lastModified": 1786247143
+    "rev": "2fcb964de67fcf60b43471c55d5d99e61a9ccb5a",
+    "narHash": "sha256-RzPPiWeUtuvymnpuEWsdtzli5w4kjZs49FqEs3/1u+I=",
+    "lastModified": 1786384358
   },
   "noctalia": {
     "type": "github",
     "owner": "noctalia-dev",
     "repo": "noctalia",
-    "rev": "352d4762d7a634ad4d2cc639b5f3b7059b01088d",
-    "narHash": "sha256-HuA2vXP7rqGoSg89S68w+VAuQpQ3asz5yAhDMyaD4TI=",
-    "lastModified": 1786423020
+    "rev": "0b1398de6b5e245a7048d9e4c2efdf563fa14d61",
+    "narHash": "sha256-7NQU+Peux6ZUszNGvBEtgRhzGCxJ/RQaYP0G7cVPt2c=",
+    "lastModified": 1786471551
   },
   "oniri": {
     "type": "github",
@@ -174,5 +166,13 @@
     "rev": "93416f4614ad2dfed5b0dcf12f27e57d27a5ab11",
     "narHash": "sha256-mMI9IanU+Xw+pVogD2oT0I2kTmvz2Un/Apc5+CwUpEY=",
     "lastModified": 1757436102
+  },
+  "vellum": {
+    "type": "git",
+    "url": "file:///home/grey/Projects/vellum",
+    "ref": "HEAD",
+    "rev": "0fa3b75eb5b677b4e65604121f5af5ee24c916ec",
+    "narHash": "sha256-iOKyINGNBW+zdSzt7J3/N+h1P36CnvkJ2pGBHG3DMyo=",
+    "lastModified": 1786476633
   }
 }
