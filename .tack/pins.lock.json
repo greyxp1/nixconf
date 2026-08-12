@@ -51,9 +51,9 @@
     "type": "github",
     "owner": "nix-community",
     "repo": "home-manager",
-    "rev": "c30c7955cec30d664a9baced6bc0112e263d4647",
-    "narHash": "sha256-ou8fYz5w9yhXC8YbvvExybFIa19MyW5G/8dEPqa90hM=",
-    "lastModified": 1786356609
+    "rev": "99e84ee7387ff24cd112ff51f71c3465eb9cb770",
+    "narHash": "sha256-ROC70hdloiAY74yodpAgT0sP1dmYk+vchjYsrfmhfiM=",
+    "lastModified": 1786501082
   },
   "import-tree": {
     "type": "github",
@@ -91,9 +91,17 @@
     "type": "github",
     "owner": "greyxp1",
     "repo": "niri",
-    "rev": "3fcc2ee6a8e93292ad33b8585514b4de260c989c",
-    "narHash": "sha256-UV2mE2Zc+j6PRkqV41VK/gMYIlM2oraObcW9r65ROn4=",
-    "lastModified": 1786414522
+    "rev": "87846301dbf14f24e9eb7ca686511bd56cb98dab",
+    "narHash": "sha256-jwdTW1g9p1OGjxIIl039Ndz3h1njAqvdFhrSgBUqGKE=",
+    "lastModified": 1786513435
+  },
+  "niri-screenshare": {
+    "type": "github",
+    "owner": "pantarune",
+    "repo": "niri-screenshare",
+    "rev": "66409d8833cac82f8f9c27c0bf7aa4a64b4c5862",
+    "narHash": "sha256-Q9T4KNAxJEVo6P3Bum1280ZVr/jcjZypN68g0DWDeIo=",
+    "lastModified": 1785330351
   },
   "nix-flatpak": {
     "type": "github",
@@ -123,9 +131,9 @@
     "type": "github",
     "owner": "4evy",
     "repo": "nixcord",
-    "rev": "c0c689edb0b36eb36e2b6349548b18daafd6a034",
-    "narHash": "sha256-vPUheEwncdu+w613Higt3O+359CSfliCdAFCPKzTWuQ=",
-    "lastModified": 1786424471
+    "rev": "4955a5bfaa841c6073513d9dbd6131988c444bce",
+    "narHash": "sha256-LzruxfFCoR5rhpogqX0mU8MPhSobALtB4lAInAXuX/o=",
+    "lastModified": 1786512436
   },
   "nixpkgs": {
     "type": "github",
@@ -139,9 +147,9 @@
     "type": "github",
     "owner": "noctalia-dev",
     "repo": "noctalia",
-    "rev": "0b1398de6b5e245a7048d9e4c2efdf563fa14d61",
-    "narHash": "sha256-7NQU+Peux6ZUszNGvBEtgRhzGCxJ/RQaYP0G7cVPt2c=",
-    "lastModified": 1786471551
+    "rev": "451c391cb0cdf3303f4f74473c4129c22dcd0e46",
+    "narHash": "sha256-OUYo5wttl2nyHeZ2U7VG+aCSFwvpej6ADn2d0YfylRA=",
+    "lastModified": 1786499996
   },
   "oniri": {
     "type": "github",
@@ -171,8 +179,8 @@
     "type": "git",
     "url": "file:///home/grey/Projects/vellum",
     "ref": "HEAD",
-    "rev": "0fa3b75eb5b677b4e65604121f5af5ee24c916ec",
-    "narHash": "sha256-iOKyINGNBW+zdSzt7J3/N+h1P36CnvkJ2pGBHG3DMyo=",
-    "lastModified": 1786476633
+    "rev": "41a86f1e4599d2c7e9a2e1859331a6efbd21ad5d",
+    "narHash": "sha256-4UjBFXBZwVUclIOT38RAIHakBEA2YNCCj5Tz4rhb+WM=",
+    "lastModified": 1786515102
   }
 }

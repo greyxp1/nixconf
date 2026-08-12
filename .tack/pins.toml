@@ -51,6 +51,8 @@ url = "gh:greyxp1/mpv-smartcut"
 url = "gh:greyxp1/ncr"
 [inputs.niri]
 url = "gh:greyxp1/niri"
+[inputs.niri-screenshare]
+url = "gh:pantarune/niri-screenshare"
 [inputs.perch]
 url = "gh:greyxp1/perch"
 

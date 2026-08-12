@@ -1,13 +1,7 @@
 {inputs, ...}: {
-  flake.nixosModules.niri = {
-    lib,
-    username,
-    ...
-  }: {
+  flake.nixosModules.niri = {username, ...}: {
     nixpkgs.overlays = [inputs.niri.overlays.default];
-    services.gnome.gnome-keyring.enable = lib.mkForce false;
-    xdg.portal.config.niri."org.freedesktop.impl.portal.Secret" = lib.mkForce "none";
-    environment.pathsToLink = ["/share/applications" "/share/xdg-desktop-portal"];
+    environment.pathsToLink = ["/share/applications"];
     services.greetd = {
       enable = true;
       settings.default_session = {
