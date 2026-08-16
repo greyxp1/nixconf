@@ -4,6 +4,7 @@
   services.flatpak = {
     enable = true;
     packages = ["org.vinegarhq.Sober"];
+    update.onActivation = true;
   };
 
   home-manager.sharedModules = [
