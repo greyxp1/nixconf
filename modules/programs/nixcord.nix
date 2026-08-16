@@ -17,6 +17,7 @@ in {
           openasar = {
             setup = true;
             quickstart = true;
+            noTyping = true;
           };
         };
 
