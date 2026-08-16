@@ -19,6 +19,7 @@
           show_reload_button = false;
           zen_mode = true;
           zen_mode_sidebar_pinned = true;
+          centered_location_bar = true;
         };
 
         browser = {
