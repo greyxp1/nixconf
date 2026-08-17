@@ -1,7 +1,6 @@
 {inputs, ...}: {
   flake.nixosModules.cli = {config, ...}: {
     imports = [inputs.ncr.nixosModules.default];
-    networking.firewall.allowedTCPPorts = [3773];
     programs = {
       tack.enable = true;
       nh = {
@@ -26,7 +25,6 @@
     programs = {
       nix-index.enable = true;
       nix-index-database.comma.enable = true;
-      t3code.enable = true;
 
       bat = {
         enable = true;
@@ -64,6 +62,7 @@
       ripgrep
       microfetch
       pandora-launcher
+      heroic
     ];
   };
 }
