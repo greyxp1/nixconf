@@ -155,9 +155,9 @@
     "type": "github",
     "owner": "greyxp1",
     "repo": "perch",
-    "rev": "1c28c75c1f69adf711447822c8ae613581d2d593",
-    "narHash": "sha256-iGjOGMsaj/GnG4IFc/ciohR+FR8A7VsfK68rqvzxe+g=",
-    "lastModified": 1785840579
+    "rev": "4f23ad40f1c3489bb9383a1f51f9cb3972de4ad4",
+    "narHash": "sha256-sI54cPDGiMysNM5R02ObcKbYUTh3trSsm53MP+HyGe4=",
+    "lastModified": 1786970358
   },
   "preservation": {
     "type": "github",
