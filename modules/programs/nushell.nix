@@ -18,7 +18,6 @@
         update = "do { cd ${config.flake.location}; ^tack update; ^nh os switch }";
         home = "sudo systemctl restart home-manager-${config.home.username}.service";
         clean = "do { ^nh clean all --optimise --keep 1; ^ncr --warm-only }";
-        codex = "do { cd ${config.flake.location}; ^codex resume --all }";
       };
 
       extraConfig = ''
