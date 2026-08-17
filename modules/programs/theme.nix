@@ -15,6 +15,7 @@
       flavor = "mocha";
       accent = "mauve";
       cursors.enable = true;
+      gtk.icon.enable = false;
       sources = lib.mkForce catppuccinPackages;
     };
 
