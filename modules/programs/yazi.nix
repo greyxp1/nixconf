@@ -78,14 +78,13 @@
         opener = {
           play = [
             {
-              run = ''mpv --force-window -- "$@"'';
+              run = "mpv --force-window -- %s";
               orphan = true;
             }
           ];
           open = [
             {
-              mime = "image/*";
-              run = ''perch "$@"'';
+              run = "perch %s";
               orphan = true;
             }
           ];
