@@ -53,8 +53,6 @@
 
     home.packages = with pkgs; [
       curl
-      zip
-      unzip
       wget
       fzf
       fd

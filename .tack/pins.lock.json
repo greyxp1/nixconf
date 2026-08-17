@@ -7,6 +7,14 @@
     "narHash": "sha256-wjdfX+jCJCJsteGD75xEfsDR3yATFFEx4mwelhlDXdU=",
     "lastModified": 1786696832
   },
+  "compress-yazi": {
+    "type": "github",
+    "owner": "KKV9",
+    "repo": "compress.yazi",
+    "rev": "518621c6a7579025c3418761c5a0e2820d1cf9ef",
+    "narHash": "sha256-3paT6vcGbQ6jvvXT/sFuWvIxrVYRRsDtbsFQcdnxyW0=",
+    "lastModified": 1787014773
+  },
   "cord-stash": {
     "type": "github",
     "owner": "greyxp1",

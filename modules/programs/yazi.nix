@@ -1,4 +1,4 @@
-{
+{inputs, ...}: {
   flake.nixosModules.yazi = {
     pkgs,
     lib,
@@ -30,6 +30,7 @@
       inherit on desc;
       run = "plugin ${run}";
     };
+    compress = inputs.compress-yazi;
   in {
     xdg.configFile."xdg-desktop-portal-termfilechooser/config".text = ''
       [filechooser]
