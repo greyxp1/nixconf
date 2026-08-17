@@ -26,8 +26,6 @@ url = "gh:nixos/nixpkgs/nixos-unstable"
 url = "gh:nix-community/preservation"
 [inputs.import-tree]
 url = "gh:vic/import-tree"
-[inputs.nix-yazi-plugins]
-url = "gh:greyxp1/nix-yazi-plugins"
 [inputs.disko]
 url = "gh:nix-community/disko"
 [inputs.home-manager]
