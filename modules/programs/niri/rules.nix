@@ -10,7 +10,7 @@
       }
       {
         window-rule = {
-          match._props."app-id" = "^com\\.mitchellh\\.ghostty$";
+          match._props."app-id" = "^kitty$";
           background-effect = {
             blur = true;
             xray = false;

@@ -3,8 +3,8 @@ let
 in {
   flake.homeModules.niri-binds = {
     wayland.windowManager.niri.settings.binds = {
-      "Mod+Return" = bind {spawn._args = ["ghostty" "+new-window"];};
-      "Mod+E" = bind {spawn._args = ["ghostty" "+new-window" "-e" "nu" "-e" "y"];};
+      "Mod+Return" = bind {spawn._args = ["kitty"];};
+      "Mod+E" = bind {spawn._args = ["kitty" "nu" "-e" "y"];};
       "Mod+B" = bind {spawn = "helium";};
       "Mod+D" = bind {spawn = "discord";};
 

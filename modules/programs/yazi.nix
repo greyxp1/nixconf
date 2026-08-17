@@ -30,14 +30,13 @@
       inherit on desc;
       run = "plugin ${run}";
     };
-
   in {
     imports = [inputs.nix-yazi-plugins.legacyPackages.x86_64-linux.homeManagerModules.default];
     xdg.configFile."xdg-desktop-portal-termfilechooser/config".text = ''
       [filechooser]
       cmd=${pkgs.xdg-desktop-portal-termfilechooser}/share/xdg-desktop-portal-termfilechooser/yazi-wrapper.sh
       default_dir=$HOME
-      env=TERMCMD=${pkgs.ghostty}/bin/ghostty --background-opacity=0.6 --title=filepicker -e
+      env=TERMCMD=kitty -o background_opacity=0.6 --title=filepicker
     '';
 
     xdg.configFile."yazi/init.lua".text = ''
@@ -68,7 +67,6 @@
       })
     '';
 
-    home.packages = with pkgs; [trash-cli ripdrag];
     programs.yazi = {
       enable = true;
       settings = {
@@ -100,12 +98,6 @@
           starship.enable = true;
           full-border.enable = true;
           jump-to-char.enable = true;
-
-          recycle-bin = {
-            enable = true;
-            keys.open.on = ["R"];
-          };
-
           smart-enter = {
             enable = true;
             open_multi = true;
@@ -113,25 +105,12 @@
         };
       };
 
-      plugins = with pkgs.yaziPlugins; {inherit mount toggle-pane compress drag keep-preferences;};
+      plugins = with pkgs.yaziPlugins; {inherit mount toggle-pane compress keep-preferences;};
       keymap.mgr.prepend_keymap = [
         (plug ["C"] "compress" "Compress selected files")
         (plug ["M"] "mount" "Mount manager")
         (plug ["<A-p>"] "toggle-pane min-preview" "Hide/show preview pane")
         (plug ["<A-m>"] "toggle-pane max-preview" "Maximize/restore preview pane")
-        (plug ["<A-d>"] "drag" "Drag selected files")
-
-        {
-          on = ["s"];
-          run = ''shell 'file=$(fd --type f --follow . ~ | fzf --preview "bat --color=always {}") && [ -n "$file" ] && ya emit reveal "$file"' --block'';
-          desc = "Global file search (Excluding hidden)";
-        }
-
-        {
-          on = ["S"];
-          run = ''shell 'res=$(rg --column --line-number --no-heading --color=always --smart-case "" ~ 2>/dev/null | fzf --ansi --delimiter : --preview "bat --color=always --highlight-line {2} {1}") && [ -n "$res" ] && ya emit reveal "$(echo "$res" | cut -d: -f1)"' --block'';
-          desc = "Global content search (Excluding hidden)";
-        }
       ];
     };
   };
