@@ -10,8 +10,10 @@
           - Prefer the smallest root-cause solution. Follow KISS, YAGNI, and DRY.
           - Do not add tests unless asked. Keep docs concise, natural, and clear.
           - Use the project's Nix environment when available.
+          - Before evaluating a Git-backed flake after creating files, stage only the new
+            in-scope paths; untracked files are excluded. Never stage unrelated work.
           - Commit completed edits automatically but never push. Split independent changes,
-          squash otherwise, and use short lowercase past-tense commit messages.
+            squash otherwise, and use short lowercase past-tense commit messages.
 
           # Projects
           Apply only the matching repository section.
