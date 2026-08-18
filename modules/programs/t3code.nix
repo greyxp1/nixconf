@@ -1,6 +1,20 @@
 {
   flake.nixosModules.t3code.networking.firewall.allowedTCPPorts = [3773];
-  flake.homeModules.t3code = {
+  flake.homeModules.t3code = {config, ...}: {
+    # journalctl --user -u t3code -b | rg -i pairing
+    systemd.user.services.t3code = {
+      Unit.Description = "T3 Code server";
+      Install.WantedBy = ["default.target"];
+      Service = {
+        ExecStart = "t3 serve --host 0.0.0.0 --port 3773";
+        ExecSearchPath = "${config.home.profileDirectory}/bin";
+        Restart = "on-failure";
+        RestartSec = 5;
+        UMask = "0077";
+        WorkingDirectory = "%h";
+      };
+    };
+
     programs = {
       t3code.enable = true;
       codex = {
@@ -19,7 +33,8 @@
           Apply only the matching repository section.
 
           ## nixconf `/home/grey/Projects/nixconf`
-          - Prefer readable command names when packages are guaranteed in `PATH`.
+          - Prefer readable command names when packages are guaranteed in `PATH`; For example,
+            use "ghostty" instead of "''${pkgs.ghostty}/bin/ghostty".
           - Edit `.tack/pins.toml` and use `tack update` for input changes.
         '';
         skills = {
