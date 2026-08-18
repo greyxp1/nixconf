@@ -59,8 +59,6 @@
       tlrc
       ripgrep
       microfetch
-      pandora-launcher
-      heroic
     ];
   };
 }

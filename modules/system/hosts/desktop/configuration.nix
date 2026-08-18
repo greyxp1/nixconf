@@ -33,6 +33,14 @@ in {
       ./_modules/virt.nix
     ];
 
-    home-manager.sharedModules = [./_modules/noctalia.nix];
+    home-manager.sharedModules = [
+      ./_modules/noctalia.nix
+      ({pkgs, ...}: {
+        home.packages = with pkgs; [
+          pandora-launcher
+          heroic
+        ];
+      })
+    ];
   };
 }
