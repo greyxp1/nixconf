@@ -54,7 +54,7 @@
           optimize = ''
             ---
             name: optimize
-            description: Use when invoked with "optimize".
+            description: Use when invoked with "optimize" or other variants like "optimization".
             ---
             Review the complete task diff and relevant commits with fresh eyes. Check
             correctness, UX, reliability, readability, performance, maintainability, and
