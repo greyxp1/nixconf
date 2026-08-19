@@ -25,13 +25,6 @@
       }
       {
         window-rule = {
-          match._props."app-id" = "^Minecraft";
-          open-fullscreen = true;
-          open-on-workspace = "default";
-        };
-      }
-      {
-        window-rule = {
           match._props."app-id" = "^discord$";
           open-on-workspace = "chat";
           open-maximized-to-edges = true;

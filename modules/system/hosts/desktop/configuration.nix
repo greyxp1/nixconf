@@ -24,23 +24,14 @@ in {
       };
     };
 
+    home-manager.sharedModules = [./_modules/noctalia.nix];
     imports = [
       ./_modules/at2005usb.nix
-      ./_modules/steam.nix
+      ./_modules/gaming.nix
       ./_modules/kovaaks.nix
       ./_modules/sober.nix
       ./_modules/nvidia.nix
       ./_modules/virt.nix
-    ];
-
-    home-manager.sharedModules = [
-      ./_modules/noctalia.nix
-      ({pkgs, ...}: {
-        home.packages = with pkgs; [
-          pandora-launcher
-          heroic
-        ];
-      })
     ];
   };
 }

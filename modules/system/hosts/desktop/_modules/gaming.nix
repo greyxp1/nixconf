@@ -14,7 +14,8 @@
   };
 
   home-manager.sharedModules = [
-    {
+    ({pkgs, ...}: {
+      home.packages = with pkgs; [pandora-launcher heroic];
       wayland.windowManager.niri.settings._children = [
         {
           output = {
@@ -25,7 +26,7 @@
         }
         {
           window-rule = {
-            match._props."app-id" = "^steam_app_";
+            match._props."app-id" = "^steam_app_|^Terraria.bin.x86_64$|^Minecraft";
             open-fullscreen = true;
             variable-refresh-rate = true;
           };
@@ -55,6 +56,6 @@
           };
         }
       ];
-    }
+    })
   ];
 }
