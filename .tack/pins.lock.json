@@ -63,6 +63,14 @@
     "narHash": "sha256-iI88R3wHz8wTKQb5orvpc51L/Xr64AJyxid/0MKa/b8=",
     "lastModified": 1784254960
   },
+  "inshellah": {
+    "type": "github",
+    "owner": "manic-systems",
+    "repo": "inshellah",
+    "rev": "4e0da58e610f4cc3d1d3ab11b27f61afa8be99c1",
+    "narHash": "sha256-Hl0PLWo6xyhSJaQtOkrNGQFxqBx5AdP1R1veMD22cMc=",
+    "lastModified": 1782548861
+  },
   "kovaaks-config": {
     "type": "github",
     "owner": "greyxp1",

@@ -1,9 +1,12 @@
 {
   flake.nixosModules.nushell = {
+    inputs,
     pkgs,
     username,
     ...
   }: {
+    imports = [inputs.inshellah.nixosModules.default];
+    programs.inshellah.enable = true;
     environment.shells = [pkgs.nushell];
     users.users.${username}.shell = pkgs.nushell;
   };

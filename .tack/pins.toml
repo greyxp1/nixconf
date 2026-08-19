@@ -72,6 +72,9 @@ url = "git+file:///home/grey/Projects/vellum"
 [inputs.nix-flatpak]
 url = "gh:gmodena/nix-flatpak"
 
+[inputs.inshellah]
+url = "gh:manic-systems/inshellah"
+
 [inputs.compress-yazi]
 url = "gh:KKV9/compress.yazi/pull/32/head"
 type = "fetch"
