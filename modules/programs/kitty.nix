@@ -12,6 +12,7 @@
 
       settings = {
         cursor_blink_interval = 0;
+        cursor_shape = "beam";
         cursor_shape_unfocused = "unchanged";
         cursor_trail = 3;
         cursor_trail_decay = "0.05 0.15";
