@@ -51,9 +51,9 @@
     "type": "github",
     "owner": "nix-community",
     "repo": "home-manager",
-    "rev": "152b9dcad099ed3d85d4f90152a110dd8b84c73f",
-    "narHash": "sha256-fgi9dJtceRgxoUm64wAA3Ua+NncQ4cZRGBbNqdg3g9Q=",
-    "lastModified": 1787164822
+    "rev": "c53d643b3737e2fcd04e6cb3b3580ef50b2087a0",
+    "narHash": "sha256-djoRr6jBpe35q/0JwAvXpFXg1Ktf+X54NU2RLR7wnHw=",
+    "lastModified": 1787176219
   },
   "import-tree": {
     "type": "github",
@@ -147,9 +147,9 @@
     "type": "github",
     "owner": "noctalia-dev",
     "repo": "noctalia",
-    "rev": "a4575781d7e9c432a58832b04e0cda310bd22b71",
-    "narHash": "sha256-uqDHCNgaB0l0UYN5rXksMwkaFOYgkZv2nZ1imPtlK5I=",
-    "lastModified": 1787160176
+    "rev": "02286bbdcfa81dc3675c9de1d7203a466fcaf0eb",
+    "narHash": "sha256-vlpv5X3qOzoTGtJxejXkIdivgnJ3jI+3Gn1neD6y/mI=",
+    "lastModified": 1787196493
   },
   "oniri": {
     "type": "github",
