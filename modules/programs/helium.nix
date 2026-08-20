@@ -31,7 +31,7 @@
         sponsorBlock.id = "mnjggcdmjocbbbhaepdhchncahnbgone";
         deArrow.id = "enamippconapkdmgfgjchkhakpfinmaj";
         controlPanel.id = "lodcanccmfbpjjpnngindkkmiehimile";
-        re-start.id = "fdodcmjeojbmcgmhcgcelffcekhicnop";
+        ttv.id = "bhplkbgoehhhddaoolmakpocnenplmhf";
 
         ublock = {
           id = "blockjmkbacgjkknlgpkjjiijinjdanf";
