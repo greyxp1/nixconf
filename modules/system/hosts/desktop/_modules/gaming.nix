@@ -28,6 +28,7 @@
           window-rule = {
             match._props."app-id" = "^steam_app_|^Terraria.bin.x86_64$|^Minecraft";
             open-fullscreen = true;
+            open-on-workspace = "default";
             variable-refresh-rate = true;
           };
         }
