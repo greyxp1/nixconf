@@ -39,14 +39,12 @@
 
     xdg.configFile = {
       "mpv/script-opts/modernz.conf".text = ''
-        layout=seekbar
         window_controls=no
         vidscale=no
         sub_margins=no
       '';
 
-      "mpv/scripts/mpv-smartcut.lua".source =
-        "${mpv-smartcut}/share/mpv/scripts/mpv-smartcut.lua";
+      "mpv/scripts/mpv-smartcut.lua".source = "${mpv-smartcut}/share/mpv/scripts/mpv-smartcut.lua";
 
       "mpv/scripts/short-loop.lua".text = ''
         local function has_real_video()
