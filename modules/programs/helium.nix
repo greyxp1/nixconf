@@ -31,7 +31,7 @@
         sponsorBlock.id = "mnjggcdmjocbbbhaepdhchncahnbgone";
         deArrow.id = "enamippconapkdmgfgjchkhakpfinmaj";
         controlPanel.id = "lodcanccmfbpjjpnngindkkmiehimile";
-        ttv.id = "bhplkbgoehhhddaoolmakpocnenplmhf";
+        "7tv".id = "bhplkbgoehhhddaoolmakpocnenplmhf";
 
         ublock = {
           id = "blockjmkbacgjkknlgpkjjiijinjdanf";
@@ -45,11 +45,6 @@
 
         raindrop = {
           id = "ldgfbffkinooeloadekpmfoklnobpien";
-          pin = true;
-        };
-
-        pipView = {
-          id = "eaeedemddlledlghhjebjgdmhjekgegd";
           pin = true;
         };
       };
