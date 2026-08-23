@@ -40,10 +40,10 @@ in {
       "Mod+Shift+ctrl+J" = bind {move-column-to-workspace-down = {};};
       "Mod+Shift+ctrl+K" = bind {move-column-to-workspace-up = {};};
 
-      "Mod+WheelScrollUp" = bind {focus-workspace-up = {};};
-      "Mod+WheelScrollDown" = bind {focus-workspace-down = {};};
       "Mod+Shift+WheelScrollUp" = bind {focus-column-left = {};};
       "Mod+Shift+WheelScrollDown" = bind {focus-column-right = {};};
+      "Mod+WheelScrollDown" = bind {focus-window-or-workspace-down = {};};
+      "Mod+WheelScrollUp" = bind {focus-window-or-workspace-up = {};};
     };
   };
 }
