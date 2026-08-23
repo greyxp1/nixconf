@@ -75,11 +75,13 @@
 
         shell = {
           avatar_path = ./assets/user.jpg;
+          date_format = "%A, %-d/%-m/%y";
           launch_apps_as_systemd_services = true;
           password_style = "random";
           polkit_agent = true;
           setup_wizard_enabled = false;
           show_location = false;
+          time_format = "{:%I:%M %p}";
           screen_corners.enabled = true;
           session.actions = [
             {action = "reboot";}
