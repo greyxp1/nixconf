@@ -36,9 +36,11 @@
         def restore-ssh-key [] {
           mkdir ~/.ssh
           chmod 700 ~/.ssh
-          $in | save --force ~/.ssh/id_ed25519
+          print "Paste your SSH private key, then press Ctrl+D:"
+          ^cat o> ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           do { ^ssh-add ~/.ssh/id_ed25519 e> /dev/null } | complete | ignore
+          print "SSH private key restored"
         }
 
         def sync-windows-esp [] {
