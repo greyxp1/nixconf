@@ -35,7 +35,6 @@
         };
 
         _children = [
-          {spawn-at-startup._args = ["discord"];}
           {workspace._args = ["browser"];}
           {workspace._args = ["default"];}
           {workspace._args = ["chat"];}
