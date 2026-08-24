@@ -1,7 +1,6 @@
-{inputs, ...}: {
+{
   flake.homeModules.noctalia = {pkgs, ...}: {
     home.packages = with pkgs; [gpu-screen-recorder];
-    imports = [inputs.noctalia.homeModules.default];
     programs.noctalia = {
       enable = true;
       systemd.enable = true;

@@ -37,9 +37,6 @@ url = "gh:4evy/nixcord"
 [inputs.nix-index-database]
 url = "gh:nix-community/nix-index-database"
 exclude_follow = ["nixpkgs"]
-[inputs.noctalia]
-url = "gh:noctalia-dev/noctalia/cachix"
-exclude_follow = ["nixpkgs"]
 [inputs.catppuccin]
 url = "gh:catppuccin/nix"
 exclude_follow = ["nixpkgs"]
