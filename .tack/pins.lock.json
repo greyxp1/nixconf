@@ -35,25 +35,25 @@
     "type": "github",
     "owner": "hercules-ci",
     "repo": "flake-parts",
-    "rev": "427bf4bd9435fdf21321c8cc628c24efc14c0f7a",
-    "narHash": "sha256-4dtXQk/NMePegK/nWp5NSeuZKLATItOq61lpEvmXqGw=",
-    "lastModified": 1785627969
+    "rev": "9d0d87172c374f89da73c1cfe6d81ae62feac1f1",
+    "narHash": "sha256-onL0VLf9vPllmT0H/OlURIU5r5t5WIEl7t4tVNKT0Nw=",
+    "lastModified": 1787559586
   },
   "helium": {
     "type": "github",
     "owner": "greyxp1",
     "repo": "helium-flake",
-    "rev": "8930726a15214e9874b8a4c64f87550e3b00f444",
-    "narHash": "sha256-khaYt04l8IW6QyM9+2fGoOfLKOkaGyLOEybyVrvwB3M=",
-    "lastModified": 1787231445
+    "rev": "60a5cf7eb47a0f37dcf77642e49e9cef9e338bad",
+    "narHash": "sha256-Cw8VjxDn6axyEnEDbBZ9giPkFiWEPyDKymFEu5tOpnA=",
+    "lastModified": 1787590505
   },
   "home-manager": {
     "type": "github",
     "owner": "nix-community",
     "repo": "home-manager",
-    "rev": "ec1a8fdf74ed3f276148ee106299a2ba0e65d51f",
-    "narHash": "sha256-XL2qfqmocfsvuEGyomZg4nOZfkuSe8vZtrOX99I+b6I=",
-    "lastModified": 1787379775
+    "rev": "03f4cd46bc1dd4f3a96da778d2ce9f7ce39dd450",
+    "narHash": "sha256-MHwk52ty3NsLhq9a1IbIfBJZlCUJIdiUYFo52JLK9hY=",
+    "lastModified": 1787540599
   },
   "import-tree": {
     "type": "github",
@@ -123,33 +123,33 @@
     "type": "github",
     "owner": "nix-community",
     "repo": "nix-index-database",
-    "rev": "c7962dc97b45129df8d751bedaf37beb5a17706e",
-    "narHash": "sha256-IM5CYtf86W4w8eUPpKcY/LpdHElmVBtJhaKnoTKxZEA=",
-    "lastModified": 1786852476
+    "rev": "c51d5c2ba69c907a34e90c9b6b80cd2b93811745",
+    "narHash": "sha256-FJh4esFS3zqNNuKwvN3t6wrJGewqp1AUF9DAEvoKPD8=",
+    "lastModified": 1787457452
   },
   "nixcord": {
     "type": "github",
     "owner": "4evy",
     "repo": "nixcord",
-    "rev": "064908c1d591cf3cd3b9a5517220cd1de2abc196",
-    "narHash": "sha256-2+15Ox9SbqgOTuBYYmzLQb2HRMrxDyzualvwf85w18E=",
-    "lastModified": 1787372784
+    "rev": "de7375a7ebf5d43f70e084d1bc6d48821142d3c1",
+    "narHash": "sha256-QzOt9oPoIvOBdV6Gj58VsTNhKaMvvNNf7V02mVAJNeU=",
+    "lastModified": 1787546313
   },
   "nixpkgs": {
     "type": "github",
     "owner": "nixos",
     "repo": "nixpkgs",
-    "rev": "2c423e03bbafcff28bfadc6781a4a8257f205cb5",
-    "narHash": "sha256-dt4WdcvsA8/RCe+VZZwqU0X+XMM3wBbGCWA0/sFWzGo=",
-    "lastModified": 1787360063
+    "rev": "56c02bc00adcf003215cc4bd996d6efaf4cff188",
+    "narHash": "sha256-9i/VTdusq/+NM/tz+J1Re+ojkMB8MBf0QshnYfzHz30=",
+    "lastModified": 1787498568
   },
   "noctalia": {
     "type": "github",
     "owner": "noctalia-dev",
     "repo": "noctalia",
-    "rev": "7fd9f7bfa9604022b9de311b30a3da0c2c4415de",
-    "narHash": "sha256-1WUdzP3Y9l95gRhn8muREP0UJu8PmvzEHmdIyfaYRac=",
-    "lastModified": 1787369379
+    "rev": "6adc158d79ec91b5b78ae9b888f4ebf72c3b2c9a",
+    "narHash": "sha256-6bjkHVhPF6LrqThjpmf0pdkrVznCAxsX45RZloavoQk=",
+    "lastModified": 1787602867
   },
   "oniri": {
     "type": "github",
@@ -179,8 +179,8 @@
     "type": "github",
     "owner": "greyxp1",
     "repo": "vellum",
-    "rev": "00485a39307438d4b65de3e64b4b057ac29f55bd",
-    "narHash": "sha256-GaHUlMdMycMlbX7aJ9h0FLckszPyoLYOMd7mv0QvAWQ=",
-    "lastModified": 1787423255
+    "rev": "9db542214d1138075041a664548fe123babc4d0e",
+    "narHash": "sha256-51RowSiuVCNMRT/8ZNWC08wFpQ6EDHsgOu8bcVV2ntk=",
+    "lastModified": 1787607158
   }
 }
