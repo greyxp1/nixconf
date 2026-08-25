@@ -31,11 +31,8 @@ color_white = "#f2f2f2"
 
 [os]
 style = "bg:color_bg1 fg:color_white"
-format = "[$symbol]($style)"
+format = "[ ]($style)"
 disabled = false
-
-[os.symbols]
-NixOS = " "
 
 [username]
 style_user = "bg:color_bg1 fg:color_white"

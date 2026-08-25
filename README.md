@@ -1,5 +1,5 @@
-### Installation
+# Installation
 
 ```bash
-curl -fsSL greyxp1.github.io/nixconf/i | bash
+curl -fsSL https://greyxp1.github.io/nixconf/i | bash
 ```

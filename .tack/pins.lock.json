@@ -175,6 +175,14 @@
     "narHash": "sha256-mMI9IanU+Xw+pVogD2oT0I2kTmvz2Un/Apc5+CwUpEY=",
     "lastModified": 1757436102
   },
+  "system-manager": {
+    "type": "github",
+    "owner": "numtide",
+    "repo": "system-manager",
+    "rev": "64748b62d6ae74c069234103ce368626bcad8c70",
+    "narHash": "sha256-L8GneKBeYOStPrLUAypI8bDGNjntcH2AngxSig/ul8c=",
+    "lastModified": 1786747314
+  },
   "vellum": {
     "type": "github",
     "owner": "greyxp1",

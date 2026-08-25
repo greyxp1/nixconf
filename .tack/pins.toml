@@ -30,6 +30,8 @@ url = "gh:vic/import-tree"
 url = "gh:nix-community/disko"
 [inputs.home-manager]
 url = "gh:nix-community/home-manager"
+[inputs.system-manager]
+url = "gh:numtide/system-manager"
 [inputs.helium]
 url = "gh:greyxp1/helium-flake"
 [inputs.nixcord]
@@ -64,7 +66,7 @@ url = "gh:greyxp1/kovaaks-config"
 type = "fetch"
 
 [inputs.vellum]
-url = "git+file:///home/grey/Projects/vellum"
+url = "gh:greyxp1/vellum"
 
 [inputs.nix-flatpak]
 url = "gh:gmodena/nix-flatpak"

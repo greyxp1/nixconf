@@ -2,19 +2,57 @@
 set -euo pipefail
 
 REPO="https://github.com/greyxp1/nixconf.git"
-HOST="${1:-}"
-WORK_DIR=$(mktemp -d -t nixconf.XXXXXX)
-INSTALL_MANAGES_MNT=false
 
-cleanup() {
-  if [[ "$INSTALL_MANAGES_MNT" == true ]]; then
-    sudo umount -R /mnt 2>/dev/null || true
-  fi
-  rm -rf -- "$WORK_DIR"
+use_alma_https_repositories() {
+  local repo_file
+
+  for repo_file in /etc/yum.repos.d/almalinux-*.repo; do
+    [[ -f $repo_file ]] || continue
+    sudo /usr/bin/sed -i \
+      -e 's|^mirrorlist=|# mirrorlist=|' \
+      -e 's|^# *baseurl=https://repo.almalinux.org/almalinux/|baseurl=https://repo.almalinux.org/almalinux/|' \
+      "$repo_file"
+  done
 }
-trap cleanup EXIT
 
-PASSWORD_HASH=$(mkpasswd --method=yescrypt)
+install_alma() {
+  local repo_dir="$HOME/Projects/nixconf"
+  local nix_profile="/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"
+  local system_manager
+
+  [[ $EUID -ne 0 && $(id -un) == grey ]] || {
+    echo "Run the Alma installer as the grey user, not root." >&2
+    exit 1
+  }
+  use_alma_https_repositories
+  sudo dnf install -y git
+
+  if [[ ! -e "$nix_profile" ]]; then
+    curl -fsSL https://artifacts.nixos.org/nix-installer \
+      | sh -s -- install --enable-flakes --no-confirm
+  fi
+  # shellcheck disable=SC1090
+  source "$nix_profile"
+
+  mkdir -p "$(dirname "$repo_dir")"
+  if [[ -d "$repo_dir/.git" ]]; then
+    echo "==> Using existing checkout: $repo_dir"
+  elif [[ -e "$repo_dir" ]]; then
+    echo "Refusing to replace existing path: $repo_dir" >&2
+    exit 1
+  else
+    git clone "$REPO" "$repo_dir"
+  fi
+
+  cd "$repo_dir"
+  system_manager=$(nix build --no-link --print-out-paths .#system-manager)
+  "$system_manager/bin/system-manager" switch --flake "$repo_dir#alma" --sudo
+  [[ ! -L result ]] || /usr/bin/rm -f result
+  sudo systemctl restart alma-host.service
+  sudo systemctl restart home-manager-grey.service
+
+  echo 'Alma setup complete. Verify Niri on tty1 before rebooting; tty2 remains the recovery console.'
+}
 
 # Returns the most stable device path for a given block device:
 # prefers /dev/disk/by-id/<name> (excluding partition entries),
@@ -28,18 +66,34 @@ by_id() {
 }
 
 # Host selection
-if [[ -z "$HOST" ]]; then
-  echo "Select a host:"
-  echo "  [0] desktop  — Nvidia, gaming, virtualization"
-  echo "  [1] vm       — QEMU/SPICE, standard kernel"
-  echo "  [2] generic  — portable hardware, standard kernel"
-  read -rp "Choice: " n < /dev/tty
-  case "$n" in
-    0) HOST=desktop ;; 1) HOST=vm ;; 2) HOST=generic ;;
-    *) echo "Invalid choice"; exit 1 ;;
-  esac
+echo "Select a host:"
+echo "  [0] desktop  — Nvidia, gaming, virtualization"
+echo "  [1] vm       — QEMU/SPICE, standard kernel"
+echo "  [2] generic  — portable hardware, standard kernel"
+echo "  [3] alma     — AlmaLinux with System Manager"
+read -rp "Choice: " n < /dev/tty
+case "$n" in
+  0) HOST=desktop ;; 1) HOST=vm ;; 2) HOST=generic ;; 3) HOST=alma ;;
+  *) echo "Invalid choice"; exit 1 ;;
+esac
+
+if [[ "$HOST" == alma ]]; then
+  install_alma
+  exit
 fi
-[[ "$HOST" =~ ^(desktop|vm|generic)$ ]] || { echo "Unknown host: $HOST"; exit 1; }
+
+WORK_DIR=$(mktemp -d -t nixconf.XXXXXX)
+INSTALL_MANAGES_MNT=false
+
+cleanup() {
+  if [[ "$INSTALL_MANAGES_MNT" == true ]]; then
+    sudo umount -R /mnt 2>/dev/null || true
+  fi
+  rm -rf -- "$WORK_DIR"
+}
+trap cleanup EXIT
+
+PASSWORD_HASH=$(mkpasswd --method=yescrypt)
 
 [[ -d /sys/firmware/efi/efivars ]] || { echo "UEFI required"; exit 1; }
 
@@ -58,7 +112,10 @@ else
       "$(lsblk -dno SIZE,MODEL "/dev/${DISKS[$i]}")"
   done
   read -rp "Choice (WILL BE WIPED): " i < /dev/tty
-  [[ "$i" =~ ^[0-9]+$ ]] && ((i < ${#DISKS[@]})) || { echo "Invalid choice"; exit 1; }
+  if ! [[ "$i" =~ ^[0-9]+$ ]] || ((i >= ${#DISKS[@]})); then
+    echo "Invalid choice"
+    exit 1
+  fi
   DEV="/dev/${DISKS[$i]}"
 fi
 

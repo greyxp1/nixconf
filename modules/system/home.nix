@@ -39,6 +39,7 @@
       useUserPackages = true;
       backupFileExtension = "backup";
       overwriteBackup = true;
+      extraSpecialArgs.nixconfSystem = null;
       sharedModules = [
         {
           imports = builtins.attrValues config.flake.homeModules;

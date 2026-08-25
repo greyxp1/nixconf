@@ -1,13 +1,15 @@
 {
   flake.nixosModules.t3code.networking.firewall.allowedTCPPorts = [3773];
   flake.homeModules.t3code = {config, ...}: {
-    # journalctl --user -u t3code -b | rg -i pairing
+    # journalctl --user-unit=t3code -b -n 50 | rg -i 'token|pairing'
     systemd.user.services.t3code = {
       Unit.Description = "T3 Code server";
       Install.WantedBy = ["default.target"];
       Service = {
         ExecStart = "t3 serve --host 0.0.0.0 --port 3773";
         ExecSearchPath = "${config.home.profileDirectory}/bin:/run/current-system/sw/bin";
+        TasksMax = 512;
+        MemoryMax = "16G";
         Restart = "on-failure";
         RestartSec = 5;
         UMask = "0077";
@@ -45,6 +47,12 @@
           - Prefer readable command names when packages are guaranteed in `PATH`; For example,
             use "ghostty" instead of "''${pkgs.ghostty}/bin/ghostty".
           - Edit `.tack/pins.toml` and use `tack update` for input changes.
+          - `systemConfigs.alma` is a portable school SSD used across different PCs. The school
+            blocks outbound HTTP and ICMP but permits HTTPS: never use ping as a connectivity
+            gate, and configure Alma repositories to use their direct HTTPS base URLs.
+          - Alma boot and login paths must not execute Nix-store files directly because SELinux
+            can deny them. Keep a native TTY2 recovery path, use SELinux-labelled local launchers,
+            and prove the tty1 graphical login path before recommending a reboot.
         '';
         skills = {
           blast-radius = ''
