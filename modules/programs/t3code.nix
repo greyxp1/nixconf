@@ -23,6 +23,9 @@
           # Global
           - Prefer the smallest root-cause solution; follow KISS, YAGNI, and DRY.
           - Do not add tests unless asked. Keep human-facing docs concise and natural.
+          - Before inspecting, building, activating, or changing host configuration, identify the
+            current host and operating system with `hostnamectl` and `/etc/os-release`; select the
+            matching host target and never infer it from the repository or working directory.
           - Enter the project's Nix environment before the first project command when available.
           - Before evaluating a Git-backed flake after creating files, stage only the new
             in-scope paths; untracked files are excluded. Never stage unrelated work.
