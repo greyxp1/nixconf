@@ -26,8 +26,8 @@ in {
       "Mod+Tab" = bind {toggle-overview = {};};
       "Print" = bind {screenshot = {};};
 
-      "Mod+H" = bind {focus-column-left = {};};
-      "Mod+L" = bind {focus-column-right = {};};
+      "Mod+H" = bind {focus-column-or-monitor-left = {};};
+      "Mod+L" = bind {focus-column-or-monitor-right = {};};
       "Mod+J" = bind {focus-window-or-workspace-down = {};};
       "Mod+K" = bind {focus-window-or-workspace-up = {};};
 
@@ -41,8 +41,8 @@ in {
       "Mod+Shift+ctrl+J" = bind {move-column-to-workspace-down = {};};
       "Mod+Shift+ctrl+K" = bind {move-column-to-workspace-up = {};};
 
-      "Mod+Shift+WheelScrollUp" = bind {focus-column-left = {};};
-      "Mod+Shift+WheelScrollDown" = bind {focus-column-right = {};};
+      "Mod+Shift+WheelScrollUp" = bind {focus-column-or-monitor-left = {};};
+      "Mod+Shift+WheelScrollDown" = bind {focus-column-or-monitor-right = {};};
       "Mod+WheelScrollDown" = bind {focus-window-or-workspace-down = {};};
       "Mod+WheelScrollUp" = bind {focus-window-or-workspace-up = {};};
     };
