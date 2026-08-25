@@ -6,7 +6,16 @@
   pkgs,
   ...
 }: let
-  inherit (import ./inventory.nix {inherit username;}) disabledServices;
+  inherit
+    (import ./inventory.nix {inherit username;})
+    disabledServices
+    dnfPackagesByMajor
+    ;
+  almaMajors = lib.sort (a: b: builtins.fromJSON a < builtins.fromJSON b) (
+    builtins.attrNames dnfPackagesByMajor
+  );
+  supportedAlmaMajors = lib.concatStringsSep "|" almaMajors;
+  supportedAlmaMajorsText = lib.concatStringsSep " or " almaMajors;
 in {
   imports = [
     (import ./files.nix {inherit username;})
@@ -28,6 +37,14 @@ in {
           echo "The alma System Manager configuration requires AlmaLinux." >&2
           exit 1
         fi
+        alma_major=''${VERSION_ID%%.*}
+        case "$alma_major" in
+          ${supportedAlmaMajors}) ;;
+          *)
+            echo "Unsupported AlmaLinux major version: ''${VERSION_ID:-unknown}. Expected ${supportedAlmaMajorsText}." >&2
+            exit 1
+            ;;
+        esac
         if [[ ! -x /usr/bin/dnf || ! -x /usr/bin/systemctl ]]; then
           echo "Alma's dnf and systemctl commands are required." >&2
           exit 1

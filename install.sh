@@ -15,17 +15,82 @@ use_alma_https_repositories() {
   done
 }
 
+bootstrap_alma_sudo() {
+  local policy_file
+
+  policy_file=$(/usr/bin/mktemp -t nixconf-sudoers.XXXXXX)
+  /usr/bin/printf '%s\n' '%wheel ALL=(ALL:ALL) NOPASSWD: ALL' >"$policy_file"
+  /usr/sbin/visudo --check --file "$policy_file"
+  sudo /usr/bin/install -o root -g root -m 0440 \
+    "$policy_file" /etc/sudoers.d/nixconf
+  /usr/bin/rm -f "$policy_file"
+
+  # Everything after this point must remain unattended-safe, including the
+  # privileged System Manager activation after a potentially long Nix build.
+  sudo -n /usr/bin/true
+}
+
+update_alma_checkout() {
+  local repo_dir="$1"
+  local backup_branch
+  local branch
+  local previous_head
+  local remote_head
+
+  if [[ -n $(git -C "$repo_dir" status --porcelain --untracked-files=all) ]]; then
+    echo "Refusing to update a checkout with local changes: $repo_dir" >&2
+    echo "Commit or stash those changes, then run the installer again." >&2
+    exit 1
+  fi
+
+  branch=$(git -C "$repo_dir" symbolic-ref --quiet --short HEAD || true)
+  if [[ $branch != main ]]; then
+    echo "Refusing to replace the current Git branch '$branch'; expected 'main'." >&2
+    exit 1
+  fi
+
+  echo "==> Updating existing checkout: $repo_dir"
+  previous_head=$(git -C "$repo_dir" rev-parse HEAD)
+  git -C "$repo_dir" fetch --prune origin main
+  remote_head=$(git -C "$repo_dir" rev-parse FETCH_HEAD)
+
+  if [[ $previous_head == "$remote_head" ]]; then
+    return
+  fi
+  if ! git -C "$repo_dir" merge-base --is-ancestor "$previous_head" "$remote_head"; then
+    backup_branch="alma-installer-backup/${previous_head:0:12}"
+    if ! git -C "$repo_dir" show-ref --verify --quiet "refs/heads/$backup_branch"; then
+      git -C "$repo_dir" branch "$backup_branch" "$previous_head"
+    fi
+    echo "==> Preserved rewritten local history as $backup_branch"
+  fi
+  git -C "$repo_dir" reset --hard "$remote_head"
+}
+
 install_alma() {
   local repo_dir="$HOME/Projects/nixconf"
   local nix_profile="/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"
+  local system_config
   local system_manager
 
   [[ $EUID -ne 0 && $(id -un) == grey ]] || {
     echo "Run the Alma installer as the grey user, not root." >&2
     exit 1
   }
+  # shellcheck disable=SC1091
+  source /etc/os-release
+  if [[ ${ID:-} != almalinux || ! ${VERSION_ID:-} =~ ^(9|10)(\.|$) ]]; then
+    echo "The Alma installer supports only AlmaLinux 9 and 10." >&2
+    exit 1
+  fi
+  if ! id -nG | /usr/bin/tr ' ' '\n' | /usr/bin/grep -Fqx wheel; then
+    echo "The grey user must belong to the wheel group." >&2
+    exit 1
+  fi
+  sudo -v
+  bootstrap_alma_sudo
   use_alma_https_repositories
-  sudo dnf install -y git
+  rpm --quiet -q git || sudo dnf install -y git
 
   if [[ ! -e "$nix_profile" ]]; then
     curl -fsSL https://artifacts.nixos.org/nix-installer \
@@ -36,7 +101,7 @@ install_alma() {
 
   mkdir -p "$(dirname "$repo_dir")"
   if [[ -d "$repo_dir/.git" ]]; then
-    echo "==> Using existing checkout: $repo_dir"
+    update_alma_checkout "$repo_dir"
   elif [[ -e "$repo_dir" ]]; then
     echo "Refusing to replace existing path: $repo_dir" >&2
     exit 1
@@ -45,13 +110,100 @@ install_alma() {
   fi
 
   cd "$repo_dir"
+  configure_alma_nix "$repo_dir"
   system_manager=$(nix build --no-link --print-out-paths .#system-manager)
-  "$system_manager/bin/system-manager" switch --flake "$repo_dir#alma" --sudo
+  system_config=$(nix build --no-link --print-out-paths .#systemConfigs.alma)
+  "$system_manager/bin/system-manager" register --store-path "$system_config" --sudo
+  "$system_manager/bin/system-manager" activate --store-path "$system_config" --sudo
   [[ ! -L result ]] || /usr/bin/rm -f result
-  sudo systemctl restart alma-host.service
-  sudo systemctl restart home-manager-grey.service
+  restart_and_wait_for_unit alma-host.service 900
+  restart_and_wait_for_unit home-manager-grey.service 300
 
   echo 'Alma setup complete. Verify Niri on tty1 before rebooting; tty2 remains the recovery console.'
+}
+
+configure_alma_nix() {
+  local cache_file="$1/modules/system/hosts/alma/_cache.nix"
+  local substituters
+  local trusted_public_keys
+
+  substituters=$(nix eval --raw --impure --expr \
+    "builtins.concatStringsSep \" \" (import $cache_file).substituters")
+  trusted_public_keys=$(nix eval --raw --impure --expr \
+    "builtins.concatStringsSep \" \" (import $cache_file).trusted-public-keys")
+
+  sudo /usr/bin/install -d -m 0755 /etc/nix
+  /usr/bin/printf '%s\n' \
+    'trusted-users = root @wheel' \
+    'max-jobs = 2' \
+    'cores = 6' \
+    'warn-dirty = false' \
+    "extra-substituters = $substituters" \
+    "extra-trusted-public-keys = $trusted_public_keys" \
+    | sudo /usr/bin/tee /etc/nix/nix.custom.conf >/dev/null
+  /usr/bin/grep -Fqx '!include nix.custom.conf' /etc/nix/nix.conf \
+    || /usr/bin/printf '%s\n' '!include nix.custom.conf' \
+      | sudo /usr/bin/tee -a /etc/nix/nix.conf >/dev/null
+  sudo /usr/bin/systemctl restart nix-daemon.service
+}
+
+restart_and_wait_for_unit() {
+  local unit="$1"
+  local timeout="$2"
+  local before_invocation
+  local current_invocation
+  local deadline
+  local queued=false
+  local state
+
+  echo "==> Starting $unit..."
+  before_invocation=$(sudo /usr/bin/systemctl show \
+    --property=InvocationID --value "$unit" 2>/dev/null || true)
+  if sudo /usr/bin/systemctl restart --no-block "$unit"; then
+    queued=true
+  else
+    # The queued job can survive a transient system-bus disconnect. Reconnect
+    # and identify the new invocation before deciding that it failed.
+    deadline=$((SECONDS + 30))
+    while ((SECONDS < deadline)); do
+      current_invocation=$(sudo /usr/bin/systemctl show \
+        --property=InvocationID --value "$unit" 2>/dev/null || true)
+      if [[ -n $current_invocation && $current_invocation != "$before_invocation" ]]; then
+        queued=true
+        break
+      fi
+      /usr/bin/sleep 1
+    done
+    if [[ $queued != true ]]; then
+      sudo /usr/bin/journalctl --boot --unit "$unit" --no-pager --lines 200
+      return 1
+    fi
+  fi
+
+  deadline=$((SECONDS + timeout))
+  while ((SECONDS < deadline)); do
+    current_invocation=$(sudo /usr/bin/systemctl show \
+      --property=InvocationID --value "$unit" 2>/dev/null || true)
+    state=$(sudo /usr/bin/systemctl show \
+      --property=ActiveState --value "$unit" 2>/dev/null || true)
+    if [[ -n $current_invocation && $current_invocation != "$before_invocation" ]]; then
+      case "$state" in
+        active)
+          echo "==> $unit finished successfully."
+          return 0
+          ;;
+        failed)
+          sudo /usr/bin/journalctl --boot --unit "$unit" --no-pager --lines 200
+          return 1
+          ;;
+      esac
+    fi
+    /usr/bin/sleep 1
+  done
+
+  echo "Timed out waiting for $unit." >&2
+  sudo /usr/bin/journalctl --boot --unit "$unit" --no-pager --lines 200
+  return 1
 }
 
 # Returns the most stable device path for a given block device:

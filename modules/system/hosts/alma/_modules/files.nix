@@ -4,7 +4,7 @@
   pkgs,
   ...
 }: let
-  cache = import ../../../_cache.nix;
+  cache = import ../_cache.nix;
   inherit (import ./inventory.nix {inherit username;}) storeScriptUnits;
   heliumPolicy =
     pkgs.writeText "helium-policy.json"

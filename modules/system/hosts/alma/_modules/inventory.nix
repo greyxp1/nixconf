@@ -1,16 +1,12 @@
-{username}: {
-  dnfPackages = [
+{username}: let
+  commonDnfPackages = [
     "NetworkManager"
     "alsa-ucm"
     "alsa-utils"
-    "amd-gpu-firmware"
-    "amd-ucode-firmware"
     "dconf"
     "dracut-config-generic"
     "git"
     "grubby"
-    "intel-audio-firmware"
-    "intel-gpu-firmware"
     "irqbalance"
     "kernel"
     "kernel-modules-extra"
@@ -18,7 +14,6 @@
     "mailcap"
     "mesa-dri-drivers"
     "microcode_ctl"
-    "nvidia-gpu-firmware"
     "openssh-clients"
     "openssh-server"
     "pipewire"
@@ -33,6 +28,21 @@
     "xdg-desktop-portal-gtk"
     "zram-generator"
   ];
+in {
+  dnfPackagesByMajor = {
+    # Alma 9 ships all hardware firmware in linux-firmware. Alma 10 splits
+    # common GPU and CPU firmware into packages that must be requested too.
+    "9" = commonDnfPackages;
+    "10" =
+      commonDnfPackages
+      ++ [
+        "amd-gpu-firmware"
+        "amd-ucode-firmware"
+        "intel-audio-firmware"
+        "intel-gpu-firmware"
+        "nvidia-gpu-firmware"
+      ];
+  };
 
   dnfGroups = [
     "server-product-environment|Server"

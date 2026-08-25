@@ -9,13 +9,19 @@
     (inventory)
     disabledServices
     dnfGroups
-    dnfPackages
+    dnfPackagesByMajor
     kernelArguments
     nativeServices
     ;
 
-  dnfManifest = pkgs.writeText "alma-dnf-packages" (
-    lib.concatStringsSep "\n" dnfPackages + "\n"
+  dnfManifests = lib.mapAttrs (major: packages:
+    pkgs.writeText "alma-${major}-dnf-packages" (
+      lib.concatStringsSep "\n" packages + "\n"
+    ))
+  dnfPackagesByMajor;
+  selectDnfManifest = lib.concatStringsSep "\n  " (
+    lib.mapAttrsToList (major: manifest: "${major}) dnf_manifest=${manifest} ;;")
+    dnfManifests
   );
   dnfGroupManifest = pkgs.writeText "alma-dnf-groups" (
     lib.concatStringsSep "\n" dnfGroups + "\n"
@@ -44,6 +50,16 @@ in {
       set -euo pipefail
       export LC_ALL=C
       export PATH=/run/system-manager/sw/bin:/nix/var/nix/profiles/default/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
+
+      source /etc/os-release
+      alma_major=''${VERSION_ID%%.*}
+      case "$alma_major" in
+        ${selectDnfManifest}
+        *)
+          echo "Unsupported AlmaLinux major version: ''${VERSION_ID:-unknown}" >&2
+          exit 1
+          ;;
+      esac
 
       state_dir=/var/lib/nixconf
       previous_packages="$state_dir/dnf-packages"
@@ -83,7 +99,7 @@ in {
               ;;
           esac
         fi
-      done < ${dnfManifest}
+      done < "$dnf_manifest"
       if (( ''${#missing[@]} )); then
         /usr/bin/dnf install -y "''${missing[@]}"
       fi
@@ -100,11 +116,12 @@ in {
         /usr/bin/dnf mark install "''${unprotected[@]}"
       fi
 
+      installed_groups=$(/usr/bin/dnf -q group list --installed \
+        | /usr/bin/sed -E 's/^[[:space:]]+//')
       missing_groups=()
       while IFS='|' read -r group_id group_name; do
         [[ -z $group_id ]] && continue
-        if [[ ! -f $previous_groups ]] \
-          || ! /usr/bin/grep -Fxq "$group_id|$group_name" "$previous_groups"; then
+        if ! ${pkgs.gnugrep}/bin/grep -Fxq "$group_name" <<< "$installed_groups"; then
           missing_groups+=("$group_id")
         fi
       done < ${dnfGroupManifest}
@@ -132,7 +149,7 @@ in {
       if [[ -f $previous_packages ]]; then
         while IFS= read -r package; do
           [[ -z $package ]] && continue
-          if ! ${pkgs.gnugrep}/bin/grep -Fxq "$package" ${dnfManifest} \
+          if ! ${pkgs.gnugrep}/bin/grep -Fxq "$package" "$dnf_manifest" \
             && /usr/bin/rpm --quiet -q "$package"; then
             removed+=("$package")
           fi
@@ -146,7 +163,7 @@ in {
           /usr/bin/rpm -e "$package"
         done
       fi
-      /usr/bin/install -m 0644 ${dnfManifest} "$previous_packages.new"
+      /usr/bin/install -m 0644 "$dnf_manifest" "$previous_packages.new"
       /usr/bin/mv -f "$previous_packages.new" "$previous_packages"
       if [[ $rebuild_initramfs == true ]]; then
         /usr/bin/dracut -f --regenerate-all
