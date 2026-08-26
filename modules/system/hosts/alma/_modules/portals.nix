@@ -16,6 +16,15 @@
       };
     };
 
+    xdg-desktop-portal-gtk = {
+      Unit.Description = "Portal service (GTK implementation)";
+      Service = {
+        Type = "dbus";
+        BusName = "org.freedesktop.impl.portal.desktop.gtk";
+        ExecStart = "${pkgs.xdg-desktop-portal-gtk}/libexec/xdg-desktop-portal-gtk";
+      };
+    };
+
     xdg-desktop-portal-termfilechooser = {
       Unit = {
         Description = "Terminal file chooser portal";
