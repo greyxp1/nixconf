@@ -47,6 +47,7 @@ create_archive() {
     --selinux \
     --numeric-owner \
     --one-file-system \
+    --exclude="$source_name/.cache" \
     --file="$output" \
     --directory="$source_directory" \
     "$source_name"

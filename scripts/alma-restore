@@ -46,6 +46,7 @@ extract_archive() {
     --numeric-owner \
     --same-owner \
     --overwrite \
+    --exclude="$username/.cache" \
     --file="$archive" \
     --directory="$destination"
 }
