@@ -1,4 +1,29 @@
 {username}: let
+  virtualizationPackages = [
+    "libvirt"
+    "libvirt-client"
+    "qemu-kvm"
+    "virt-install"
+    "virt-manager"
+    "virt-viewer"
+  ];
+  virtualizationSocketDrivers = [
+    "interface"
+    "network"
+    "nodedev"
+    "nwfilter"
+    "qemu"
+    "secret"
+    "storage"
+  ];
+  virtualizationSockets = builtins.concatMap (
+    driver:
+      map (suffix: "virt${driver}d${suffix}.socket") [
+        ""
+        "-ro"
+        "-admin"
+      ]
+  ) virtualizationSocketDrivers;
   commonDnfPackages = [
     "NetworkManager"
     "alsa-ucm"
@@ -27,7 +52,7 @@
     "xdg-desktop-portal"
     "xdg-desktop-portal-gtk"
     "zram-generator"
-  ];
+  ] ++ virtualizationPackages;
 in {
   dnfPackagesByMajor = {
     # Alma 9 ships all hardware firmware in linux-firmware. Alma 10 splits
@@ -61,6 +86,13 @@ in {
     "getty@tty2.service"
     "irqbalance.service"
     "sshd.service"
+  ] ++ virtualizationSockets;
+
+  nativeUserGroups = [
+    "libvirt"
+    "render"
+    "video"
+    "wheel"
   ];
 
   kernelArguments = [
