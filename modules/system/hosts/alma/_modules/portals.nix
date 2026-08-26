@@ -45,6 +45,11 @@
         "dbus-1/services/org.freedesktop.impl.portal.Secret.service" = "org.freedesktop.impl.portal.Secret";
         "dbus-1/services/org.freedesktop.secrets.service" = "org.freedesktop.secrets";
       };
+    mimeApps = {
+      enable = true;
+      associations.removed."inode/directory" = ["kitty-open.desktop"];
+      defaultApplications."inode/directory" = ["yazi.desktop"];
+    };
     portal = {
       enable = true;
       config.niri = {
