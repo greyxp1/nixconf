@@ -67,24 +67,61 @@ update_alma_checkout() {
   git -C "$repo_dir" reset --hard "$remote_head"
 }
 
+build_alma_system_config() {
+  local repo_dir="$1"
+  local username="$2"
+  local uid="$3"
+  local gid="$4"
+  local primary_group="$5"
+  local home_directory="$6"
+
+  NIX_PATH='' \
+  NIXCONF_REPO="$repo_dir" \
+  NIXCONF_USERNAME="$username" \
+  NIXCONF_UID="$uid" \
+  NIXCONF_GID="$gid" \
+  NIXCONF_PRIMARY_GROUP="$primary_group" \
+  NIXCONF_HOME="$home_directory" \
+    nix build --impure --no-link --print-out-paths \
+      --file "$repo_dir/modules/system/hosts/alma/_build.nix"
+}
+
 install_alma() {
-  local repo_dir="$HOME/Projects/nixconf"
+  local gid
+  local home_directory
   local nix_profile="/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"
+  local primary_group
+  local repo_dir
   local system_config
   local system_manager
+  local uid
+  local username
 
-  [[ $EUID -ne 0 && $(id -un) == grey ]] || {
-    echo "Run the Alma installer as the grey user, not root." >&2
+  [[ $EUID -ne 0 ]] || {
+    echo "Run the Alma installer as the account that will use this system, not root." >&2
     exit 1
   }
+  username=$(id -un)
+  uid=$(id -u)
+  gid=$(id -g)
+  primary_group=$(id -gn)
+  home_directory=$(getent passwd "$username" | /usr/bin/cut -d: -f6)
+  if [[ ! $username =~ ^[a-zA-Z_][a-zA-Z0-9_.-]*$ \
+    || ! $primary_group =~ ^[a-zA-Z_][a-zA-Z0-9_.-]*$ \
+    || $home_directory != /* \
+    || ! -d $home_directory ]]; then
+    echo "The current native account has unsupported identity data." >&2
+    exit 1
+  fi
+  repo_dir="$home_directory/Projects/nixconf"
   # shellcheck disable=SC1091
   source /etc/os-release
   if [[ ${ID:-} != almalinux || ! ${VERSION_ID:-} =~ ^(9|10)(\.|$) ]]; then
     echo "The Alma installer supports only AlmaLinux 9 and 10." >&2
     exit 1
   fi
-  if ! id -nG | /usr/bin/tr ' ' '\n' | /usr/bin/grep -Fqx wheel; then
-    echo "The grey user must belong to the wheel group." >&2
+  if ! id -nG "$username" | /usr/bin/tr ' ' '\n' | /usr/bin/grep -Fqx wheel; then
+    echo "$username must belong to the wheel group." >&2
     exit 1
   fi
   sudo -v
@@ -112,14 +149,15 @@ install_alma() {
   cd "$repo_dir"
   configure_alma_nix "$repo_dir"
   system_manager=$(nix build --no-link --print-out-paths .#system-manager)
-  system_config=$(nix build --no-link --print-out-paths .#systemConfigs.alma)
+  system_config=$(build_alma_system_config \
+    "$repo_dir" "$username" "$uid" "$gid" "$primary_group" "$home_directory")
   "$system_manager/bin/system-manager" register --store-path "$system_config" --sudo
   "$system_manager/bin/system-manager" activate --store-path "$system_config" --sudo
   [[ ! -L result ]] || /usr/bin/rm -f result
   restart_and_wait_for_unit alma-host.service 900
-  restart_and_wait_for_unit home-manager-grey.service 300
+  restart_and_wait_for_unit "home-manager-$username.service" 300
 
-  echo 'Alma setup complete. Verify Niri on tty1 before rebooting; tty2 remains the recovery console.'
+  echo "Alma setup for $username is complete. Verify Niri on tty1 before rebooting; tty2 remains the recovery console."
 }
 
 configure_alma_nix() {

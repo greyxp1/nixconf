@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-readonly username="grey"
-readonly home_directory="/home/$username"
-readonly archive_name="alma-grey-home.tar.zst"
+username=$(id -un)
+home_directory=$(getent passwd "$username" | cut -d: -f6)
+home_parent=$(dirname -- "$home_directory")
+home_name=$(basename -- "$home_directory")
+archive_name="alma-$username-home.tar.zst"
+readonly username home_directory home_parent home_name archive_name
 readonly checksum_name="$archive_name.sha256"
 readonly restore_name="alma-restore"
 
@@ -63,8 +66,9 @@ main() {
   local script_directory
   local ventoy_mount
 
-  [[ $EUID -ne 0 && $(id -un) == "$username" ]] \
-    || die "Run this script as $username, not root."
+  [[ $EUID -ne 0 ]] || die "Run this script as the account being backed up, not root."
+  [[ $username =~ ^[a-zA-Z_][a-zA-Z0-9_.-]*$ && $home_directory == /* ]] \
+    || die "The current native account has unsupported identity data."
   [[ -d $home_directory ]] || die "Missing home directory: $home_directory"
   for command in findmnt lsblk sha256sum tar udisksctl zstd; do
     command -v "$command" >/dev/null || die "Required command is missing: $command"
@@ -89,7 +93,7 @@ main() {
 
   echo "Backing up $home_directory to $archive"
   read -rp "Close applications that may still be writing important files, then press Enter. " </dev/tty
-  create_archive "$partial_archive" /home "$username"
+  create_archive "$partial_archive" "$home_parent" "$home_name"
   sudo tar --list --zstd --file="$partial_archive" >/dev/null
   sudo mv -- "$partial_archive" "$archive"
 

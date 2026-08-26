@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-readonly username="grey"
-readonly home_directory="/home/$username"
-readonly archive_name="alma-grey-home.tar.zst"
+username=$(id -un)
+home_directory=$(getent passwd "$username" | cut -d: -f6)
+home_parent=$(dirname -- "$home_directory")
+home_name=$(basename -- "$home_directory")
+archive_name="alma-$username-home.tar.zst"
+readonly username home_directory home_parent home_name archive_name
 readonly checksum_name="$archive_name.sha256"
 readonly rebuild_command="/etc/profiles/per-user/$username/bin/alma-rebuild"
 
@@ -46,21 +49,21 @@ extract_archive() {
     --numeric-owner \
     --same-owner \
     --overwrite \
-    --exclude="$username/.cache" \
+    --exclude="$home_name/.cache" \
     --file="$archive" \
     --directory="$destination"
 }
 
 main() {
   local archive
+  local archive_owner
   local confirmation
   local current_tty
   local ventoy_mount
 
-  [[ $EUID -ne 0 && $(id -un) == "$username" ]] \
-    || die "Run this script as $username, not root."
-  [[ $(id -u "$username") == 1000 ]] \
-    || die "The restored home expects $username to have UID 1000."
+  [[ $EUID -ne 0 ]] || die "Run this script as the account being restored, not root."
+  [[ $username =~ ^[a-zA-Z_][a-zA-Z0-9_.-]*$ && $home_directory == /* ]] \
+    || die "The current native account has unsupported identity data."
   current_tty=$(tty)
   [[ $current_tty == /dev/tty2 ]] \
     || die "Log out of Niri, switch to TTY2 with Ctrl+Alt+F2, and run this script there."
@@ -81,7 +84,10 @@ main() {
     cd "$ventoy_mount"
     sha256sum --check "$checksum_name"
   )
-  tar --list --zstd --file="$archive" >/dev/null
+  archive_owner=$(tar --list --verbose --numeric-owner --zstd --file="$archive" \
+    | awk -v root="$home_name/" '$6 == root && owner == "" {owner = $2} END {print owner}')
+  [[ $archive_owner == "$(id -u)/$(id -g)" ]] \
+    || die "The archive belongs to UID/GID $archive_owner, not $(id -u)/$(id -g)."
 
   read -rp "Type RESTORE to replace files in $home_directory: " confirmation </dev/tty
   [[ $confirmation == RESTORE ]] || die "Restore cancelled."
@@ -89,7 +95,7 @@ main() {
   sudo -v
   sudo systemctl stop getty@tty1.service
   echo "Restoring $archive..."
-  extract_archive "$archive" /home
+  extract_archive "$archive" "$home_parent"
   sudo restorecon -RF "$home_directory"
 
   echo "Reapplying the declarative Alma configuration..."

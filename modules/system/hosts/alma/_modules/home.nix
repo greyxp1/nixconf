@@ -1,10 +1,17 @@
 {
   flakeLocation,
+  gid,
   homeDirectory,
   homeModules,
   inputs,
+  primaryGroup,
+  uid,
   username,
-}: {pkgs, ...}: let
+}: {
+  lib,
+  pkgs,
+  ...
+}: let
   systemManager = inputs.system-manager.packages.${pkgs.stdenv.hostPlatform.system}.default;
   almaDataScripts = pkgs.runCommand "alma-data-scripts" {} ''
     mkdir -p "$out/bin"
@@ -15,8 +22,20 @@
     set -euo pipefail
     export PATH=/run/system-manager/sw/bin:/nix/var/nix/profiles/default/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
 
-    cd ${flakeLocation}
-    ${systemManager}/bin/system-manager switch --flake ${flakeLocation}#alma --sudo
+    cd ${lib.escapeShellArg flakeLocation}
+    unset NIX_PATH
+    system_config=$(
+      NIXCONF_REPO=${lib.escapeShellArg flakeLocation} \
+      NIXCONF_USERNAME=${lib.escapeShellArg username} \
+      NIXCONF_UID=${lib.escapeShellArg (toString uid)} \
+      NIXCONF_GID=${lib.escapeShellArg (toString gid)} \
+      NIXCONF_PRIMARY_GROUP=${lib.escapeShellArg primaryGroup} \
+      NIXCONF_HOME=${lib.escapeShellArg homeDirectory} \
+      nix build --impure --no-link --print-out-paths \
+        --file ${lib.escapeShellArg "${flakeLocation}/modules/system/hosts/alma/_build.nix"}
+    )
+    ${systemManager}/bin/system-manager register --store-path "$system_config" --sudo
+    ${systemManager}/bin/system-manager activate --store-path "$system_config" --sudo
     [[ ! -L result ]] || /usr/bin/rm -f result
     sudo /usr/bin/systemctl restart alma-host.service
     sudo /usr/bin/systemctl restart home-manager-${username}.service
@@ -42,6 +61,7 @@ in {
           imports = homeModules;
 
           fonts.fontconfig.enable = true;
+          flake.location = flakeLocation;
           home = {
             inherit homeDirectory username;
             packages = [

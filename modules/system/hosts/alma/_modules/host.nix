@@ -1,5 +1,8 @@
 {
+  gid,
   homeDirectory,
+  primaryGroup,
+  uid,
   username,
 }: {
   lib,
@@ -49,6 +52,15 @@ in {
           echo "Alma's dnf and systemctl commands are required." >&2
           exit 1
         fi
+        account=${lib.escapeShellArg username}
+        expected_home=${lib.escapeShellArg homeDirectory}
+        if [[ $(/usr/bin/id -u "$account") != ${toString uid} \
+          || $(/usr/bin/id -g "$account") != ${toString gid} \
+          || $(/usr/bin/id -gn "$account") != ${lib.escapeShellArg primaryGroup} \
+          || $(/usr/bin/getent passwd "$account" | /usr/bin/cut -d: -f6) != "$expected_home" ]]; then
+          echo "The native account no longer matches the Alma configuration for $account." >&2
+          exit 1
+        fi
       '';
     };
   };
@@ -58,11 +70,11 @@ in {
   security.enableWrappers = false;
   services.userborn.enable = false;
   users = {
-    groups.${username}.gid = 1000;
+    groups.${primaryGroup}.gid = gid;
     users.${username} = {
       isNormalUser = true;
-      uid = 1000;
-      group = username;
+      inherit uid;
+      group = primaryGroup;
       home = homeDirectory;
       shell = pkgs.nushell;
     };
