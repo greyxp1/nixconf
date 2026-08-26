@@ -1,0 +1,102 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+readonly username="grey"
+readonly home_directory="/home/$username"
+readonly archive_name="alma-grey-home.tar.zst"
+readonly checksum_name="$archive_name.sha256"
+readonly rebuild_command="/etc/profiles/per-user/$username/bin/alma-rebuild"
+
+die() {
+  echo "Error: $*" >&2
+  exit 1
+}
+
+find_ventoy() {
+  local -a devices
+  local -a mounts
+
+  mapfile -t mounts < <(findmnt -rn -S LABEL=Ventoy -o TARGET)
+  if ((${#mounts[@]} == 0)); then
+    mapfile -t devices < <(lsblk -rpn -o PATH,LABEL | awk '$2 == "Ventoy" {print $1}')
+    case ${#devices[@]} in
+      1) udisksctl mount --block-device "${devices[0]}" >/dev/null ;;
+      0) die "Connect the Ventoy USB, then run this script again." ;;
+      *) die "More than one filesystem is labelled Ventoy." ;;
+    esac
+    mapfile -t mounts < <(findmnt -rn -S LABEL=Ventoy -o TARGET)
+  fi
+  case ${#mounts[@]} in
+    1) printf '%s\n' "${mounts[0]}" ;;
+    0) die "The Ventoy data partition could not be mounted." ;;
+    *) die "More than one mounted filesystem is labelled Ventoy." ;;
+  esac
+}
+
+extract_archive() {
+  local archive="$1"
+  local destination="$2"
+
+  sudo tar \
+    --extract \
+    --zstd \
+    --acls \
+    --xattrs \
+    --selinux \
+    --numeric-owner \
+    --same-owner \
+    --overwrite \
+    --file="$archive" \
+    --directory="$destination"
+}
+
+main() {
+  local archive
+  local confirmation
+  local current_tty
+  local ventoy_mount
+
+  [[ $EUID -ne 0 && $(id -un) == "$username" ]] \
+    || die "Run this script as $username, not root."
+  [[ $(id -u "$username") == 1000 ]] \
+    || die "The restored home expects $username to have UID 1000."
+  current_tty=$(tty)
+  [[ $current_tty == /dev/tty2 ]] \
+    || die "Log out of Niri, switch to TTY2 with Ctrl+Alt+F2, and run this script there."
+  [[ -x $rebuild_command ]] \
+    || die "Finish the declarative Alma installation before restoring the backup."
+  for command in findmnt lsblk restorecon sha256sum tar udisksctl zstd; do
+    command -v "$command" >/dev/null || die "Required command is missing: $command"
+  done
+
+  ventoy_mount=$(find_ventoy)
+  archive="$ventoy_mount/$archive_name"
+  [[ -f $archive ]] || die "Backup archive not found: $archive"
+  [[ -f $ventoy_mount/$checksum_name ]] \
+    || die "Backup checksum not found: $ventoy_mount/$checksum_name"
+
+  echo "Verifying the backup before changing $home_directory..."
+  (
+    cd "$ventoy_mount"
+    sha256sum --check "$checksum_name"
+  )
+  tar --list --zstd --file="$archive" >/dev/null
+
+  read -rp "Type RESTORE to replace files in $home_directory: " confirmation </dev/tty
+  [[ $confirmation == RESTORE ]] || die "Restore cancelled."
+
+  sudo -v
+  sudo systemctl stop getty@tty1.service
+  echo "Restoring $archive..."
+  extract_archive "$archive" /home
+  sudo restorecon -RF "$home_directory"
+
+  echo "Reapplying the declarative Alma configuration..."
+  "$rebuild_command"
+  sudo systemctl start getty@tty1.service
+  echo "Restore completed. You can return to Niri with Ctrl+Alt+F1."
+}
+
+if [[ ${BASH_SOURCE[0]} == "$0" ]]; then
+  main "$@"
+fi

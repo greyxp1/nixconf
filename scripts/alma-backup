@@ -1,0 +1,109 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+readonly username="grey"
+readonly home_directory="/home/$username"
+readonly archive_name="alma-grey-home.tar.zst"
+readonly checksum_name="$archive_name.sha256"
+readonly restore_name="alma-restore"
+
+die() {
+  echo "Error: $*" >&2
+  exit 1
+}
+
+find_ventoy() {
+  local -a devices
+  local -a mounts
+
+  mapfile -t mounts < <(findmnt -rn -S LABEL=Ventoy -o TARGET)
+  if ((${#mounts[@]} == 0)); then
+    mapfile -t devices < <(lsblk -rpn -o PATH,LABEL | awk '$2 == "Ventoy" {print $1}')
+    case ${#devices[@]} in
+      1) udisksctl mount --block-device "${devices[0]}" >/dev/null ;;
+      0) die "Connect the Ventoy USB, then run this script again." ;;
+      *) die "More than one filesystem is labelled Ventoy." ;;
+    esac
+    mapfile -t mounts < <(findmnt -rn -S LABEL=Ventoy -o TARGET)
+  fi
+  case ${#mounts[@]} in
+    1) printf '%s\n' "${mounts[0]}" ;;
+    0) die "The Ventoy data partition could not be mounted." ;;
+    *) die "More than one mounted filesystem is labelled Ventoy." ;;
+  esac
+}
+
+create_archive() {
+  local output="$1"
+  local source_directory="$2"
+  local source_name="$3"
+
+  sudo tar \
+    --create \
+    --zstd \
+    --sparse \
+    --acls \
+    --xattrs \
+    --selinux \
+    --numeric-owner \
+    --one-file-system \
+    --file="$output" \
+    --directory="$source_directory" \
+    "$source_name"
+}
+
+main() {
+  local archive
+  local available_bytes
+  local checksum
+  local partial_archive
+  local required_bytes
+  local restore_source
+  local script_directory
+  local ventoy_mount
+
+  [[ $EUID -ne 0 && $(id -un) == "$username" ]] \
+    || die "Run this script as $username, not root."
+  [[ -d $home_directory ]] || die "Missing home directory: $home_directory"
+  for command in findmnt lsblk sha256sum tar udisksctl zstd; do
+    command -v "$command" >/dev/null || die "Required command is missing: $command"
+  done
+
+  ventoy_mount=$(find_ventoy)
+  archive="$ventoy_mount/$archive_name"
+  checksum="$ventoy_mount/$checksum_name"
+  partial_archive="$archive.partial"
+  [[ ! -e $archive && ! -e $checksum ]] \
+    || die "A backup already exists at $archive. Move it elsewhere before creating another."
+
+  script_directory=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+  restore_source="$script_directory/$restore_name"
+  [[ -r $restore_source ]] || die "Missing restore script: $restore_source"
+
+  sudo -v
+  required_bytes=$(sudo du -sx --block-size=1 "$home_directory" | awk '{print $1}')
+  available_bytes=$(df --output=avail --block-size=1 "$ventoy_mount" | tail -n 1 | tr -d ' ')
+  ((required_bytes + 536870912 <= available_bytes)) \
+    || die "Ventoy does not have enough free space for the home directory and a 512 MiB reserve."
+
+  echo "Backing up $home_directory to $archive"
+  read -rp "Close applications that may still be writing important files, then press Enter. " </dev/tty
+  create_archive "$partial_archive" /home "$username"
+  sudo tar --list --zstd --file="$partial_archive" >/dev/null
+  sudo mv -- "$partial_archive" "$archive"
+
+  install -m 0755 "$restore_source" "$ventoy_mount/$restore_name"
+  (
+    cd "$ventoy_mount"
+    sha256sum "$archive_name" >"$checksum_name"
+  )
+  sync
+
+  echo "Backup created and verified."
+  echo "Archive: $archive"
+  echo "Restore script: $ventoy_mount/$restore_name"
+}
+
+if [[ ${BASH_SOURCE[0]} == "$0" ]]; then
+  main "$@"
+fi

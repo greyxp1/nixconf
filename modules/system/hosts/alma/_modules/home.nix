@@ -6,6 +6,11 @@
   username,
 }: {pkgs, ...}: let
   systemManager = inputs.system-manager.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  almaDataScripts = pkgs.runCommand "alma-data-scripts" {} ''
+    mkdir -p "$out/bin"
+    install -m 0755 ${../../../../../scripts/alma-backup} "$out/bin/alma-backup"
+    install -m 0755 ${../../../../../scripts/alma-restore} "$out/bin/alma-restore"
+  '';
   alma-rebuild = pkgs.writeShellScriptBin "alma-rebuild" ''
     set -euo pipefail
     export PATH=/run/system-manager/sw/bin:/nix/var/nix/profiles/default/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
@@ -40,6 +45,7 @@ in {
           home = {
             inherit homeDirectory username;
             packages = [
+              almaDataScripts
               alma-rebuild
               inputs.ncr.packages.${pkgs.stdenv.hostPlatform.system}.default
               pkgs.nh
