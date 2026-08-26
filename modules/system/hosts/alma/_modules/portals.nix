@@ -1,12 +1,22 @@
 {
-  config,
   lib,
   pkgs,
   ...
 }: {
-  systemd.user = {
-    sessionVariables.XDG_DESKTOP_PORTAL_DIR = "${config.home.profileDirectory}/share/xdg-desktop-portal/portals";
-    services.xdg-desktop-portal-termfilechooser = {
+  systemd.user.services = {
+    # Alma 9 ships xdg-desktop-portal 1.12, which predates portals.conf.
+    # Use Home Manager's broker so the per-interface policy below is honored.
+    xdg-desktop-portal = {
+      Unit.Description = "Portal service";
+      Service = {
+        Type = "dbus";
+        BusName = "org.freedesktop.portal.Desktop";
+        ExecStart = "${pkgs.xdg-desktop-portal}/libexec/xdg-desktop-portal";
+        Slice = "session.slice";
+      };
+    };
+
+    xdg-desktop-portal-termfilechooser = {
       Unit = {
         Description = "Terminal file chooser portal";
         After = ["graphical-session.target"];
@@ -61,15 +71,6 @@
       extraPortals = [
         pkgs.xdg-desktop-portal-gtk
         pkgs.xdg-desktop-portal-termfilechooser
-        # Alma's native broker uses XDG_DESKTOP_PORTAL_DIR for both
-        # backend descriptors and policy lookup.
-        (pkgs.writeTextDir "share/xdg-desktop-portal/portals/niri-portals.conf" ''
-          [preferred]
-          default=gtk
-          org.freedesktop.impl.portal.FileChooser=termfilechooser
-          org.freedesktop.impl.portal.ScreenCast=niri
-          org.freedesktop.impl.portal.Secret=none
-        '')
         (lib.lowPrio ((pkgs.niri-screenshare.override {withPicker = false;}).overrideAttrs {
           cargoBuildNoDefaultFeatures = true;
           cargoCheckNoDefaultFeatures = true;
