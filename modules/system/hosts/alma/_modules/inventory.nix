@@ -90,6 +90,7 @@ in {
   ] ++ virtualizationSockets;
 
   nativeUserGroups = [
+    "docker"
     "libvirt"
     "render"
     "video"
