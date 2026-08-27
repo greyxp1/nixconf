@@ -128,6 +128,8 @@
         bindkey '^L' _nixconf_clear_scrollback
         bindkey '^J' menu-complete
         bindkey '^K' reverse-menu-complete
+        bindkey '^[[1;5D' backward-word
+        bindkey '^[[1;5C' forward-word
         bindkey -M menuselect '^J' down-line-or-history
         bindkey -M menuselect '^K' up-line-or-history
       '';
