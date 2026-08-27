@@ -76,14 +76,15 @@ in {
       inherit uid;
       group = primaryGroup;
       home = homeDirectory;
-      shell = pkgs.nushell;
     };
   };
 
   environment.pathsToLink = [
     "/share/applications"
+    "/share/zsh"
     "/share/xdg-desktop-portal"
   ];
+  environment.systemPackages = [pkgs.zsh];
 
   # Only the immutable system profile belongs in the boot path. Package
   # and Home Manager reconciliation run explicitly after a switch.

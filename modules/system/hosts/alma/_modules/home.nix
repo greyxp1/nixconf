@@ -22,6 +22,12 @@
     set -euo pipefail
     export PATH=/run/system-manager/sw/bin:/nix/var/nix/profiles/default/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
 
+    if [[ ! -e /var/lib/nixconf/helium-policy-reconciled ]] \
+      && /usr/bin/pgrep -x helium >/dev/null; then
+      echo "Close Helium before this one-time policy migration, then run alma-rebuild again." >&2
+      exit 1
+    fi
+
     cd ${lib.escapeShellArg flakeLocation}
     unset NIX_PATH
     system_config=$(
@@ -50,6 +56,8 @@ in {
     sharedModules = [
       inputs.helium.homeModules.helium
       ./bottom.nix
+      ./helium.nix
+      ./niri.nix
       ./noctalia.nix
       ./portals.nix
       (import ./shell.nix {

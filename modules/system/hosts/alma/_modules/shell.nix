@@ -5,13 +5,8 @@
 }: {
   config,
   lib,
-  pkgs,
   ...
-}: let
-  zoxideNushell = pkgs.runCommand "zoxide-nushell-config.nu" {} ''
-    ${lib.getExe pkgs.zoxide} init nushell --cmd z > "$out"
-  '';
-in {
+}: {
   home.sessionVariables = {
     NCR_FLAKE = flakeLocation;
     NH_FLAKE = flakeLocation;
@@ -20,80 +15,122 @@ in {
   };
 
   programs = {
-    nushell = {
-      environmentVariables = {
-        PATH = lib.hm.nushell.mkNushellInline ''
-          ([
-            "${config.home.profileDirectory}/bin"
-            "/run/system-manager/sw/bin"
-            "/nix/var/nix/profiles/default/bin"
-            "${homeDirectory}/.local/bin"
-            "/usr/local/bin"
-            "/usr/bin"
-            "/bin"
-            "/usr/local/sbin"
-            "/usr/sbin"
-            "/sbin"
-          ]
-            | append ($env.PATH | split row (char esep))
-            | uniq)
-        '';
-        XDG_DATA_DIRS = lib.mkForce (lib.hm.nushell.mkNushellInline ''
-          ([
-            "${config.home.profileDirectory}/share"
-            "/run/system-manager/sw/share"
-            "/nix/var/nix/profiles/default/share"
-            "/usr/local/share"
-            "/usr/share"
-          ]
-            | append (
-                $env.XDG_DATA_DIRS?
-                | default ""
-                | split row (char esep)
-                | where {|path| not ($path | is-empty) }
-              )
-            | uniq
-            | str join (char esep))
-        '');
-      };
-      extraLogin = ''
-        if $env.USER == "${username}" and (^tty | str trim) == "/dev/tty1" {
-          ^niri-session -l
-        }
-      '';
-      extraConfig = lib.mkAfter ''
-        source ${zoxideNushell}
-
-        # Alma's zoxide/Nushell integration treats a trailing slash as
-        # part of the search term instead of a directory separator.
-        alias __zoxide_builtin_cd = cd
-        def --env --wrapped cd [...rest: directory] {
-          let normalized = ($rest | each {|arg|
-            let text = ($arg | into string)
-            if $text == "/" {
-              $text
-            } else {
-              $text | str trim --right --char "/"
-            }
-          })
-          let path = match $normalized {
-            [] => { "~" },
-            [ "-" ] => { "-" },
-            [ $arg ] if ($arg | path expand | path type) == "dir" => { $arg },
-            _ => {
-              ^zoxide query --exclude $env.PWD -- ...$normalized
-              | str trim -r -c (char newline)
-            }
-          }
-          __zoxide_builtin_cd $path
-        }
-      '';
-      shellAliases = lib.mkForce {
-        rebuild = "alma-rebuild";
-        update = "do { cd ${flakeLocation}; ^tack update; ^alma-rebuild }";
-        clean = "nix store gc";
-      };
+    eza = {
+      enable = true;
+      extraOptions = [
+        "-l"
+        "--icons"
+        "--git"
+        "--group-directories-first"
+        "--time-style=relative"
+        "--no-user"
+        "--no-permissions"
+      ];
     };
-    zoxide.enableNushellIntegration = lib.mkForce false;
+    nushell.enable = lib.mkForce false;
+    zsh = {
+      enable = true;
+      defaultKeymap = "emacs";
+      autosuggestion.enable = true;
+      syntaxHighlighting.enable = true;
+      history = {
+        extended = true;
+        ignoreAllDups = true;
+        saveNoDups = true;
+      };
+      historySubstringSearch.enable = true;
+      shellAliases = {
+        rebuild = "alma-rebuild";
+        update = "cd ${lib.escapeShellArg flakeLocation} && tack update && alma-rebuild";
+        clean = "nix store gc";
+        ls = "eza --no-filesize";
+        ll = "eza --total-size";
+        la = "eza -a --no-filesize";
+        lla = "eza -a --total-size";
+        lt = "eza --tree --no-time --no-filesize";
+        llt = "eza --tree --total-size";
+      };
+      envExtra = ''
+        typeset -U path
+        path=(
+          ${config.home.profileDirectory}/bin
+          /run/system-manager/sw/bin
+          /nix/var/nix/profiles/default/bin
+          ${homeDirectory}/.local/bin
+          /usr/local/bin
+          /usr/bin
+          /bin
+          /usr/local/sbin
+          /usr/sbin
+          /sbin
+          $path
+        )
+        export PATH
+
+        typeset -aU xdg_data_dirs
+        xdg_data_dirs=(
+          ${config.home.profileDirectory}/share
+          /run/system-manager/sw/share
+          /nix/var/nix/profiles/default/share
+          /usr/local/share
+          /usr/share
+          ''${(s.:.)XDG_DATA_DIRS}
+        )
+        export XDG_DATA_DIRS="''${(j.:.)xdg_data_dirs}"
+        unset xdg_data_dirs
+      '';
+      loginExtra = ''
+        if [[ $USER == ${lib.escapeShellArg username} && $TTY == /dev/tty1 ]]; then
+          niri-session -l
+        fi
+      '';
+      siteFunctions."restore-ssh-key" = ''
+        mkdir -p "$HOME/.ssh" || return
+        chmod 700 "$HOME/.ssh" || return
+        print "Paste your SSH private key, then press Ctrl+D:"
+        cat > "$HOME/.ssh/id_ed25519" || return
+        chmod 600 "$HOME/.ssh/id_ed25519" || return
+        ssh-add "$HOME/.ssh/id_ed25519" >/dev/null 2>&1 || true
+        print "SSH private key restored"
+      '';
+      initContent = lib.mkAfter ''
+        autoload -Uz add-zsh-hook
+        typeset -g __nixconf_skip_prompt_spacing=true
+
+        _nixconf_prompt_spacing() {
+          if [[ ''${__nixconf_skip_prompt_spacing:-false} == true ]]; then
+            unset __nixconf_skip_prompt_spacing
+          else
+            print
+          fi
+        }
+        add-zsh-hook precmd _nixconf_prompt_spacing
+
+        _nixconf_accept_suggestion_or_complete() {
+          if [[ -n $POSTDISPLAY ]]; then
+            zle autosuggest-accept
+          else
+            zle expand-or-complete
+          fi
+        }
+        zle -N _nixconf_accept_suggestion_or_complete
+
+        _nixconf_clear_scrollback() {
+          print -n $'\e[2J\e[3J\e[H'
+          typeset -g __nixconf_skip_prompt_spacing=true
+          zle reset-prompt
+        }
+        zle -N _nixconf_clear_scrollback
+
+        zmodload zsh/complist
+        zstyle ':completion:*' menu select
+        bindkey '^I' _nixconf_accept_suggestion_or_complete
+        bindkey '^L' _nixconf_clear_scrollback
+        bindkey '^J' menu-complete
+        bindkey '^K' reverse-menu-complete
+        bindkey -M menuselect '^J' down-line-or-history
+        bindkey -M menuselect '^K' up-line-or-history
+      '';
+    };
   };
 }

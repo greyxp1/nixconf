@@ -6,9 +6,6 @@
 }: let
   cache = import ../_cache.nix;
   inherit (import ./inventory.nix {inherit username;}) storeScriptUnits;
-  heliumPolicy =
-    pkgs.writeText "helium-policy.json"
-    config.home-manager.users.${username}.programs.helium.finalPolicyJson;
 in {
   environment.etc =
     {
@@ -57,16 +54,6 @@ in {
         mode = "0440";
         replaceExisting = true;
         text = "%wheel ALL=(ALL:ALL) NOPASSWD: ALL\n";
-      };
-      "chromium/policies/managed/helium.json" = {
-        mode = "0644";
-        replaceExisting = true;
-        source = heliumPolicy;
-      };
-      "helium/policies/managed/helium.json" = {
-        mode = "0644";
-        replaceExisting = true;
-        source = heliumPolicy;
       };
       "polkit-1/rules.d/50-nixconf-udisks2.rules" = {
         mode = "0644";

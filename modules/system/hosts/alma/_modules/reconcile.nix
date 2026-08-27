@@ -36,7 +36,23 @@
   kernelArgumentManifest = pkgs.writeText "alma-kernel-arguments" (
     lib.concatStringsSep "\n" kernelArguments + "\n"
   );
+  heliumPolicy =
+    pkgs.writeText "helium-policy.json"
+    config.home-manager.users.${username}.programs.helium.finalPolicyJson;
   gpuSetup = config.home-manager.users.${username}.targets.genericLinux.gpu.setupPackage;
+  loginShellLauncher = pkgs.writeText "nixconf-zsh" ''
+    #!/bin/sh
+    if [ -x /run/system-manager/sw/bin/zsh ]; then
+      exec /run/system-manager/sw/bin/zsh --login "$@"
+    fi
+    echo "The declarative Zsh is unavailable; starting Alma Bash." >&2
+    exec /bin/bash -l "$@"
+  '';
+  legacyShellLauncher = pkgs.writeText "nixconf-nu" ''
+    #!/bin/sh
+    export SHELL=/usr/local/bin/nixconf-zsh
+    exec /usr/local/bin/nixconf-zsh "$@"
+  '';
 in {
   systemd.services.alma-host = {
     description = "Reconcile the AlmaLinux host";
@@ -68,6 +84,26 @@ in {
       previous_services="$state_dir/native-services"
       previous_kernel_arguments="$state_dir/kernel-arguments"
       /usr/bin/install -d -m 0755 "$state_dir"
+
+      install_helium_policy() {
+        local target=$1
+        /usr/bin/install -d -m 0755 "$(/usr/bin/dirname "$target")"
+        if [[ ! -f $target ]] || ! /usr/bin/cmp -s ${heliumPolicy} "$target"; then
+          if /usr/bin/pgrep -x helium >/dev/null; then
+            echo "Refusing to change Helium policy while Helium is running: $target" >&2
+            exit 1
+          fi
+          /usr/bin/install -m 0644 ${heliumPolicy} "$target"
+          if [[ -x /usr/sbin/restorecon ]]; then
+            /usr/sbin/restorecon -F "$target"
+          fi
+        fi
+      }
+      install_helium_policy /etc/chromium/policies/managed/helium.json
+      install_helium_policy /etc/helium/policies/managed/helium.json
+      if [[ ! -e $state_dir/helium-policy-reconciled ]]; then
+        /usr/bin/install -m 0644 /dev/null "$state_dir/helium-policy-reconciled"
+      fi
 
       use_https_repositories() {
         # The school network blocks HTTP. Alma's mirror service can
@@ -181,24 +217,29 @@ in {
         /etc/tmpfiles.d/nixconf-journal.conf \
         /etc/tmpfiles.d/nixconf-pam.conf
 
-      shell=/usr/local/bin/nixconf-nu
-      nushell=/run/system-manager/sw/bin/nu
-      if [[ ! -x $nushell ]]; then
-        echo "System Manager's Nushell is missing at $nushell" >&2
+      shell=/usr/local/bin/nixconf-zsh
+      zsh=/run/system-manager/sw/bin/zsh
+      if [[ ! -x $zsh ]]; then
+        echo "System Manager's Zsh is missing at $zsh" >&2
         exit 1
       fi
       /usr/bin/install -d -m 0755 /usr/local/bin
-      /usr/bin/printf '%s\n' \
-        '#!/bin/sh' \
-        'exec /run/system-manager/sw/bin/nu --login --interactive "$@"' \
-        > "$shell"
-      /usr/bin/chmod 0755 "$shell"
+      /usr/bin/install -m 0755 ${loginShellLauncher} "$shell"
       if [[ -x /usr/sbin/restorecon ]]; then
         /usr/sbin/restorecon -F "$shell"
       fi
       ${pkgs.gnugrep}/bin/grep -Fqx "$shell" /etc/shells \
         || printf '%s\n' "$shell" >> /etc/shells
       /usr/sbin/usermod --shell "$shell" ${username}
+
+      # Existing sessions can retain the old SHELL value, so keep that path as
+      # a forwarding shim without declaring it as a valid login shell.
+      legacy_shell=/usr/local/bin/nixconf-nu
+      /usr/bin/install -m 0755 ${legacyShellLauncher} "$legacy_shell"
+      if [[ -x /usr/sbin/restorecon ]]; then
+        /usr/sbin/restorecon -F "$legacy_shell"
+      fi
+      /usr/bin/sed -i '\|^/usr/local/bin/nixconf-nu$|d' /etc/shells
       for group in ${lib.escapeShellArgs nativeUserGroups}; do
         /usr/bin/getent group "$group" >/dev/null \
           && /usr/sbin/usermod --append --groups "$group" ${username}
