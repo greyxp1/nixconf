@@ -28,6 +28,7 @@
         confirm_os_window_close = 0;
         scrollback_lines = 10000;
         enable_audio_bell = "no";
+        "map ctrl+backspace" = "send_text all \\x17";
         "map ctrl+y" =
           "combine : launch "
           + "--stdin-source=@screen_scrollback "
