@@ -13,6 +13,7 @@
     kernelArguments
     nativeServices
     nativeUserGroups
+    removedKernelArguments
     ;
 
   dnfManifests = lib.mapAttrs (major: packages:
@@ -36,6 +37,58 @@
   kernelArgumentManifest = pkgs.writeText "alma-kernel-arguments" (
     lib.concatStringsSep "\n" kernelArguments + "\n"
   );
+  removedKernelArgumentManifest = pkgs.writeText "alma-removed-kernel-arguments" (
+    lib.concatStringsSep "\n" removedKernelArguments + "\n"
+  );
+  bootHealth = pkgs.writeText "nixconf-boot-health" ''
+    #!/bin/bash
+    set -euo pipefail
+
+    valid_boot_artifacts() {
+      local version=$1
+      local kernel=/boot/vmlinuz-$version
+      local initramfs=/boot/initramfs-$version.img
+      [[ -s $kernel && -s $initramfs ]] \
+        && (( $(/usr/bin/stat -c %s "$initramfs") >= 32 * 1024 * 1024 ))
+    }
+
+    case ''${1:-check} in
+      check)
+        running_version=$(/usr/bin/uname -r)
+        running_kernel=/boot/vmlinuz-$running_version
+        if ! valid_boot_artifacts "$running_version"; then
+          echo "The running kernel $running_version has incomplete boot artifacts." >&2
+          exit 1
+        fi
+
+        default_kernel=$(/usr/sbin/grubby --default-kernel 2>/dev/null || true)
+        default_version=''${default_kernel#/boot/vmlinuz-}
+        if [[ $default_kernel != /boot/vmlinuz-* ]] \
+          || ! valid_boot_artifacts "$default_version"; then
+          echo "GRUB's default kernel has incomplete boot artifacts; restoring $running_version." >&2
+          /usr/sbin/grubby --set-default="$running_kernel"
+          echo "The unsafe GRUB default was repaired. Re-run the rebuild after reviewing /boot." >&2
+          exit 1
+        fi
+        ;;
+      promote)
+        target_version=''${2:?kernel version is required}
+        target_kernel=/boot/vmlinuz-$target_version
+        target_initramfs=/boot/initramfs-$target_version.img
+        if ! valid_boot_artifacts "$target_version" \
+          || ! /usr/bin/lsinitrd "$target_initramfs" >/dev/null 2>&1 \
+          || ! /usr/sbin/grubby --info="$target_kernel" >/dev/null 2>&1; then
+          echo "Refusing to promote kernel $target_version: its boot artifacts are incomplete." >&2
+          exit 1
+        fi
+        /usr/sbin/grubby --set-default="$target_kernel"
+        ;;
+      *)
+        echo "Usage: nixconf-boot-health [check | promote KERNEL_VERSION]" >&2
+        exit 2
+        ;;
+    esac
+  '';
   heliumPolicy =
     pkgs.writeText "helium-policy.json"
     config.home-manager.users.${username}.programs.helium.finalPolicyJson;
@@ -117,6 +170,13 @@ in {
         done
       }
       use_https_repositories
+
+      /usr/bin/install -d -m 0755 /usr/local/sbin
+      /usr/bin/install -m 0755 ${bootHealth} /usr/local/sbin/nixconf-boot-health
+      if [[ -x /usr/sbin/restorecon ]]; then
+        /usr/sbin/restorecon -F /usr/local/sbin/nixconf-boot-health
+      fi
+      /usr/local/sbin/nixconf-boot-health check
 
       while IFS= read -r service; do
         [[ -z $service ]] || /usr/bin/systemctl stop "$service"
@@ -203,8 +263,29 @@ in {
       /usr/bin/install -m 0644 "$dnf_manifest" "$previous_packages.new"
       /usr/bin/mv -f "$previous_packages.new" "$previous_packages"
       if [[ $rebuild_initramfs == true ]]; then
-        /usr/bin/dracut -f --regenerate-all
+        /usr/bin/dracut -f --kver "$(/usr/bin/uname -r)"
       fi
+
+      # Kdump is not useful on this portable workstation and consumes scarce
+      # /boot space once per installed kernel.
+      while IFS= read -r -d $'\0' kdump_image; do
+        /usr/bin/rm -f -- "$kdump_image"
+      done < <(
+        /usr/bin/find /boot -xdev -maxdepth 1 -type f \
+          -name 'initramfs-*kdump.img' -print0
+      )
+      machine_id=$(/usr/bin/tr -d '\n' < /etc/machine-id)
+      rescue_paths=(
+        "/boot/.vmlinuz-0-rescue-$machine_id.hmac"
+        "/boot/initramfs-0-rescue-$machine_id.img"
+        "/boot/vmlinuz-0-rescue-$machine_id"
+        "/boot/loader/entries/$machine_id-0-rescue.conf"
+      )
+      for rescue_path in "''${rescue_paths[@]}"; do
+        if [[ -e $rescue_path || -L $rescue_path ]]; then
+          /usr/bin/unlink -- "$rescue_path"
+        fi
+      done
 
       unix_chkpwd=/usr/sbin/unix_chkpwd
       if [[ ! -x $unix_chkpwd \
@@ -320,8 +401,13 @@ in {
       while IFS= read -r argument; do
         [[ -z $argument ]] || /usr/sbin/grubby --update-kernel=ALL --args="$argument"
       done < ${kernelArgumentManifest}
+      while IFS= read -r argument; do
+        [[ -z $argument ]] || /usr/sbin/grubby --update-kernel=ALL --remove-args="$argument"
+      done < ${removedKernelArgumentManifest}
       /usr/bin/install -m 0644 ${kernelArgumentManifest} "$previous_kernel_arguments.new"
       /usr/bin/mv -f "$previous_kernel_arguments.new" "$previous_kernel_arguments"
+
+      /usr/local/sbin/nixconf-boot-health check
 
       /usr/sbin/sysctl --system
       /usr/bin/systemctl restart systemd-journald.service

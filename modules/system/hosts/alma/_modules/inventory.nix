@@ -76,6 +76,7 @@ in {
 
   disabledServices = [
     "firewalld.service"
+    "kdump.service"
     "packagekit-offline-update.service"
     "packagekit.service"
   ];
@@ -97,6 +98,10 @@ in {
 
   kernelArguments = [
     "selinux=0"
+  ];
+
+  removedKernelArguments = [
+    "crashkernel"
   ];
 
   storeScriptUnits = [

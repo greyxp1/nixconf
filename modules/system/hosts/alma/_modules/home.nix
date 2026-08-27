@@ -30,6 +30,10 @@
 
     cd ${lib.escapeShellArg flakeLocation}
     unset NIX_PATH
+    previous_alma_host_start=$(
+      /usr/bin/systemctl show alma-host.service \
+        --property=ExecMainStartTimestampMonotonic --value 2>/dev/null || true
+    )
     system_config=$(
       NIXCONF_REPO=${lib.escapeShellArg flakeLocation} \
       NIXCONF_USERNAME=${lib.escapeShellArg username} \
@@ -43,7 +47,18 @@
     ${systemManager}/bin/system-manager register --store-path "$system_config" --sudo
     ${systemManager}/bin/system-manager activate --store-path "$system_config" --sudo
     [[ ! -L result ]] || /usr/bin/rm -f result
-    sudo /usr/bin/systemctl restart alma-host.service
+    current_alma_host_start=$(
+      /usr/bin/systemctl show alma-host.service \
+        --property=ExecMainStartTimestampMonotonic --value 2>/dev/null || true
+    )
+    if [[ -n $current_alma_host_start \
+      && $current_alma_host_start != "$previous_alma_host_start" ]]; then
+      # Activation already started the changed unit. This waits for that job
+      # instead of interrupting it with a duplicate restart.
+      sudo /usr/bin/systemctl start alma-host.service
+    else
+      sudo /usr/bin/systemctl restart alma-host.service
+    fi
     sudo /usr/bin/systemctl restart home-manager-${username}.service
   '';
 in {

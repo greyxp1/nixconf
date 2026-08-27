@@ -42,6 +42,46 @@ in {
           extra-trusted-public-keys = ${lib.concatStringsSep " " cache.trusted-public-keys}
         '';
       };
+      "dnf/dnf.conf" = {
+        mode = "0644";
+        replaceExisting = true;
+        text = ''
+          [main]
+          gpgcheck=1
+          installonly_limit=2
+          clean_requirements_on_remove=True
+          best=True
+          skip_if_unavailable=False
+        '';
+      };
+      "dracut.conf.d/99-nixconf-no-rescue.conf" = {
+        mode = "0644";
+        replaceExisting = true;
+        text = ''
+          dracut_rescue_image="no"
+        '';
+      };
+      "kernel/install.d/99-nixconf-promote.install" = {
+        mode = "0755";
+        replaceExisting = true;
+        text = ''
+          #!/bin/bash
+          [[ $1 == add ]] || exit 0
+          if [[ ! -x /usr/local/sbin/nixconf-boot-health ]]; then
+            echo "Refusing to install a kernel without the native nixconf boot-health check." >&2
+            exit 1
+          fi
+          exec /usr/local/sbin/nixconf-boot-health promote "$2"
+        '';
+      };
+      "sysconfig/kernel" = {
+        mode = "0644";
+        replaceExisting = true;
+        text = ''
+          UPDATEDEFAULT=no
+          DEFAULTKERNEL=kernel-core
+        '';
+      };
       "selinux/config" = {
         mode = "0644";
         replaceExisting = true;
