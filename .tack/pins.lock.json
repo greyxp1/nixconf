@@ -79,6 +79,14 @@
     "narHash": "sha256-D+bdwP1OCMctzaEtghwhj5XKbd4iv3tL5dR9u7XAybY=",
     "lastModified": 1784842832
   },
+  "mpv-auto-sub-sync": {
+    "type": "github",
+    "owner": "greyxp1",
+    "repo": "mpv-auto-sub-sync",
+    "rev": "28d9d97f520657aa2da8a1e050769cdef89af19c",
+    "narHash": "sha256-fz4AZ27WrPu8V3CLFpe4/zxCQ/VXBu8DLbdF5ATJItA=",
+    "lastModified": 1788024600
+  },
   "mpv-smartcut": {
     "type": "github",
     "owner": "greyxp1",

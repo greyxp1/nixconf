@@ -3,20 +3,20 @@
     packages.mpv-smartcut = inputs.mpv-smartcut.packages.${system}.default;
   };
 
-  flake.homeModules.mpv = {pkgs, ...}: let
-    mpv-smartcut = inputs.mpv-smartcut.packages.${pkgs.stdenv.hostPlatform.system}.default;
-  in {
+  flake.homeModules.mpv = {pkgs, ...}: {
     catppuccin.mpv.enable = false;
-    home.packages = [mpv-smartcut];
+    home.packages = [inputs.mpv-smartcut.packages.${pkgs.stdenv.hostPlatform.system}.default];
     programs.mpv = {
       enable = true;
       package = pkgs.mpv.override {
-        scripts = with pkgs.mpvScripts; [
-          modernz
-          thumbfast
-          mpris
-          visualizer
-        ];
+        scripts =
+          (with pkgs.mpvScripts; [
+            modernz
+            thumbfast
+            mpris
+            visualizer
+          ])
+          ++ [inputs.mpv-auto-sub-sync.packages.${pkgs.stdenv.hostPlatform.system}.default];
       };
 
       config = {
@@ -33,6 +33,8 @@
         screenshot-format = "png";
         screenshot-directory = "~/Pictures/Screenshots";
         screenshot-template = "%F-%P";
+        sub-scale = "0.8";
+        watch-later-options-remove = "sid";
         ytdl-format = "bestvideo+bestaudio";
       };
     };
@@ -44,7 +46,7 @@
         sub_margins=no
       '';
 
-      "mpv/scripts/mpv-smartcut.lua".source = "${mpv-smartcut}/share/mpv/scripts/mpv-smartcut.lua";
+      "mpv/scripts/mpv-smartcut.lua".source = "${inputs.mpv-smartcut.packages.${pkgs.stdenv.hostPlatform.system}.default}/share/mpv/scripts/mpv-smartcut.lua";
 
       "mpv/scripts/short-loop.lua".text = ''
         local function has_real_video()

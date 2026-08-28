@@ -44,6 +44,9 @@ url = "gh:catppuccin/nix"
 exclude_follow = ["nixpkgs"]
 [inputs.mpv-smartcut]
 url = "gh:greyxp1/mpv-smartcut"
+[inputs.mpv-auto-sub-sync]
+url = "gh:greyxp1/mpv-auto-sub-sync"
+follows = { nixpkgs = "nixpkgs" }
 [inputs.ncr]
 url = "gh:greyxp1/ncr"
 [inputs.niri]
