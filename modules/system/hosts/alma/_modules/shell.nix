@@ -27,6 +27,10 @@
         "--no-permissions"
       ];
     };
+    fzf = {
+      enable = true;
+      enableZshIntegration = true;
+    };
     nushell.enable = lib.mkForce false;
     zsh = {
       enable = true;
