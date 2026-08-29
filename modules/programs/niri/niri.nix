@@ -21,8 +21,10 @@
         overview.workspace-shadow.off = {};
         hotkey-overlay.skip-at-startup = {};
         gestures.hot-corners.off = {};
-        cursor.hide-after-inactive-ms = 5000;
-
+        cursor = {
+          hide-after-inactive-ms = 5000;
+          scale-with-zoom = {};
+        };
         input = {
           touchpad.natural-scroll = {};
           keyboard = {

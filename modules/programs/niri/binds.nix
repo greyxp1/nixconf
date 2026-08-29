@@ -45,6 +45,10 @@ in {
       "Mod+Shift+WheelScrollDown" = bind {focus-column-or-monitor-right = {};};
       "Mod+WheelScrollDown" = bind {focus-window-or-workspace-down = {};};
       "Mod+WheelScrollUp" = bind {focus-window-or-workspace-up = {};};
+
+      "Mod+Alt+WheelScrollUp" = bind {set-zoom-level._args = ["+0.1"];};
+      "Mod+Alt+WheelScrollDown" = bind {set-zoom-level._args = ["-0.1"];};
+      "Mod+Alt+Z" = bind {toggle-zoom-lock = {};};
     };
   };
 }
