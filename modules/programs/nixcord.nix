@@ -155,6 +155,10 @@ in {
 
           questify = {
             enable = true;
+            acknowledgedNotices = {
+              quest-ban-warning-2026-08-07 = true;
+              quest-ban-warning-2026-08-26 = true;
+            };
             allowChangingDangerousSettings = true;
             autoCompleteQuestTypes = {
               PLAY_ON_DESKTOP = true;
@@ -167,6 +171,7 @@ in {
             };
             autoCompleteQuestsSimultaneously = true;
             completeVideoQuestsQuicker = true;
+            preventVideoQuestsPausing = true;
             disableAccountPanelQuestProgress = true;
             disableOrbsAndQuestsBadges = true;
             disableSponsoredBanner = true;
