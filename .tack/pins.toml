@@ -50,15 +50,11 @@ follows = { nixpkgs = "nixpkgs" }
 [inputs.ncr]
 url = "gh:greyxp1/ncr"
 [inputs.niri]
-url = "gh:greyxp1/niri"
+url = "gh:greyxp1/niri/personal"
 [inputs.niri-screenshare]
 url = "gh:pantarune/niri-screenshare"
 [inputs.perch]
 url = "gh:greyxp1/perch"
-
-[inputs.oniri]
-url = "gh:Antiz96/oniri"
-type = "fetch"
 
 [inputs.cord-stash]
 url = "gh:greyxp1/cord-stash"

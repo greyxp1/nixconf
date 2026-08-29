@@ -53,6 +53,8 @@
         };
 
         layout = {
+          fill-empty-space = {};
+          maximize-single-window-to-edges = {};
           insert-hint.off = {};
           background-color = "transparent";
           focus-ring.active-color = "#cba6f7";
