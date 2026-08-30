@@ -17,7 +17,7 @@
       else
         "(builtins.getFlake \"path:${config.flake.location}\")"
         + ".nixosConfigurations.${osConfig.networking.hostName}";
-    nix-format = pkgs.writeShellScript "nix-format" ''
+    nix-format = pkgs.writeShellScriptBin "nix-format" ''
       set -o pipefail
       ${pkgs.statix}/bin/statix fix -s | ${pkgs.alejandra}/bin/alejandra -q
     '';
@@ -31,6 +31,7 @@
       helix = {
         enable = true;
         defaultEditor = true;
+        extraPackages = [nix-format pkgs.mpls pkgs.nixd];
         themes.catppuccin_transparent = {
           inherits = "catppuccin_mocha";
           "ui.background".bg = "none";
@@ -58,8 +59,12 @@
         };
 
         languages = {
+          language-server.mpls = {
+            command = "mpls";
+            args = ["--theme" "catppuccin-mocha"];
+          };
           language-server.nixd = {
-            command = "${pkgs.nixd}/bin/nixd";
+            command = "nixd";
             config =
               {
                 nixpkgs.expr = "import ${pkgs.path} {}";
@@ -72,9 +77,13 @@
 
           language = [
             {
+              name = "markdown";
+              language-servers = ["mpls"];
+            }
+            {
               name = "nix";
               auto-format = true;
-              formatter.command = "${nix-format}";
+              formatter.command = "nix-format";
               language-servers = ["nixd"];
             }
           ];
