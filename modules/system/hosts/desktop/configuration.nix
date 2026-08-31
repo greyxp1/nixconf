@@ -14,8 +14,6 @@ in {
       kernelParams = [
         "amd_pstate=active" # AMD CPU freq scaling driver
         "8250.nr_uarts=0" # suppress legacy COM port probes
-        "nowatchdog" # disable hardware watchdog drivers
-        "nmi_watchdog=0" # disable NMI watchdog
       ];
 
       initrd = {
