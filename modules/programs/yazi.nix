@@ -48,6 +48,12 @@
         };
 
         opener = {
+          browser = [
+            {
+              run = "helium %s";
+              orphan = true;
+            }
+          ];
           play = [
             {
               run = "mpv --force-window -- %s";
@@ -61,6 +67,12 @@
             }
           ];
         };
+        open.prepend_rules = [
+          {
+            mime = "application/pdf";
+            use = "browser";
+          }
+        ];
       };
 
       plugins = with pkgs.yaziPlugins; {
