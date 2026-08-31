@@ -25,6 +25,7 @@
           # Global
           - Prefer the smallest root-cause solution; follow KISS, YAGNI, and DRY.
           - Do not add tests unless asked. Keep human-facing docs concise and natural.
+          - Never use computer-use for testing unless the user explicitly asks.
           - Treat every change as a clean break unless the user explicitly asks to preserve
             compatibility. Do not add aliases, deprecation paths, migrations, or compatibility
             shims by default.
