@@ -11,6 +11,7 @@
       };
 
       settings = {
+        enabled_layouts = "splits:split_axis=horizontal";
         cursor_blink_interval = 0;
         cursor_shape = "beam";
         cursor_shape_unfocused = "unchanged";
