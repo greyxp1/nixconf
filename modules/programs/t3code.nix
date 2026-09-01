@@ -48,8 +48,9 @@
           Apply only the matching repository section.
 
           ## nixconf `/home/grey/Projects/nixconf`
-          - Prefer readable command names when packages are guaranteed in `PATH`; For example,
-            use "ghostty" instead of "''${pkgs.ghostty}/bin/ghostty".
+          - When a program supports adding packages to its `PATH`, use that and configure readable
+            command names. For example, use Helix `extraPackages` with `command = "mpls"`, not
+            `command = "''${pkgs.mpls}/bin/mpls"`.
           - Edit `.tack/pins.toml` and use `tack update` for input changes.
           - `systemConfigs.alma` is a portable school SSD used across different PCs. The school
             blocks outbound HTTP and ICMP but permits HTTPS: never use ping as a connectivity
