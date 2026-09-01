@@ -18,6 +18,15 @@
     install -m 0755 ${../../../../../scripts/alma-backup} "$out/bin/alma-backup"
     install -m 0755 ${../../../../../scripts/alma-restore} "$out/bin/alma-restore"
   '';
+  almaOpencode = pkgs.writeShellApplication {
+    name = "opencode";
+    runtimeInputs = [pkgs.ripgrep];
+    text = ''
+      export OPENCODE_DISABLE_AUTOUPDATE=true
+      exec ${pkgs.stdenv.cc.bintools.dynamicLinker} --argv0 "$0" \
+        ${pkgs.opencode}/bin/.opencode-wrapped "$@"
+    '';
+  };
   alma-rebuild = pkgs.writeShellScriptBin "alma-rebuild" ''
     set -euo pipefail
     export PATH=/run/system-manager/sw/bin:/nix/var/nix/profiles/default/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
@@ -89,6 +98,7 @@ in {
             inherit homeDirectory username;
             packages = [
               almaDataScripts
+              almaOpencode
               alma-rebuild
               inputs.ncr.packages.${pkgs.stdenv.hostPlatform.system}.default
               pkgs.nh
