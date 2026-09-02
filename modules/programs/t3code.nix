@@ -1,4 +1,4 @@
-{
+{inputs, ...}: {
   flake.nixosModules.t3code.networking.firewall.allowedTCPPorts = [3773];
   flake.homeModules.t3code = {config, ...}: {
     # journalctl --user-unit=t3code -b -n 50 | rg -i 'token|pairing'
@@ -60,20 +60,24 @@
             and prove the tty1 graphical login path before recommending a reboot.
         '';
         skills = {
-          blast-radius = ''
+          unslop = inputs.cursor-plugins + "/pstack/skills/unslop";
+          blast-radius = inputs.cursor-plugins + "/pstack/skills/blast-radius";
+          diagnosing-bugs = inputs.mattpocock-skills + "/skills/engineering/diagnosing-bugs";
+          grill-with-docs = inputs.mattpocock-skills + "/skills/engineering/grill-with-docs";
+          principle-guard-the-context-window = inputs.cursor-plugins + "/pstack/skills/principle-guard-the-context-window";
+          principle-prove-it-works = inputs.cursor-plugins + "/pstack/skills/principle-prove-it-works";
+          principle-sequence-verifiable-units = inputs.cursor-plugins + "/pstack/skills/principle-sequence-verifiable-units";
+          prototype = inputs.mattpocock-skills + "/skills/engineering/prototype";
+          optimize = ''
             ---
-            name: blast-radius
+            name: optimize
             description: >-
-              Find what a change could break outside its diff and prove the key safety assumption.
-              Use when asked about blast radius, regression risk, or whether a small-looking
-              change is safe.
+              Use when invoked with "optimize" or other variants like "optimization".
             ---
-            Trace callers, configuration, persisted state, wire formats, dependencies, and
-            downstream consumers. Identify the one or two assumptions safety depends on and prove
-            them with the real code or authoritative value.
-
-            Report the evidence, credible failure paths, cleared risks, and cheapest real-path
-            check. Mark unknowns as unproven. Stay read-only unless the user asks for fixes.
+            Review the task diff and relevant commits with fresh eyes. Check correctness, UX,
+            reliability, readability, performance, maintainability, and necessity. Remove dead
+            code, duplication, redundant comments, and incidental complexity. If no improvement
+            remains, leave the implementation unchanged and say so.
           '';
           remember-correction = ''
             ---
@@ -86,126 +90,11 @@
             Identify the correction, preferred behavior, and narrowest scope where it always
             applies. Inspect existing context and skills first; update instead of duplicating.
 
-            Edit only `/home/grey/Projects/nixconf/modules/programs/t3code.nix`. Put general
+            Edit only `/home/grey/Projects/nixconf/modules/programs/t3code/t3code.nix`. Put general
             preferences in Global, repository conventions in the matching Projects section, and
-            reusable multi-step procedures in skills. Preserve concrete wording when clearest and
-            do not generalize beyond the evidence. Build the correct system target and follow the
-            global switch and commit rules.
-          '';
-          diagnosing-bugs = ''
-            ---
-            name: diagnosing-bugs
-            description: >-
-              Diagnose hard, recurrent, intermittent, or performance bugs with a reproducible
-              feedback loop. Use after a first fix fails, when the symptom is unclear, or when the
-              user explicitly asks to diagnose or debug.
-            ---
-            Build the tightest runnable signal for the exact symptom, preferring an existing
-            command, replay, differential check, profiler, or temporary harness. Redact secrets
-            and do not add a permanent test unless asked.
-
-            Reproduce and minimize. Rank three to five falsifiable hypotheses with predictions,
-            then test one variable at a time. Instrument only distinguishing boundaries and
-            measure performance before changing it.
-
-            If fixing is in scope, address the root cause, rerun the minimized and original
-            scenarios, and remove temporary artifacts. If no reliable signal exists, report what
-            is missing instead of guessing.
-          '';
-          principle-guard-the-context-window = ''
-            ---
-            name: principle-guard-the-context-window
-            description: >-
-              Protect reasoning quality when outputs, files, histories, or repeated reads are
-              filling the context. Use for long-running tasks and large investigations.
-            ---
-            Every token must earn its place. Read selective ranges, constrain tool output,
-            summarize evidence, and avoid replaying or rereading raw payloads. Work in bounded
-            phases. After a stable verified slice, leave a compact state brief and suggest a fresh
-            thread when practical.
-          '';
-          principle-prove-it-works = ''
-            ---
-            name: principle-prove-it-works
-            description: >-
-              Verify completed work against the real artifact or user-facing path before declaring
-              it done. Use after implementation and before handoff or commit.
-            ---
-            Identify the most direct observation. Build or evaluate when needed, then run the
-            feature, read the authoritative value, or exercise the full integration path. Inspect
-            delegated artifacts. Prefer a cheap deterministic check without adding permanent tests
-            unless asked. State what was proven, how, and what remains unverified.
-          '';
-          principle-sequence-verifiable-units = ''
-            ---
-            name: principle-sequence-verifiable-units
-            description: >-
-              Break migrations, sweeps, refactors, and other multi-step work into small units that
-              each end in a real check. Use when a task spans several files, behaviors, or commits.
-            ---
-            Start from a known-good state. Make one coherent change, run the cheapest relevant
-            check, and advance only when it passes. Keep each commit independently valid. Do not
-            batch unrelated edits or defer all verification to the end.
-          '';
-          prototype = ''
-            ---
-            name: prototype
-            description: >-
-              Build the smallest throwaway artifact that answers an uncertain UI, state-model, or
-              architectural question before production implementation. Use when competing designs
-              are plausible or requirements keep changing.
-            ---
-            Name the decision and observable success criterion. Build the smallest isolated,
-            trivial-to-run artifact; compare genuinely different variants when useful. Default to
-            in-memory state and omit tests, production abstractions, persistence, and polish.
-
-            Recommend a variant before changing production code. Carry over only validated
-            behavior and remove the prototype unless the user asks to preserve it.
-          '';
-          unslop = ''
-            ---
-            name: unslop
-            description: >-
-              Rewrite public-facing prose to remove AI tells while preserving meaning and voice.
-              Use when explicitly invoked with "unslop" or when polishing documentation, release
-              notes, PR text, or other prose meant for people.
-            ---
-            Cut puffery, vague attribution, promotion, canned transitions, chatbot filler,
-            excessive hedging, repetition, and generic conclusions. Prefer concrete facts, plain
-            words, active voice, natural rhythm, and restrained formatting.
-
-            Preserve meaning, formality, and opinionated voice. Finish by finding and fixing what
-            still sounds generated without sterilizing the author.
-          '';
-          grill-with-docs = ''
-            ---
-            name: grill-with-docs
-            description: >-
-              Stress-test an ambiguous plan or design through a structured interview and record
-              only durable terminology or decisions. Use only when explicitly invoked with
-              "grill-with-docs" or a clear request to grill a high-cost decision.
-            ---
-            Build a decision tree. In each round, ask every question whose prerequisites are
-            settled, number the questions, and give a recommended answer with its tradeoff.
-            Discover environmental facts yourself; ask the user only for choices. Recompute the
-            frontier after each reply and stop when no material assumption remains.
-
-            Present the final decisions in chat. Update an existing human-facing document only
-            when the decision naturally belongs there and benefits people; otherwise create
-            nothing. Never write documentation solely as agent memory, and introduce no glossary
-            or ADR system unless explicitly asked. Do not implement until the user confirms the
-            shared understanding.
-          '';
-          optimize = ''
-            ---
-            name: optimize
-            description: >-
-              Use when invoked with "optimize" or other variants like "optimization".
-            ---
-            Review the task diff and relevant commits with fresh eyes. Check correctness, UX,
-            reliability, readability, performance, maintainability, and necessity. Remove dead
-            code, duplication, redundant comments, and incidental complexity. If no improvement
-            remains, leave the implementation unchanged and say so.
+            reusable multi-step procedures in inline skills. Preserve concrete wording when
+            clearest and do not generalize beyond the evidence. Build the correct system target
+            and follow the global switch and commit rules.
           '';
           review = ''
             ---

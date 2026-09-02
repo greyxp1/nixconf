@@ -23,6 +23,14 @@
     "narHash": "sha256-n4Jccs+8tH5ToOs7OIOD45OtjxNtpum2llSM1hEMLrw=",
     "lastModified": 1784870889
   },
+  "cursor-plugins": {
+    "type": "github",
+    "owner": "cursor",
+    "repo": "plugins",
+    "rev": "efa2a531985e0a8084d36ff3cf87233be8a9f34b",
+    "narHash": "sha256-RC5cFtLx9sVM6pFTnIzHgvRQX5Co7il6EhComqN9XTk=",
+    "lastModified": 1788323902
+  },
   "disko": {
     "type": "github",
     "owner": "nix-community",
@@ -78,6 +86,14 @@
     "rev": "628b6618b1b94ee5289efb6d908270ac3d84a906",
     "narHash": "sha256-D+bdwP1OCMctzaEtghwhj5XKbd4iv3tL5dR9u7XAybY=",
     "lastModified": 1784842832
+  },
+  "mattpocock-skills": {
+    "type": "github",
+    "owner": "mattpocock",
+    "repo": "skills",
+    "rev": "6654f6b60cd9d5be8b54c6fafe44346dabeb3b76",
+    "narHash": "sha256-N5tpUIHO2VFeJntBTl6/VLDIVpqoshwFxNJlfXXUwsQ=",
+    "lastModified": 1787581197
   },
   "mpv-auto-sub-sync": {
     "type": "github",

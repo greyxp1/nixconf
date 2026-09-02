@@ -76,3 +76,11 @@ url = "gh:manic-systems/inshellah"
 [inputs.compress-yazi]
 url = "gh:KKV9/compress.yazi/pull/32/head"
 type = "fetch"
+
+[inputs.cursor-plugins]
+url = "gh:cursor/plugins"
+type = "fetch"
+
+[inputs.mattpocock-skills]
+url = "gh:mattpocock/skills"
+type = "fetch"
