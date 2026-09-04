@@ -2,16 +2,18 @@
   cordStashPath = subpath:
     /. + builtins.unsafeDiscardStringContext "${inputs.cord-stash}/${subpath}";
 in {
-  flake.homeModules.nixcord = {
+  flake.homeModules.nixcord = {pkgs, ...}: {
     imports = [inputs.nixcord.homeModules.nixcord];
-
     programs.nixcord = {
       enable = true;
       useGlobalPkgs = true;
       quickCss = builtins.readFile (cordStashPath "themes/catppuccin-mocha.css");
 
       discord = {
-        equicord.enable = true;
+        equicord = {
+          enable = true;
+          package = inputs.nixcord.packages.${pkgs.stdenv.hostPlatform.system}.equicord;
+        };
         settings = {
           MINIMIZE_TO_TRAY = false;
           openasar = {

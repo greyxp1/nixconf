@@ -2,10 +2,13 @@
   flake.nixosModules.system = {username, ...}: {
     time.timeZone = "America/Montreal";
     networking.networkmanager.enable = true;
-
     services = {
       irqbalance.enable = true;
-      journald.extraConfig = "SystemMaxUse=500M\nMaxFileSec=1week";
+      journald.settings.Journal = {
+        SystemMaxUse = "500M";
+        MaxFileSec = "1week";
+      };
+
       pipewire = {
         enable = true;
         pulse.enable = true;
