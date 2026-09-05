@@ -23,6 +23,7 @@
 
   flake.homeModules.yazi = {
     config,
+    lib,
     pkgs,
     ...
   }: let
@@ -32,6 +33,22 @@
     };
     compress = inputs.compress-yazi;
   in {
+    # Preserve terminal transparency and open the hovered folder icon.
+    xdg.configFile."yazi/theme.toml".source = lib.mkForce (
+      pkgs.runCommand "yazi-catppuccin-theme" {} ''
+        sed '
+          /^overall =/d
+          /if = "dir"/ {
+            h
+            s/if = "dir"/if = "dir \& hovered"/
+            s///
+            p
+            g
+          }
+        ' ${config.catppuccin.sources.yazi}/${config.catppuccin.yazi.flavor}/catppuccin-${config.catppuccin.yazi.flavor}-${config.catppuccin.yazi.accent}.toml > "$out"
+      ''
+    );
+
     xdg.configFile."xdg-desktop-portal-termfilechooser/config".text = ''
       [filechooser]
       cmd=${pkgs.xdg-desktop-portal-termfilechooser}/share/xdg-desktop-portal-termfilechooser/yazi-wrapper.sh
