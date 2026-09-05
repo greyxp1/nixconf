@@ -17,7 +17,7 @@
     ({pkgs, ...}: {
       home.packages = with pkgs; [pandora-launcher heroic];
       wayland.windowManager.niri.settings._children = [
-        {spawn-at-startup._args = ["discord"];}
+        {spawn-at-startup._args = ["equibop"];}
         {
           output = {
             _args = ["DP-2"];

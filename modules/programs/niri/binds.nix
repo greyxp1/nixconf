@@ -7,7 +7,7 @@ in {
       "Mod+Escape" = bind {spawn._args = ["kitty" "btm"];};
       "Mod+E" = bind {spawn._args = ["kitty" "nu" "-e" "y"];};
       "Mod+B" = bind {spawn = "helium";};
-      "Mod+D" = bind {spawn = "discord";};
+      "Mod+D" = bind {spawn = "equibop";};
 
       "Mod+C" = bind {spawn-sh = "noctalia msg panel-toggle control-center";};
       "Alt+Space" = bind {spawn-sh = "noctalia msg panel-toggle launcher";};

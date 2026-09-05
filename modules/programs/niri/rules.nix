@@ -10,7 +10,7 @@
       }
       {
         window-rule = {
-          match._props."app-id" = "^kitty$";
+          match._props."app-id" = "^kitty$|^equibop$";
           background-effect = {
             blur = true;
             xray = false;
@@ -25,18 +25,18 @@
       }
       {
         window-rule = {
-          match._props."app-id" = "^discord$";
+          match._props."app-id" = "^equibop$";
           open-on-workspace = "chat";
         };
       }
       {
         window-rule = {
           _children = [
-            {match._props."app-id" = "^discord$";}
+            {match._props."app-id" = "^equibop$";}
             {match._props.title = "^Picture in picture$";}
             {match._props."app-id" = "^chrome-ldgfbffkinooeloadekpmfoklnobpien-Default$";}
           ];
-          exclude._props.title = "(?i).*discord$";
+          exclude._props.title = "(?i).*equibop$";
           open-floating = true;
           focus-ring.off = {};
           default-column-width.fixed = 1024;
