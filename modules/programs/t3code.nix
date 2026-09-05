@@ -1,4 +1,4 @@
-{inputs, ...}: {
+{
   flake.nixosModules.t3code.networking.firewall.allowedTCPPorts = [3773];
   flake.homeModules.t3code = {config, ...}: {
     # journalctl --user-unit=t3code -b -n 50 | rg -i 'token|pairing'
@@ -19,94 +19,127 @@
 
     programs = {
       t3code.enable = true;
+      opencode.settings.permission = "allow";
       codex = {
         enable = true;
         context = ''
           # Global
-          - Prefer the smallest root-cause solution; follow KISS, YAGNI, and DRY.
-          - Do not add tests unless asked. Keep human-facing docs concise and natural.
-          - Never use computer-use for testing unless the user explicitly asks.
-          - Treat every change as a clean break unless the user explicitly asks to preserve
-            compatibility. Do not add aliases, deprecation paths, migrations, or compatibility
-            shims by default.
-          - Before inspecting, building, activating, or changing host configuration, identify the
-            current host and operating system with `hostnamectl` and `/etc/os-release`; select the
-            matching host target and never infer it from the repository or working directory.
-          - Enter the project's Nix environment before the first project command when available.
-          - Before evaluating a Git-backed flake after creating files, stage only the new
-            in-scope paths; untracked files are excluded. Never stage unrelated work.
-          - Commit completed edits automatically; never push. Split only independently useful
-            changes. Before handoff, amend or squash all work and follow-up revisions from one
-            task into one commit. Use short lowercase past-tense commit messages.
-          - Never create agent-specific project files such as `AGENTS.md` or `.agents/`. Keep
-            agent configuration in this module; add project documentation only for humans.
-          - On NixOS, never activate standalone Home Manager or another host's configuration.
-            Build and switch the matching NixOS host; if privileges are unavailable, ask the user
-            to run `nh os switch`.
+          - Prefer the smallest root-cause solution. Avoid unnecessary abstractions, wrappers,
+            dependencies, and documentation. Write concise, natural prose.
+          - Do not add tests or use computer-use for testing unless asked.
+          - Make clean breaks by default; add compatibility code only when requested.
+          - Enter the project's Nix environment before running project commands when available.
+          - Prefer substitutes or checksum-pinned upstream binaries for large packages.
+            If source compilation is unavoidable, warn first and limit builds to
+            `--max-jobs 1 --cores 2` or stricter.
+          - Before evaluating a Git-backed flake with new files, stage only the new in-scope
+            paths. Never stage unrelated work.
+          - Check the behavior affected by the change. Repeat successful checks only after
+            relevant edits or when evidence leaves a concern unresolved.
+          - Commit completed work automatically; never push. Use one commit per independently
+            useful change and fold its follow-up fixes into it. Use short lowercase past-tense
+            messages. Follow the user's requested commit grouping.
+          - Keep agent instructions in
+            `/home/grey/Projects/nixconf/modules/programs/t3code.nix`; do not create project
+            `AGENTS.md` or `.agents/` files.
+
+          # Host configuration
+          - Before inspecting or changing host configuration, run `hostnamectl` and read
+            `/etc/os-release`. Use that host's target; never infer it from the checkout.
+          - After implementing NixOS configuration changes, build and switch that host's
+            NixOS configuration. Never activate standalone Home Manager or another host.
+            If privileges are unavailable, ask the user to rebuild.
 
           # Projects
-          Apply only the matching repository section.
+          Apply conventions to the repository being changed, including worktrees and work
+          performed from a thread opened in another repository.
 
           ## nixconf `/home/grey/Projects/nixconf`
-          - When a program supports adding packages to its `PATH`, use that and configure readable
-            command names. For example, use Helix `extraPackages` with `command = "mpls"`, not
-            `command = "''${pkgs.mpls}/bin/mpls"`.
-          - Edit `.tack/pins.toml` and use `tack update` for input changes.
-          - `systemConfigs.alma` is a portable school SSD used across different PCs. The school
-            blocks outbound HTTP and ICMP but permits HTTPS: never use ping as a connectivity
-            gate, and configure Alma repositories to use their direct HTTPS base URLs.
-          - Alma boot and login paths must not execute Nix-store files directly because SELinux
-            can deny them. Keep a native TTY2 recovery path, use SELinux-labelled local launchers,
-            and prove the tty1 graphical login path before recommending a reboot.
+          - Use a program's package/PATH integration and readable command names, such as
+            Helix `extraPackages` with `command = "mpls"`.
+          - Edit `.tack/pins.toml` and run `tack update` for input changes.
+          - Alma is a portable school SSD. Its network permits HTTPS but blocks HTTP and
+            ICMP. Use direct HTTPS repository URLs; never gate connectivity on ping.
+          - Alma boot/login must use SELinux-labelled local launchers, not Nix-store
+            executables. Preserve native TTY2 recovery and prove tty1 graphical login before
+            recommending a reboot.
+
+          ## vellum `/home/grey/Projects/vellum`
+          - The user's `vellum toggle` keybind must control either the installed overlay or
+            a development build. Preserve that workflow when changing IPC or packaging.
+          - For performance or dependency replacements, measure the relevant workload and
+            the complete integration cost. Distinguish library capabilities from features
+            actually exposed in Vellum.
+          - Do not claim headless GPU or state checks validate live Wayland input, tablet
+            hardware, or visible interaction quality.
         '';
         skills = {
-          unslop = inputs.cursor-plugins + "/pstack/skills/unslop";
-          blast-radius = inputs.cursor-plugins + "/pstack/skills/blast-radius";
-          diagnosing-bugs = inputs.mattpocock-skills + "/skills/engineering/diagnosing-bugs";
-          grill-with-docs = inputs.mattpocock-skills + "/skills/engineering/grill-with-docs";
-          principle-guard-the-context-window = inputs.cursor-plugins + "/pstack/skills/principle-guard-the-context-window";
-          principle-prove-it-works = inputs.cursor-plugins + "/pstack/skills/principle-prove-it-works";
-          principle-sequence-verifiable-units = inputs.cursor-plugins + "/pstack/skills/principle-sequence-verifiable-units";
-          prototype = inputs.mattpocock-skills + "/skills/engineering/prototype";
-          optimize = ''
+          grill-me = ''
             ---
-            name: optimize
-            description: >-
-              Use when invoked with "optimize" or other variants like "optimization".
+            name: grill-me
+            description: Challenge a plan or design when the user asks to be grilled.
             ---
-            Review the task diff and relevant commits with fresh eyes. Check correctness, UX,
-            reliability, readability, performance, maintainability, and necessity. Remove dead
-            code, duplication, redundant comments, and incidental complexity. If no improvement
-            remains, leave the implementation unchanged and say so.
-          '';
-          remember-correction = ''
-            ---
-            name: remember-correction
-            description: >-
-              Turn a user correction into the smallest durable Codex rule in the central Nix
-              configuration. Use when asked to "make sure this never happens again", remember a
-              preference, or codify a correction for future agents.
-            ---
-            Identify the correction, preferred behavior, and narrowest scope where it always
-            applies. Inspect existing context and skills first; update instead of duplicating.
+            Inspect the relevant code and facts before asking questions. Challenge assumptions,
+            requirements, failure cases, and implementation tradeoffs. Ask a few related questions
+            at a time, with a recommendation and its reasoning. Resolve prerequisite decisions
+            before asking questions that depend on them.
 
-            Edit only `/home/grey/Projects/nixconf/modules/programs/t3code/t3code.nix`. Put general
-            preferences in Global, repository conventions in the matching Projects section, and
-            reusable multi-step procedures in inline skills. Preserve concrete wording when
-            clearest and do not generalize beyond the evidence. Build the correct system target
-            and follow the global switch and commit rules.
+            Focus on choices that materially affect the result. Stop when those decisions are
+            settled, and summarize the agreed direction and remaining uncertainties. Create
+            documents or implement changes only when requested; honor existing authorization.
           '';
           review = ''
             ---
             name: review
-            description: >-
-              Use when invoked with "review".
+            description: Review a requested change for concrete defects and unnecessary complexity.
             ---
-            Diagnose the problem before judging the implementation. Trace behavior end to end,
-            reproduce it when practical, and inspect architecture, history, and upstream
-            conventions only when material. Decide whether the implementation fixes the cause or
-            a symptom, compare simpler native alternatives, and recommend the smallest complete
-            solution with material tradeoffs. Stay read-only unless asked to implement.
+            Inspect the requested diff and relevant callers. Determine whether the change fixes
+            the root cause or only a symptom. Explain actionable defects with evidence and
+            recommend the smallest complete solution. Check non-obvious runtime and integration
+            effects when material. Reproduce uncertain findings when practical. When fixes are
+            requested, implement them and verify the affected behavior.
+            Stay read-only unless implementation is requested; an explicit request to fix or
+            optimize authorizes those changes. Do not reopen settled findings without new evidence.
+          '';
+          optimize = ''
+            ---
+            name: optimize
+            description: Simplify and improve the current change when asked to optimize it.
+            ---
+            Review the requested change for correctness, usability, performance, and unnecessary
+            code. Make improvements supported by the code or measurements. Prefer existing
+            library capabilities when they reduce the complete integration cost. Preserve the
+            requested behavior. Stop when no substantive improvement remains; do not churn code
+            to produce a diff. Fold fixes into the relevant commit.
+          '';
+          diagnosing-bugs = ''
+            ---
+            name: diagnosing-bugs
+            description: Investigate difficult bugs, intermittent failures, and performance regressions.
+            ---
+            Establish the symptom and inspect relevant changes, logs, and code. Reproduce it when
+            practical, then compare behavior before and after the smallest root-cause fix. For
+            intermittent failures, continue with available evidence and targeted diagnostics;
+            lack of a deterministic reproduction does not forbid investigation. Distinguish
+            confirmed causes from hypotheses. Measure performance claims. Respect the user's
+            test and desktop-interaction policy, and remove temporary instrumentation.
+          '';
+          remember-correction = ''
+            ---
+            name: remember-correction
+            description: Prevent a repeated mistake or record a preference when the user asks.
+            ---
+            Identify the cause and narrowest applicable scope. Prefer eliminating invalid states
+            through architecture or data structures, then automated checks, then scoped
+            instructions. Leave human review for what cannot be prevented or checked automatically.
+            A personal preference may need only an instruction. Avoid expanding the task or
+            creating tests without authorization. Update existing prevention instead of duplicating it.
+
+            Keep durable instructions in
+            `/home/grey/Projects/nixconf/modules/programs/t3code.nix`: general preferences in
+            Global, project invariants in Projects, reusable procedures in inline skills.
+            Verify the prevention where practical and follow the host build, switch, and commit
+            rules for configuration changes.
           '';
         };
       };
