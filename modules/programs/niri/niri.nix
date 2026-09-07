@@ -17,7 +17,6 @@
       settings = {
         screenshot-path = "~/Pictures/Screenshots/%y-%m-%d-%H-%M-%S.png";
         prefer-no-csd = {};
-        debug.honor-xdg-activation-with-invalid-serial = {};
         hotkey-overlay.skip-at-startup = {};
         gestures.hot-corners.off = {};
         cursor = {
@@ -69,6 +68,12 @@
         overview = {
           workspace-shadow.off = {};
           zoom = 0.25;
+        };
+
+        debug = {
+          honor-xdg-activation-with-invalid-serial = {};
+          disable-cursor-plane = {};
+          emulate-zero-presentation-time = {};
         };
       };
     };
