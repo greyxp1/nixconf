@@ -3,6 +3,7 @@
     wayland.windowManager.niri.settings._children = [
       {
         window-rule = {
+          exclude._props."app-id" = "^perch$";
           geometry-corner-radius = 16;
           clip-to-geometry = true;
           draw-border-with-background = false;

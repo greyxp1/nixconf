@@ -29,8 +29,10 @@
             match._props."app-id" = "^perch$";
             open-floating = true;
             focus-ring.off = {};
+            geometry-corner-radius = 0;
             border = {
               on = {};
+              width = 1;
               active-color = "#cba6f7";
               inactive-color = "#cba6f7";
             };
