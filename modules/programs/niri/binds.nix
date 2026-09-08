@@ -24,7 +24,12 @@ in {
       "Mod+T" = bind {toggle-window-floating = {};};
       "Mod+R" = bind {switch-preset-column-width = {};};
       "Mod+Tab" = bind {toggle-overview = {};};
+
       "Print" = bind {screenshot = {};};
+      "Shift+Print" = bind {spawn-sh = "niri msg screenshot --stdout | perch -";};
+      "Ctrl+Print" = bind {spawn-sh = "niri msg screenshot --stdout | tesseract - - | wl-copy";};
+      "Mod+Shift+C" = bind {spawn-sh = "niri msg pick-color | wl-copy";};
+      "Mod+A" = bind {spawn-sh = "vellum toggle";};
 
       "Mod+H" = bind {focus-column-or-monitor-left = {};};
       "Mod+L" = bind {focus-column-or-monitor-right = {};};

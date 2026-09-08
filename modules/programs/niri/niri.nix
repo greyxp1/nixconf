@@ -11,7 +11,18 @@
     };
   };
 
-  flake.homeModules.niri = {
+  flake.homeModules.niri = {pkgs, ...}: let
+    tesseract = pkgs.tesseract.override {enableLanguages = ["eng"];};
+  in {
+    imports = [
+      inputs.vellum.homeModules.default
+      inputs.perch.homeModules.default
+    ];
+
+    services.vellum.enable = true;
+    programs.perch.enable = true;
+    home.packages = [tesseract pkgs.wl-clipboard];
+
     wayland.windowManager.niri = {
       enable = true;
       settings = {
