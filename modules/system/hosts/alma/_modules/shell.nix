@@ -14,6 +14,8 @@
     NIX_SSL_CERT_FILE = "/etc/pki/tls/certs/ca-bundle.crt";
   };
 
+  systemd.user.sessionVariables.NIX_PATH = lib.mkForce "";
+
   programs = {
     eza = {
       enable = true;
