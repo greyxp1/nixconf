@@ -93,6 +93,7 @@ in {
     maskedUnits = ["NetworkManager-wait-online.service"] ++ disabledServices;
     services."home-manager-${username}" = {
       wantedBy = lib.mkForce [];
+      restartIfChanged = false;
       environment = {
         DBUS_SESSION_BUS_ADDRESS = "unix:path=/run/user/${toString uid}/bus";
         PATH = lib.mkForce "/etc/profiles/per-user/${username}/bin:/run/system-manager/sw/bin:/nix/var/nix/profiles/default/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin";

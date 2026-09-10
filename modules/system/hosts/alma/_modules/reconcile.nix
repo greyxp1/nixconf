@@ -111,6 +111,7 @@ in {
     description = "Reconcile the AlmaLinux host";
     after = ["system-manager-path.service"];
     requires = ["system-manager-path.service"];
+    restartIfChanged = false;
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
@@ -136,6 +137,7 @@ in {
       previous_groups="$state_dir/dnf-groups"
       previous_services="$state_dir/native-services"
       previous_kernel_arguments="$state_dir/kernel-arguments"
+      pending_initramfs="$state_dir/initramfs-pending"
       /usr/bin/install -d -m 0755 "$state_dir"
 
       install_helium_policy() {
@@ -197,6 +199,10 @@ in {
           esac
         fi
       done < "$dnf_manifest"
+      # Keep this work pending across interrupted installs and later failures.
+      if [[ $rebuild_initramfs == true ]]; then
+        /usr/bin/install -m 0644 /dev/null "$pending_initramfs"
+      fi
       if (( ''${#missing[@]} )); then
         /usr/bin/dnf install -y "''${missing[@]}"
       fi
@@ -253,17 +259,25 @@ in {
         done < "$previous_packages"
       fi
       if (( ''${#removed[@]} )); then
-        for package in "''${removed[@]}"; do
-          # RPM erases exactly one package and refuses when another
-          # installed package still depends on it. DNF's solver could
-          # otherwise remove an unrelated, manually installed program.
-          /usr/bin/rpm -e "$package"
-        done
+        # Erase the declared set together so its internal dependencies do not
+        # block removal. RPM still refuses dependencies from retained packages.
+        /usr/bin/rpm -e "''${removed[@]}"
       fi
       /usr/bin/install -m 0644 "$dnf_manifest" "$previous_packages.new"
       /usr/bin/mv -f "$previous_packages.new" "$previous_packages"
-      if [[ $rebuild_initramfs == true ]]; then
-        /usr/bin/dracut -f --kver "$(/usr/bin/uname -r)"
+      if [[ -e $pending_initramfs ]]; then
+        kernel_versions=$(/usr/bin/rpm -q kernel-core --qf '%{VERSION}-%{RELEASE}.%{ARCH}\n')
+        while IFS= read -r kernel_version; do
+          initramfs="/boot/initramfs-$kernel_version.img"
+          # Preserve each bootable image until its replacement is complete.
+          /usr/bin/dracut -f "$initramfs.new" "$kernel_version"
+          /usr/bin/lsinitrd "$initramfs.new" >/dev/null
+          /usr/bin/mv -f "$initramfs.new" "$initramfs"
+          if [[ -x /usr/sbin/restorecon ]]; then
+            /usr/sbin/restorecon -F "$initramfs"
+          fi
+        done <<< "$kernel_versions"
+        /usr/bin/rm -f "$pending_initramfs"
       fi
 
       # Kdump is not useful on this portable workstation and consumes scarce

@@ -120,6 +120,10 @@ in {
         mode = "0644";
         replaceExisting = true;
         text = ''
+          [Unit]
+          Wants=system-manager-path.service
+          After=system-manager-path.service
+
           [Service]
           ExecStart=
           ExecStart=-/sbin/agetty --autologin ${username} --noclear %I $TERM
