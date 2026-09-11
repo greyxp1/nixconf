@@ -37,8 +37,12 @@
           - Check the behavior affected by the change. Repeat successful checks only after
             relevant edits or when evidence leaves a concern unresolved.
           - Commit completed work automatically; never push. Use one commit per independently
-            useful change and fold its follow-up fixes into it. Use short lowercase past-tense
-            messages. Follow the user's requested commit grouping.
+            useful change and fold its follow-up fixes into it only while it is unpushed.
+            Never amend, squash, rebase, or otherwise rewrite pushed commits unless the user
+            explicitly asks to rewrite published history; a general request to squash fixes
+            does not authorize it. Before rewriting, refresh remote refs and verify every
+            affected commit is unpushed. If uncertain, keep a separate fix commit.
+            Use short lowercase past-tense messages. Follow the user's requested commit grouping.
           - Keep agent instructions in
             `/home/grey/Projects/nixconf/modules/programs/t3code.nix`; do not create project
             `AGENTS.md` or `.agents/` files.
