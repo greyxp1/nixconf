@@ -17,14 +17,13 @@
         inputs.niri.overlays.default
         inputs.niri-screenshare.overlays.default
       ];
+      specialArgs = {
+        inherit flakeLocation gid homeDirectory homeModules inputs primaryGroup uid username;
+      };
       modules = [
         inputs.home-manager.nixosModules.home-manager
-        (import ./_modules/home.nix {
-          inherit flakeLocation gid homeDirectory homeModules inputs primaryGroup uid username;
-        })
-        (import ./_modules/host.nix {
-          inherit gid homeDirectory primaryGroup uid username;
-        })
+        ./_modules/home.nix
+        ./_modules/host.nix
       ];
     };
 in {

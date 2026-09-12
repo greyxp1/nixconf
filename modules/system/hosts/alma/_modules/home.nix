@@ -7,7 +7,6 @@
   primaryGroup,
   uid,
   username,
-}: {
   lib,
   pkgs,
   ...
@@ -30,12 +29,6 @@
   alma-rebuild = pkgs.writeShellScriptBin "alma-rebuild" ''
     set -euo pipefail
     export PATH=/run/system-manager/sw/bin:/nix/var/nix/profiles/default/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
-
-    if [[ ! -e /var/lib/nixconf/helium-policy-reconciled ]] \
-      && /usr/bin/pgrep -x helium >/dev/null; then
-      echo "Close Helium before this one-time policy migration, then run alma-rebuild again." >&2
-      exit 1
-    fi
 
     cd ${lib.escapeShellArg flakeLocation}
     unset NIX_PATH
@@ -62,49 +55,80 @@ in {
     backupFileExtension = "backup";
     overwriteBackup = true;
     extraSpecialArgs.nixconfSystem = "systemConfigs.alma";
-    sharedModules = [
-      inputs.helium.homeModules.helium
-      ./bottom.nix
-      ./helium.nix
-      ./niri.nix
-      ./noctalia.nix
-      ./portals.nix
-      (import ./shell.nix {
-        inherit flakeLocation homeDirectory username;
-      })
-      ./t3code.nix
-      (
-        {...}: {
-          imports = homeModules;
+    users.${username} = {config, ...}: {
+      imports =
+        homeModules
+        ++ [
+          inputs.helium.homeModules.helium
+          ./helium.nix
+          ./niri.nix
+          ./portals.nix
+          (import ./shell.nix {
+            inherit flakeLocation homeDirectory username;
+          })
+        ];
 
-          fonts.fontconfig.enable = true;
-          flake.location = flakeLocation;
-          home = {
-            inherit homeDirectory username;
-            packages = [
-              almaDataScripts
-              almaOpencode
-              alma-rebuild
-              inputs.ncr.packages.${pkgs.stdenv.hostPlatform.system}.default
-              pkgs.nh
-              pkgs.tack
+      fonts.fontconfig.enable = true;
+      flake.location = flakeLocation;
+      home = {
+        inherit homeDirectory username;
+        packages = [
+          almaDataScripts
+          almaOpencode
+          alma-rebuild
+          inputs.ncr.packages.${pkgs.stdenv.hostPlatform.system}.default
+          pkgs.nh
+          pkgs.tack
+        ];
+        stateVersion = "26.05";
+      };
+      manual.manpages.enable = false;
+      programs = {
+        home-manager.enable = true;
+        kitty.settings.symbol_map =
+          "U+e000-U+e00a,U+e0a0-U+e0a2,U+e0a3,U+e0b0-U+e0b3,"
+          + "U+e0b4-U+e0c8,U+e0ca,U+e0cc-U+e0d7,U+e200-U+e2a9,"
+          + "U+e300-U+e3e3,U+e5fa-U+e6b7,U+e700-U+e8ef,U+ea60-U+ec1e,"
+          + "U+ed00-U+efce,U+f000-U+f2ff,U+f300-U+f381,U+f400-U+f533,"
+          + "U+f0001-U+f1af0 Symbols Nerd Font Mono";
+      };
+      programs.bottom.settings = {
+        disk.mount_filter.is_list_ignored = lib.mkForce true;
+        row = lib.mkForce [
+          {
+            ratio = 30;
+            child = [{type = "cpu";}];
+          }
+          {
+            ratio = 70;
+            child = [
+              {
+                child = [
+                  {
+                    ratio = 5;
+                    type = "mem";
+                  }
+                  {
+                    ratio = 2;
+                    type = "disk";
+                  }
+                  {type = "temp";}
+                ];
+              }
+              {
+                type = "proc";
+                default = true;
+              }
             ];
-            stateVersion = "26.05";
-          };
-          manual.manpages.enable = false;
-          programs = {
-            home-manager.enable = true;
-            kitty.settings.symbol_map =
-              "U+e000-U+e00a,U+e0a0-U+e0a2,U+e0a3,U+e0b0-U+e0b3,"
-              + "U+e0b4-U+e0c8,U+e0ca,U+e0cc-U+e0d7,U+e200-U+e2a9,"
-              + "U+e300-U+e3e3,U+e5fa-U+e6b7,U+e700-U+e8ef,U+ea60-U+ec1e,"
-              + "U+ed00-U+efce,U+f000-U+f2ff,U+f300-U+f381,U+f400-U+f533,"
-              + "U+f0001-U+f1af0 Symbols Nerd Font Mono";
-          };
-          targets.genericLinux.enable = true;
-        }
-      )
-    ];
-    users.${username} = {};
+          }
+        ];
+      };
+      programs.noctalia.settings = {
+        bar.default.margin_ends = lib.mkForce 415;
+        plugin_settings."noctalia/screen_recorder".video_codec = lib.mkForce "h264";
+      };
+      systemd.user.services.t3code.Service.ExecSearchPath = lib.mkForce "${config.home.profileDirectory}/bin:/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin";
+      targets.genericLinux.enable = true;
+    };
   };
 }

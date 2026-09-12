@@ -1,28 +1,20 @@
 {
-  gid,
-  homeDirectory,
-  primaryGroup,
-  uid,
-  username,
-}: {
   lib,
   pkgs,
+  uid,
+  username,
   ...
 }: let
-  inherit
-    (import ./inventory.nix {inherit username;})
-    disabledServices
-    dnfPackagesByMajor
-    ;
-  almaMajors = lib.sort (a: b: builtins.fromJSON a < builtins.fromJSON b) (
-    builtins.attrNames dnfPackagesByMajor
-  );
-  supportedAlmaMajors = lib.concatStringsSep "|" almaMajors;
-  supportedAlmaMajorsText = lib.concatStringsSep " or " almaMajors;
+  cache = import ../_cache.nix;
 in {
   imports = [
-    (import ./files.nix {inherit username;})
-    (import ./reconcile.nix {inherit username;})
+    ./system
+    ./system/packages.nix
+    ./system/boot.nix
+    ./system/login.nix
+    ./system/services.nix
+    ./system/virtualisation.nix
+    ./system/desktop.nix
   ];
 
   nixpkgs = {
@@ -30,54 +22,93 @@ in {
     config.allowUnfree = true;
   };
 
-  system-manager = {
-    allowAnyDistro = true;
-    preActivationAssertions.alma = {
-      enable = true;
-      script = ''
-        source /etc/os-release
-        if [[ ''${ID:-} != almalinux ]]; then
-          echo "The alma System Manager configuration requires AlmaLinux." >&2
-          exit 1
-        fi
-        alma_major=''${VERSION_ID%%.*}
-        case "$alma_major" in
-          ${supportedAlmaMajors}) ;;
-          *)
-            echo "Unsupported AlmaLinux major version: ''${VERSION_ID:-unknown}. Expected ${supportedAlmaMajorsText}." >&2
-            exit 1
-            ;;
-        esac
-        if [[ ! -x /usr/bin/dnf || ! -x /usr/bin/systemctl ]]; then
-          echo "Alma's dnf and systemctl commands are required." >&2
-          exit 1
-        fi
-        account=${lib.escapeShellArg username}
-        expected_home=${lib.escapeShellArg homeDirectory}
-        if [[ $(/usr/bin/id -u "$account") != ${toString uid} \
-          || $(/usr/bin/id -g "$account") != ${toString gid} \
-          || $(/usr/bin/id -gn "$account") != ${lib.escapeShellArg primaryGroup} \
-          || $(/usr/bin/getent passwd "$account" | /usr/bin/cut -d: -f6) != "$expected_home" ]]; then
-          echo "The native account no longer matches the Alma configuration for $account." >&2
-          exit 1
-        fi
-      '';
+  alma = {
+    hostName = "alma";
+    timeZone = "America/Montreal";
+    defaultTarget = "multi-user.target";
+    packages = [
+      "NetworkManager"
+      "alsa-ucm"
+      "alsa-utils"
+      "dconf"
+      "dracut-config-generic"
+      "git"
+      "grubby"
+      "irqbalance"
+      "kernel"
+      "kernel-modules-extra"
+      "linux-firmware"
+      "mailcap"
+      "mesa-dri-drivers"
+      "microcode_ctl"
+      "openssh-clients"
+      "openssh-server"
+      "pipewire"
+      "pipewire-alsa"
+      "pipewire-pulseaudio"
+      "polkit"
+      "rtkit"
+      "sudo"
+      "udisks2"
+      "wireplumber"
+      "xdg-desktop-portal"
+      "xdg-desktop-portal-gtk"
+      "zram-generator"
+    ];
+    # Alma 10 splits firmware that Alma 9 bundles in linux-firmware.
+    extraPackagesByMajor = {
+      "9" = [];
+      "10" = [
+        "amd-gpu-firmware"
+        "amd-ucode-firmware"
+        "intel-audio-firmware"
+        "intel-gpu-firmware"
+        "nvidia-gpu-firmware"
+      ];
     };
+    packageGroups = {
+      server-product-environment = "Server";
+      development = "Development Tools";
+    };
+    services = [
+      "NetworkManager.service"
+      "getty@tty1.service"
+      "getty@tty2.service"
+      "irqbalance.service"
+      "sshd.service"
+    ];
+
+    userGroups = [
+      "docker"
+      "libvirt"
+      "render"
+      "video"
+      "wheel"
+    ];
+
+    kernelArguments = [
+      "selinux=0"
+    ];
+
+    removedKernelArguments = [
+      "crashkernel"
+    ];
   };
 
-  # The host account already exists. Userborn is deliberately disabled:
-  # its imported Debian-oriented system group IDs do not match Alma's.
-  security.enableWrappers = false;
-  services.userborn.enable = false;
-  users = {
-    groups.${primaryGroup}.gid = gid;
-    users.${username} = {
-      isNormalUser = true;
-      inherit uid;
-      group = primaryGroup;
-      home = homeDirectory;
+  nix = {
+    enable = true;
+    settings = {
+      experimental-features = ["nix-command" "flakes"];
+      auto-optimise-store = true;
+      trusted-users = ["@wheel"];
+      max-jobs = 2;
+      cores = 6;
+      warn-dirty = false;
+      extra-substituters = cache.substituters;
+      extra-trusted-public-keys = cache.trusted-public-keys;
     };
   };
+  environment.etc."nix/nix.conf".mode = "0644";
 
   environment.pathsToLink = [
     "/share/applications"
@@ -86,11 +117,17 @@ in {
   ];
   environment.systemPackages = [pkgs.zsh];
 
-  # Only the immutable system profile belongs in the boot path. Package
-  # and Home Manager reconciliation run explicitly after a switch.
+  systemd.maskedUnits = [
+    "NetworkManager-wait-online.service"
+    "firewalld.service"
+    "kdump.service"
+    "packagekit-offline-update.service"
+    "packagekit.service"
+  ];
+
+  # Reconcile explicitly after switching; boot only needs the immutable profile.
   systemd = {
     targets.system-manager.wants = ["system-manager-path.service"];
-    maskedUnits = ["NetworkManager-wait-online.service"] ++ disabledServices;
     services."home-manager-${username}" = {
       wantedBy = lib.mkForce [];
       restartIfChanged = false;
@@ -100,5 +137,10 @@ in {
         XDG_RUNTIME_DIR = "/run/user/${toString uid}";
       };
     };
+  };
+  environment.etc."systemd/system/nix-daemon.service.d/nixconf.conf" = {
+    mode = "0644";
+    replaceExisting = true;
+    text = "[Service]\nCPUSchedulingPolicy=idle\nIOSchedulingClass=idle\n";
   };
 }
