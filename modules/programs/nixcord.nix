@@ -69,6 +69,7 @@ in {
         useQuickCss = true;
         transparent = true;
         plugins = {
+          addAttachments.enable = true;
           alwaysTrust.enable = true;
           betterCommands.enable = true;
           betterSettings.enable = true;
@@ -183,10 +184,6 @@ in {
               ACHIEVEMENT_IN_ACTIVITY = true;
               ACHIEVEMENT_IN_GAME = true;
               PLAY_ACTIVITY = true;
-              PLAY_ON_DESKTOP = true;
-              PLAY_ON_DESKTOP_V2 = true;
-              PLAY_ON_PLAYSTATION = true;
-              PLAY_ON_XBOX = true;
               STREAM_ON_DESKTOP = true;
               WATCH_VIDEO = true;
               WATCH_VIDEO_ON_MOBILE = true;
