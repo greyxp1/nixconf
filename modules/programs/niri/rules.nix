@@ -25,6 +25,12 @@
       }
       {
         window-rule = {
+          match._props."app-id" = "^pixel9$";
+          open-floating = true;
+        };
+      }
+      {
+        window-rule = {
           match._props."app-id" = "^kitty$|^equibop$";
           background-effect = {
             blur = true;
