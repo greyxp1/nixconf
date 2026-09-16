@@ -77,6 +77,7 @@ in {
           almaOpencode
           alma-rebuild
           inputs.ncr.packages.${pkgs.stdenv.hostPlatform.system}.default
+          pkgs.cisco-packet-tracer_9
           pkgs.nh
           pkgs.tack
         ];
