@@ -261,9 +261,10 @@ echo "  [0] desktop  — Nvidia, gaming, virtualization"
 echo "  [1] vm       — QEMU/SPICE, standard kernel"
 echo "  [2] generic  — portable hardware, standard kernel"
 echo "  [3] alma     — AlmaLinux with System Manager"
+echo "  [4] laptop   — legacy BIOS, GRUB"
 read -rp "Choice: " n < /dev/tty
 case "$n" in
-  0) HOST=desktop ;; 1) HOST=vm ;; 2) HOST=generic ;; 3) HOST=alma ;;
+  0) HOST=desktop ;; 1) HOST=vm ;; 2) HOST=generic ;; 3) HOST=alma ;; 4) HOST=laptop ;;
   *) echo "Invalid choice"; exit 1 ;;
 esac
 
@@ -285,7 +286,10 @@ trap cleanup EXIT
 
 PASSWORD_HASH=$(mkpasswd --method=yescrypt)
 
-[[ -d /sys/firmware/efi/efivars ]] || { echo "UEFI required"; exit 1; }
+if [[ "$HOST" != laptop && ! -d /sys/firmware/efi/efivars ]]; then
+  echo "UEFI required for $HOST"
+  exit 1
+fi
 
 # Disk selection — exclude loop devices (-e 7) and the ISO boot disk
 ISO_DISK=$(findmnt -n -o SOURCE /iso 2>/dev/null | xargs -r lsblk -no PKNAME 2>/dev/null || true)

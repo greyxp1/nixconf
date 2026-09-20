@@ -1,11 +1,11 @@
 {
-  flake.nixosModules.boot = {
+  flake.nixosModules.boot = {lib, ...}: {
     boot = {
       kernelParams = ["systemd.show_status=auto"];
       consoleLogLevel = 3;
       loader = {
-        efi.canTouchEfiVariables = true;
-        systemd-boot.enable = true;
+        efi.canTouchEfiVariables = lib.mkDefault true;
+        systemd-boot.enable = lib.mkDefault true;
         timeout = 0;
       };
     };

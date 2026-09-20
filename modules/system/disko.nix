@@ -1,12 +1,12 @@
 {inputs, ...}: {
-  flake.nixosModules.filesystem = {
+  flake.nixosModules.filesystem = {lib, ...}: {
     imports = [inputs.disko.nixosModules.disko];
     disko.devices.disk.main = {
       type = "disk";
       content = {
         type = "gpt";
         partitions = {
-          ESP = {
+          ESP = lib.mkDefault {
             size = "512M";
             type = "EF00";
             content = {
