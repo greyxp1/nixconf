@@ -48,6 +48,11 @@
               insert = "bar";
               select = "bar";
             };
+
+            soft-wrap = {
+              enable = true;
+              wrap-indicator = "";
+            };
           };
 
           keys.normal."C-g" = [
