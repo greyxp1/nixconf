@@ -12,11 +12,6 @@
   ...
 }: let
   systemManager = inputs.system-manager.packages.${pkgs.stdenv.hostPlatform.system}.default;
-  almaDataScripts = pkgs.runCommand "alma-data-scripts" {} ''
-    mkdir -p "$out/bin"
-    install -m 0755 ${../../../../../scripts/alma-backup} "$out/bin/alma-backup"
-    install -m 0755 ${../../../../../scripts/alma-restore} "$out/bin/alma-restore"
-  '';
   almaOpencode = pkgs.writeShellApplication {
     name = "opencode";
     runtimeInputs = [pkgs.ripgrep];
@@ -73,7 +68,6 @@ in {
       home = {
         inherit homeDirectory username;
         packages = [
-          almaDataScripts
           almaOpencode
           alma-rebuild
           inputs.ncr.packages.${pkgs.stdenv.hostPlatform.system}.default
