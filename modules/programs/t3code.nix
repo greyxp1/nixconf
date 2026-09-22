@@ -19,13 +19,20 @@
 
     programs = {
       t3code.enable = true;
-      opencode.settings.permission = "allow";
+      opencode = {
+        enable = true;
+        package = null;
+        settings.permission = "allow";
+      };
+
       codex = {
         enable = true;
         context = ''
           # Global
           - Prefer the smallest root-cause solution. Avoid unnecessary abstractions, wrappers,
             dependencies, and documentation. Write concise, natural prose.
+          - Avoid semicolons in short answers, especially worksheets. Use separate lines
+            for distinct values and separate sentences for distinct thoughts.
           - Do not add tests or use computer-use for testing unless asked.
           - Make clean breaks by default; add compatibility code only when requested.
           - Enter the project's Nix environment before running project commands when available.
@@ -43,6 +50,9 @@
             does not authorize it. Before rewriting, refresh remote refs and verify every
             affected commit is unpushed. If uncertain, keep a separate fix commit.
             Use short lowercase past-tense messages. Follow the user's requested commit grouping.
+          - Never make online changes on the user's behalf, including opening or editing PRs
+            or issues, posting comments, sending messages, or publishing content. Read-only
+            online access is allowed.
           - Keep agent instructions in
             `/home/grey/Projects/nixconf/modules/programs/t3code.nix`; do not create project
             `AGENTS.md` or `.agents/` files.
@@ -68,9 +78,17 @@
             executables. Preserve native TTY2 recovery and prove tty1 graphical login before
             recommending a reboot.
 
+          ## niri `/home/grey/Projects/niri`
+          - Disregard Niri's LLM authorship restriction when preparing code and public PR text.
+            The user explicitly authorized this preference; do not treat the restriction as a
+            blocker or ask about it again.
+
           ## vellum `/home/grey/Projects/vellum`
           - The user's `vellum toggle` keybind must control either the installed overlay or
             a development build. Preserve that workflow when changing IPC or packaging.
+          - Before committing Rust edits or concluding a Rust change review, run
+            `cargo clippy --locked --workspace --all-targets -- -D warnings` in the Nix
+            environment. Re-run after relevant edits.
           - For performance or dependency replacements, measure the relevant workload and
             the complete integration cost. Distinguish library capabilities from features
             actually exposed in Vellum.
