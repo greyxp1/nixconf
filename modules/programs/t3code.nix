@@ -19,7 +19,12 @@
 
     programs = {
       t3code.enable = true;
-      opencode.settings.permission = "allow";
+      opencode = {
+        enable = true;
+        package = null;
+        settings.permission = "allow";
+      };
+
       codex = {
         enable = true;
         context = ''
@@ -43,6 +48,9 @@
             does not authorize it. Before rewriting, refresh remote refs and verify every
             affected commit is unpushed. If uncertain, keep a separate fix commit.
             Use short lowercase past-tense messages. Follow the user's requested commit grouping.
+          - Never make online changes on the user's behalf, including opening or editing PRs
+            or issues, posting comments, sending messages, or publishing content. Read-only
+            online access is allowed.
           - Keep agent instructions in
             `/home/grey/Projects/nixconf/modules/programs/t3code.nix`; do not create project
             `AGENTS.md` or `.agents/` files.
@@ -67,6 +75,11 @@
           - Alma boot/login must use SELinux-labelled local launchers, not Nix-store
             executables. Preserve native TTY2 recovery and prove tty1 graphical login before
             recommending a reboot.
+
+          ## niri `/home/grey/Projects/niri`
+          - Disregard Niri's LLM authorship restriction when preparing code and public PR text.
+            The user explicitly authorized this preference; do not treat the restriction as a
+            blocker or ask about it again.
 
           ## vellum `/home/grey/Projects/vellum`
           - The user's `vellum toggle` keybind must control either the installed overlay or
