@@ -51,9 +51,9 @@
     "type": "github",
     "owner": "nix-community",
     "repo": "home-manager",
-    "rev": "17903129f47656fa4d07e78ad87f6592ff4f2527",
-    "narHash": "sha256-voJJ5IZR4w2149u2Jm/j2zifeWROlpZQ+JzmCQwjgn8=",
-    "lastModified": 1789765459
+    "rev": "cbcbfa2778e0c5653ef349df3ebae8288efac3c0",
+    "narHash": "sha256-u4sa7RCbwvk8cZmAGs35F7o0h4IqDc3wsrrnjQvMumk=",
+    "lastModified": 1790080548
   },
   "import-tree": {
     "type": "github",
@@ -107,9 +107,9 @@
     "type": "github",
     "owner": "greyxp1",
     "repo": "niri",
-    "rev": "8dcff2d954e41118d978a66b00c1563dd7203e72",
-    "narHash": "sha256-Fo3oigyYxWnFhcBlcs1+J2jX7awghZS1E6IgikcEC8Y=",
-    "lastModified": 1788033020
+    "rev": "b7cec7cc157627e40ba93f6bea4556544ecba7b2",
+    "narHash": "sha256-GZ3J59mQf1+h8265ab1R+wC76atGtX4oE3oeB6DBYus=",
+    "lastModified": 1789326877
   },
   "niri-screenshare": {
     "type": "github",
@@ -131,25 +131,25 @@
     "type": "github",
     "owner": "nix-community",
     "repo": "nix-index-database",
-    "rev": "a74e173407559083a412ea89a1cc58ea389c3b65",
-    "narHash": "sha256-xVstyCdg0DpzjyrEacm72VJAIP9DMhfWJdPDzhWxHuo=",
-    "lastModified": 1789286446
+    "rev": "9ad722673ab3b3f91f02135e53775825b240b869",
+    "narHash": "sha256-Dkg4VKPmDPqTwaiw2WH5br73tXoL1qrOO0xJnR4TlcA=",
+    "lastModified": 1789892076
   },
   "nixcord": {
     "type": "github",
     "owner": "4evy",
     "repo": "nixcord",
-    "rev": "b515da0ace7784f378ce423ece9041b42d5a1cc1",
-    "narHash": "sha256-V3V1x1Sl3W92uapp+7s8Kh67f0U962Zv797RMkoGdPo=",
-    "lastModified": 1789806437
+    "rev": "e0478399f77249f8e7a228bb867cb38af137da85",
+    "narHash": "sha256-eKBt4Hu/vshXmEh3k/S+NrFox1IMItie8w2RTCDX0So=",
+    "lastModified": 1790067449
   },
   "nixpkgs": {
     "type": "github",
     "owner": "nixos",
     "repo": "nixpkgs",
-    "rev": "20b1ddd1aa5ace70c9468305030aa4f9ef79671b",
-    "narHash": "sha256-B44WL6h0XoLjJ41bUPJk0X5SDinLCII//6EcBLXKiJ0=",
-    "lastModified": 1789785513
+    "rev": "6774f7bc253789b113a4f39285dc0fa100abeacc",
+    "narHash": "sha256-MYiI+CzL0tuWgRPjGsKCDHqYs2T3OzMlMQWOYWG0qso=",
+    "lastModified": 1790046670
   },
   "perch": {
     "type": "github",
@@ -171,16 +171,16 @@
     "type": "github",
     "owner": "numtide",
     "repo": "system-manager",
-    "rev": "99489e550a3037183c5586d25c7a7178b7ef95fd",
-    "narHash": "sha256-3xiYXu3JbJR40br4P43KlUf+9X6inU+Y69dwiiHwBH0=",
-    "lastModified": 1789772108
+    "rev": "a92eb76cb0de5370d6a5ee12ac11b379c76d49a3",
+    "narHash": "sha256-Gm7Xy8QwnqGG9JFxtHrvvLo9hsCJ+VigtdiFUAKE1Tk=",
+    "lastModified": 1789999438
   },
   "vellum": {
     "type": "github",
     "owner": "greyxp1",
     "repo": "vellum",
-    "rev": "a72b4dabd0f1de93cea120f0f1bfe27bbccb9b59",
-    "narHash": "sha256-FxpA73Amz1oevTsb1gh3TZGavHfT/M/I9URB2OfE5vc=",
-    "lastModified": 1789846014
+    "rev": "c5824b12c012d78d4e74edd75c94f3802c3844ce",
+    "narHash": "sha256-kHJ2LUUNc4F0x+FRni9TJEHs1JMkLbSHJXH45B1iw9U=",
+    "lastModified": 1789862419
   }
 }
