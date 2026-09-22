@@ -30,6 +30,7 @@ in {
       ./_modules/sober.nix
       ./_modules/nvidia.nix
       ./_modules/virt.nix
+      ./_modules/xwayland-satellite-popup-fix.nix
     ];
   };
 }
