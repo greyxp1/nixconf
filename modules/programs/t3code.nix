@@ -84,6 +84,9 @@
           ## vellum `/home/grey/Projects/vellum`
           - The user's `vellum toggle` keybind must control either the installed overlay or
             a development build. Preserve that workflow when changing IPC or packaging.
+          - Before committing Rust edits or concluding a Rust change review, run
+            `cargo clippy --locked --workspace --all-targets -- -D warnings` in the Nix
+            environment. Re-run after relevant edits.
           - For performance or dependency replacements, measure the relevant workload and
             the complete integration cost. Distinguish library capabilities from features
             actually exposed in Vellum.
