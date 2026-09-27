@@ -1,0 +1,11 @@
+diff --git a/third-party/libvirtualhid/src/platform/linux/uhid_backend.cpp b/third-party/libvirtualhid/src/platform/linux/uhid_backend.cpp
+--- a/third-party/libvirtualhid/src/platform/linux/uhid_backend.cpp
++++ b/third-party/libvirtualhid/src/platform/linux/uhid_backend.cpp
+@@ -1485,7 +1485,7 @@
+       }
+ 
+-      for (auto code = 1; code < KEY_MAX; ++code) {
++      for (auto code = 1; code < BTN_MISC; ++code) {
+         if (const auto status = enable_evdev_code(device, EV_KEY, code, "keyboard key"); !status.ok()) {
+           return status;
+         }
