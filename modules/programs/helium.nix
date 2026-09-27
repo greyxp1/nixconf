@@ -11,6 +11,7 @@
         DefaultSearchProviderName = "Google";
         DefaultSearchProviderSearchURL = "https://www.google.com/search?q={searchTerms}";
         DefaultSearchProviderSuggestURL = "https://www.google.com/complete/search?output=chrome&q={searchTerms}";
+        ExtensionSettings.blockjmkbacgjkknlgpkjjiijinjdanf.toolbar_pin = "force_pinned"; #pin ublock
       };
 
       preferences = {
@@ -31,12 +32,7 @@
         sponsorBlock.id = "mnjggcdmjocbbbhaepdhchncahnbgone";
         deArrow.id = "enamippconapkdmgfgjchkhakpfinmaj";
         controlPanel.id = "lodcanccmfbpjjpnngindkkmiehimile";
-        "7tv".id = "bhplkbgoehhhddaoolmakpocnenplmhf";
-
-        ublock = {
-          id = "blockjmkbacgjkknlgpkjjiijinjdanf";
-          pin = true;
-        };
+        alternatePlayer.id = "aojjiodaaogdbbcnbpjnojilccopgcbk;https://edge.microsoft.com/extensionwebstorebase/v1/crx";
 
         protonPass = {
           id = "ghmbeldphafepmbegfdlkpapadhbakde";
