@@ -11,7 +11,8 @@ in {
     ...
   }: {
     nixpkgs.overlays = [inputs.niri-screenshare.overlays.default];
-    services.gnome.gnome-keyring.enable = lib.mkForce false;
+    services.gnome.gnome-keyring.enable = true;
+    services.gnome.gcr-ssh-agent.enable = false;
     xdg.portal = {
       extraPortals = [(niri-screenshare pkgs)];
       config.niri = {
