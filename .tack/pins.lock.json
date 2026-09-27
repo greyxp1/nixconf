@@ -167,6 +167,14 @@
     "narHash": "sha256-mMI9IanU+Xw+pVogD2oT0I2kTmvz2Un/Apc5+CwUpEY=",
     "lastModified": 1757436102
   },
+  "sunshine-nixpkgs": {
+    "type": "github",
+    "owner": "nixos",
+    "repo": "nixpkgs",
+    "rev": "fd29d673b014a4f88f9bb9ec628b46055243cf96",
+    "narHash": "sha256-lSAB6CZem3CWe0Qqk14uzrysQePYgn2Aul7Wxmns6eY=",
+    "lastModified": 1790541915
+  },
   "system-manager": {
     "type": "github",
     "owner": "numtide",
