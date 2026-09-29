@@ -7,6 +7,14 @@
     "narHash": "sha256-W5dvgFOuVs24X3G5tUb8C2IHU7ICXNvyGPiWWFjfbuo=",
     "lastModified": 1789553013
   },
+  "codex-cli-nix": {
+    "type": "github",
+    "owner": "sadjow",
+    "repo": "codex-cli-nix",
+    "rev": "3422ac7dfb605b5b02a39d55ed3b9e1b29007f11",
+    "narHash": "sha256-NpohRwQkPnm5XCs91GeeYB+H7B5ZBv/pGm3Ztev38xQ=",
+    "lastModified": 1790716519
+  },
   "compress-yazi": {
     "type": "github",
     "owner": "KKV9",

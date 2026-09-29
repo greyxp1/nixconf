@@ -9,7 +9,7 @@
       dataDir = "${homeDirectory}/.t3";
       host = "0.0.0.0";
       openFirewall = true;
-      extraPackages = [pkgs.codex pkgs.gh];
+      extraPackages = [inputs.codex-cli-nix.packages.${pkgs.stdenv.hostPlatform.system}.default pkgs.gh];
       environment.HOME = homeDirectory;
       environment.SSH_AUTH_SOCK = "/run/user/${toString (args.uid or config.users.users.${username}.uid)}/ssh-agent";
     };
