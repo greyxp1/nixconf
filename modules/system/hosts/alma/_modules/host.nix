@@ -128,6 +128,7 @@ in {
 
   # Reconcile explicitly after switching; boot only needs the immutable profile.
   systemd = {
+    services.t3code.path = lib.mkAfter ["/run/system-manager/sw" "/nix/var/nix/profiles/default" "/usr/local" "/usr" ""];
     targets.system-manager.wants = ["system-manager-path.service"];
     services."home-manager-${username}" = {
       wantedBy = lib.mkForce [];

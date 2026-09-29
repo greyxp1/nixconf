@@ -21,6 +21,7 @@
         inherit flakeLocation gid homeDirectory homeModules inputs primaryGroup uid username;
       };
       modules = [
+        config.flake.nixosModules.t3code
         inputs.home-manager.nixosModules.home-manager
         ./_modules/home.nix
         ./_modules/host.nix

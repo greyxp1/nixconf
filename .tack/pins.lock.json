@@ -183,6 +183,14 @@
     "narHash": "sha256-YZqUkgbUEWdb+f8LtyM47NBhxnh2GLYEdzOYM9uTTOs=",
     "lastModified": 1790615532
   },
+  "t3code": {
+    "type": "github",
+    "owner": "ominit",
+    "repo": "t3code-flake",
+    "rev": "eb4c1ab312730761546a85146c781db8e05d6fdb",
+    "narHash": "sha256-1a9EJ5tOpVY+JRkmp7a1FcsFZ7y0Ohdy2CZ86OdybuY=",
+    "lastModified": 1790714293
+  },
   "vellum": {
     "type": "github",
     "owner": "greyxp1",

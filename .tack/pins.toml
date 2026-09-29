@@ -22,6 +22,9 @@ follows = { nixpkgs-lib = "nixpkgs" }
 
 [inputs.nixpkgs]
 url = "gh:nixos/nixpkgs/nixos-unstable"
+[inputs.t3code]
+url = "gh:ominit/t3code-flake"
+follows = { nixpkgs = "nixpkgs", flake-parts = "flake-parts" }
 [inputs.sunshine-nixpkgs]
 url = "gh:nixos/nixpkgs/fd29d673b014a4f88f9bb9ec628b46055243cf96"
 [inputs.preservation]
