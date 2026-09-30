@@ -17,7 +17,6 @@ in {
       scheduler = "scx_cosmos";
     };
     hardware.cpu.amd.updateMicrocode = true;
-    environment.systemPackages = [inputs.delta.packages.x86_64-linux.delta];
     powerManagement.cpuFreqGovernor = "performance";
     boot = {
       kernelModules = ["kvm-amd" "ntsync"];
@@ -32,15 +31,7 @@ in {
       };
     };
 
-    home-manager.sharedModules = [
-      ./_modules/noctalia.nix
-      {
-        xdg.mimeApps = {
-          enable = true;
-          defaultApplications."x-scheme-handler/delta" = "dev.zed.Delta.desktop";
-        };
-      }
-    ];
+    home-manager.sharedModules = [./_modules/noctalia.nix];
     imports = [
       ./_modules/at2005usb.nix
       ./_modules/gaming.nix

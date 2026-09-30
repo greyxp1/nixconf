@@ -35,8 +35,6 @@ url = "gh:nix-community/preservation"
 url = "gh:vic/import-tree"
 [inputs.disko]
 url = "gh:nix-community/disko"
-[inputs.delta]
-url = "gh:zed-industries/delta-nix"
 [inputs.home-manager]
 url = "gh:nix-community/home-manager"
 [inputs.system-manager]

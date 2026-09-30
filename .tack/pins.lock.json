@@ -31,14 +31,6 @@
     "narHash": "sha256-n4Jccs+8tH5ToOs7OIOD45OtjxNtpum2llSM1hEMLrw=",
     "lastModified": 1784870889
   },
-  "delta": {
-    "type": "github",
-    "owner": "zed-industries",
-    "repo": "delta-nix",
-    "rev": "a9b7f20479455d921c881c7cd37cf2370e671bc7",
-    "narHash": "sha256-AMqXZz8MV9t0UnCRqi+VgsAQNkVJbbaN638cQ1RMV/c=",
-    "lastModified": 1790338327
-  },
   "disko": {
     "type": "github",
     "owner": "nix-community",
