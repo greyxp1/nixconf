@@ -130,6 +130,7 @@ in {
   systemd = {
     packages = [pkgs.tailscale];
     services.tailscaled.wantedBy = ["multi-user.target"];
+    services.tailscaled.environment.PORT = "41641";
     services.t3code.path = lib.mkAfter ["/run/system-manager/sw" "/nix/var/nix/profiles/default" "/usr/local" "/usr" ""];
     targets.system-manager.wants = ["system-manager-path.service"];
     services."home-manager-${username}" = {
