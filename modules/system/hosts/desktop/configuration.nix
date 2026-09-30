@@ -1,7 +1,16 @@
 {inputs, ...}: let
   mkHost = import ../_mkHost.nix inputs;
 in {
-  flake.nixosConfigurations.desktop = mkHost "desktop" {
+  flake.nixosConfigurations.desktop = mkHost "desktop" ({pkgs, username, ...}: {
+    services.tailscale = {
+      enable = true;
+      extraSetFlags = ["--operator=${username}"];
+    };
+    services.t3code = {
+      extraPackages = [pkgs.tailscale];
+      extraArgs = ["--tailscale-serve"];
+    };
+    systemd.services.t3code.after = ["tailscaled.service" "tailscaled-set.service"];
     disko.devices.disk.main.device = import ./_device.nix;
     services.scx = {
       enable = true;
@@ -31,5 +40,5 @@ in {
       ./_modules/nvidia.nix
       ./_modules/virt.nix
     ];
-  };
+  });
 }

@@ -116,7 +116,7 @@ in {
     "/share/zsh"
     "/share/xdg-desktop-portal"
   ];
-  environment.systemPackages = [pkgs.zsh];
+  environment.systemPackages = [pkgs.zsh pkgs.tailscale];
 
   systemd.maskedUnits = [
     "NetworkManager-wait-online.service"
@@ -128,6 +128,8 @@ in {
 
   # Reconcile explicitly after switching; boot only needs the immutable profile.
   systemd = {
+    packages = [pkgs.tailscale];
+    services.tailscaled.wantedBy = ["multi-user.target"];
     services.t3code.path = lib.mkAfter ["/run/system-manager/sw" "/nix/var/nix/profiles/default" "/usr/local" "/usr" ""];
     targets.system-manager.wants = ["system-manager-path.service"];
     services."home-manager-${username}" = {
