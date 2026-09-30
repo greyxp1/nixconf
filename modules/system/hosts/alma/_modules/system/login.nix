@@ -15,6 +15,17 @@
   '';
 in {
   environment.etc = {
+    # Nix's libpolkit-agent expects the helper at the NixOS wrapper path.
+    # Use Alma's setuid helper so authentication goes through the host PAM stack.
+    "tmpfiles.d/nixconf-polkit.conf" = {
+      mode = "0644";
+      replaceExisting = true;
+      text = ''
+        d /run/wrappers 0755 root root -
+        d /run/wrappers/bin 0755 root root -
+        L+ /run/wrappers/bin/polkit-agent-helper-1 - - - - /usr/lib/polkit-1/polkit-agent-helper-1
+      '';
+    };
     "sudoers.d/nixconf" = {
       mode = "0440";
       replaceExisting = true;
