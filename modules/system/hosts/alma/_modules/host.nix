@@ -57,7 +57,8 @@ in {
     ];
     # Alma 10 splits firmware that Alma 9 bundles in linux-firmware.
     extraPackagesByMajor = {
-      "9" = [];
+      # VMware's bundled OVF Tool needs the legacy libnsl.so.1 library.
+      "9" = ["libnsl"];
       "10" = [
         "amd-gpu-firmware"
         "amd-ucode-firmware"
