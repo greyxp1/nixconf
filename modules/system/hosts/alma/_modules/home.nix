@@ -86,37 +86,6 @@ in {
           + "U+ed00-U+efce,U+f000-U+f2ff,U+f300-U+f381,U+f400-U+f533,"
           + "U+f0001-U+f1af0 Symbols Nerd Font Mono";
       };
-      programs.bottom.settings = {
-        disk.mount_filter.is_list_ignored = lib.mkForce true;
-        row = lib.mkForce [
-          {
-            ratio = 30;
-            child = [{type = "cpu";}];
-          }
-          {
-            ratio = 70;
-            child = [
-              {
-                child = [
-                  {
-                    ratio = 5;
-                    type = "mem";
-                  }
-                  {
-                    ratio = 2;
-                    type = "disk";
-                  }
-                  {type = "temp";}
-                ];
-              }
-              {
-                type = "proc";
-                default = true;
-              }
-            ];
-          }
-        ];
-      };
       programs.noctalia.settings = {
         bar.default.margin_ends = lib.mkForce 415;
         plugin_settings."noctalia/screen_recorder".video_codec = lib.mkForce "h264";

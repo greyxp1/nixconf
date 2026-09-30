@@ -4,8 +4,11 @@
     inputs = tackInputs // {inherit self;};
   in
     inputs.flake-parts.lib.mkFlake {inherit inputs;} {
-      imports = [(inputs.import-tree ./modules)];
+      imports = [inputs.wrappers.flakeModules.wrappers (inputs.import-tree ./modules)];
       systems = ["x86_64-linux"];
-      perSystem = {system, ...}: {packages.disko = inputs.disko.packages.${system}.disko;};
+      perSystem = {system, ...}: {
+        _module.args.pkgs = inputs.nixpkgs.legacyPackages.${system};
+        packages.disko = inputs.disko.packages.${system}.disko;
+      };
     };
 }

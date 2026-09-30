@@ -6,6 +6,9 @@
   }: {
     nixpkgs.config.allowUnfree = true;
     documentation.nixos.enable = false;
+    security.sudo.extraConfig = ''
+      Defaults secure_path="/run/wrappers/bin:/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin"
+    '';
 
     nix = {
       package = pkgs.lix;

@@ -21,6 +21,27 @@
         inherit flakeLocation gid homeDirectory homeModules inputs primaryGroup uid username;
       };
       modules = [
+        ({pkgs, ...}: {
+          environment.variables = {
+            EDITOR = "hx";
+            VISUAL = "hx";
+          };
+          environment.systemPackages = [
+            (config.flake.wrappers.helix.wrap {
+              inherit pkgs;
+              inherit flakeLocation;
+              nixconfSystem = "systemConfigs.alma";
+            })
+            (config.flake.wrappers.yazi.wrap {
+              inherit pkgs homeDirectory;
+            })
+            (config.flake.wrappers.bottom.wrap {
+              inherit pkgs;
+              diskRatio = 2;
+              settings.disk.mount_filter.is_list_ignored = inputs.nixpkgs.lib.mkForce true;
+            })
+          ];
+        })
         config.flake.nixosModules.t3code
         inputs.home-manager.nixosModules.home-manager
         ./_modules/home.nix

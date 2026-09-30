@@ -1,9 +1,19 @@
-{inputs, ...}: {
+{
+  config,
+  inputs,
+  ...
+}: {
   flake.nixosModules.yazi = {
+    homeDirectory,
     pkgs,
     lib,
     ...
   }: {
+    imports = [config.flake.wrappers.yazi.install];
+    wrappers.yazi = {
+      enable = true;
+      inherit homeDirectory;
+    };
     xdg.portal = {
       enable = true;
       extraPortals = [pkgs.xdg-desktop-portal-termfilechooser];
@@ -21,44 +31,65 @@
     '';
   };
 
-  flake.homeModules.yazi = {
-    config,
-    lib,
-    pkgs,
-    ...
-  }: let
-    plug = on: run: desc: {
-      inherit on desc;
-      run = "plugin ${run}";
+  flake.homeModules.yazi = {pkgs, ...}: {
+    catppuccin.yazi.enable = false;
+    programs.yazi = {
+      enable = true;
+      package = null;
     };
-    compress = inputs.compress-yazi;
-  in {
-    # Preserve terminal transparency and open the hovered folder icon.
-    xdg.configFile."yazi/theme.toml".source = lib.mkForce (
-      pkgs.runCommand "yazi-catppuccin-theme" {} ''
-        sed '
-          /^overall =/d
-          /if = "dir"/ {
-            h
-            s/if = "dir"/if = "dir \& hovered"/
-            s///
-            p
-            g
-          }
-        ' ${config.catppuccin.sources.yazi}/${config.catppuccin.yazi.flavor}/catppuccin-${config.catppuccin.yazi.flavor}-${config.catppuccin.yazi.accent}.toml > "$out"
-      ''
-    );
-
     xdg.configFile."xdg-desktop-portal-termfilechooser/config".text = ''
       [filechooser]
       cmd=${pkgs.xdg-desktop-portal-termfilechooser}/share/xdg-desktop-portal-termfilechooser/yazi-wrapper.sh
       default_dir=$HOME
       env=TERMCMD=kitty -o background_opacity=0.6 --title=filepicker
     '';
+  };
 
-    programs.yazi = {
-      enable = true;
-      settings = {
+  flake.wrappers.yazi = {
+    config,
+    lib,
+    pkgs,
+    wlib,
+    ...
+  }: let
+    plug = on: run: desc: {
+      inherit on desc;
+      run = "plugin ${run}";
+    };
+    catppuccin = inputs.catppuccin.packages.${pkgs.stdenv.hostPlatform.system};
+    theme = lib.importTOML "${catppuccin.yazi}/mocha/catppuccin-mocha-mauve.toml";
+  in {
+    imports = [wlib.wrapperModules.yazi];
+    options.homeDirectory = lib.mkOption {
+      type = lib.types.str;
+      default = "/home/grey";
+    };
+    config = {
+      runtimePkgs = [pkgs.starship pkgs.udisks2 (lib.getBin pkgs.util-linux)];
+      env.STARSHIP_CONFIG = pkgs.writeText "yazi-starship.toml" (builtins.readFile ./starship/starship.toml);
+      settings.theme =
+        theme
+        // {
+          app = builtins.removeAttrs theme.app ["overall"];
+          mgr =
+            theme.mgr
+            // {
+              syntect_theme = "${catppuccin.bat}/Catppuccin Mocha.tmTheme";
+            };
+          icon =
+            theme.icon
+            // {
+              conds = lib.concatMap (icon:
+                lib.optional ((icon."if" or "") == "dir") (icon
+                  // {
+                    "if" = "dir & hovered";
+                    text = "";
+                  })
+                ++ [icon])
+              theme.icon.conds;
+            };
+        };
+      settings.yazi = {
         mgr = {
           ratio = [0 3 5];
           sort_by = "natural";
@@ -93,39 +124,29 @@
       };
 
       plugins = with pkgs.yaziPlugins; {
-        inherit compress mount;
-
-        full-border = {
-          package = full-border;
-          setup = true;
-        };
-        keep-preferences = {
-          package = keep-preferences;
-          setup = true;
-          settings.path_preferences =
-            map (directory: {
-              path = "^${config.home.homeDirectory}/${directory}";
-              defaults = {
-                sort_by = "mtime";
-                sort_reverse = true;
-              };
-            }) [
-              "Downloads"
-              "Pictures"
-              "Videos"
-            ];
-        };
-        smart-enter = {
-          package = smart-enter;
-          setup = true;
-          settings.open_multi = true;
-        };
-        starship = {
-          package = starship;
-          setup = true;
+        compress = inputs.compress-yazi;
+        inherit mount full-border keep-preferences smart-enter starship;
+      };
+      constructFiles = {
+        init = {
+          relPath = "${config.binName}-config/init.lua";
+          content = ''
+            require("full-border"):setup()
+            require("keep-preferences"):setup(${lib.generators.toLua {} {
+              path_preferences = map (directory: {
+                path = "^${config.homeDirectory}/${directory}";
+                defaults = {
+                  sort_by = "mtime";
+                  sort_reverse = true;
+                };
+              }) ["Downloads" "Pictures" "Videos"];
+            }})
+            require("smart-enter"):setup({ open_multi = true })
+            require("starship"):setup()
+          '';
         };
       };
-      keymap.mgr.prepend_keymap = [
+      settings.keymap.mgr.prepend_keymap = [
         (plug ["l"] "smart-enter" "Enter the child directory, or open the file")
         (plug ["C"] "compress" "Compress selected files")
         (plug ["M"] "mount" "Mount manager")

@@ -37,6 +37,8 @@ url = "gh:vic/import-tree"
 url = "gh:nix-community/disko"
 [inputs.home-manager]
 url = "gh:nix-community/home-manager"
+[inputs.wrappers]
+url = "gh:nix-community/nix-wrapper-modules"
 [inputs.system-manager]
 url = "gh:numtide/system-manager"
 [inputs.helium]
