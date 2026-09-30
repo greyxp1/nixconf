@@ -77,6 +77,8 @@ in {
       "getty@tty2.service"
       "irqbalance.service"
       "sshd.service"
+      "tailscaled.service"
+      "t3code.service"
     ];
 
     userGroups = [
