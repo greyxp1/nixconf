@@ -48,7 +48,7 @@ in {
         name = "Connect to ${if name == "alma" then "Alma" else "Desktop"}";
         comment = "Remote desktop over Tailscale";
         icon = "network-workgroup";
-        exec = "env SDL_VIDEODRIVER=wayland moonlight stream ${address} -app Desktop -platform sdl -1080 -fps 30 -bitrate 6000 -packetsize 1024 -codec h264 -keydir ${keyDirectory}";
+        exec = "env SDL_VIDEODRIVER=wayland moonlight stream ${address} -app Desktop -platform sdl -1080 -fps 60 -bitrate 6000 -packetsize 1024 -codec h264 -keydir ${keyDirectory}";
         terminal = false;
         categories = ["Network" "RemoteAccess"];
         actions.pair = {

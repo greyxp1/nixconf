@@ -1,6 +1,15 @@
 diff --git a/src/sdl.c b/src/sdl.c
 --- a/src/sdl.c
 +++ b/src/sdl.c
+@@ -46,7 +46,7 @@
+     exit(1);
+   }
+ 
+-  renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
++  renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+   if (!renderer) {
+     printf("SDL_CreateRenderer failed: %s\n", SDL_GetError());
+     exit(1);
 @@ -73,6 +73,7 @@
    SDL_Event event;
  
