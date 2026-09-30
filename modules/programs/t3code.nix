@@ -58,9 +58,9 @@
         # Host configuration
         - Before inspecting or changing host configuration, run `hostnamectl` and read
           `/etc/os-release`. Use that host's target; never infer it from the checkout.
-        - After implementing NixOS configuration changes, build and switch that host's
-          NixOS configuration. Never activate standalone Home Manager or another host.
-          If privileges are unavailable, ask the user to rebuild.
+        - After host configuration changes, evaluate that host's configuration to catch
+          evaluation errors. Leave builds, switches, activation, and `rebuild` to the user
+          so they can watch progress. Never activate standalone Home Manager or another host.
 
         # Projects
         Apply conventions to the repository being changed, including worktrees and work
@@ -202,7 +202,7 @@
           Keep durable instructions in
           `/home/grey/Projects/nixconf/modules/programs/t3code.nix`: general preferences in
           Global, project invariants in Projects, reusable procedures in inline skills.
-          Verify the prevention where practical and follow the host build, switch, and commit
+          Verify the prevention where practical and follow the host evaluation and commit
           rules for configuration changes.
         '';
       };
