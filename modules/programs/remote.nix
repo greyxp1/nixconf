@@ -2,14 +2,15 @@
   sunshine = inputs.sunshine-nixpkgs.legacyPackages.x86_64-linux.sunshine.overrideAttrs (old: {
     patches = (old.patches or []) ++ [./sunshine-keyboard.patch];
   });
+  displayFor = pkgs: pkgs.writeShellApplication {
+    name = "sunshine-display";
+    runtimeInputs = [pkgs.niri pkgs.jq];
+    text = builtins.readFile ./sunshine-display.sh;
+  };
 in {
   flake.nixosModules.remote = {config, pkgs, utils, username, ...}: let
     resizeDesktop = config.networking.hostName == "desktop";
-    display = pkgs.writeShellApplication {
-      name = "sunshine-display";
-      runtimeInputs = [pkgs.niri pkgs.jq];
-      text = builtins.readFile ./sunshine-display.sh;
-    };
+    display = displayFor pkgs;
     prepCommands = builtins.toJSON [{
       do = "${lib.getExe display} start";
       undo = "${lib.getExe display} restore";
@@ -46,9 +47,27 @@ in {
     pkgs,
     ...
   }: let
+    display = displayFor pkgs;
+    prepCommands = builtins.toJSON [{
+      do = "${lib.getExe display} start";
+      undo = "${lib.getExe display} restore";
+    }];
+    # Match the host driver's libc without recompiling the patched Sunshine binary.
+    hostSunshine = (pkgs.replaceDirectDependencies {
+      drv = sunshine;
+      replacements = [{
+        oldDependency = inputs.sunshine-nixpkgs.legacyPackages.x86_64-linux.glibc;
+        newDependency = pkgs.glibc;
+      }];
+    }) // {inherit (sunshine) meta;};
     client = pkgs.moonlight-embedded.overrideAttrs (old: {
       patches = (old.patches or []) ++ [./moonlight-keyboard.patch];
     });
+    connect = pkgs.writeShellApplication {
+      name = "remote-connect";
+      runtimeInputs = [client pkgs.niri pkgs.jq];
+      text = builtins.readFile ./remote-connect.sh;
+    };
     hostName =
       if nixconfSystem == "systemConfigs.alma"
       then "alma"
@@ -58,33 +77,40 @@ in {
       desktop = "desktop.tail1785c.ts.net";
     };
     keyDirectory = "${config.xdg.dataHome}/moonlight";
+    stream = address: bitrate:
+      "${lib.getExe connect} ${address} ${toString bitrate} ${keyDirectory}";
   in {
-    home.packages = [client] ++ lib.optionals (nixconfSystem != null) [sunshine];
+    home.packages = [client] ++ lib.optionals (nixconfSystem != null) [hostSunshine];
 
     xdg.desktopEntries = lib.mapAttrs' (name: address:
       lib.nameValuePair "remote-${name}" {
         name = "Connect to ${if name == "alma" then "Alma" else "Desktop"}";
         comment = "Remote desktop over Tailscale";
-        icon = "network-workgroup";
-        exec = "env SDL_VIDEODRIVER=wayland moonlight stream ${address} -app Desktop -quitappafter -platform sdl -1080 -fps 60 -bitrate 6000 -packetsize 1024 -codec h264 -keydir ${keyDirectory}";
+        icon = "${./remote-desktop.svg}";
+        exec = stream address 6000;
         terminal = false;
         categories = ["Network" "RemoteAccess"];
         actions.pair = {
           name = "Pair";
           exec = "kitty --hold moonlight pair ${address} -keydir ${keyDirectory}";
         };
+        actions.high-quality = lib.mkIf (name == "desktop") {
+          name = "Connect (high quality, home network)";
+          exec = stream address 20000;
+        };
       })
     hosts;
 
     xdg.configFile = lib.mkIf (nixconfSystem != null) {
       "systemd/user/app-dev.lizardbyte.app.Sunshine.service".source =
-        "${sunshine}/share/systemd/user/app-dev.lizardbyte.app.Sunshine.service";
+        "${hostSunshine}/share/systemd/user/app-dev.lizardbyte.app.Sunshine.service";
       "systemd/user/graphical-session.target.wants/app-dev.lizardbyte.app.Sunshine.service".source =
-        "${sunshine}/share/systemd/user/app-dev.lizardbyte.app.Sunshine.service";
+        "${hostSunshine}/share/systemd/user/app-dev.lizardbyte.app.Sunshine.service";
       "systemd/user/app-dev.lizardbyte.app.Sunshine.service.d/codec.conf".text = ''
         [Service]
         ExecStart=
-        ExecStart=${lib.getExe sunshine} hevc_mode=1 csrf_allowed_origins=https://alma.tail1785c.ts.net:47990
+        ExecStart=${lib.getExe hostSunshine} hevc_mode=1 csrf_allowed_origins=https://alma.tail1785c.ts.net:47990 vaapi_quality=balanced qp=20 "global_prep_cmd=${lib.replaceStrings ["\""] ["\\\""] prepCommands}"
+        ExecStopPost=-${lib.getExe display} restore
       '';
     };
   };
