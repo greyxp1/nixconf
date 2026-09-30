@@ -10,6 +10,12 @@
 in {
   flake.nixosModules.remote = {config, pkgs, utils, username, ...}: let
     resizeDesktop = config.networking.hostName == "desktop";
+    cudaSunshine = ((import inputs.sunshine-nixpkgs {
+      system = pkgs.stdenv.hostPlatform.system;
+      config.allowUnfree = true;
+    }).sunshine.override {cudaSupport = true;}).overrideAttrs (old: {
+      patches = (old.patches or []) ++ [./sunshine-keyboard.patch];
+    });
     display = displayFor pkgs;
     prepCommands = builtins.toJSON [{
       do = "${lib.getExe display} start";
@@ -25,10 +31,14 @@ in {
     services.sunshine = {
       enable = true;
       openFirewall = true;
-      package = lib.mkDefault sunshine;
+      package = lib.mkDefault (if resizeDesktop then cudaSunshine else sunshine);
     };
 
     environment.systemPackages = lib.optional resizeDesktop display;
+
+    systemd.user.services.sunshine.environment = lib.mkIf resizeDesktop {
+      LD_LIBRARY_PATH = "/run/opengl-driver/lib";
+    };
 
     # CLI settings preserve the configuration edited through Sunshine's web UI.
     systemd.user.services.sunshine.serviceConfig.ExecStart = lib.mkForce
@@ -86,7 +96,7 @@ in {
       lib.nameValuePair "remote-${name}" {
         name = "Connect to ${if name == "alma" then "Alma" else "Desktop"}";
         comment = "Remote desktop over Tailscale";
-        icon = "${./remote-desktop.svg}";
+        icon = "${pkgs.adwaita-icon-theme-legacy}/share/icons/AdwaitaLegacy/48x48/places/network-workgroup.png";
         exec = stream address 6000;
         terminal = false;
         categories = ["Network" "RemoteAccess"];
