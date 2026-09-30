@@ -3,7 +3,18 @@
     patches = (old.patches or []) ++ [./sunshine-keyboard.patch];
   });
 in {
-  flake.nixosModules.remote = {config, username, ...}: {
+  flake.nixosModules.remote = {config, pkgs, utils, username, ...}: let
+    resizeDesktop = config.networking.hostName == "desktop";
+    display = pkgs.writeShellApplication {
+      name = "sunshine-display";
+      runtimeInputs = [pkgs.niri pkgs.jq];
+      text = builtins.readFile ./sunshine-display.sh;
+    };
+    prepCommands = builtins.toJSON [{
+      do = "${lib.getExe display} start";
+      undo = "${lib.getExe display} restore";
+    }];
+  in {
     boot.kernelModules = ["uhid"];
     users.users.${username}.extraGroups = ["uinput"];
     services.udev.extraRules = ''
@@ -16,9 +27,16 @@ in {
       package = lib.mkDefault sunshine;
     };
 
+    environment.systemPackages = lib.optional resizeDesktop display;
+
     # CLI settings preserve the configuration edited through Sunshine's web UI.
     systemd.user.services.sunshine.serviceConfig.ExecStart = lib.mkForce
-      "${lib.getExe config.services.sunshine.package} csrf_allowed_origins=https://${config.networking.hostName}.tail1785c.ts.net:47990";
+      (utils.escapeSystemdExecArgs ([
+        (lib.getExe config.services.sunshine.package)
+        "csrf_allowed_origins=https://${config.networking.hostName}.tail1785c.ts.net:47990"
+      ] ++ lib.optional resizeDesktop "global_prep_cmd=${prepCommands}"));
+    systemd.user.services.sunshine.serviceConfig.ExecStopPost =
+      lib.mkIf resizeDesktop "-${lib.getExe display} restore";
   };
 
   flake.homeModules.remote = {
@@ -48,7 +66,7 @@ in {
         name = "Connect to ${if name == "alma" then "Alma" else "Desktop"}";
         comment = "Remote desktop over Tailscale";
         icon = "network-workgroup";
-        exec = "env SDL_VIDEODRIVER=wayland moonlight stream ${address} -app Desktop -platform sdl -1080 -fps 60 -bitrate 6000 -packetsize 1024 -codec h264 -keydir ${keyDirectory}";
+        exec = "env SDL_VIDEODRIVER=wayland moonlight stream ${address} -app Desktop -quitappafter -platform sdl -1080 -fps 60 -bitrate 6000 -packetsize 1024 -codec h264 -keydir ${keyDirectory}";
         terminal = false;
         categories = ["Network" "RemoteAccess"];
         actions.pair = {
