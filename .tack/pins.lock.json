@@ -11,9 +11,9 @@
     "type": "github",
     "owner": "sadjow",
     "repo": "codex-cli-nix",
-    "rev": "3422ac7dfb605b5b02a39d55ed3b9e1b29007f11",
-    "narHash": "sha256-NpohRwQkPnm5XCs91GeeYB+H7B5ZBv/pGm3Ztev38xQ=",
-    "lastModified": 1790716519
+    "rev": "0cce411a817357ae6d875fd6cc76f8f155e9b12b",
+    "narHash": "sha256-Zkj6kI64e9P9Cu9rqL4+3hT5jsAQizshbqviik23+Gs=",
+    "lastModified": 1790729097
   },
   "compress-yazi": {
     "type": "github",
@@ -59,9 +59,9 @@
     "type": "github",
     "owner": "nix-community",
     "repo": "home-manager",
-    "rev": "7b4c5ec4bedaf1e062bbc1bcaeddbc6bd242aa1b",
-    "narHash": "sha256-iQ0ebhiVo64NktTnwft9hNxlFu4j5cvljVxyJaEVIP4=",
-    "lastModified": 1790365885
+    "rev": "0aefa652eb6fd8b7396af25e8c81cb0790f12cc2",
+    "narHash": "sha256-5399J1/O3DyLSsYGVa950JtOUDB9Reqvy7FhfDuTVzk=",
+    "lastModified": 1790742230
   },
   "import-tree": {
     "type": "github",
@@ -147,17 +147,17 @@
     "type": "github",
     "owner": "4evy",
     "repo": "nixcord",
-    "rev": "3295ff2ec6bfeb9ccb632b85b845c27c531406be",
-    "narHash": "sha256-DpFQ/Cllo+JmKD71d6vPHTJV9jeQidCUHePNIrzRbvA=",
-    "lastModified": 1790718822
+    "rev": "6a60ccd7ba6f43b40ea4bb45e905b2d4596a11a5",
+    "narHash": "sha256-OTR/sEdqetEuPcWQJRjFz0+XRuYgBXPEAAXe12D3IeM=",
+    "lastModified": 1790763193
   },
   "nixpkgs": {
     "type": "github",
     "owner": "nixos",
     "repo": "nixpkgs",
-    "rev": "7a0f122f5090cf4c2ade2a13a0e229d4e19ba71f",
-    "narHash": "sha256-ZoxIApko70jCdbH3l20HWXOBaT2HZd87orzd2yJ9dVE=",
-    "lastModified": 1790578696
+    "rev": "b4fd65b198c599cbe814fcb9f42d25d021595ec9",
+    "narHash": "sha256-ilerN1WLSvF+HMjziC/Wv99J5y02maDH+6hZPwsORKg=",
+    "lastModified": 1790689126
   },
   "perch": {
     "type": "github",
@@ -195,9 +195,9 @@
     "type": "github",
     "owner": "ominit",
     "repo": "t3code-flake",
-    "rev": "eb4c1ab312730761546a85146c781db8e05d6fdb",
-    "narHash": "sha256-1a9EJ5tOpVY+JRkmp7a1FcsFZ7y0Ohdy2CZ86OdybuY=",
-    "lastModified": 1790714293
+    "rev": "c39bda3a48d0b96bb9d1b110fe2e1433d27cf1a9",
+    "narHash": "sha256-kYrMy6HiTyYk1K3bsP/OjPcAkXU02CBFuNMHPCoo0vg=",
+    "lastModified": 1790727347
   },
   "vellum": {
     "type": "github",
