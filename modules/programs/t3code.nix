@@ -59,8 +59,10 @@
         - Before inspecting or changing host configuration, run `hostnamectl` and read
           `/etc/os-release`. Use that host's target; never infer it from the checkout.
         - After host configuration changes, evaluate that host's configuration to catch
-          evaluation errors. Leave builds, switches, activation, and `rebuild` to the user
-          so they can watch progress. Never activate standalone Home Manager or another host.
+          evaluation errors and inspect the build plan. Run routine rebuilds and activation
+          for small configuration changes yourself. Leave rebuilds with long or large source
+          compilations or broad program updates to the user unless explicitly requested.
+          Never activate standalone Home Manager or a host outside the task's scope.
 
         # Projects
         Apply conventions to the repository being changed, including worktrees and work
