@@ -7,14 +7,6 @@
     "narHash": "sha256-W5dvgFOuVs24X3G5tUb8C2IHU7ICXNvyGPiWWFjfbuo=",
     "lastModified": 1789553013
   },
-  "codex-cli-nix": {
-    "type": "github",
-    "owner": "sadjow",
-    "repo": "codex-cli-nix",
-    "rev": "0cce411a817357ae6d875fd6cc76f8f155e9b12b",
-    "narHash": "sha256-Zkj6kI64e9P9Cu9rqL4+3hT5jsAQizshbqviik23+Gs=",
-    "lastModified": 1790729097
-  },
   "compress-yazi": {
     "type": "github",
     "owner": "KKV9",
@@ -86,6 +78,30 @@
     "rev": "628b6618b1b94ee5289efb6d908270ac3d84a906",
     "narHash": "sha256-D+bdwP1OCMctzaEtghwhj5XKbd4iv3tL5dR9u7XAybY=",
     "lastModified": 1784842832
+  },
+  "llm-agents": {
+    "type": "github",
+    "owner": "numtide",
+    "repo": "llm-agents.nix",
+    "rev": "b87928873f143e0dd521bed5ff9eea5e9951cda7",
+    "narHash": "sha256-RH/y3Ok8ncBRNBqM2kpeD9AmQ4KcF5dusdeMG/TqLFg=",
+    "lastModified": 1790961139
+  },
+  "llm-agents-codex": {
+    "type": "github",
+    "owner": "numtide",
+    "repo": "llm-agents.nix",
+    "rev": "19de0d15be86befc92a1f092244a94bc3dc99526",
+    "narHash": "sha256-4hPh+ugrf+ZrTqaLtbukPjaSSW+3LKOWB3YYQuIQPXk=",
+    "lastModified": 1790866267
+  },
+  "llm-agents-connect": {
+    "type": "github",
+    "owner": "numtide",
+    "repo": "llm-agents.nix",
+    "rev": "ba624243c3c63c9752e44e2e6f23c0acb150e970",
+    "narHash": "sha256-xmwmXOc3iUJHiDMg0V9Q0dxsfVOIGrjKxxMAajW8Jhs=",
+    "lastModified": 1790960580
   },
   "mpv-auto-sub-sync": {
     "type": "github",
@@ -190,14 +206,6 @@
     "rev": "2473258afe1f7fbaa6229dc77961dd8a89ca713e",
     "narHash": "sha256-YZqUkgbUEWdb+f8LtyM47NBhxnh2GLYEdzOYM9uTTOs=",
     "lastModified": 1790615532
-  },
-  "t3code": {
-    "type": "github",
-    "owner": "ominit",
-    "repo": "t3code-flake",
-    "rev": "c39bda3a48d0b96bb9d1b110fe2e1433d27cf1a9",
-    "narHash": "sha256-kYrMy6HiTyYk1K3bsP/OjPcAkXU02CBFuNMHPCoo0vg=",
-    "lastModified": 1790727347
   },
   "vellum": {
     "type": "github",

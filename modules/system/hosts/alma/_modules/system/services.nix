@@ -19,7 +19,9 @@ in {
       while IFS= read -r service; do
         [[ -z $service ]] && continue
         if ! ${pkgs.gnugrep}/bin/grep -Fxq "$service" ${serviceManifest}; then
-          /usr/bin/systemctl disable --now "$service"
+          if [[ $(/usr/bin/systemctl show "$service" -p LoadState --value) != not-found ]]; then
+            /usr/bin/systemctl disable --now "$service"
+          fi
         fi
       done < "$previous_services"
     fi

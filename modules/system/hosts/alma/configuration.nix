@@ -42,7 +42,6 @@
             })
           ];
         })
-        config.flake.nixosModules.t3code
         inputs.home-manager.nixosModules.home-manager
         ./_modules/home.nix
         ./_modules/host.nix

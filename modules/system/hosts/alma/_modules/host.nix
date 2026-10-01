@@ -36,6 +36,7 @@ in {
       "git"
       "grubby"
       "irqbalance"
+      "libatomic"
       "kernel"
       "kernel-modules-extra"
       "linux-firmware"
@@ -79,7 +80,6 @@ in {
       "irqbalance.service"
       "sshd.service"
       "tailscaled.service"
-      "t3code.service"
     ];
 
     userGroups = [
@@ -121,6 +121,9 @@ in {
     "/share/xdg-desktop-portal"
   ];
   environment.systemPackages = [pkgs.zsh pkgs.tailscale];
+  alma.activation.t3code = ''
+    /usr/bin/loginctl enable-linger ${lib.escapeShellArg username}
+  '';
 
   systemd.maskedUnits = [
     "NetworkManager-wait-online.service"
@@ -141,7 +144,6 @@ in {
         Restart = "on-failure";
       };
     };
-    services.t3code.path = lib.mkAfter ["/run/system-manager/sw" "/nix/var/nix/profiles/default" "/usr/local" "/usr" ""];
     targets.system-manager.wants = ["system-manager-path.service"];
     services."home-manager-${username}" = {
       wantedBy = lib.mkForce [];

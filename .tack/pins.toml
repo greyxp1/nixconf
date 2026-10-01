@@ -22,11 +22,15 @@ follows = { nixpkgs-lib = "nixpkgs" }
 
 [inputs.nixpkgs]
 url = "gh:nixos/nixpkgs/nixos-unstable"
-[inputs.t3code]
-url = "gh:ominit/t3code-flake"
-follows = { nixpkgs = "nixpkgs", flake-parts = "flake-parts" }
-[inputs.codex-cli-nix]
-url = "gh:sadjow/codex-cli-nix"
+[inputs.llm-agents]
+url = "gh:numtide/llm-agents.nix/pull/10251/head"
+exclude_follow = ["nixpkgs"]
+[inputs.llm-agents-connect]
+url = "gh:numtide/llm-agents.nix/pull/10250/head"
+exclude_follow = ["nixpkgs"]
+[inputs.llm-agents-codex]
+url = "gh:numtide/llm-agents.nix/pull/10132/head"
+exclude_follow = ["nixpkgs"]
 [inputs.sunshine-nixpkgs]
 url = "gh:nixos/nixpkgs/fd29d673b014a4f88f9bb9ec628b46055243cf96"
 [inputs.preservation]
