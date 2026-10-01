@@ -4,7 +4,11 @@
     programs.helium = {
       enable = true;
       defaultBrowser = true;
-      flags = ["--enable-features=HeliumMiddleClickAutoscroll"];
+
+      flags = [
+        "--enable-features=HeliumMiddleClickAutoscroll"
+        "--disable-features=MiddleClickPasteEnabled"
+      ];
 
       extraPolicies = {
         DefaultSearchProviderEnabled = true;
