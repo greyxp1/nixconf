@@ -1,11 +1,7 @@
 {inputs, ...}: let
   mkHost = import ../_mkHost.nix inputs;
 in {
-  flake.nixosConfigurations.desktop = mkHost "desktop" ({username, ...}: {
-    services.tailscale = {
-      enable = true;
-      extraSetFlags = ["--operator=${username}"];
-    };
+  flake.nixosConfigurations.desktop = mkHost "desktop" {
     disko.devices.disk.main.device = import ./_device.nix;
     services.scx = {
       enable = true;
@@ -35,5 +31,5 @@ in {
       ./_modules/nvidia.nix
       ./_modules/virt.nix
     ];
-  });
+  };
 }

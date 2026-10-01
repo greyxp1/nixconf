@@ -9,7 +9,7 @@
   };
 in {
   flake.nixosModules.remote = {config, pkgs, utils, username, ...}: let
-    resizeDesktop = config.networking.hostName == "desktop";
+    isDesktop = config.networking.hostName == "desktop";
     cudaSunshine = ((import inputs.sunshine-nixpkgs {
       system = pkgs.stdenv.hostPlatform.system;
       config.allowUnfree = true;
@@ -22,6 +22,12 @@ in {
       undo = "${lib.getExe display} restore";
     }];
   in {
+    services.tailscale = {
+      enable = true;
+      useRoutingFeatures = lib.mkIf isDesktop "server";
+      extraSetFlags = ["--operator=${username}"] ++ lib.optional isDesktop "--advertise-exit-node";
+    };
+
     boot.kernelModules = ["uhid"];
     users.users.${username}.extraGroups = ["uinput"];
     services.udev.extraRules = ''
@@ -31,12 +37,12 @@ in {
     services.sunshine = {
       enable = true;
       openFirewall = true;
-      package = lib.mkDefault (if resizeDesktop then cudaSunshine else sunshine);
+      package = lib.mkDefault (if isDesktop then cudaSunshine else sunshine);
     };
 
-    environment.systemPackages = lib.optional resizeDesktop display;
+    environment.systemPackages = lib.optional isDesktop display;
 
-    systemd.user.services.sunshine.environment = lib.mkIf resizeDesktop {
+    systemd.user.services.sunshine.environment = lib.mkIf isDesktop {
       LD_LIBRARY_PATH = "/run/opengl-driver/lib";
     };
 
@@ -45,9 +51,9 @@ in {
       (utils.escapeSystemdExecArgs ([
         (lib.getExe config.services.sunshine.package)
         "csrf_allowed_origins=https://${config.networking.hostName}.tail1785c.ts.net:47990"
-      ] ++ lib.optional resizeDesktop "global_prep_cmd=${prepCommands}"));
+      ] ++ lib.optional isDesktop "global_prep_cmd=${prepCommands}"));
     systemd.user.services.sunshine.serviceConfig.ExecStopPost =
-      lib.mkIf resizeDesktop "-${lib.getExe display} restore";
+      lib.mkIf isDesktop "-${lib.getExe display} restore";
   };
 
   flake.homeModules.remote = {

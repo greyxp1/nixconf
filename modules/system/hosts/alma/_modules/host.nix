@@ -6,6 +6,14 @@
   ...
 }: let
   cache = import ../_cache.nix;
+  schoolExitNode = pkgs.writeShellScript "alma-school-exit-node" ''
+    set -euo pipefail
+    exit_node=""
+    if /usr/bin/nmcli -g UUID connection show --active | ${pkgs.gnugrep}/bin/grep -Fxq 77f514d1-e780-4c88-999b-208d242db751; then
+      exit_node=100.91.121.54
+    fi
+    ${pkgs.tailscale}/bin/tailscale set --exit-node="$exit_node" --exit-node-allow-lan-access
+  '';
 in {
   imports = [
     ../../../../programs/remote/_alma.nix
@@ -80,6 +88,7 @@ in {
       "irqbalance.service"
       "sshd.service"
       "tailscaled.service"
+      "alma-school-exit-node.service"
     ];
 
     userGroups = [
@@ -114,6 +123,17 @@ in {
     };
   };
   environment.etc."nix/nix.conf".mode = "0644";
+  environment.etc."NetworkManager/dispatcher.d/90-school-exit-node" = {
+    mode = "0755";
+    source = pkgs.writeShellScript "school-exit-node-dispatcher" ''
+      [[ ''${1:-} = tailscale0 ]] && exit 0
+      case ''${2:-} in
+        up|down|dhcp4-change)
+          /usr/bin/systemctl start alma-school-exit-node.service
+          ;;
+      esac
+    '';
+  };
 
   environment.pathsToLink = [
     "/share/applications"
@@ -123,6 +143,10 @@ in {
   environment.systemPackages = [pkgs.zsh pkgs.tailscale];
   alma.activation.t3code = ''
     /usr/bin/loginctl enable-linger ${lib.escapeShellArg username}
+  '';
+  home-manager.users.${username}.xdg.configFile."systemd/user/t3code.service.d/transport.conf".text = ''
+    [Service]
+    Environment="TUNNEL_TRANSPORT_PROTOCOL=http2"
   '';
 
   systemd.maskedUnits = [
@@ -135,6 +159,19 @@ in {
 
   # Reconcile explicitly after switching; boot only needs the immutable profile.
   systemd = {
+    services.alma-school-exit-node = {
+      description = "Use desktop as an exit node on the school network";
+      wantedBy = ["multi-user.target"];
+      unitConfig.StartLimitIntervalSec = 0;
+      after = ["NetworkManager.service" "tailscaled.service"];
+      requires = ["tailscaled.service"];
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = schoolExitNode;
+        Restart = "on-failure";
+        RestartSec = 10;
+      };
+    };
     services.tailscaled = {
       wantedBy = ["multi-user.target"];
       serviceConfig = {
