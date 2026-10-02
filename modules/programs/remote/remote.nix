@@ -8,7 +8,7 @@
     text = builtins.readFile ./sunshine-display.sh;
   };
 in {
-  flake.nixosModules.remote = {config, pkgs, utils, username, ...}: let
+  flake.nixosModules.remote = {config, pkgs, utils, ...}: let
     isDesktop = config.networking.hostName == "desktop";
     cudaSunshine = ((import inputs.sunshine-nixpkgs {
       system = pkgs.stdenv.hostPlatform.system;
@@ -25,11 +25,11 @@ in {
     services.tailscale = {
       enable = true;
       useRoutingFeatures = lib.mkIf isDesktop "server";
-      extraSetFlags = ["--operator=${username}"] ++ lib.optional isDesktop "--advertise-exit-node";
+      extraSetFlags = ["--operator=grey"] ++ lib.optional isDesktop "--advertise-exit-node";
     };
 
     boot.kernelModules = ["uhid"];
-    users.users.${username}.extraGroups = ["uinput"];
+    users.users.grey.extraGroups = ["uinput"];
     services.udev.extraRules = ''
       SUBSYSTEM=="misc", KERNEL=="uhid", MODE="0660", GROUP="uinput", TAG+="seat", TAG+="uaccess", OPTIONS+="static_node=uhid"
     '';

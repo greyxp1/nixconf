@@ -1,8 +1,8 @@
 {
+  inputs,
   lib,
   pkgs,
   uid,
-  username,
   ...
 }: let
   cache = import ../_cache.nix;
@@ -16,7 +16,7 @@
   '';
 in {
   imports = [
-    ../../../../programs/_t3code-service.nix
+    inputs.self.t3codeSystemModule
     ../../../../programs/remote/_alma.nix
     ./system
     ./system/packages.nix
@@ -144,7 +144,7 @@ in {
   ];
   environment.systemPackages = [pkgs.zsh pkgs.tailscale];
   alma.activation.t3code = ''
-    /usr/bin/loginctl enable-linger ${lib.escapeShellArg username}
+    /usr/bin/loginctl enable-linger grey
   '';
   systemd.services.t3code.environment.TUNNEL_TRANSPORT_PROTOCOL = "http2";
 
@@ -181,12 +181,12 @@ in {
       };
     };
     targets.system-manager.wants = ["system-manager-path.service"];
-    services."home-manager-${username}" = {
+    services."home-manager-grey" = {
       wantedBy = lib.mkForce [];
       restartIfChanged = false;
       environment = {
         DBUS_SESSION_BUS_ADDRESS = "unix:path=/run/user/${toString uid}/bus";
-        PATH = lib.mkForce "/etc/profiles/per-user/${username}/bin:/run/system-manager/sw/bin:/nix/var/nix/profiles/default/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin";
+        PATH = lib.mkForce "/etc/profiles/per-user/grey/bin:/run/system-manager/sw/bin:/nix/var/nix/profiles/default/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin";
         XDG_RUNTIME_DIR = "/run/user/${toString uid}";
       };
     };

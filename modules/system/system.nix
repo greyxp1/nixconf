@@ -1,5 +1,5 @@
 {
-  flake.nixosModules.system = {username, ...}: {
+  flake.nixosModules.system = {
     time.timeZone = "America/Montreal";
     networking.networkmanager.enable = true;
     services = {
@@ -18,11 +18,11 @@
 
     users = {
       mutableUsers = false;
-      users.${username} = {
+      users.grey = {
         isNormalUser = true;
         uid = 1000;
         extraGroups = ["networkmanager" "wheel"];
-        hashedPasswordFile = "/persistent/passwords/${username}";
+        hashedPasswordFile = "/persistent/passwords/grey";
       };
     };
 

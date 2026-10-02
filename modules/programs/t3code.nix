@@ -1,12 +1,39 @@
 {inputs, ...}: {
-  flake.nixosModules.t3code = {
-    config,
-    username,
+  flake.t3codeSystemModule = {
+    lib,
+    pkgs,
+    uid,
     ...
-  }: {
-    imports = [./_t3code-service.nix];
-    _module.args.uid = config.users.users.${username}.uid;
-    users.users.${username}.linger = true;
+  }: let
+    t3code = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.t3code.unwrapped;
+  in {
+    environment.systemPackages = [t3code];
+    systemd.services.t3code = {
+      description = "T3 Code headless server";
+      wantedBy = ["multi-user.target"];
+      after = ["network.target"];
+      environment = {
+        HOME = "/home/grey";
+        PATH = lib.mkForce "/etc/profiles/per-user/grey/bin:/run/wrappers/bin:/run/current-system/sw/bin:/run/system-manager/sw/bin:/nix/var/nix/profiles/default/bin:/usr/local/bin:/usr/bin:/bin";
+        SSH_AUTH_SOCK = "/run/user/${toString uid}/ssh-agent";
+        XDG_RUNTIME_DIR = "/run/user/${toString uid}";
+        DBUS_SESSION_BUS_ADDRESS = "unix:path=/run/user/${toString uid}/bus";
+      };
+      serviceConfig = {
+        User = "grey";
+        WorkingDirectory = "/home/grey";
+        ExecStart = "${lib.getExe t3code} serve --host 127.0.0.1 --port 3773";
+        Restart = "on-failure";
+        RestartSec = 5;
+        KillMode = "mixed";
+        UMask = "0077";
+      };
+    };
+  };
+  flake.nixosModules.t3code = {config, ...}: {
+    imports = [inputs.self.t3codeSystemModule];
+    _module.args.uid = config.users.users.grey.uid;
+    users.users.grey.linger = true;
   };
   flake.homeModules.t3code = {pkgs, ...}: {
     programs = {

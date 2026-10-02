@@ -2,7 +2,6 @@
   config,
   lib,
   pkgs,
-  username,
   ...
 }: let
   loginShellLauncher = pkgs.writeText "nixconf-zsh" ''
@@ -41,7 +40,7 @@ in {
 
         [Service]
         ExecStart=
-        ExecStart=-/sbin/agetty --autologin ${username} --noclear %I $TERM
+        ExecStart=-/sbin/agetty --autologin grey --noclear %I $TERM
       '';
     };
   };
@@ -71,11 +70,11 @@ in {
     fi
     ${pkgs.gnugrep}/bin/grep -Fqx "$shell" /etc/shells \
       || printf '%s\n' "$shell" >> /etc/shells
-    /usr/sbin/usermod --shell "$shell" ${username}
+    /usr/sbin/usermod --shell "$shell" grey
 
     for group in ${lib.escapeShellArgs config.alma.userGroups}; do
       /usr/bin/getent group "$group" >/dev/null \
-        && /usr/sbin/usermod --append --groups "$group" ${username}
+        && /usr/sbin/usermod --append --groups "$group" grey
     done
     /usr/bin/rm -f /etc/profile.d/nixconf-niri.sh /usr/local/bin/nixconf-nu
     /usr/bin/sed -i '\|^/usr/local/bin/nixconf-nu$|d' /etc/shells

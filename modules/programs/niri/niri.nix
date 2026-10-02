@@ -1,12 +1,12 @@
 {inputs, ...}: {
-  flake.nixosModules.niri = {username, ...}: {
+  flake.nixosModules.niri = {
     nixpkgs.overlays = [inputs.niri.overlays.default];
     environment.pathsToLink = ["/share/applications"];
     services.greetd = {
       enable = true;
       settings.default_session = {
         command = "niri-session";
-        user = username;
+        user = "grey";
       };
     };
   };

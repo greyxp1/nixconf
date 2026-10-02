@@ -1,8 +1,4 @@
-{
-  flakeLocation,
-  homeDirectory,
-  username,
-}: {
+{flakeLocation}: {
   config,
   lib,
   ...
@@ -62,7 +58,7 @@
           ${config.home.profileDirectory}/bin
           /run/system-manager/sw/bin
           /nix/var/nix/profiles/default/bin
-          ${homeDirectory}/.local/bin
+          /home/grey/.local/bin
           /usr/local/bin
           /usr/bin
           /bin
@@ -86,7 +82,7 @@
         unset xdg_data_dirs
       '';
       loginExtra = ''
-        if [[ $USER == ${lib.escapeShellArg username} && $TTY == /dev/tty1 ]]; then
+        if [[ $USER == grey && $TTY == /dev/tty1 ]]; then
           niri-session -l
         fi
       '';

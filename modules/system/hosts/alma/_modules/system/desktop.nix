@@ -1,13 +1,12 @@
 {
   config,
   pkgs,
-  username,
   ...
 }: let
   heliumPolicy =
     pkgs.writeText "helium-policy.json"
-    config.home-manager.users.${username}.programs.helium.finalPolicyJson;
-  gpuSetup = config.home-manager.users.${username}.targets.genericLinux.gpu.setupPackage;
+    config.home-manager.users.grey.programs.helium.finalPolicyJson;
+  gpuSetup = config.home-manager.users.grey.targets.genericLinux.gpu.setupPackage;
 in {
   environment.etc = {
     "polkit-1/rules.d/50-nixconf-udisks2.rules" = {

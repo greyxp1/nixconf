@@ -1,18 +1,16 @@
 {
   config,
   gid,
-  homeDirectory,
   lib,
   pkgs,
   primaryGroup,
   uid,
-  username,
   ...
 }: let
   almaMajors = builtins.attrNames config.alma.extraPackagesByMajor;
   supportedAlmaMajors = lib.concatStringsSep "|" almaMajors;
   supportedAlmaMajorsText = lib.concatStringsSep " or " almaMajors;
-  storeScriptUnits = ["alma-host.service" "home-manager-${username}.service" "system-manager-path.service"];
+  storeScriptUnits = ["alma-host.service" "home-manager-grey.service" "system-manager-path.service"];
 in {
   system-manager = {
     allowAnyDistro = true;
@@ -36,8 +34,8 @@ in {
           echo "Alma's dnf and systemctl commands are required." >&2
           exit 1
         fi
-        account=${lib.escapeShellArg username}
-        expected_home=${lib.escapeShellArg homeDirectory}
+        account=grey
+        expected_home=/home/grey
         if [[ $(/usr/bin/id -u "$account") != ${toString uid} \
           || $(/usr/bin/id -g "$account") != ${toString gid} \
           || $(/usr/bin/id -gn "$account") != ${lib.escapeShellArg primaryGroup} \
@@ -55,11 +53,11 @@ in {
   services.userborn.enable = false;
   users = {
     groups.${primaryGroup}.gid = gid;
-    users.${username} = {
+    users.grey = {
       isNormalUser = true;
       inherit uid;
       group = primaryGroup;
-      home = homeDirectory;
+      home = "/home/grey";
     };
   };
 
@@ -86,7 +84,7 @@ in {
             then
               pkgs.runCommand "alma-${name}" {} ''
                 ${pkgs.gnused}/bin/sed \
-                  -E 's|^(ExecStart=)(/nix/store/)|\1/bin/bash ${lib.optionalString (name == "home-manager-${username}.service") "-el "}\2|' \
+                  -E 's|^(ExecStart=)(/nix/store/)|\1/bin/bash ${lib.optionalString (name == "home-manager-grey.service") "-el "}\2|' \
                   ${unit.unit}/${name} > "$out"
               ''
             else "${unit.unit}/${name}";

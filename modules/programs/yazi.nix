@@ -4,7 +4,6 @@
   ...
 }: {
   flake.nixosModules.yazi = {
-    homeDirectory,
     pkgs,
     lib,
     ...
@@ -12,7 +11,6 @@
     imports = [config.flake.wrappers.yazi.install];
     wrappers.yazi = {
       enable = true;
-      inherit homeDirectory;
     };
     xdg.portal = {
       enable = true;
@@ -60,10 +58,6 @@
     theme = lib.importTOML "${catppuccin.yazi}/mocha/catppuccin-mocha-mauve.toml";
   in {
     imports = [wlib.wrapperModules.yazi];
-    options.homeDirectory = lib.mkOption {
-      type = lib.types.str;
-      default = "/home/grey";
-    };
     config = {
       runtimePkgs = [pkgs.starship pkgs.udisks2 (lib.getBin pkgs.util-linux)];
       env.STARSHIP_CONFIG = pkgs.writeText "yazi-starship.toml" (builtins.readFile ./starship/starship.toml);
@@ -134,7 +128,7 @@
             require("full-border"):setup()
             require("keep-preferences"):setup(${lib.generators.toLua {} {
               path_preferences = map (directory: {
-                path = "^${config.homeDirectory}/${directory}";
+                path = "^/home/grey/${directory}";
                 defaults = {
                   sort_by = "mtime";
                   sort_reverse = true;

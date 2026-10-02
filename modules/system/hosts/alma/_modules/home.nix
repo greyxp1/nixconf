@@ -1,12 +1,10 @@
 {
   flakeLocation,
   gid,
-  homeDirectory,
   homeModules,
   inputs,
   primaryGroup,
   uid,
-  username,
   lib,
   pkgs,
   ...
@@ -29,11 +27,9 @@
     unset NIX_PATH
     system_config=$(
       NIXCONF_REPO=${lib.escapeShellArg flakeLocation} \
-      NIXCONF_USERNAME=${lib.escapeShellArg username} \
       NIXCONF_UID=${lib.escapeShellArg (toString uid)} \
       NIXCONF_GID=${lib.escapeShellArg (toString gid)} \
       NIXCONF_PRIMARY_GROUP=${lib.escapeShellArg primaryGroup} \
-      NIXCONF_HOME=${lib.escapeShellArg homeDirectory} \
       nix build --impure --no-link --print-out-paths \
         --file ${lib.escapeShellArg "${flakeLocation}/modules/system/hosts/alma/_build.nix"}
     )
@@ -41,7 +37,7 @@
     ${systemManager}/bin/system-manager activate --store-path "$system_config" --sudo
     [[ ! -L result ]] || /usr/bin/rm -f result
     sudo /usr/bin/systemctl restart alma-host.service
-    sudo /usr/bin/systemctl restart home-manager-${username}.service
+    sudo /usr/bin/systemctl restart home-manager-grey.service
   '';
 in {
   home-manager = {
@@ -50,7 +46,7 @@ in {
     backupFileExtension = "backup";
     overwriteBackup = true;
     extraSpecialArgs.nixconfSystem = "systemConfigs.alma";
-    users.${username} = {config, ...}: {
+    users.grey = {config, ...}: {
       imports =
         homeModules
         ++ [
@@ -59,14 +55,15 @@ in {
           ./niri.nix
           ./portals.nix
           (import ./shell.nix {
-            inherit flakeLocation homeDirectory username;
+            inherit flakeLocation;
           })
         ];
 
       fonts.fontconfig.enable = true;
       flake.location = flakeLocation;
       home = {
-        inherit homeDirectory username;
+        homeDirectory = "/home/grey";
+        username = "grey";
         packages = [
           almaOpencode
           alma-rebuild

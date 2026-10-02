@@ -29,10 +29,6 @@
   };
 
   config.flake.nixosModules.home = {
-    homeDirectory,
-    username,
-    ...
-  }: {
     imports = [inputs.home-manager.nixosModules.home-manager];
     home-manager = {
       useGlobalPkgs = true;
@@ -46,8 +42,9 @@
           xdg.enable = true;
         }
       ];
-      users.${username}.home = {
-        inherit homeDirectory username;
+      users.grey.home = {
+        homeDirectory = "/home/grey";
+        username = "grey";
         stateVersion = "26.05";
       };
     };
