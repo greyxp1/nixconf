@@ -55,6 +55,14 @@
     "narHash": "sha256-EEQKUylD8zuRTmDFX4rbwsHQ+iZhqqOldYcFN8SLcE0=",
     "lastModified": 1790955005
   },
+  "home-manager-t3code": {
+    "type": "github",
+    "owner": "nix-community",
+    "repo": "home-manager",
+    "rev": "310ddb10c6510498cf11d0f186f2069415ef280d",
+    "narHash": "sha256-cN/0VpxQSfDpti1WWRxx5RPkdTXpjLpGctcQs+BTNZM=",
+    "lastModified": 1784696724
+  },
   "import-tree": {
     "type": "github",
     "owner": "vic",
@@ -83,25 +91,9 @@
     "type": "github",
     "owner": "numtide",
     "repo": "llm-agents.nix",
-    "rev": "b87928873f143e0dd521bed5ff9eea5e9951cda7",
-    "narHash": "sha256-RH/y3Ok8ncBRNBqM2kpeD9AmQ4KcF5dusdeMG/TqLFg=",
-    "lastModified": 1790961139
-  },
-  "llm-agents-codex": {
-    "type": "github",
-    "owner": "numtide",
-    "repo": "llm-agents.nix",
-    "rev": "43597605c97b74dc28edd2b0c39b03530a0a988c",
-    "narHash": "sha256-rMB3uJ/ljmcH+Oyrxi3eOgMGExjTkXP2dJpmZrcMy3U=",
-    "lastModified": 1790967182
-  },
-  "llm-agents-connect": {
-    "type": "github",
-    "owner": "numtide",
-    "repo": "llm-agents.nix",
-    "rev": "ba624243c3c63c9752e44e2e6f23c0acb150e970",
-    "narHash": "sha256-xmwmXOc3iUJHiDMg0V9Q0dxsfVOIGrjKxxMAajW8Jhs=",
-    "lastModified": 1790960580
+    "rev": "b768e838e72e543cb36490a860d4debf3e1ad024",
+    "narHash": "sha256-usRCvzPTNxmb+em2R2pV3nEFIUHQfQza2iCIrKV1bDA=",
+    "lastModified": 1790973612
   },
   "mpv-auto-sub-sync": {
     "type": "github",

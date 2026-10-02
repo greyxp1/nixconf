@@ -1,6 +1,7 @@
 {
   flake.homeModules.git = {
     programs = {
+      gh.enable = true;
       git = {
         enable = true;
         settings = {

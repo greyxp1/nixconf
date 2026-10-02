@@ -1,40 +1,22 @@
 {inputs, ...}: {
-  flake.nixosModules.t3code = {username, ...}: {
-    users.users.${username}.linger = true;
-  };
-
-  flake.homeModules.t3code = {
-    config,
-    lib,
-    pkgs,
-    ...
-  }: let
-    agents = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
-    # Combine the independent runtime-dependency and Connect PRs.
-    t3code = agents.t3code.unwrapped.overrideAttrs {
-      inherit (inputs.llm-agents-connect.packages.${pkgs.stdenv.hostPlatform.system}.t3code.unwrapped) env;
-    };
-    codex = inputs.llm-agents-codex.packages.${pkgs.stdenv.hostPlatform.system}.codex;
-  in {
-    home.packages = [t3code];
-    systemd.user.services.t3code = {
-      Unit.Description = "T3 Code headless server";
-      Install.WantedBy = ["default.target"];
-      Service = {
-        ExecStart = "${lib.getExe t3code} serve --host 127.0.0.1 --port 3773";
-        WorkingDirectory = config.home.homeDirectory;
-        Environment = [
-          "T3CODE_HOME=${config.home.homeDirectory}/.t3"
-          "PATH=${lib.makeBinPath [codex pkgs.gh pkgs.git pkgs.openssh]}:${config.home.homeDirectory}/.local/bin:${config.home.profileDirectory}/bin:/run/current-system/sw/bin:/run/system-manager/sw/bin:/nix/var/nix/profiles/default/bin:/usr/local/bin:/usr/bin:/bin"
-          "SSH_AUTH_SOCK=%t/ssh-agent"
-        ];
-        Restart = "on-failure";
-        RestartSec = 5;
-        KillMode = "mixed";
-        UMask = "0077";
-      };
+  flake.nixosModules.t3code = {username, ...}: {users.users.${username}.linger = true;};
+  flake.homeModules.t3code = {pkgs, ...}: {
+    disabledModules = ["programs/t3code.nix"];
+    imports = ["${inputs.home-manager-t3code}/modules/programs/t3code.nix"];
+    systemd.user.services.t3code.Service = {
+      Environment = ["SSH_AUTH_SOCK=%t/ssh-agent"];
+      KillMode = "mixed";
+      UMask = "0077";
     };
     programs = {
+      t3code = {
+        enable = true;
+        package = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.t3code.unwrapped;
+        server = {
+          enable = true;
+          extraArgs = ["--host" "127.0.0.1" "--port" "3773"];
+        };
+      };
       opencode = {
         enable = true;
         package = null;
@@ -43,7 +25,7 @@
 
       codex = {
         enable = true;
-        package = codex;
+        package = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.codex;
         context = ''
           # Global
           - Prefer the smallest root-cause solution. Avoid unnecessary abstractions, wrappers,
