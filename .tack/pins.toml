@@ -35,9 +35,6 @@ url = "gh:vic/import-tree"
 url = "gh:nix-community/disko"
 [inputs.home-manager]
 url = "gh:nix-community/home-manager"
-[inputs.home-manager-t3code]
-url = "gh:nix-community/home-manager/pull/9695/head"
-type = "fetch"
 [inputs.wrappers]
 url = "gh:nix-community/nix-wrapper-modules"
 [inputs.system-manager]

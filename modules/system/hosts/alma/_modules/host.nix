@@ -16,6 +16,7 @@
   '';
 in {
   imports = [
+    ../../../../programs/_t3code-service.nix
     ../../../../programs/remote/_alma.nix
     ./system
     ./system/packages.nix
@@ -88,6 +89,7 @@ in {
       "irqbalance.service"
       "sshd.service"
       "tailscaled.service"
+      "t3code.service"
       "alma-school-exit-node.service"
     ];
 
@@ -144,10 +146,7 @@ in {
   alma.activation.t3code = ''
     /usr/bin/loginctl enable-linger ${lib.escapeShellArg username}
   '';
-  home-manager.users.${username}.xdg.configFile."systemd/user/t3code.service.d/transport.conf".text = ''
-    [Service]
-    Environment="TUNNEL_TRANSPORT_PROTOCOL=http2"
-  '';
+  systemd.services.t3code.environment.TUNNEL_TRANSPORT_PROTOCOL = "http2";
 
   systemd.maskedUnits = [
     "NetworkManager-wait-online.service"

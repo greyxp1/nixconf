@@ -1,22 +1,15 @@
 {inputs, ...}: {
-  flake.nixosModules.t3code = {username, ...}: {users.users.${username}.linger = true;};
+  flake.nixosModules.t3code = {
+    config,
+    username,
+    ...
+  }: {
+    imports = [./_t3code-service.nix];
+    _module.args.uid = config.users.users.${username}.uid;
+    users.users.${username}.linger = true;
+  };
   flake.homeModules.t3code = {pkgs, ...}: {
-    disabledModules = ["programs/t3code.nix"];
-    imports = ["${inputs.home-manager-t3code}/modules/programs/t3code.nix"];
-    systemd.user.services.t3code.Service = {
-      Environment = ["SSH_AUTH_SOCK=%t/ssh-agent"];
-      KillMode = "mixed";
-      UMask = "0077";
-    };
     programs = {
-      t3code = {
-        enable = true;
-        package = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.t3code.unwrapped;
-        server = {
-          enable = true;
-          extraArgs = ["--host" "127.0.0.1" "--port" "3773"];
-        };
-      };
       opencode = {
         enable = true;
         package = null;
