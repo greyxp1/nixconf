@@ -1,6 +1,10 @@
-{
-  flake.homeModules.monstar = {
-    config,
+{inputs, ...}: {
+  flake.nixosModules.monstar = {
+    imports = [inputs.self.wrappers.monstar.install];
+    wrappers.monstar.enable = true;
+  };
+  flake.wrappers.monstar = {
+    wlib,
     pkgs,
     lib,
     ...
@@ -36,21 +40,19 @@
       };
     };
   in {
-    home.packages = [monstar];
-
-    xdg.configFile."monstar/config".text = ''
-      font-family = JetBrains Mono
-      font-size = 14
-      background-opacity = 0.8
-      window-padding-x = 8
-      window-padding-y = 8
-      selection-background = #0078D7
-      theme = catppuccin-${config.catppuccin.flavor}
-    '';
-    xdg.configFile."monstar/themes/catppuccin-${config.catppuccin.flavor}".source =
-      pkgs.runCommand "monstar-catppuccin-${config.catppuccin.flavor}" {} ''
+    imports = [wlib.wrapperModules.monstar];
+    package = monstar;
+    settings = {
+      font-family = "JetBrains Mono";
+      font-size = 14;
+      background-opacity = 0.8;
+      window-padding-x = 8;
+      window-padding-y = 8;
+      selection-background = "#0078D7";
+      theme = pkgs.runCommand "monstar-catppuccin-mocha" {} ''
         sed '/^split-divider-color =/d' \
-          ${config.catppuccin.sources.ghostty}/catppuccin-${config.catppuccin.flavor}.conf > "$out"
+          ${inputs.catppuccin.packages.${pkgs.stdenv.hostPlatform.system}.ghostty}/catppuccin-mocha.conf > "$out"
       '';
+    };
   };
 }

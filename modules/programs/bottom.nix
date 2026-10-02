@@ -8,8 +8,6 @@
     wrappers.bottom.enable = true;
   };
 
-  flake.homeModules.bottom.catppuccin.bottom.enable = false;
-
   flake.wrappers.bottom = {
     config,
     lib,

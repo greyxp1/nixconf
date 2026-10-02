@@ -1,4 +1,5 @@
 {
+  inputs,
   lib,
   pkgs,
   ...
@@ -39,16 +40,19 @@
     '';
   };
 in {
-  home.packages = [swapOutputs];
+  environment.systemPackages = [swapOutputs];
 
-  wayland.windowManager.niri.settings.binds = {
-    "Mod+E" = lib.mkForce {
-      _props.repeat = false;
-      spawn._args = ["kitty" "yazi"];
-    };
-    "Mod+Shift+O" = {
-      _props.repeat = false;
-      spawn = "niri-swap-outputs";
+  _module.args.almaNiri = inputs.self.wrappers.niri.wrap {
+    inherit pkgs;
+    settings.binds = {
+      "Mod+E" = lib.mkForce (_: {
+        props.repeat = false;
+        content.spawn = ["kitty" "yazi"];
+      });
+      "Mod+Shift+O" = _: {
+        props.repeat = false;
+        content.spawn = "niri-swap-outputs";
+      };
     };
   };
 }

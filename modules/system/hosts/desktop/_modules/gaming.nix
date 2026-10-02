@@ -13,51 +13,39 @@
     };
   };
 
-  home-manager.sharedModules = [
-    ({pkgs, ...}: {
-      home.packages = with pkgs; [pandora-launcher heroic];
-      wayland.windowManager.niri.settings._children = [
-        {spawn-at-startup._args = ["equibop"];}
-        {
-          output = {
-            _args = ["DP-2"];
-            mode = "2560x1440@170.071";
-            variable-refresh-rate._props.on-demand = true;
+  environment.systemPackages = with pkgs; [pandora-launcher heroic];
+  wrappers.niri.settings = {
+    outputs.DP-2 = {
+      mode = "2560x1440@170.071";
+      variable-refresh-rate = _: {props.on-demand = true;};
+    };
+    window-rules = [
+      {
+        matches = [{"app-id" = "(?i)^steam_app_|^terraria|^minecraft$";}];
+        open-fullscreen = true;
+        open-on-workspace = "default";
+        variable-refresh-rate = true;
+      }
+      {
+        matches = [{"app-id" = "^steam$";}];
+        open-fullscreen = false;
+        open-on-workspace = "default";
+      }
+      {
+        matches = [{title = "^(Sign in to Steam|Shutdown)$";}];
+        open-on-workspace = "default";
+      }
+      {
+        matches = [{"app-id" = ''^notificationtoasts_\d+_desktop$'';}];
+        open-floating = true;
+        default-floating-position = _: {
+          props = {
+            relative-to = "bottom-right";
+            x = 12;
+            y = 12;
           };
-        }
-        {
-          window-rule = {
-            match._props."app-id" = "(?i)^steam_app_|^terraria|^minecraft$";
-            open-fullscreen = true;
-            open-on-workspace = "default";
-            variable-refresh-rate = true;
-          };
-        }
-        {
-          window-rule = {
-            match._props."app-id" = "^steam$";
-            open-fullscreen = false;
-            open-on-workspace = "default";
-          };
-        }
-        {
-          window-rule = {
-            match._props.title = "^(Sign in to Steam|Shutdown)$";
-            open-on-workspace = "default";
-          };
-        }
-        {
-          window-rule = {
-            match._props."app-id" = ''^notificationtoasts_\d+_desktop$'';
-            open-floating = true;
-            default-floating-position._props = {
-              relative-to = "bottom-right";
-              x = 12;
-              y = 12;
-            };
-          };
-        }
-      ];
-    })
-  ];
+        };
+      }
+    ];
+  };
 }

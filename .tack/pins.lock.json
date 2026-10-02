@@ -47,14 +47,6 @@
     "narHash": "sha256-adXBN30joBsjrPOleA4Ybdt/Wp5L3/upJ4h7dsGPyr8=",
     "lastModified": 1790795986
   },
-  "home-manager": {
-    "type": "github",
-    "owner": "nix-community",
-    "repo": "home-manager",
-    "rev": "0560d64401a6d5370732a69d08bc4a6b135962d9",
-    "narHash": "sha256-EEQKUylD8zuRTmDFX4rbwsHQ+iZhqqOldYcFN8SLcE0=",
-    "lastModified": 1790955005
-  },
   "import-tree": {
     "type": "github",
     "owner": "vic",
@@ -192,19 +184,19 @@
     "lastModified": 1790893495
   },
   "vellum": {
-    "type": "github",
-    "owner": "greyxp1",
-    "repo": "vellum",
-    "rev": "98b07d090078eda639aa00e4fb45d653729594a5",
-    "narHash": "sha256-nW0O0uosFdaxyrvJCF5o/iDvnJ6lizCMCOubIMkENWo=",
-    "lastModified": 1790806836
+    "type": "git",
+    "url": "https://github.com/greyxp1/vellum",
+    "ref": "HEAD",
+    "rev": "888aaf9b02809c49648a8978ff59c6ba58bf30dc",
+    "narHash": "sha256-+oreqW/6bPghTdNFUP55tACNqis8bJ2khWg01aOnuCA=",
+    "lastModified": 1791055677
   },
   "wrappers": {
-    "type": "github",
-    "owner": "nix-community",
-    "repo": "nix-wrapper-modules",
-    "rev": "1db3c116a6aa61823f8d8f3c47c306846428fc54",
-    "narHash": "sha256-7xWS16u13YGlRNKWaAPzRbEyh4OLOXJe31k7h4AnXNU=",
-    "lastModified": 1788981141
+    "type": "git",
+    "url": "file:///home/grey/Projects/nix-wrapper-modules",
+    "ref": "refs/heads/nixconf",
+    "rev": "b5861f77fc293250163e0a967fe47442bd726c52",
+    "narHash": "sha256-7KOn8lF3BKLJkrTLBNwrvyV0JQ5vWxzCOJYgQVT7CTc=",
+    "lastModified": 1791052803
   }
 }

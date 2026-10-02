@@ -1,8 +1,8 @@
 {
+  config,
   inputs,
   lib,
   pkgs,
-  uid,
   ...
 }: let
   cache = import ../_cache.nix;
@@ -142,7 +142,7 @@ in {
     "/share/zsh"
     "/share/xdg-desktop-portal"
   ];
-  environment.systemPackages = [pkgs.zsh pkgs.tailscale];
+  environment.systemPackages = [pkgs.tailscale];
   alma.activation.t3code = ''
     /usr/bin/loginctl enable-linger grey
   '';
@@ -181,15 +181,6 @@ in {
       };
     };
     targets.system-manager.wants = ["system-manager-path.service"];
-    services."home-manager-grey" = {
-      wantedBy = lib.mkForce [];
-      restartIfChanged = false;
-      environment = {
-        DBUS_SESSION_BUS_ADDRESS = "unix:path=/run/user/${toString uid}/bus";
-        PATH = lib.mkForce "/etc/profiles/per-user/grey/bin:/run/system-manager/sw/bin:/nix/var/nix/profiles/default/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin";
-        XDG_RUNTIME_DIR = "/run/user/${toString uid}";
-      };
-    };
   };
   environment.etc."systemd/system/nix-daemon.service.d/nixconf.conf" = {
     mode = "0644";

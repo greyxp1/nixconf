@@ -14,7 +14,7 @@
     };
     xdg.portal = {
       enable = true;
-      extraPortals = [pkgs.xdg-desktop-portal-termfilechooser];
+      extraPortals = [(inputs.self.wrappers.termfilechooser.wrap {inherit pkgs;})];
       config.niri."org.freedesktop.impl.portal.FileChooser" = lib.mkForce ["termfilechooser"];
     };
 
@@ -29,22 +29,20 @@
     '';
   };
 
-  flake.homeModules.yazi = {pkgs, ...}: {
-    catppuccin.yazi.enable = false;
-    programs.yazi = {
-      enable = true;
-      package = null;
+  flake.wrappers.termfilechooser = {
+    pkgs,
+    wlib,
+    ...
+  }: {
+    imports = [wlib.wrapperModules.xdg-desktop-portal-termfilechooser];
+    settings.filechooser = {
+      cmd = "${pkgs.xdg-desktop-portal-termfilechooser}/share/xdg-desktop-portal-termfilechooser/yazi-wrapper.sh";
+      default_dir = "$HOME";
+      env = "TERMCMD=kitty -o background_opacity=0.6 --title=filepicker";
     };
-    xdg.configFile."xdg-desktop-portal-termfilechooser/config".text = ''
-      [filechooser]
-      cmd=${pkgs.xdg-desktop-portal-termfilechooser}/share/xdg-desktop-portal-termfilechooser/yazi-wrapper.sh
-      default_dir=$HOME
-      env=TERMCMD=kitty -o background_opacity=0.6 --title=filepicker
-    '';
   };
 
   flake.wrappers.yazi = {
-    config,
     lib,
     pkgs,
     wlib,
@@ -119,25 +117,30 @@
 
       plugins = with pkgs.yaziPlugins; {
         compress = inputs.compress-yazi;
-        inherit mount full-border keep-preferences smart-enter starship;
-      };
-      constructFiles = {
-        init = {
-          relPath = "${config.binName}-config/init.lua";
-          content = ''
-            require("full-border"):setup()
-            require("keep-preferences"):setup(${lib.generators.toLua {} {
-              path_preferences = map (directory: {
-                path = "^/home/grey/${directory}";
-                defaults = {
-                  sort_by = "mtime";
-                  sort_reverse = true;
-                };
-              }) ["Downloads" "Pictures" "Videos"];
-            }})
-            require("smart-enter"):setup({ open_multi = true })
-            require("starship"):setup()
-          '';
+        inherit mount;
+        full-border = {
+          package = full-border;
+          setup = true;
+        };
+        keep-preferences = {
+          package = keep-preferences;
+          setup = true;
+          settings.path_preferences = map (directory: {
+            path = "^/home/grey/${directory}";
+            defaults = {
+              sort_by = "mtime";
+              sort_reverse = true;
+            };
+          }) ["Downloads" "Pictures" "Videos"];
+        };
+        smart-enter = {
+          package = smart-enter;
+          setup = true;
+          settings.open_multi = true;
+        };
+        starship = {
+          package = starship;
+          setup = true;
         };
       };
       settings.keymap.mgr.prepend_keymap = [

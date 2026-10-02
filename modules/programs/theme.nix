@@ -1,40 +1,42 @@
-{inputs, ...}: {
-  flake.homeModules.theme = {
-    config,
-    lib,
+{
+  flake.nixosModules.theme = {
     pkgs,
+    lib,
     ...
   }: let
-    inherit (config.catppuccin) accent flavor;
-    catppuccinPackages = inputs.catppuccin.packages.${pkgs.stdenv.hostPlatform.system};
+    theme = pkgs.catppuccin-gtk.override {
+      accents = ["mauve"];
+      variant = "mocha";
+    };
+    cursor = pkgs.catppuccin-cursors.mochaMauve;
+    settings = ''
+      [Settings]
+      gtk-theme-name=catppuccin-mocha-mauve-standard
+      gtk-application-prefer-dark-theme=1
+      gtk-cursor-theme-name=catppuccin-mocha-mauve-cursors
+      gtk-cursor-theme-size=24
+    '';
   in {
-    imports = [inputs.catppuccin.homeModules.catppuccin];
-    catppuccin = {
-      enable = true;
-      autoEnable = true;
-      flavor = "mocha";
-      accent = "mauve";
-      cursors.enable = true;
-      gtk.icon.enable = false;
-      sources = lib.mkForce catppuccinPackages;
+    environment.systemPackages = [theme cursor];
+    environment.pathsToLink = ["/share/themes" "/share/icons"];
+    environment.sessionVariables = {
+      XCURSOR_THEME = "catppuccin-mocha-mauve-cursors";
+      XCURSOR_SIZE = "24";
     };
-
-    home.pointerCursor = {
+    environment.etc."xdg/gtk-3.0/settings.ini".text = settings;
+    environment.etc."xdg/gtk-4.0/settings.ini".text = settings;
+    programs.dconf = {
       enable = true;
-      size = 24;
-      gtk.enable = true;
-    };
-
-    gtk = {
-      enable = true;
-      colorScheme = "dark";
-      theme = {
-        name = "catppuccin-${flavor}-${accent}-standard";
-        package = pkgs.catppuccin-gtk.override {
-          accents = [accent];
-          variant = flavor;
-        };
-      };
+      profiles.user.databases = [
+        {
+          settings."org/gnome/desktop/interface" = {
+            color-scheme = "prefer-dark";
+            gtk-theme = "catppuccin-mocha-mauve-standard";
+            cursor-theme = "catppuccin-mocha-mauve-cursors";
+            cursor-size = lib.gvariant.mkInt32 24;
+          };
+        }
+      ];
     };
   };
 }

@@ -10,7 +10,7 @@
   almaMajors = builtins.attrNames config.alma.extraPackagesByMajor;
   supportedAlmaMajors = lib.concatStringsSep "|" almaMajors;
   supportedAlmaMajorsText = lib.concatStringsSep " or " almaMajors;
-  storeScriptUnits = ["alma-host.service" "home-manager-grey.service" "system-manager-path.service"];
+  storeScriptUnits = ["alma-host.service" "system-manager-path.service"];
 in {
   system-manager = {
     allowAnyDistro = true;
@@ -84,7 +84,7 @@ in {
             then
               pkgs.runCommand "alma-${name}" {} ''
                 ${pkgs.gnused}/bin/sed \
-                  -E 's|^(ExecStart=)(/nix/store/)|\1/bin/bash ${lib.optionalString (name == "home-manager-grey.service") "-el "}\2|' \
+                  -E 's|^(ExecStart=)(/nix/store/)|\1/bin/bash \2|' \
                   ${unit.unit}/${name} > "$out"
               ''
             else "${unit.unit}/${name}";

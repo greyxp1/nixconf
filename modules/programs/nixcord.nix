@@ -1,32 +1,14 @@
-{inputs, ...}: let
-  cordStashPath = subpath:
-    /. + builtins.unsafeDiscardStringContext "${inputs.cord-stash}/${subpath}";
-in {
-  flake.homeModules.nixcord = {
-    imports = [inputs.nixcord.homeModules.nixcord];
-    programs.nixcord = {
-      enable = true;
-      useGlobalPkgs = true;
-      discord.enable = false;
-      equibop = {
-        enable = true;
-        autoscroll.enable = true;
-        state.firstLaunch = false;
-        settings = {
-          tray = false;
-          hardwareVideoAcceleration = true;
-          enableSplashScreen = false;
-          splashTheming = false;
-          staticTitle = true;
-        };
-      };
-
+{inputs, ...}: {
+  flake.wrappers.helium = {pkgs, ...}: {
+    equicord = {
+      package = pkgs.callPackage (inputs.nixcord.outPath + "/pkgs/equicord") {};
       quickCss = ''
         @import url(https://refact0r.github.io/midnight-discord/build/midnight.css);
         @import url(https://mwittrien.github.io/BetterDiscordAddons/Themes/EmojiReplace/base/Apple.css);
 
         body {
-            --remove-bg-layer: on;
+            --background-image: on;
+            --background-image-url: url('https://i.imgur.com/mOR0PoA.jpeg');
             --top-bar-height: var(--gap);
             --transparency-tweaks: on;
             --panel-blur: on;
@@ -50,109 +32,98 @@ in {
       '';
 
       userPlugins = {
-        autoReact = cordStashPath "plugins/AutoReact";
-        betterAudioDefaults = cordStashPath "plugins/BetterAudioDefaults";
-        fakeDeafen = cordStashPath "plugins/FakeDeafen";
-        localEdit = cordStashPath "plugins/LocalEdit";
+        autoReact = "${inputs.cord-stash}/plugins/AutoReact";
+        betterAudioDefaults = "${inputs.cord-stash}/plugins/BetterAudioDefaults";
+        fakeDeafen = "${inputs.cord-stash}/plugins/FakeDeafen";
+        localEdit = "${inputs.cord-stash}/plugins/LocalEdit";
       };
 
-      extraConfig = {
+      settings = {
+        useQuickCSS = true;
         plugins = {
-          autoReact.enable = true;
-          betterAudioDefaults.enable = true;
-          fakeDeafen.enable = true;
-          localEdit.enable = true;
-        };
-      };
-
-      config = {
-        useQuickCss = true;
-        transparent = true;
-        plugins = {
-          addAttachments.enable = true;
-          alwaysTrust.enable = true;
-          betterCommands.enable = true;
-          betterSettings.enable = true;
-          betterUploadButton.enable = true;
-          blockKrisp.enable = true;
-          callTimer = {
-            enable = true;
+          AutoReact.enabled = true;
+          BetterAudioDefaults.enabled = true;
+          FakeDeafen.enabled = true;
+          LocalEdit.enabled = true;
+          AddAttachments.enabled = true;
+          AlwaysTrust.enabled = true;
+          BetterCommands.enabled = true;
+          BetterSettings.enabled = true;
+          BetterUploadButton.enabled = true;
+          BlockKrisp.enabled = true;
+          CallTimer = {
+            enabled = true;
             format = "human";
           };
-          clearUrls.enable = true;
-          consoleJanitor.enable = true;
-          copyFileContents.enable = true;
-          copyStickerLinks.enable = true;
-          crashHandler.enable = true;
-          declutter = {
-            enable = true;
+          ClearURLs.enabled = true;
+          ConsoleJanitor.enabled = true;
+          CopyFileContents.enabled = true;
+          CopyStickerLinks.enabled = true;
+          CrashHandler.enabled = true;
+          Declutter = {
+            enabled = true;
             removeAvatarDecoration = true;
             removeButtonTooltips = true;
             removeFamilyCenterAboveDms = true;
             removeLibraryAboveDms = true;
             removeShopAboveDms = true;
           };
-          disableCallIdle.enable = true;
-          dragFavoriteEmotes.enable = true;
-          equibopStreamFixes = {
-            enable = true;
-            bitsPerPixelPct = 16;
-            minBitrate = 6000;
-          };
-          expressionCloner.enable = true;
-          fakeNitro.enable = true;
-          fixCodeblockGap.enable = true;
-          fixFileExtensions.enable = true;
-          fixYoutubeEmbeds.enable = true;
-          followVoiceUser = {
-            enable = true;
+          DisableCallIdle.enabled = true;
+          DragFavoriteEmotes.enabled = true;
+          ExpressionCloner.enabled = true;
+          FakeNitro.enabled = true;
+          FixCodeblockGap.enabled = true;
+          FixFileExtensions.enabled = true;
+          FixYoutubeEmbeds.enabled = true;
+          FollowVoiceUser = {
+            enabled = true;
             onlyWhenInVoice = false;
           };
-          fullVcpfp.enable = true;
-          gifPaste.enable = true;
-          guildPickerDumper.enable = true;
-          hideMessages.enable = true;
-          homeTyping.enable = true;
-          imageZoom = {
-            enable = true;
+          FullVCPFP.enabled = true;
+          GifPaste.enabled = true;
+          GuildPickerDumper.enabled = true;
+          HideMessages.enabled = true;
+          HomeTyping.enabled = true;
+          ImageZoom = {
+            enabled = true;
             size = 500.0;
             square = true;
           };
-          keepCurrentChannel.enable = true;
-          memberCount.enable = true;
-          messageClickActions.enable = true;
-          messageLogger = {
-            enable = true;
+          KeepCurrentChannel.enabled = true;
+          MemberCount.enabled = true;
+          MessageClickActions.enabled = true;
+          MessageLogger = {
+            enabled = true;
             collapseDeleted = true;
             ignoreSelf = true;
             inlineEdits = false;
             logEdits = false;
           };
-          moreUserTags = {
-            enable = true;
+          MoreUserTags = {
+            enabled = true;
             dontShowBotTag = true;
             noAppsAllowed = true;
-            tagSettings.voiceModerator.showInChat = false;
+            tagSettings.VOICE_MODERATOR.showInChat = false;
           };
-          newGuildSettings = {
-            enable = true;
+          NewGuildSettings = {
+            enabled = true;
             messages = 1;
           };
-          newPluginsManager.enable = true;
-          noDevtoolsWarning.enable = true;
-          noF1.enable = true;
-          noMiddleClickPaste.enable = true;
-          noNitroUpsell.enable = true;
-          noOnboardingDelay.enable = true;
-          noPushToTalk.enable = true;
-          noTypingAnimation.enable = true;
-          noUnblockToJump.enable = true;
-          onePingPerDm.enable = true;
-          pinIcon.enable = true;
-          platformIndicators.enable = true;
-          previewMessage.enable = true;
-          questify = {
-            enable = true;
+          NewPluginsManager.enabled = true;
+          NoDevtoolsWarning.enabled = true;
+          NoF1.enabled = true;
+          NoMiddleClickPaste.enabled = true;
+          NoNitroUpsell.enabled = true;
+          NoOnboardingDelay.enabled = true;
+          NoPushToTalk.enabled = true;
+          NoTypingAnimation.enabled = true;
+          NoUnblockToJump.enabled = true;
+          OnePingPerDM.enabled = true;
+          PinIcon.enabled = true;
+          PlatformIndicators.enabled = true;
+          PreviewMessage.enabled = true;
+          Questify = {
+            enabled = true;
             acknowledgedNotices = {
               quest-ban-warning-2026-08-07 = true;
               quest-ban-warning-2026-08-26 = true;
@@ -190,45 +161,45 @@ in {
             };
             resumeInterruptedQuests = true;
           };
-          quoter = {
-            enable = true;
+          Quoter = {
+            enabled = true;
             watermark = "Made by greyxp1";
           };
-          reactErrorDecoder.enable = true;
-          relationshipNotifier.enable = true;
-          reverseImageSearch.enable = true;
-          searchFix.enable = true;
-          sendTimestamps.enable = true;
-          showAllMessageButtons.enable = true;
-          showTimeoutDuration.enable = true;
-          silentTyping.enable = true;
-          stickerPaste.enable = true;
-          translate.enable = true;
-          unindent.enable = true;
-          userVoiceShow.enable = true;
-          viewIcons = {
-            enable = true;
+          ReactErrorDecoder.enabled = true;
+          RelationshipNotifier.enabled = true;
+          ReverseImageSearch.enabled = true;
+          SearchFix.enabled = true;
+          SendTimestamps.enabled = true;
+          ShowAllMessageButtons.enabled = true;
+          ShowTimeoutDuration.enabled = true;
+          SilentTyping.enabled = true;
+          StickerPaste.enabled = true;
+          Translate.enabled = true;
+          Unindent.enabled = true;
+          UserVoiceShow.enabled = true;
+          ViewIcons = {
+            enabled = true;
             format = "png";
             imgSize = "4096";
           };
-          voiceChannelLog.enable = true;
-          voiceMessages = {
-            enable = true;
+          VoiceChannelLog.enabled = true;
+          VoiceMessages = {
+            enabled = true;
             echoCancellation = false;
             noiseSuppression = false;
           };
-          voiceRejoin = {
-            enable = true;
+          VoiceRejoin = {
+            enabled = true;
             preventReconnectIfCallEnded = "none";
             rejoinDelay = 1.0;
             rejoinTimeout = 120.0;
           };
-          webContextMenus.enable = true;
-          webKeybinds.enable = true;
-          webScreenShareFixes.enable = true;
-          whoReacted.enable = true;
-          whosWatching.enable = true;
-          youtubeAdblock.enable = true;
+          WebContextMenus.enabled = true;
+          WebKeybinds.enabled = true;
+          WebScreenShareFixes.enabled = true;
+          WhoReacted.enabled = true;
+          WhosWatching.enabled = true;
+          YoutubeAdblock.enabled = true;
         };
       };
     };

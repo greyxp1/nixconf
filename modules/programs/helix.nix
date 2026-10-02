@@ -1,9 +1,9 @@
 {inputs, ...}: {
   flake.nixosModules.helix = {config, ...}: {
-    imports = [inputs.self.wrappers.helix.install];
+    imports = [inputs.self.wrappers.helix.install inputs.self.wrappers.lazygit.install];
+    wrappers.lazygit.enable = true;
     wrappers.helix = {
       enable = true;
-      flakeLocation = config.flake.location;
       nixconfSystem = "nixosConfigurations.${config.networking.hostName}";
     };
     environment.variables = {
@@ -12,12 +12,14 @@
     };
   };
 
-  flake.homeModules.helix = {
-    catppuccin.helix.enable = false;
-    programs.lazygit = {
-      enable = true;
-      settings.notARepository = "skip";
-    };
+  flake.wrappers.lazygit = {
+    pkgs,
+    wlib,
+    ...
+  }: {
+    imports = [wlib.wrapperModules.lazygit];
+    settings.notARepository = "skip";
+    extraConfigFiles = ["${inputs.catppuccin.packages.${pkgs.stdenv.hostPlatform.system}.lazygit}/mocha/mauve.yml"];
   };
 
   flake.wrappers.helix = {
@@ -31,7 +33,7 @@
       if config.nixconfSystem == null
       then null
       else
-        "(builtins.getFlake \"path:${config.flakeLocation}\")"
+        "(builtins.getFlake \"path:/home/grey/Projects/nixconf\")"
         + ".${config.nixconfSystem}";
     nix-format = pkgs.writeShellScriptBin "nix-format" ''
       set -o pipefail
@@ -40,17 +42,13 @@
   in {
     imports = [wlib.wrapperModules.helix];
     options = {
-      flakeLocation = lib.mkOption {
-        type = lib.types.str;
-        default = "/home/grey/Projects/nixconf";
-      };
       nixconfSystem = lib.mkOption {
         type = lib.types.nullOr lib.types.str;
         default = null;
       };
     };
     config = {
-      runtimePkgs = [nix-format pkgs.mpls pkgs.nixd pkgs.lazygit];
+      runtimePkgs = [nix-format pkgs.mpls pkgs.nixd (inputs.self.wrappers.lazygit.wrap {inherit pkgs;})];
       themes.catppuccin_transparent = {
         inherits = "catppuccin_mocha";
         "ui.background".bg = "none";
@@ -99,7 +97,6 @@
             }
             // lib.optionalAttrs (configurationExpr != null) {
               options.nixos.expr = "${configurationExpr}.options";
-              options.home-manager.expr = "${configurationExpr}.options.home-manager.users.type.getSubOptions []";
             };
         };
 

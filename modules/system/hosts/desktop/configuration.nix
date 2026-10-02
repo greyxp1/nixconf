@@ -22,8 +22,8 @@ in {
       };
     };
 
-    home-manager.sharedModules = [./_modules/noctalia.nix];
     imports = [
+      ./_modules/noctalia.nix
       ./_modules/at2005usb.nix
       ./_modules/gaming.nix
       ./_modules/kovaaks.nix

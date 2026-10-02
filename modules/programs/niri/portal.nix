@@ -20,23 +20,9 @@ in {
       };
     };
     environment.pathsToLink = ["/share/xdg-desktop-portal"];
-  };
-
-  flake.homeModules.niri-portal = {pkgs, ...}: {
     systemd.user.services.niri-screenshare = {
-      Unit = {
-        Description = "Portal service (niri backend)";
-        After = ["graphical-session.target"];
-        PartOf = ["graphical-session.target"];
-        Requisite = ["graphical-session.target"];
-      };
-      Service = {
-        Type = "dbus";
-        BusName = "org.freedesktop.impl.portal.desktop.niri";
-        ExecStart = "${niri-screenshare pkgs}/bin/niri-screenshare";
-        Restart = "on-failure";
-      };
-      Install.WantedBy = ["graphical-session.target"];
+      enableDefaultPath = false;
+      wantedBy = ["graphical-session.target"];
     };
   };
 }

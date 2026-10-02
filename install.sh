@@ -74,7 +74,6 @@ build_alma_system_config() {
   local primary_group="$4"
 
   NIX_PATH='' \
-  NIXCONF_REPO="$repo_dir" \
   NIXCONF_UID="$uid" \
   NIXCONF_GID="$gid" \
   NIXCONF_PRIMARY_GROUP="$primary_group" \

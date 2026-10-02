@@ -1,9 +1,11 @@
-{
-  flake.homeModules.starship = {
-    catppuccin.starship.enable = false;
-    programs.starship = {
-      enable = true;
-      settings = fromTOML (builtins.readFile ./starship.toml);
-    };
+{inputs, ...}: {
+  flake.nixosModules.starship = {
+    imports = [inputs.self.wrappers.starship.install];
+    wrappers.starship.enable = true;
+  };
+
+  flake.wrappers.starship = {wlib, ...}: {
+    imports = [wlib.wrapperModules.starship];
+    settings = fromTOML (builtins.readFile ./starship.toml);
   };
 }

@@ -1,23 +1,17 @@
 {inputs, ...}: {
   imports = [inputs.nix-flatpak.nixosModules.nix-flatpak];
-  environment.variables.XDG_DATA_DIRS = ["/var/lib/flatpak/exports/share"];
+  environment.sessionVariables.XDG_DATA_DIRS = ["/var/lib/flatpak/exports/share"];
   services.flatpak = {
     enable = true;
     packages = ["org.vinegarhq.Sober"];
     update.onActivation = true;
   };
 
-  home-manager.sharedModules = [
+  wrappers.niri.settings.window-rules = [
     {
-      wayland.windowManager.niri.settings._children = [
-        {
-          window-rule = {
-            match._props."app-id" = "^org\\.vinegarhq\\.Sober$";
-            open-fullscreen = true;
-            variable-refresh-rate = true;
-          };
-        }
-      ];
+      matches = [{app-id = "^org\\.vinegarhq\\.Sober$";}];
+      open-fullscreen = true;
+      variable-refresh-rate = true;
     }
   ];
 }

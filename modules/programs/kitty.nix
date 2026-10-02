@@ -1,40 +1,41 @@
-{
-  flake.homeModules.kitty = {pkgs, ...}: {
-    home.packages = [pkgs.nerd-fonts.symbols-only];
+{inputs, ...}: {
+  flake.nixosModules.kitty = {pkgs, ...}: {
+    imports = [inputs.self.wrappers.kitty.install];
+    wrappers.kitty.enable = true;
+    fonts.packages = [pkgs.jetbrains-mono pkgs.nerd-fonts.symbols-only];
+  };
 
-    programs.kitty = {
-      enable = true;
-      font = {
-        name = "JetBrains Mono";
-        package = pkgs.jetbrains-mono;
-        size = 14;
-      };
-
-      settings = {
-        enabled_layouts = "splits:split_axis=horizontal";
-        cursor_blink_interval = 0;
-        cursor_shape = "beam";
-        cursor_shape_unfocused = "unchanged";
-        cursor_trail = 3;
-        cursor_trail_decay = "0.05 0.15";
-        cursor_trail_start_threshold = 2;
-        background_opacity = "0.8";
-        window_padding_width = 8;
-        placement_strategy = "center";
-        sync_to_monitor = "yes";
-        detect_urls = true;
-        tab_bar_style = "powerline";
-        tab_powerline_style = "slanted";
-        strip_trailing_spaces = "smart";
-        confirm_os_window_close = 0;
-        scrollback_lines = 10000;
-        enable_audio_bell = "no";
-        "map ctrl+backspace" = "send_text all \\x17";
-        "map ctrl+y" =
-          "combine : launch "
-          + "--stdin-source=@screen_scrollback "
-          + "--type=clipboard : launch --type=overlay true";
-      };
+  flake.wrappers.kitty = {wlib, ...}: {
+    imports = [wlib.wrapperModules.kitty];
+    font = {
+      name = "JetBrains Mono";
+      size = 14;
+    };
+    themeFile = "Catppuccin-Mocha";
+    settings = {
+      enabled_layouts = "splits:split_axis=horizontal";
+      cursor_blink_interval = 0;
+      cursor_shape = "beam";
+      cursor_shape_unfocused = "unchanged";
+      cursor_trail = 3;
+      cursor_trail_decay = "0.05 0.15";
+      cursor_trail_start_threshold = 2;
+      background_opacity = "0.8";
+      window_padding_width = 8;
+      placement_strategy = "center";
+      sync_to_monitor = "yes";
+      detect_urls = true;
+      tab_bar_style = "powerline";
+      tab_powerline_style = "slanted";
+      strip_trailing_spaces = "smart";
+      confirm_os_window_close = 0;
+      scrollback_lines = 10000;
+      enable_audio_bell = "no";
+      "map ctrl+backspace" = "send_text all \\x17";
+      "map ctrl+y" =
+        "combine : launch "
+        + "--stdin-source=@screen_scrollback "
+        + "--type=clipboard : launch --type=overlay true";
     };
   };
 }
