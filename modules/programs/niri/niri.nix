@@ -41,7 +41,6 @@
     extraSettings = [
       {workspace = _: {props = "browser";};}
       {workspace = _: {props = "default";};}
-      {workspace = _: {props = "chat";};}
     ];
     settings = {
       window-rules = [
@@ -79,10 +78,23 @@
           open-on-workspace = "browser";
         }
         {
+          matches = [{title = "^discord\\.com is sharing your screen\\.$";}];
+          opacity = 0.0;
+          open-focused = false;
+          focus-ring.off = {};
+          border.off = {};
+          shadow.off = {};
+        }
+        {
           matches = [
+            {
+              "app-id" = "^helium$";
+              title = " - Helium$";
+            }
             {title = "^Picture in picture$";}
             {"app-id" = "^chrome-ldgfbffkinooeloadekpmfoklnobpien-Default$";}
           ];
+          excludes = [{title = "^• Discord.* - Helium$";}];
           open-floating = true;
           focus-ring.off = {};
           default-column-width.fixed = 1024;
