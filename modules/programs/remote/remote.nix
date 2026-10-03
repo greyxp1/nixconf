@@ -42,6 +42,13 @@ in {
       extraSetFlags = ["--operator=grey"] ++ lib.optional isDesktop "--advertise-exit-node";
     };
 
+    preservation.preserveAt."/persistent".directories = [
+      {
+        directory = "/var/lib/tailscale";
+        mode = "0700";
+      }
+    ];
+
     boot.kernelModules = ["uhid"];
     users.users.grey.extraGroups = ["uinput"];
     services.udev.extraRules = ''
