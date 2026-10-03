@@ -75,9 +75,9 @@
     "type": "github",
     "owner": "numtide",
     "repo": "llm-agents.nix",
-    "rev": "b768e838e72e543cb36490a860d4debf3e1ad024",
-    "narHash": "sha256-usRCvzPTNxmb+em2R2pV3nEFIUHQfQza2iCIrKV1bDA=",
-    "lastModified": 1790973612
+    "rev": "cd88eedb193fde4dc405e02763f56f8f4f8d343d",
+    "narHash": "sha256-7NrbyeCugkaZEYy+oCcYA4p+l+2TPrhu0qS3qrcWJZE=",
+    "lastModified": 1791061662
   },
   "mpv-auto-sub-sync": {
     "type": "github",
@@ -139,9 +139,9 @@
     "type": "github",
     "owner": "4evy",
     "repo": "nixcord",
-    "rev": "430676f81ddefd114f43254a1ae83b75963ddcfc",
-    "narHash": "sha256-GJ+pEcvjbnKXtIN67i+e4paMujahuWL2Ps4pVz9GLHw=",
-    "lastModified": 1790957230
+    "rev": "c0e76a9ddc0f86860b2fc3fc027fc83fec5618c0",
+    "narHash": "sha256-mPa20rgp6cUP6khDAYdOtiSt0gBfG/fHQH/Ifsa94bA=",
+    "lastModified": 1791067261
   },
   "nixpkgs": {
     "type": "github",
@@ -155,9 +155,9 @@
     "type": "github",
     "owner": "greyxp1",
     "repo": "perch",
-    "rev": "4f23ad40f1c3489bb9383a1f51f9cb3972de4ad4",
-    "narHash": "sha256-sI54cPDGiMysNM5R02ObcKbYUTh3trSsm53MP+HyGe4=",
-    "lastModified": 1786970358
+    "rev": "6cebaa72264a918177dd46c63567889e6313dc40",
+    "narHash": "sha256-IGU0NC5OucPR5xKZpQRwgbNk4hCkr/CgqoGMkV3MHfc=",
+    "lastModified": 1791070058
   },
   "preservation": {
     "type": "github",
@@ -184,19 +184,19 @@
     "lastModified": 1790893495
   },
   "vellum": {
-    "type": "git",
-    "url": "https://github.com/greyxp1/vellum",
-    "ref": "HEAD",
-    "rev": "888aaf9b02809c49648a8978ff59c6ba58bf30dc",
-    "narHash": "sha256-+oreqW/6bPghTdNFUP55tACNqis8bJ2khWg01aOnuCA=",
-    "lastModified": 1791055677
+    "type": "github",
+    "owner": "greyxp1",
+    "repo": "vellum",
+    "rev": "e2b8aa7f8e7cbea21a5dfa910f0d32e42822b4d8",
+    "narHash": "sha256-1N7FgVnO1aLQa7UYyoR1tH3EkpM6cnlpzM7qWSs3x7c=",
+    "lastModified": 1791065874
   },
   "wrappers": {
     "type": "git",
     "url": "file:///home/grey/Projects/nix-wrapper-modules",
-    "ref": "refs/heads/nixconf",
-    "rev": "b5861f77fc293250163e0a967fe47442bd726c52",
-    "narHash": "sha256-7KOn8lF3BKLJkrTLBNwrvyV0JQ5vWxzCOJYgQVT7CTc=",
-    "lastModified": 1791052803
+    "ref": "nixconf",
+    "rev": "107edbf08a18c58aafee483f3b34440d3b5496aa",
+    "narHash": "sha256-KLJSB+Sh4TmYo9ahnjK6u8guC8QdGSdduSvb1cyJ/fM=",
+    "lastModified": 1791155875
   }
 }

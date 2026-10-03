@@ -70,7 +70,7 @@ url = "gh:greyxp1/kovaaks-config"
 type = "fetch"
 
 [inputs.vellum]
-url = "git+https://github.com/greyxp1/vellum"
+url = "gh:greyxp1/vellum"
 
 [inputs.nix-flatpak]
 url = "gh:gmodena/nix-flatpak"
