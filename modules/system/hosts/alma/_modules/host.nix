@@ -10,7 +10,10 @@
     set -euo pipefail
     exit_node=""
     if /usr/bin/nmcli -g UUID connection show --active | ${pkgs.gnugrep}/bin/grep -Fxq 77f514d1-e780-4c88-999b-208d242db751; then
-      exit_node=100.91.121.54
+      exit_node=$(${pkgs.tailscale}/bin/tailscale status --json | ${pkgs.jq}/bin/jq -r '
+        [.Peer[]? | select(.HostName == "desktop" and .Online and .ExitNodeOption)
+          | .TailscaleIPs[0]][0] // ""
+      ')
     fi
     ${pkgs.tailscale}/bin/tailscale set --exit-node="$exit_node" --exit-node-allow-lan-access
   '';
@@ -158,6 +161,14 @@ in {
 
   # Reconcile explicitly after switching; boot only needs the immutable profile.
   systemd = {
+    timers.alma-school-exit-node = {
+      wantedBy = ["timers.target"];
+      timerConfig = {
+        OnBootSec = "30s";
+        OnUnitActiveSec = "30s";
+        AccuracySec = "1s";
+      };
+    };
     services.alma-school-exit-node = {
       description = "Use desktop as an exit node on the school network";
       wantedBy = ["multi-user.target"];
