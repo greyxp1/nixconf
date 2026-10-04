@@ -16,13 +16,17 @@
       daemonIOSchedClass = "idle";
       settings =
         {
-          max-jobs = 2;
-          cores = 6;
           trusted-users = ["@wheel"];
           experimental-features = ["nix-command" "flakes"];
           warn-dirty = false;
         }
         // import ./_cache.nix;
+    };
+
+    systemd.services.nix-daemon.serviceConfig = {
+      MemoryHigh = "70%";
+      MemoryMax = "85%";
+      OOMScoreAdjust = 500;
     };
 
     system = {

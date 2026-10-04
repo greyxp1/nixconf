@@ -120,8 +120,8 @@ in {
       experimental-features = ["nix-command" "flakes"];
       auto-optimise-store = true;
       trusted-users = ["@wheel"];
-      max-jobs = 2;
-      cores = 6;
+      max-jobs = "auto";
+      cores = 0;
       warn-dirty = false;
       extra-substituters = cache.substituters;
       extra-trusted-public-keys = cache.trusted-public-keys;
@@ -196,6 +196,13 @@ in {
   environment.etc."systemd/system/nix-daemon.service.d/nixconf.conf" = {
     mode = "0644";
     replaceExisting = true;
-    text = "[Service]\nCPUSchedulingPolicy=idle\nIOSchedulingClass=idle\n";
+    text = ''
+      [Service]
+      CPUSchedulingPolicy=idle
+      IOSchedulingClass=idle
+      MemoryHigh=70%
+      MemoryMax=85%
+      OOMScoreAdjust=500
+    '';
   };
 }
