@@ -3,7 +3,7 @@
     equicord = {
       package = pkgs.callPackage (inputs.nixcord.outPath + "/pkgs/equicord") {};
       quickCss = ''
-        @import url(https://refact0r.github.io/midnight-discord/build/midnight.css);
+        @import url(https://raw.githubusercontent.com/greyxp1/midnight-discord/aa3ba76a91933005ebd6c4e31260f247741ebde1/build/midnight.css);
         @import url(https://mwittrien.github.io/BetterDiscordAddons/Themes/EmojiReplace/base/Apple.css);
 
         body {
@@ -152,12 +152,16 @@
               "3" = false;
               "4" = true;
               "5" = true;
-              ACHIEVEMENT_IN_ACTIVITY = true;
-              ACHIEVEMENT_IN_GAME = true;
-              PLAY_ACTIVITY = true;
-              STREAM_ON_DESKTOP = true;
               WATCH_VIDEO = true;
               WATCH_VIDEO_ON_MOBILE = true;
+              ACHIEVEMENT_IN_ACTIVITY = false;
+              ACHIEVEMENT_IN_GAME = false;
+              PLAY_ACTIVITY = false;
+              STREAM_ON_DESKTOP = false;
+              PLAY_ON_DESKTOP = false;
+              PLAY_ON_DESKTOP_V2 = false;
+              PLAY_ON_PLAYSTATION = false;
+              PLAY_ON_XBOX = false;
             };
             resumeInterruptedQuests = true;
           };
