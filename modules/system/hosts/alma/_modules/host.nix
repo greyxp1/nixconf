@@ -9,7 +9,8 @@
   schoolExitNode = pkgs.writeShellScript "alma-school-exit-node" ''
     set -euo pipefail
     exit_node=""
-    if /usr/bin/nmcli -g UUID connection show --active | ${pkgs.gnugrep}/bin/grep -Fxq 77f514d1-e780-4c88-999b-208d242db751; then
+    # The campus route survives switching between physical DHCP and br-wan.
+    if /usr/sbin/ip -j -4 route show default | ${pkgs.jq}/bin/jq -e 'any(.[]; .gateway == "10.64.100.1")' >/dev/null; then
       exit_node=$(${pkgs.tailscale}/bin/tailscale status --json | ${pkgs.jq}/bin/jq -r '
         [.Peer[]? | select(.HostName == "desktop" and .Online and .ExitNodeOption)
           | .TailscaleIPs[0]][0] // ""
