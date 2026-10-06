@@ -1,2 +1,1 @@
-# Replaced by the installer with the selected disk's stable path.
-"/dev/sda"
+"/dev/disk/by-id/ata-SATA3_128GB_SSD_2021071200216"
