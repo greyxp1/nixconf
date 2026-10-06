@@ -7,7 +7,10 @@
   }: let
     t3code = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.t3code.unwrapped;
   in {
-    environment.systemPackages = [t3code];
+    environment.systemPackages = [
+      t3code
+      (pkgs.writeShellScriptBin "t3-restart" (builtins.readFile ./t3-restart.sh))
+    ];
     environment.variables.OPENCODE_CONFIG = toString (pkgs.writeText "opencode.json" (builtins.toJSON {permission = "allow";}));
     systemd.services.t3code = {
       description = "T3 Code headless server";
