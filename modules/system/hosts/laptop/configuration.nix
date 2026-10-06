@@ -19,7 +19,7 @@ in {
       extraStopCommands = "iptables -D nixos-fw -s 192.168.1.6/32 -p tcp --dport 22 -j nixos-fw-accept || true";
     };
     nix.settings = {
-      max-jobs = 1;
+      max-jobs = 0;
       cores = 1;
     };
     wrappers = {
@@ -43,18 +43,6 @@ in {
         '';
       };
     };
-
-    nixpkgs.overlays = lib.mkAfter [
-      (_: prev: {
-        niri = prev.niri.overrideAttrs (old: {
-          # Avoid the memory-heavy release link on this 4 GiB laptop.
-          env = (old.env or {}) // {
-            CARGO_PROFILE_RELEASE_LTO = "false";
-            CARGO_PROFILE_RELEASE_DEBUG = "0";
-          };
-        });
-      })
-    ];
 
     disko.devices.disk.main = {
       device = import ./_device.nix;
