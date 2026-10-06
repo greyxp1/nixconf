@@ -19,7 +19,12 @@
   }: {
     imports = [wlib.wrapperModules.lazygit];
     settings.notARepository = "skip";
-    extraConfigFiles = ["${inputs.catppuccin.packages.${pkgs.stdenv.hostPlatform.system}.lazygit}/mocha/mauve.yml"];
+    extraConfigFiles = [
+      (pkgs.runCommand "catppuccin-lazygit-mocha-mauve.yml" {} ''
+        ${pkgs.yq-go}/bin/yq '.gui.theme.authorColors = .gui.authorColors | del(.gui.authorColors)' \
+          ${inputs.catppuccin.packages.${pkgs.stdenv.hostPlatform.system}.lazygit}/mocha/mauve.yml > "$out"
+      '')
+    ];
   };
 
   flake.wrappers.helix = {
