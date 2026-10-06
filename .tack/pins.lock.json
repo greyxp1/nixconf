@@ -243,9 +243,9 @@
     "type": "git",
     "url": "https://github.com/greyxp1/nix-wrapper-modules",
     "ref": "refs/heads/nushell-structured-config",
-    "rev": "3728cc49c6f6f2d1962a0fc2867abe0f70cef329",
-    "narHash": "sha256-+ceN95VlXrFHjWZQ+t3ppAPn08v1ng45xkFtWLB+/bw=",
-    "lastModified": 1790989666
+    "rev": "03fae4ae05d29f45da363edd37d4c991b32684ce",
+    "narHash": "sha256-WoKn96JCCzuZNBtSSRhQ5KkIXM2TAHqKt1MpYivn3lY=",
+    "lastModified": 1791314879
   },
   "wrapper-openssh": {
     "type": "git",
