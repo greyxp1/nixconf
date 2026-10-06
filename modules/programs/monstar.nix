@@ -4,7 +4,6 @@
     wrappers.monstar.enable = true;
   };
   flake.wrappers.monstar = {
-    wlib,
     pkgs,
     lib,
     ...
@@ -40,7 +39,7 @@
       };
     };
   in {
-    imports = [wlib.wrapperModules.monstar];
+    imports = ["${inputs.wrapper-monstar}/wrapperModules/m/monstar/module.nix"];
     package = monstar;
     settings = {
       font-family = "JetBrains Mono";

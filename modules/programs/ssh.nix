@@ -9,8 +9,8 @@
     };
     programs.ssh.startAgent = true;
   };
-  flake.wrappers.openssh = {wlib, ...}: {
-    imports = [wlib.wrapperModules.openssh];
+  flake.wrappers.openssh = {...}: {
+    imports = ["${inputs.wrapper-openssh}/wrapperModules/o/openssh/module.nix"];
     settings = {
       "*" = {
         AddKeysToAgent = "yes";

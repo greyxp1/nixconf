@@ -31,10 +31,9 @@
 
   flake.wrappers.termfilechooser = {
     pkgs,
-    wlib,
     ...
   }: {
-    imports = [wlib.wrapperModules.xdg-desktop-portal-termfilechooser];
+    imports = ["${inputs.wrapper-xdg-desktop-portal-termfilechooser}/wrapperModules/x/xdg-desktop-portal-termfilechooser/module.nix"];
     settings.filechooser = {
       cmd = "${pkgs.xdg-desktop-portal-termfilechooser}/share/xdg-desktop-portal-termfilechooser/yazi-wrapper.sh";
       default_dir = "$HOME";
@@ -45,7 +44,6 @@
   flake.wrappers.yazi = {
     lib,
     pkgs,
-    wlib,
     ...
   }: let
     plug = on: run: desc: {
@@ -55,7 +53,7 @@
     catppuccin = inputs.catppuccin.packages.${pkgs.stdenv.hostPlatform.system};
     theme = lib.importTOML "${catppuccin.yazi}/mocha/catppuccin-mocha-mauve.toml";
   in {
-    imports = [wlib.wrapperModules.yazi];
+    imports = ["${inputs.wrapper-yazi}/wrapperModules/y/yazi/module.nix"];
     config = {
       runtimePkgs = [pkgs.starship pkgs.udisks2 (lib.getBin pkgs.util-linux)];
       env.STARSHIP_CONFIG = pkgs.writeText "yazi-starship.toml" (builtins.readFile ./starship/starship.toml);

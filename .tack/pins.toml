@@ -34,7 +34,7 @@ url = "gh:vic/import-tree"
 [inputs.disko]
 url = "gh:nix-community/disko"
 [inputs.wrappers]
-url = "git+file:///home/grey/Projects/nix-wrapper-modules?ref=nixconf"
+url = "git+https://github.com/nix-community/nix-wrapper-modules?rev=1db3c116a6aa61823f8d8f3c47c306846428fc54"
 [inputs.system-manager]
 url = "gh:numtide/system-manager"
 [inputs.helium]
@@ -80,4 +80,52 @@ url = "gh:manic-systems/inshellah"
 
 [inputs.compress-yazi]
 url = "gh:KKV9/compress.yazi/pull/32/head"
+type = "fetch"
+
+[inputs.wrapper-bat]
+url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=bat-wrapper"
+type = "fetch"
+
+[inputs.wrapper-codex]
+url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=codex-wrapper"
+type = "fetch"
+
+[inputs.wrapper-helium]
+url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=helium-wrapper"
+type = "fetch"
+
+[inputs.wrapper-lazygit]
+url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=lazygit-wrapper"
+type = "fetch"
+
+[inputs.wrapper-monstar]
+url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=monstar-wrapper"
+type = "fetch"
+
+[inputs.wrapper-noctalia-shell]
+url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=noctalia-v5"
+type = "fetch"
+
+[inputs.wrapper-nushell]
+url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=nushell-structured-config"
+type = "fetch"
+
+[inputs.wrapper-openssh]
+url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=openssh-wrapper"
+type = "fetch"
+
+[inputs.wrapper-tlrc]
+url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=tlrc-wrapper"
+type = "fetch"
+
+[inputs.wrapper-xdg-desktop-portal-termfilechooser]
+url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=xdg-desktop-portal-termfilechooser-wrapper"
+type = "fetch"
+
+[inputs.wrapper-yazi]
+url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=yazi-plugin-setup"
+type = "fetch"
+
+[inputs.wrapper-zsh]
+url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=zsh-structured-config"
 type = "fetch"

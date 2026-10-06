@@ -39,10 +39,9 @@
   };
   flake.wrappers.codex = {
     pkgs,
-    wlib,
     ...
   }: {
-    imports = [wlib.wrapperModules.codex];
+    imports = ["${inputs.wrapper-codex}/wrapperModules/c/codex/module.nix"];
     package = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.codex;
     context = ''
       # Global

@@ -9,13 +9,12 @@
 
   flake.wrappers.nushell = {
     pkgs,
-    wlib,
     ...
   }: let
     starship = inputs.self.wrappers.starship.wrap {inherit pkgs;};
     nix-index = inputs.nix-index-database.packages.${pkgs.stdenv.hostPlatform.system}.nix-index-with-db;
   in {
-    imports = [wlib.wrapperModules.nushell];
+    imports = ["${inputs.wrapper-nushell}/wrapperModules/n/nushell/module.nix"];
     env.STARSHIP_CONFIG = "${starship}/starship.toml";
     settings.show_banner = false;
     settings.keybindings = [

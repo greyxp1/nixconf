@@ -14,10 +14,9 @@
 
   flake.wrappers.lazygit = {
     pkgs,
-    wlib,
     ...
   }: {
-    imports = [wlib.wrapperModules.lazygit];
+    imports = ["${inputs.wrapper-lazygit}/wrapperModules/l/lazygit/module.nix"];
     settings.notARepository = "skip";
     extraConfigFiles = [
       (pkgs.runCommand "catppuccin-lazygit-mocha-mauve.yml" {} ''

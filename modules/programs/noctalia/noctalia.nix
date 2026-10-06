@@ -21,8 +21,8 @@
     };
   };
 
-  flake.wrappers.noctalia = {wlib, ...}: {
-    imports = [wlib.wrapperModules.noctalia-shell];
+  flake.wrappers.noctalia = {...}: {
+    imports = ["${inputs.wrapper-noctalia-shell}/wrapperModules/n/noctalia-shell/module.nix"];
     settings = {
       desktop_widgets.enabled = false;
       notification.background_opacity = 0.9;

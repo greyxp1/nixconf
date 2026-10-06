@@ -191,12 +191,108 @@
     "narHash": "sha256-1N7FgVnO1aLQa7UYyoR1tH3EkpM6cnlpzM7qWSs3x7c=",
     "lastModified": 1791065874
   },
+  "wrapper-bat": {
+    "type": "git",
+    "url": "https://github.com/greyxp1/nix-wrapper-modules",
+    "ref": "refs/heads/bat-wrapper",
+    "rev": "27c8d1dc6ae44dfcb71616be3bf7c8570f8fb608",
+    "narHash": "sha256-gKUyQ9vJWYgAMOQ6fuGaZRayj9wfYsT2/7qsQCF6fD8=",
+    "lastModified": 1791300569
+  },
+  "wrapper-codex": {
+    "type": "git",
+    "url": "https://github.com/greyxp1/nix-wrapper-modules",
+    "ref": "refs/heads/codex-wrapper",
+    "rev": "d1ff2c331b777a4437c9f7da3db6bb6d10e8113d",
+    "narHash": "sha256-AxIvyd2Sj2k/Lwqhx0H6I6U20nKPTkeS/DMjh8uUzU4=",
+    "lastModified": 1791300569
+  },
+  "wrapper-helium": {
+    "type": "git",
+    "url": "https://github.com/greyxp1/nix-wrapper-modules",
+    "ref": "refs/heads/helium-wrapper",
+    "rev": "1826fdb6d43f5924ad7b48ba29d3ea0570237f80",
+    "narHash": "sha256-X4WojYQwjxT5dMDdjramWaKC9MSrdaac9Ng67+RXJAk=",
+    "lastModified": 1791300569
+  },
+  "wrapper-lazygit": {
+    "type": "git",
+    "url": "https://github.com/greyxp1/nix-wrapper-modules",
+    "ref": "refs/heads/lazygit-wrapper",
+    "rev": "2abc114f9bcf07f9defcf016c0d3dbd16291e09b",
+    "narHash": "sha256-gR8s/Ap4YGJxbs5Q6k6eTib2LRsz9V3nRlTCd6TR1dc=",
+    "lastModified": 1791300569
+  },
+  "wrapper-monstar": {
+    "type": "git",
+    "url": "https://github.com/greyxp1/nix-wrapper-modules",
+    "ref": "refs/heads/monstar-wrapper",
+    "rev": "8b19d19567999c9becca6b702091e69f14513b6e",
+    "narHash": "sha256-TMQHfK8s8ZRRP3yw5qX7WLPEZ7PR1J7jXdmjdw9kX8s=",
+    "lastModified": 1791300569
+  },
+  "wrapper-noctalia-shell": {
+    "type": "git",
+    "url": "https://github.com/greyxp1/nix-wrapper-modules",
+    "ref": "refs/heads/noctalia-v5",
+    "rev": "d59f299c9f1f0cc8ca28bb1c370ae57095bef626",
+    "narHash": "sha256-aASazkIHzx78gd0t7zwue8QvUK8cppBfr798CERjJlY=",
+    "lastModified": 1791300569
+  },
+  "wrapper-nushell": {
+    "type": "git",
+    "url": "https://github.com/greyxp1/nix-wrapper-modules",
+    "ref": "refs/heads/nushell-structured-config",
+    "rev": "3728cc49c6f6f2d1962a0fc2867abe0f70cef329",
+    "narHash": "sha256-+ceN95VlXrFHjWZQ+t3ppAPn08v1ng45xkFtWLB+/bw=",
+    "lastModified": 1790989666
+  },
+  "wrapper-openssh": {
+    "type": "git",
+    "url": "https://github.com/greyxp1/nix-wrapper-modules",
+    "ref": "refs/heads/openssh-wrapper",
+    "rev": "04b67f6ac27f6d65a0e33aa185e918fdfe48ec8c",
+    "narHash": "sha256-AXpr5pS8yvmXWq9tAAIoukYZaud5RSbtsggBstd1U+s=",
+    "lastModified": 1791300569
+  },
+  "wrapper-tlrc": {
+    "type": "git",
+    "url": "https://github.com/greyxp1/nix-wrapper-modules",
+    "ref": "refs/heads/tlrc-wrapper",
+    "rev": "bb16cd340f524baceed9ae8e878cdcfab326ef43",
+    "narHash": "sha256-buskLMhGTY/EBHUGbGz+ikQCUstoIWwKkZcEm0rI31Y=",
+    "lastModified": 1791300569
+  },
+  "wrapper-xdg-desktop-portal-termfilechooser": {
+    "type": "git",
+    "url": "https://github.com/greyxp1/nix-wrapper-modules",
+    "ref": "refs/heads/xdg-desktop-portal-termfilechooser-wrapper",
+    "rev": "90e88da5f6e4ff808b7c2784f463fd824e3adcfa",
+    "narHash": "sha256-DW9Hi42v6R4tVxLJx4wBKHu2EqAv+Qh0qIDzmhMkpLQ=",
+    "lastModified": 1791300569
+  },
+  "wrapper-yazi": {
+    "type": "git",
+    "url": "https://github.com/greyxp1/nix-wrapper-modules",
+    "ref": "refs/heads/yazi-plugin-setup",
+    "rev": "8ecf3d9a40649528e263e184cd0566e1a7fe53b0",
+    "narHash": "sha256-wZduySQq3hpopObu6C17r16UYaWksMNj4DUtwrwMXo8=",
+    "lastModified": 1791300569
+  },
+  "wrapper-zsh": {
+    "type": "git",
+    "url": "https://github.com/greyxp1/nix-wrapper-modules",
+    "ref": "refs/heads/zsh-structured-config",
+    "rev": "95d38d61e806f8de4ab91dbd3c86bed59cb79020",
+    "narHash": "sha256-4bvSFBgPVVebtLWMJrjz9DDEG8FDZJF1EMG/tdc8qfI=",
+    "lastModified": 1791300569
+  },
   "wrappers": {
     "type": "git",
-    "url": "file:///home/grey/Projects/nix-wrapper-modules",
-    "ref": "nixconf",
-    "rev": "107edbf08a18c58aafee483f3b34440d3b5496aa",
-    "narHash": "sha256-KLJSB+Sh4TmYo9ahnjK6u8guC8QdGSdduSvb1cyJ/fM=",
-    "lastModified": 1791155875
+    "url": "https://github.com/nix-community/nix-wrapper-modules",
+    "ref": "HEAD",
+    "rev": "1db3c116a6aa61823f8d8f3c47c306846428fc54",
+    "narHash": "sha256-7xWS16u13YGlRNKWaAPzRbEyh4OLOXJe31k7h4AnXNU=",
+    "lastModified": 1788981141
   }
 }

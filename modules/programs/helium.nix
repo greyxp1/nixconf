@@ -23,10 +23,9 @@
   };
   flake.wrappers.helium = {
     pkgs,
-    wlib,
     ...
   }: {
-    imports = [wlib.wrapperModules.helium];
+    imports = ["${inputs.wrapper-helium}/wrapperModules/h/helium/module.nix"];
     package = inputs.helium.packages.${pkgs.stdenv.hostPlatform.system}.default;
 
     flags = {

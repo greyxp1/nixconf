@@ -32,7 +32,7 @@
     };
   };
 
-  flake.wrappers.zsh = {wlib, ...}: {imports = [wlib.wrapperModules.zsh];};
+  flake.wrappers.zsh = {...}: {imports = ["${inputs.wrapper-zsh}/wrapperModules/z/zsh/module.nix"];};
 
   flake.wrappers.nh = {wlib, ...}: {
     imports = [wlib.wrapperModules.nh];
@@ -40,10 +40,9 @@
 
   flake.wrappers.bat = {
     pkgs,
-    wlib,
     ...
   }: {
-    imports = [wlib.wrapperModules.bat];
+    imports = ["${inputs.wrapper-bat}/wrapperModules/b/bat/module.nix"];
     settings = {
       style = "numbers,changes,rule,snip";
       paging = "never";
@@ -52,8 +51,8 @@
     themes."Catppuccin Mocha" = "${inputs.catppuccin.packages.${pkgs.stdenv.hostPlatform.system}.bat}/Catppuccin Mocha.tmTheme";
   };
 
-  flake.wrappers.tlrc = {wlib, ...}: {
-    imports = [wlib.wrapperModules.tlrc];
+  flake.wrappers.tlrc = {...}: {
+    imports = ["${inputs.wrapper-tlrc}/wrapperModules/t/tlrc/module.nix"];
     settings = {
       output = {
         show_title = false;
