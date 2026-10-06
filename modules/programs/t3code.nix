@@ -67,6 +67,9 @@
         does not authorize it. Before rewriting, refresh remote refs and verify every
         affected commit is unpushed. If uncertain, keep a separate fix commit.
         Use short lowercase past-tense messages. Follow the user's requested commit grouping.
+      - Pull with rebase so unpushed commits stay on top of upstream. Resolve conflicts
+        during the rebase. Never override this with `--no-rebase` or create a pull merge
+        commit unless explicitly requested. Drop changes already present upstream.
       - Never make online changes on the user's behalf, including opening or editing PRs
         or issues, posting comments, sending messages, or publishing content. Read-only
         online access is allowed.
