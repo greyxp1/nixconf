@@ -1,29 +1,32 @@
 {inputs, ...}: {
+  flake.nhModule = {
+    imports = [
+      "${inputs.nixpkgs}/nixos/modules/programs/nh.nix"
+      "${inputs.nixpkgs}/nixos/modules/services/misc/nix-gc.nix"
+    ];
+    programs.nh = {
+      enable = true;
+      flake = "/home/grey/Projects/nixconf";
+      clean = {
+        enable = true;
+        dates = "daily";
+        extraArgs = "--optimise --keep 10";
+      };
+    };
+  };
+
   flake.nixosModules.cli = {
-    config,
     pkgs,
     ...
   }: {
-    imports = [inputs.ncr.nixosModules.default inputs.self.wrappers.nh.install inputs.self.wrappers.bat.install inputs.self.wrappers.tlrc.install inputs.nix-index-database.nixosModules.nix-index];
+    imports = [inputs.self.nhModule inputs.ncr.nixosModules.default inputs.self.wrappers.bat.install inputs.self.wrappers.tlrc.install inputs.nix-index-database.nixosModules.nix-index];
     wrappers.bat.enable = true;
     wrappers.tlrc.enable = true;
     environment.systemPackages = with pkgs; [curl wget fzf fd ripgrep microfetch zoxide];
-    wrappers.nh = {
-      enable = true;
-      flake = "/home/grey/Projects/nixconf";
-    };
     programs = {
       tack.enable = true;
       nix-index.enable = true;
       nix-index-database.comma.enable = true;
-      nh = {
-        package = config.wrappers.nh.wrapper;
-        clean = {
-          enable = true;
-          dates = "daily";
-          extraArgs = "--optimise --keep 10";
-        };
-      };
 
       ncr = {
         enable = true;
@@ -33,10 +36,6 @@
   };
 
   flake.wrappers.zsh = {...}: {imports = ["${inputs.wrapper-zsh}/wrapperModules/z/zsh/module.nix"];};
-
-  flake.wrappers.nh = {wlib, ...}: {
-    imports = [wlib.wrapperModules.nh];
-  };
 
   flake.wrappers.bat = {
     pkgs,

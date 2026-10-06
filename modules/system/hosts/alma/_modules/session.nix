@@ -212,10 +212,6 @@ in {
 
     alma-rebuild
     inputs.ncr.packages.${pkgs.stdenv.hostPlatform.system}.default
-    (inputs.self.wrappers.nh.wrap {
-      inherit pkgs;
-      flake = "/home/grey/Projects/nixconf";
-    })
     pkgs.jetbrains-mono
     pkgs.nerd-fonts.symbols-only
     pkgs.tack

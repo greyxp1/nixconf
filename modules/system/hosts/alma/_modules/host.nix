@@ -1,7 +1,5 @@
 {
-  config,
   inputs,
-  lib,
   pkgs,
   ...
 }: let
@@ -20,6 +18,7 @@
   '';
 in {
   imports = [
+    inputs.self.nhModule
     inputs.self.t3codeSystemModule
     ../../../../programs/remote/_alma.nix
     ./system
@@ -120,6 +119,9 @@ in {
     settings = {
       experimental-features = ["nix-command" "flakes"];
       auto-optimise-store = true;
+      min-free = 5 * 1024 * 1024 * 1024;
+      max-free = 10 * 1024 * 1024 * 1024;
+      build-dir = "/home/.nix-build";
       trusted-users = ["@wheel"];
       max-jobs = "auto";
       cores = 0;
@@ -128,6 +130,7 @@ in {
       extra-trusted-public-keys = cache.trusted-public-keys;
     };
   };
+  systemd.tmpfiles.rules = ["d /home/.nix-build 0711 root root -"];
   environment.etc."nix/nix.conf".mode = "0644";
   environment.etc."NetworkManager/dispatcher.d/90-school-exit-node" = {
     mode = "0755";

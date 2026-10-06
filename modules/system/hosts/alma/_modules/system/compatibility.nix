@@ -10,8 +10,15 @@
   almaMajors = builtins.attrNames config.alma.extraPackagesByMajor;
   supportedAlmaMajors = lib.concatStringsSep "|" almaMajors;
   supportedAlmaMajorsText = lib.concatStringsSep " or " almaMajors;
-  storeScriptUnits = ["alma-host.service" "system-manager-path.service"];
+  storeScriptUnits = ["alma-host.service" "system-manager-path.service" "nh-clean.service"];
 in {
+  # nh clean all does not discover System Manager's nested profile directory.
+  systemd.services.nh-clean.serviceConfig.ExecStartPre =
+    "${lib.getExe config.programs.nh.package} clean profile "
+    + "/nix/var/nix/profiles/system-manager-profiles/system-manager "
+    + lib.replaceStrings ["--optimise"] [""] config.programs.nh.clean.extraArgs
+    + " --no-gc --no-gcroots";
+
   system-manager = {
     allowAnyDistro = true;
     preActivationAssertions.alma = {
