@@ -23,6 +23,7 @@ in {
     };
 
     imports = [
+      ({pkgs, ...}: {environment.systemPackages = [pkgs.cachix];})
       ./_modules/noctalia.nix
       ./_modules/at2005usb.nix
       ./_modules/gaming.nix
