@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+umask 022
 
 REPO="https://github.com/greyxp1/nixconf.git"
 

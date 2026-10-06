@@ -8,7 +8,7 @@
     set -euo pipefail
     exit_node=""
     # The campus route survives switching between physical DHCP and br-wan.
-    if /usr/sbin/ip -j -4 route show default | ${pkgs.jq}/bin/jq -e 'any(.[]; .gateway == "10.64.100.1")' >/dev/null; then
+    if /usr/sbin/ip -j -4 route show default | ${pkgs.jq}/bin/jq -e 'any(.[]; (.gateway // "") | startswith("10.64."))' >/dev/null; then
       exit_node=$(${pkgs.tailscale}/bin/tailscale status --json | ${pkgs.jq}/bin/jq -r '
         [.Peer[]? | select(.HostName == "desktop" and .Online and .ExitNodeOption)
           | .TailscaleIPs[0]][0] // ""
@@ -150,10 +150,10 @@ in {
     "/share/xdg-desktop-portal"
   ];
   environment.systemPackages = [pkgs.tailscale];
-  alma.activation.t3code = ''
-    /usr/bin/loginctl enable-linger grey
-  '';
-  systemd.services.t3code.environment.TUNNEL_TRANSPORT_PROTOCOL = "http2";
+  systemd.services.t3code.environment = {
+    TUNNEL_TRANSPORT_PROTOCOL = "http2";
+    NIX_SSL_CERT_FILE = "/etc/pki/tls/certs/ca-bundle.crt";
+  };
 
   systemd.maskedUnits = [
     "NetworkManager-wait-online.service"

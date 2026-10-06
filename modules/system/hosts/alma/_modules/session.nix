@@ -11,6 +11,7 @@
   systemManager = inputs.system-manager.packages.${pkgs.stdenv.hostPlatform.system}.default;
   alma-rebuild = pkgs.writeShellScriptBin "alma-rebuild" ''
     set -euo pipefail
+    umask 022
     export PATH=/run/system-manager/sw/bin:/nix/var/nix/profiles/default/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin
 
     cd /home/grey/Projects/nixconf
@@ -131,13 +132,14 @@
       replaceExisting = true;
     })
   services;
-  enabledUnits = lib.mapAttrs' (name: unit:
-    lib.nameValuePair
-    "systemd/user/${unit.Install.WantedBy}.wants/${name}.service" {
-      source = pkgs.writeText "${name}.service" (lib.generators.toINI {} unit);
+  enabledUnits = lib.mapAttrs' (target: names:
+    lib.nameValuePair "systemd/user/${target}.d/nixconf.conf" {
+      text = "[Unit]\nWants=${lib.concatMapStringsSep " " (name: "${name}.service") names}\n";
       mode = "0644";
       replaceExisting = true;
-    }) (lib.filterAttrs (_: unit: unit ? Install.WantedBy) services);
+    }) (lib.groupBy (name: services.${name}.Install.WantedBy)
+    (builtins.attrNames (lib.filterAttrs (_: unit: unit ? Install.WantedBy) services)));
+
 in {
   imports = [
     inputs.self.nixosModules.scrcpy

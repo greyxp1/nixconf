@@ -15,6 +15,8 @@ in {
     /usr/bin/systemctl set-default ${lib.escapeShellArg config.alma.defaultTarget}
     /usr/bin/systemctl daemon-reload
 
+    /usr/bin/loginctl enable-linger grey
+
     if [[ -f $previous_services ]]; then
       while IFS= read -r service; do
         [[ -z $service ]] && continue
