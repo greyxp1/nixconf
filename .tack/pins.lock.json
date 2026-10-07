@@ -79,6 +79,14 @@
     "narHash": "sha256-TReQAY/j9qBy4p3ctKbMfeGBaG3AkeJXAyg/G7mygII=",
     "lastModified": 1791290323
   },
+  "monstar": {
+    "type": "github",
+    "owner": "rockorager",
+    "repo": "monstar",
+    "rev": "a5207f181de39b266093b486bdad974a9598ca55",
+    "narHash": "sha256-VjCE6s7TJQlUtmHycutuxyA8qXD715b7d2ZnjFfhxdc=",
+    "lastModified": 1791296115
+  },
   "mpv-auto-sub-sync": {
     "type": "github",
     "owner": "greyxp1",

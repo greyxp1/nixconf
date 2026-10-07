@@ -102,6 +102,9 @@ type = "fetch"
 url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=monstar-wrapper"
 type = "fetch"
 
+[inputs.monstar]
+url = "gh:rockorager/monstar/a5207f181de39b266093b486bdad974a9598ca55"
+
 [inputs.wrapper-noctalia-shell]
 url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=noctalia-v5"
 type = "fetch"
