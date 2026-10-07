@@ -4,7 +4,7 @@
     wrappers.openssh.enable = true;
     services.openssh = {
       enable = true;
-      openFirewall = false;
+      openFirewall = true;
       startWhenNeeded = true;
     };
     programs.ssh.startAgent = true;
