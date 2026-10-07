@@ -6,12 +6,14 @@
     ...
   }: let
     t3code = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.t3code.unwrapped;
+    runtimeDir = "/run/user/${toString uid}";
+    opencodeConfig = toString (pkgs.writeText "opencode.json" (builtins.toJSON {permission = "allow";}));
   in {
     environment.systemPackages = [
       t3code
       (pkgs.writeShellScriptBin "t3-restart" (builtins.readFile ./t3-restart.sh))
     ];
-    environment.variables.OPENCODE_CONFIG = toString (pkgs.writeText "opencode.json" (builtins.toJSON {permission = "allow";}));
+    environment.variables.OPENCODE_CONFIG = opencodeConfig;
     systemd.services.t3code = {
       description = "T3 Code headless server";
       wantedBy = ["multi-user.target"];
@@ -19,9 +21,10 @@
       environment = {
         HOME = "/home/grey";
         PATH = lib.mkForce "/run/wrappers/bin:/run/current-system/sw/bin:/run/system-manager/sw/bin:/nix/var/nix/profiles/default/bin:/usr/local/bin:/usr/bin:/bin";
-        SSH_AUTH_SOCK = "/run/user/${toString uid}/ssh-agent";
-        XDG_RUNTIME_DIR = "/run/user/${toString uid}";
-        DBUS_SESSION_BUS_ADDRESS = "unix:path=/run/user/${toString uid}/bus";
+        OPENCODE_CONFIG = opencodeConfig;
+        SSH_AUTH_SOCK = "${runtimeDir}/ssh-agent";
+        XDG_RUNTIME_DIR = runtimeDir;
+        DBUS_SESSION_BUS_ADDRESS = "unix:path=${runtimeDir}/bus";
       };
       serviceConfig = {
         User = "grey";
@@ -34,16 +37,41 @@
       };
     };
   };
-  flake.nixosModules.t3code = {config, ...}: {
-    imports = [inputs.self.t3codeSystemModule inputs.self.wrappers.codex.install];
-    wrappers.codex.enable = true;
-    _module.args.uid = config.users.users.grey.uid;
-    users.users.grey.linger = true;
-  };
-  flake.wrappers.codex = {
+  flake.nixosModules.t3code = {
+    config,
+    lib,
     pkgs,
     ...
-  }: {
+  }: let
+    computerUse = inputs.computer-use-linux.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  in {
+    imports = [inputs.self.t3codeSystemModule inputs.self.wrappers.codex.install];
+    config = lib.mkMerge [
+      {
+        _module.args.uid = config.users.users.grey.uid;
+        wrappers.codex.enable = true;
+        users.users.grey.linger = true;
+      }
+      (lib.mkIf (config.networking.hostName == "desktop") {
+        environment.systemPackages = [computerUse];
+        services.gnome.at-spi2-core.enable = true;
+        programs.ydotool = {
+          enable = true;
+          group = "uinput";
+        };
+        users.users.grey.extraGroups = [config.programs.ydotool.group];
+        environment.etc."codex/config.toml".source = (pkgs.formats.toml {}).generate "codex-system-config.toml" {
+          mcp_servers.computer_use = {
+            command = lib.getExe computerUse;
+            args = ["mcp"];
+            env_vars = ["XDG_RUNTIME_DIR" "DBUS_SESSION_BUS_ADDRESS"];
+            env.YDOTOOL_SOCKET = config.environment.variables.YDOTOOL_SOCKET;
+          };
+        };
+      })
+    ];
+  };
+  flake.wrappers.codex = {pkgs, ...}: {
     imports = ["${inputs.wrapper-codex}/wrapperModules/c/codex/module.nix"];
     package = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.codex;
     context = ''

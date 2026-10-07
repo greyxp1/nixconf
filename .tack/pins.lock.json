@@ -15,6 +15,14 @@
     "narHash": "sha256-3paT6vcGbQ6jvvXT/sFuWvIxrVYRRsDtbsFQcdnxyW0=",
     "lastModified": 1787014773
   },
+  "computer-use-linux": {
+    "type": "github",
+    "owner": "greyxp1",
+    "repo": "computer-use-linux-flake",
+    "rev": "9db78a8f4c351a87ed7a9ecac84118d08410d778",
+    "narHash": "sha256-ee9Hi8JBwS4YEPkpYwfM6Q/PxD0H75Dxc1dIhqLyXzo=",
+    "lastModified": 1791338502
+  },
   "cord-stash": {
     "type": "github",
     "owner": "greyxp1",
