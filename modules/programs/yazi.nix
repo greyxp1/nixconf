@@ -1,20 +1,20 @@
 {
-  config,
   inputs,
   ...
 }: {
   flake.nixosModules.yazi = {
+    config,
     pkgs,
     lib,
     ...
   }: {
-    imports = [config.flake.wrappers.yazi.install];
+    imports = [inputs.self.wrappers.yazi.install inputs.self.wrappers.termfilechooser.install];
     wrappers.yazi = {
       enable = true;
     };
     xdg.portal = {
       enable = true;
-      extraPortals = [(inputs.self.wrappers.termfilechooser.wrap {inherit pkgs;})];
+      extraPortals = [config.wrappers.termfilechooser.wrapper];
       config.niri."org.freedesktop.impl.portal.FileChooser" = lib.mkForce ["termfilechooser"];
     };
 
