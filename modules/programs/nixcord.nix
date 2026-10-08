@@ -3,7 +3,7 @@
     equicord = {
       package = pkgs.callPackage (inputs.nixcord.outPath + "/pkgs/equicord") {};
       quickCss = ''
-        @import url(https://raw.githubusercontent.com/greyxp1/midnight-discord/aa3ba76a91933005ebd6c4e31260f247741ebde1/build/midnight.css);
+        @import url(https://raw.githubusercontent.com/greyxp1/midnight-discord/0ada08471358e1d046fa39f3a2e0ca9c43adee61/build/midnight.css);
         @import url(https://mwittrien.github.io/BetterDiscordAddons/Themes/EmojiReplace/base/Apple.css);
 
         body {
