@@ -19,12 +19,8 @@ nixpkgs = ["nixpkgs-unstable"]
 [inputs.flake-parts]
 url = "gh:hercules-ci/flake-parts"
 follows = { nixpkgs-lib = "nixpkgs" }
-
 [inputs.nixpkgs]
 url = "gh:nixos/nixpkgs/nixos-unstable"
-[inputs.llm-agents]
-url = "gh:numtide/llm-agents.nix"
-exclude_follow = ["nixpkgs"]
 [inputs.sunshine-nixpkgs]
 url = "gh:nixos/nixpkgs/fd29d673b014a4f88f9bb9ec628b46055243cf96"
 [inputs.preservation]
@@ -41,17 +37,10 @@ url = "gh:numtide/system-manager"
 url = "gh:greyxp1/helium-flake"
 [inputs.nixcord]
 url = "gh:4evy/nixcord"
-[inputs.nix-index-database]
-url = "gh:nix-community/nix-index-database"
-exclude_follow = ["nixpkgs"]
-[inputs.catppuccin]
-url = "gh:catppuccin/nix"
-exclude_follow = ["nixpkgs"]
 [inputs.mpv-smartcut]
 url = "gh:greyxp1/mpv-smartcut"
 [inputs.mpv-auto-sub-sync]
 url = "gh:greyxp1/mpv-auto-sub-sync"
-follows = { nixpkgs = "nixpkgs" }
 [inputs.ncr]
 url = "gh:greyxp1/ncr"
 [inputs.niri]
@@ -60,78 +49,72 @@ url = "gh:greyxp1/niri/personal"
 url = "gh:pantarune/niri-screenshare"
 [inputs.perch]
 url = "gh:greyxp1/perch"
-
 [inputs.computer-use-linux]
 url = "gh:greyxp1/computer-use-linux-flake"
-
 [inputs.cord-stash]
 url = "gh:greyxp1/cord-stash"
 type = "fetch"
-
 [inputs.kovaaks-config]
 url = "gh:greyxp1/kovaaks-config"
 type = "fetch"
-
-[inputs.vellum]
-url = "gh:greyxp1/vellum"
-
 [inputs.nix-flatpak]
 url = "gh:gmodena/nix-flatpak"
-
 [inputs.inshellah]
 url = "gh:manic-systems/inshellah"
-
 [inputs.compress-yazi]
 url = "gh:KKV9/compress.yazi/pull/32/head"
 type = "fetch"
-
-[inputs.wrapper-bat]
-url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=bat-wrapper"
-type = "fetch"
-
-[inputs.wrapper-codex]
-url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=codex-wrapper"
-type = "fetch"
-
-[inputs.wrapper-helium]
-url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=helium-wrapper"
-type = "fetch"
-
-[inputs.wrapper-lazygit]
-url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=lazygit-wrapper"
-type = "fetch"
-
-[inputs.wrapper-monstar]
-url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=monstar-wrapper"
-type = "fetch"
-
 [inputs.monstar]
 url = "gh:rockorager/monstar/a5207f181de39b266093b486bdad974a9598ca55"
 
+# Preserve upstream Nixpkgs
+[inputs.nix-index-database]
+url = "gh:nix-community/nix-index-database"
+exclude_follow = ["nixpkgs"]
+[inputs.catppuccin]
+url = "gh:catppuccin/nix"
+exclude_follow = ["nixpkgs"]
+[inputs.vellum]
+url = "gh:greyxp1/vellum"
+exclude_follow = ["nixpkgs"]
+[inputs.llm-agents]
+url = "gh:numtide/llm-agents.nix"
+exclude_follow = ["nixpkgs"]
+
+# Wrappers
+[inputs.wrapper-bat]
+url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=bat-wrapper"
+type = "fetch"
+[inputs.wrapper-codex]
+url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=codex-wrapper"
+type = "fetch"
+[inputs.wrapper-helium]
+url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=helium-wrapper"
+type = "fetch"
+[inputs.wrapper-lazygit]
+url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=lazygit-wrapper"
+type = "fetch"
+[inputs.wrapper-monstar]
+url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=monstar-wrapper"
+type = "fetch"
 [inputs.wrapper-noctalia-shell]
 url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=noctalia-v5"
 type = "fetch"
-
 [inputs.wrapper-nushell]
 url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=nushell-structured-config"
 type = "fetch"
-
 [inputs.wrapper-openssh]
 url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=openssh-wrapper"
 type = "fetch"
-
 [inputs.wrapper-tlrc]
 url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=tlrc-wrapper"
 type = "fetch"
-
 [inputs.wrapper-xdg-desktop-portal-termfilechooser]
 url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=xdg-desktop-portal-termfilechooser-wrapper"
 type = "fetch"
-
 [inputs.wrapper-yazi]
 url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=yazi-plugin-setup"
 type = "fetch"
-
 [inputs.wrapper-zsh]
 url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=zsh-structured-config"
 type = "fetch"
