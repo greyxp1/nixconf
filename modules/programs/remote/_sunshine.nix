@@ -1,9 +1,12 @@
 {
   lib,
   pkgs,
+  libvirtualhid,
   cudaSupport ? false,
 }: old: {
-  patches = (old.patches or []) ++ [./sunshine-keyboard.patch];
+  postPatch = (old.postPatch or "") + ''
+    cp -r ${libvirtualhid}/. third-party/libvirtualhid/
+  '';
   cmakeFlags = (old.cmakeFlags or []) ++ ["-DSUNSHINE_ENABLE_TRAY=OFF"];
   buildInputs = lib.filter (input: !(builtins.elem input [pkgs.qt6.qtbase pkgs.qt6.qtsvg])) old.buildInputs;
   nativeBuildInputs = lib.filter (input: input != pkgs.qt6.wrapQtAppsHook) old.nativeBuildInputs;

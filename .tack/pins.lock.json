@@ -79,6 +79,14 @@
     "narHash": "sha256-D+bdwP1OCMctzaEtghwhj5XKbd4iv3tL5dR9u7XAybY=",
     "lastModified": 1784842832
   },
+  "libvirtualhid": {
+    "type": "github",
+    "owner": "LizardByte",
+    "repo": "libvirtualhid",
+    "rev": "5ef6b9efa0634bb1fac404c2e9f10e13617ec830",
+    "narHash": "sha256-fkl4+XG3VfCB2pRG4XmFOGHpmFV5Jc4YuvEi0yAb0ZI=",
+    "lastModified": 1791497389
+  },
   "llm-agents": {
     "type": "github",
     "owner": "numtide",
@@ -94,6 +102,15 @@
     "rev": "a5207f181de39b266093b486bdad974a9598ca55",
     "narHash": "sha256-VjCE6s7TJQlUtmHycutuxyA8qXD715b7d2ZnjFfhxdc=",
     "lastModified": 1791296115
+  },
+  "moonlight-embedded": {
+    "type": "git",
+    "url": "https://github.com/moonlight-stream/moonlight-embedded",
+    "ref": "refs/pull/940/head",
+    "rev": "1f572a0699758da51e2833206e1ab54709cbfaed",
+    "narHash": "sha256-o6o44K3pAzsw7qOV2T6+FJ6Ekz8YZNzWOimYsfch0gM=",
+    "lastModified": 1791484767,
+    "submodules": true
   },
   "mpv-auto-sub-sync": {
     "type": "github",

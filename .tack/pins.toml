@@ -23,6 +23,13 @@ follows = { nixpkgs-lib = "nixpkgs" }
 url = "gh:nixos/nixpkgs/nixos-unstable"
 [inputs.sunshine-nixpkgs]
 url = "gh:nixos/nixpkgs/fd29d673b014a4f88f9bb9ec628b46055243cf96"
+[inputs.libvirtualhid]
+url = "gh:LizardByte/libvirtualhid/master"
+type = "fetch"
+[inputs.moonlight-embedded]
+url = "git+https://github.com/moonlight-stream/moonlight-embedded?ref=refs/pull/940/head"
+type = "fetch"
+submodules = true
 [inputs.preservation]
 url = "gh:nix-community/preservation"
 [inputs.import-tree]

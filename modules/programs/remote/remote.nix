@@ -6,6 +6,7 @@
   sunshinePkgs = inputs.sunshine-nixpkgs.legacyPackages.x86_64-linux;
   sunshine = sunshinePkgs.sunshine.overrideAttrs (import ./_sunshine.nix {
     inherit lib;
+    inherit (inputs) libvirtualhid;
     pkgs = sunshinePkgs;
   });
   displayFor = pkgs:
@@ -28,6 +29,7 @@ in {
         config.allowUnfree = true;
       }).sunshine.override {cudaSupport = true;}).overrideAttrs (import ./_sunshine.nix {
         inherit lib;
+        inherit (inputs) libvirtualhid;
         pkgs = sunshinePkgs;
         cudaSupport = true;
       });
@@ -93,7 +95,11 @@ in {
     ...
   }: let
     client = pkgs.moonlight-embedded.overrideAttrs (old: {
-      patches = (old.patches or []) ++ [./moonlight-keyboard.patch];
+      src = inputs.moonlight-embedded;
+      postPatch = (old.postPatch or "") + ''
+        substituteInPlace src/sdl.c \
+          --replace-fail 'SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC' 'SDL_RENDERER_ACCELERATED'
+      '';
     });
     connect = pkgs.writeShellApplication {
       name = "remote-connect";

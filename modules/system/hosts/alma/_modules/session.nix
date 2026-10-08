@@ -43,6 +43,7 @@
   };
   sunshine = inputs.sunshine-nixpkgs.legacyPackages.x86_64-linux.sunshine.overrideAttrs (import ../../../../programs/remote/_sunshine.nix {
     inherit lib;
+    inherit (inputs) libvirtualhid;
     pkgs = inputs.sunshine-nixpkgs.legacyPackages.x86_64-linux;
   });
   hostSunshine = pkgs.replaceDirectDependencies {
