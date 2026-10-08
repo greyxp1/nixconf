@@ -23,10 +23,12 @@
         // import ./_cache.nix;
     };
 
-    systemd.services.nix-daemon.serviceConfig = {
-      MemoryHigh = "70%";
-      MemoryMax = "85%";
-      OOMScoreAdjust = 500;
+    systemd = {
+      services."nix-daemon@".serviceConfig.OOMScoreAdjust = 500;
+      slices."system-nix\\x2ddaemon".sliceConfig = {
+        MemoryHigh = "70%";
+        MemoryMax = "85%";
+      };
     };
 
     system = {
