@@ -130,7 +130,6 @@
         "Mod+Escape" = bind {spawn = ["kitty" "btm"];};
         "Mod+E" = bind {spawn = ["kitty" "nu" "-e" "y"];};
         "Mod+B" = bind {spawn = "helium";};
-        "Mod+D" = bind {spawn = ["helium" "https://discord.com/channels/@me"];};
 
         "Mod+C" = bind {spawn-sh = "noctalia msg panel-toggle control-center";};
         "Alt+Space" = bind {spawn-sh = "noctalia msg panel-toggle launcher";};
