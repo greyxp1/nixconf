@@ -7,10 +7,7 @@
     users.users.grey.shell = config.wrappers.nushell.wrapper;
   };
 
-  flake.wrappers.nushell = {
-    pkgs,
-    ...
-  }: let
+  flake.wrappers.nushell = {pkgs, ...}: let
     starship = inputs.self.wrappers.starship.wrap {inherit pkgs;};
     nix-index = inputs.nix-index-database.packages.${pkgs.stdenv.hostPlatform.system}.nix-index-with-db;
   in {
@@ -77,7 +74,7 @@
     shellAliases = {
       rebuild = "nh os switch";
       update = "do { cd /home/grey/Projects/nixconf; ^tack update; ^nh os switch }";
-      clean = "do { ^nh clean all --optimise --keep 1; ^ncr --warm-only }";
+      clean = "do { ^nh clean all --optimise --keep 1 }";
     };
     extraConfig = ''
       $env.config.hooks.command_not_found = (source ${nix-index}/etc/profile.d/command-not-found.nu)
