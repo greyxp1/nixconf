@@ -41,8 +41,9 @@
     cargoBuildNoDefaultFeatures = true;
     cargoCheckNoDefaultFeatures = true;
   };
-  sunshine = inputs.sunshine-nixpkgs.legacyPackages.x86_64-linux.sunshine.overrideAttrs (old: {
-    patches = (old.patches or []) ++ [../../../../programs/remote/sunshine-keyboard.patch];
+  sunshine = inputs.sunshine-nixpkgs.legacyPackages.x86_64-linux.sunshine.overrideAttrs (import ../../../../programs/remote/_sunshine.nix {
+    inherit lib;
+    pkgs = inputs.sunshine-nixpkgs.legacyPackages.x86_64-linux;
   });
   hostSunshine = pkgs.replaceDirectDependencies {
     drv = sunshine;

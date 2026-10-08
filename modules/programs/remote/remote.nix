@@ -3,8 +3,10 @@
   lib,
   ...
 }: let
-  sunshine = inputs.sunshine-nixpkgs.legacyPackages.x86_64-linux.sunshine.overrideAttrs (old: {
-    patches = (old.patches or []) ++ [./sunshine-keyboard.patch];
+  sunshinePkgs = inputs.sunshine-nixpkgs.legacyPackages.x86_64-linux;
+  sunshine = sunshinePkgs.sunshine.overrideAttrs (import ./_sunshine.nix {
+    inherit lib;
+    pkgs = sunshinePkgs;
   });
   displayFor = pkgs:
     pkgs.writeShellApplication {
@@ -24,8 +26,10 @@ in {
       ((import inputs.sunshine-nixpkgs {
         system = pkgs.stdenv.hostPlatform.system;
         config.allowUnfree = true;
-      }).sunshine.override {cudaSupport = true;}).overrideAttrs (old: {
-        patches = (old.patches or []) ++ [./sunshine-keyboard.patch];
+      }).sunshine.override {cudaSupport = true;}).overrideAttrs (import ./_sunshine.nix {
+        inherit lib;
+        pkgs = sunshinePkgs;
+        cudaSupport = true;
       });
     display = displayFor pkgs;
     prepCommands = builtins.toJSON [
