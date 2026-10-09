@@ -7,8 +7,8 @@
   schoolExitNode = pkgs.writeShellScript "alma-school-exit-node" ''
     set -euo pipefail
     exit_node=""
-    # The campus route survives switching between physical DHCP and br-wan.
-    if /usr/sbin/ip -j -4 route show default | ${pkgs.jq}/bin/jq -e 'any(.[]; (.gateway // "") | startswith("10.64."))' >/dev/null; then
+    # The school uses different gateway ranges across classrooms.
+    if /usr/bin/nmcli -g IP4.DOMAIN device show | ${pkgs.jq}/bin/jq -Rse 'split("\n") | any(. == "cmontmorency.qc.ca")' >/dev/null; then
       exit_node=$(${pkgs.tailscale}/bin/tailscale status --json | ${pkgs.jq}/bin/jq -r '
         [.Peer[]? | select(.HostName == "desktop" and .Online and .ExitNodeOption)
           | .TailscaleIPs[0]][0] // ""
