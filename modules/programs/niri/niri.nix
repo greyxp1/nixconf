@@ -1,6 +1,7 @@
 {inputs, ...}: {
   flake.nixosModules.niri = {
     config,
+    lib,
     pkgs,
     ...
   }: let
@@ -8,11 +9,18 @@
   in {
     imports = [
       inputs.self.wrappers.niri.install
+      inputs.niri-screenshare.nixosModules.default
       inputs.perch.nixosModules.default
       inputs.vellum.nixosModules.default
     ];
     programs.perch.enable = true;
     services.vellum.enable = true;
+    services.niri-screenshare = {
+      enable = true;
+      withPicker = false;
+    };
+    services.gnome.gnome-keyring.enable = lib.mkForce false;
+    xdg.portal.config.niri."org.freedesktop.impl.portal.Secret" = lib.mkForce "none";
     wrappers.niri.enable = true;
     programs.niri = {
       enable = true;

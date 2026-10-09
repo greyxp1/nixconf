@@ -37,10 +37,7 @@
     };
   };
   termfilechooser = wrappers.termfilechooser.wrap {inherit pkgs;};
-  screenshots = (pkgs.niri-screenshare.override {withPicker = false;}).overrideAttrs {
-    cargoBuildNoDefaultFeatures = true;
-    cargoCheckNoDefaultFeatures = true;
-  };
+  screenshots = pkgs.niri-screenshare.override {withPicker = false;};
   sunshine = inputs.sunshine-nixpkgs.legacyPackages.x86_64-linux.sunshine.overrideAttrs (import ../../../../programs/remote/_sunshine.nix {
     inherit lib;
     inherit (inputs) libvirtualhid;
@@ -116,6 +113,7 @@
       Service = {
         Type = "dbus";
         BusName = "org.freedesktop.impl.portal.desktop.niri";
+        Environment = "NIRI_SCREENSHARE_NO_PORTAL_CONFIG=1";
       };
     };
     "app-dev.lizardbyte.app.Sunshine" = lib.recursiveUpdate (sessionService (lib.escapeShellArgs [
