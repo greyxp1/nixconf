@@ -201,6 +201,7 @@ in {
     noctalia
     termfilechooser
     screenshots
+    inputs.perch.packages.${pkgs.stdenv.hostPlatform.system}.default
     hostSunshine
     pkgs.xdg-desktop-portal
     pkgs.xdg-desktop-portal-gtk
