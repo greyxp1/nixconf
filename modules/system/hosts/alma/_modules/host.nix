@@ -7,8 +7,11 @@
   schoolExitNode = pkgs.writeShellScript "alma-school-exit-node" ''
     set -euo pipefail
     exit_node=""
-    # The school uses different gateway ranges across classrooms.
-    if /usr/bin/nmcli -g IP4.DOMAIN device show | ${pkgs.jq}/bin/jq -Rse 'split("\n") | any(. == "cmontmorency.qc.ca")' >/dev/null; then
+    # Classrooms advertise either the school domain or a DNS search subdomain.
+    if /usr/bin/nmcli -g IP4.DOMAIN,IP4.SEARCHES device show | ${pkgs.jq}/bin/jq -Rse '
+      [splits("[[:space:],:]+")]
+      | any(. == "cmontmorency.qc.ca" or endswith(".cmontmorency.qc.ca"))
+    ' >/dev/null; then
       exit_node=$(${pkgs.tailscale}/bin/tailscale status --json | ${pkgs.jq}/bin/jq -r '
         [.Peer[]? | select(.HostName == "desktop" and .Online and .ExitNodeOption)
           | .TailscaleIPs[0]][0] // ""
