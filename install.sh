@@ -2,7 +2,7 @@
 set -euo pipefail
 umask 022
 
-REPO="https://github.com/greyxp1/nixconf.git"
+REPO="${NIXCONF_REPO:-https://github.com/greyxp1/nixconf.git}"
 
 use_alma_https_repositories() {
   local repo_file
@@ -250,14 +250,15 @@ by_id() {
 
 # Host selection
 echo "Select a host:"
-echo "  [0] desktop  — Nvidia, gaming, virtualization"
-echo "  [1] vm       — QEMU/SPICE, standard kernel"
-echo "  [2] generic  — portable hardware, standard kernel"
-echo "  [3] alma     — AlmaLinux with System Manager"
-echo "  [4] laptop   — legacy BIOS, GRUB"
+echo "  [0] desktop"
+echo "  [1] vm"
+echo "  [2] generic"
+echo "  [3] alma"
+echo "  [4] laptop"
+echo "  [5] server"
 read -rp "Choice: " n < /dev/tty
 case "$n" in
-  0) HOST=desktop ;; 1) HOST=vm ;; 2) HOST=generic ;; 3) HOST=alma ;; 4) HOST=laptop ;;
+  0) HOST=desktop ;; 1) HOST=vm ;; 2) HOST=generic ;; 3) HOST=alma ;; 4) HOST=laptop ;; 5) HOST=server ;;
   *) echo "Invalid choice"; exit 1 ;;
 esac
 

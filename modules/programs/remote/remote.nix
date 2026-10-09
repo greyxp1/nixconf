@@ -23,6 +23,7 @@ in {
     ...
   }: let
     isDesktop = config.networking.hostName == "desktop";
+    isServer = config.networking.hostName == "server";
     cudaSunshine =
       ((import inputs.sunshine-nixpkgs {
         system = pkgs.stdenv.hostPlatform.system;
@@ -44,8 +45,11 @@ in {
     imports = [inputs.self.remoteClientModule];
     services.tailscale = {
       enable = true;
-      useRoutingFeatures = lib.mkIf isDesktop "server";
-      extraSetFlags = ["--operator=grey"] ++ lib.optional isDesktop "--advertise-exit-node";
+      useRoutingFeatures = lib.mkIf isServer "server";
+      extraSetFlags = [
+        "--operator=grey"
+        "--advertise-exit-node=${lib.boolToString isServer}"
+      ];
     };
 
     preservation.preserveAt."/persistent".directories = [
@@ -96,10 +100,12 @@ in {
   }: let
     client = pkgs.moonlight-embedded.overrideAttrs (old: {
       src = inputs.moonlight-embedded;
-      postPatch = (old.postPatch or "") + ''
-        substituteInPlace src/sdl.c \
-          --replace-fail 'SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC' 'SDL_RENDERER_ACCELERATED'
-      '';
+      postPatch =
+        (old.postPatch or "")
+        + ''
+          substituteInPlace src/sdl.c \
+            --replace-fail 'SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC' 'SDL_RENDERER_ACCELERATED'
+        '';
     });
     connect = pkgs.writeShellApplication {
       name = "remote-connect";
@@ -114,11 +120,7 @@ in {
       ++ lib.mapAttrsToList (name: address:
         pkgs.makeDesktopItem {
           name = "remote-${name}";
-          desktopName = "Connect to ${
-            if name == "alma"
-            then "Alma"
-            else "Desktop"
-          }";
+          desktopName = "Connect to ${lib.toSentenceCase name}";
           comment = "Remote desktop over Tailscale";
           icon = "${pkgs.adwaita-icon-theme-legacy}/share/icons/AdwaitaLegacy/48x48/places/network-workgroup.png";
           exec = stream address 6000;
@@ -140,6 +142,7 @@ in {
         }) (lib.filterAttrs (name: _: name != (config.networking.hostName or "alma")) {
         alma = "alma.tail1785c.ts.net";
         desktop = "desktop.tail1785c.ts.net";
+        server = "server.tail1785c.ts.net";
       });
   };
 }

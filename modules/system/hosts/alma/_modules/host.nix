@@ -13,7 +13,7 @@
       | any(. == "cmontmorency.qc.ca" or endswith(".cmontmorency.qc.ca"))
     ' >/dev/null; then
       exit_node=$(${pkgs.tailscale}/bin/tailscale status --json | ${pkgs.jq}/bin/jq -r '
-        [.Peer[]? | select(.HostName == "desktop" and .Online and .ExitNodeOption)
+        [.Peer[]? | select(.HostName == "server" and .Online and .ExitNodeOption)
           | .TailscaleIPs[0]][0] // ""
       ')
     fi
@@ -180,7 +180,7 @@ in {
       };
     };
     services.alma-school-exit-node = {
-      description = "Use desktop as an exit node on the school network";
+      description = "Use server as an exit node on the school network";
       wantedBy = ["multi-user.target"];
       unitConfig.StartLimitIntervalSec = 0;
       after = ["NetworkManager.service" "tailscaled.service"];

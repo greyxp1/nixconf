@@ -10,8 +10,8 @@ in {
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINNpHu5c/ykb/08PRxkU63jqkrn/F7FbSzHh6QqfnwC3 grey@desktop"
     ];
     networking.firewall = {
-      extraCommands = "iptables -I nixos-fw 1 -s 192.168.1.6/32 -p tcp --dport 22 -j nixos-fw-accept";
-      extraStopCommands = "iptables -D nixos-fw -s 192.168.1.6/32 -p tcp --dport 22 -j nixos-fw-accept || true";
+      extraCommands = "iptables -I nixos-fw 1 -s 192.168.1.3/32 -p tcp --dport 22 -j nixos-fw-accept";
+      extraStopCommands = "iptables -D nixos-fw -s 192.168.1.3/32 -p tcp --dport 22 -j nixos-fw-accept || true";
     };
     wrappers = {
       noctalia.settings = {
