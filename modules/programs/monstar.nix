@@ -1,15 +1,9 @@
 {inputs, ...}: {
-  flake.nixosModules.monstar-terminfo = {pkgs, ...}: {
-    environment.systemPackages = [
-      inputs.monstar.packages.${pkgs.stdenv.hostPlatform.system}.default.terminfo
-    ];
-  };
-  flake.nixosModules.monstar = {pkgs, ...}: {
-    imports = [inputs.self.wrappers.monstar.install];
-    wrappers.monstar.enable = true;
-    fonts.packages = [pkgs.jetbrains-mono pkgs.nerd-fonts.symbols-only];
-  };
   flake.wrappers.monstar = {pkgs, ...}: {
+    install.modules.nixos = {pkgs, ...}: {
+      wrappers.monstar.enable = true;
+      fonts.packages = [pkgs.jetbrains-mono pkgs.nerd-fonts.symbols-only];
+    };
     imports = ["${inputs.wrapper-monstar}/wrapperModules/m/monstar/module.nix"];
     package = inputs.monstar.packages.${pkgs.stdenv.hostPlatform.system}.default;
     settings = {

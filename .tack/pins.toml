@@ -43,7 +43,7 @@ url = "gh:numtide/system-manager"
 [inputs.helium]
 url = "gh:greyxp1/helium-flake"
 [inputs.nixcord]
-url = "gh:4evy/nixcord"
+url = "gh:4evy/nixcord/pull/253/head"
 [inputs.mpv-smartcut]
 url = "gh:greyxp1/mpv-smartcut"
 [inputs.mpv-auto-sub-sync]
@@ -59,7 +59,7 @@ url = "gh:greyxp1/perch"
 [inputs.computer-use-linux]
 url = "gh:greyxp1/computer-use-linux-flake"
 [inputs.cord-stash]
-url = "gh:greyxp1/cord-stash"
+url = "gh:greyxp1/cord-stash/396a52eaa9c0430bb9e8022427945840e0e960e1"
 type = "fetch"
 [inputs.kovaaks-config]
 url = "gh:greyxp1/kovaaks-config"
@@ -74,16 +74,15 @@ type = "fetch"
 [inputs.monstar]
 url = "gh:rockorager/monstar/pull/67/head"
 
-# Preserve upstream Nixpkgs
 [inputs.nix-index-database]
 url = "gh:nix-community/nix-index-database"
-exclude_follow = ["nixpkgs"]
 [inputs.catppuccin]
 url = "gh:catppuccin/nix"
-exclude_follow = ["nixpkgs"]
+
 [inputs.vellum]
 url = "gh:greyxp1/vellum"
-exclude_follow = ["nixpkgs"]
+
+# Preserve upstream Nixpkgs
 [inputs.llm-agents]
 url = "gh:numtide/llm-agents.nix"
 exclude_follow = ["nixpkgs"]
@@ -94,9 +93,6 @@ url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=bat-wrapper"
 type = "fetch"
 [inputs.wrapper-codex]
 url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=codex-wrapper"
-type = "fetch"
-[inputs.wrapper-helium]
-url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=helium-wrapper"
 type = "fetch"
 [inputs.wrapper-lazygit]
 url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=lazygit-wrapper"

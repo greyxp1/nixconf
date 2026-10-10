@@ -1,21 +1,22 @@
 {inputs, ...}: {
   flake.nixosModules.profile-core = {
-    imports = with inputs.self.nixosModules; [
-      nixos
-      system
-      boot
-      filesystem
-      preservation
-      cachix
-      ssh
-      tailscale
-      cli
-      git
-      helix
-      bottom
-      nushell
-      starship
-      t3code
+    wrappers.nushell.integrations.yazi.enable = true;
+    imports = with inputs.self; [
+      nixosModules.nixos
+      nixosModules.system
+      nixosModules.boot
+      nixosModules.filesystem
+      nixosModules.preservation
+      nixosModules.cachix
+      nixosModules.cli
+      wrappers.openssh.install
+      wrappers.git.install
+      wrappers.helix.install
+      wrappers.bottom.install
+      wrappers.nushell.install
+      wrappers.starship.install
+      wrappers.codex.install
+      wrappers.yazi.install
     ];
   };
 }

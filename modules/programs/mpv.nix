@@ -3,18 +3,16 @@
     packages.mpv-smartcut = inputs.mpv-smartcut.packages.${system}.default;
   };
 
-  flake.nixosModules.mpv = {pkgs, ...}: {
-    imports = [inputs.self.wrappers.mpv.install];
-    wrappers.mpv.enable = true;
-    environment.systemPackages = [inputs.mpv-smartcut.packages.${pkgs.stdenv.hostPlatform.system}.default];
-  };
-
   flake.wrappers.mpv = {
     lib,
     pkgs,
     wlib,
     ...
   }: {
+    install.modules.nixos = {pkgs, ...}: {
+      wrappers.mpv.enable = true;
+      environment.systemPackages = [inputs.mpv-smartcut.packages.${pkgs.stdenv.hostPlatform.system}.default];
+    };
     imports = [wlib.wrapperModules.mpv];
     "mpv.conf".content = lib.generators.toKeyValue {} {
       vo = "gpu";

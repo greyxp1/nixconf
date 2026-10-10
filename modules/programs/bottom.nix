@@ -1,25 +1,14 @@
-{
-  config,
-  inputs,
-  ...
-}: {
-  flake.nixosModules.bottom = {
-    imports = [config.flake.wrappers.bottom.install];
-    wrappers.bottom.enable = true;
-  };
-
+{inputs, ...}: {
   flake.wrappers.bottom = {
-    config,
     lib,
     pkgs,
     wlib,
     ...
   }: {
-    imports = [wlib.wrapperModules.bottom];
-    options.diskRatio = lib.mkOption {
-      type = lib.types.ints.positive;
-      default = 1;
+    config.install.modules.nixos = {
+      wrappers.bottom.enable = true;
     };
+    imports = [wlib.wrapperModules.bottom];
     config.settings = {
       styles = (lib.importTOML "${inputs.catppuccin.packages.${pkgs.stdenv.hostPlatform.system}.bottom}/mocha.toml").styles;
       processes = {
@@ -50,7 +39,7 @@
                 }
                 {
                   type = "disk";
-                  ratio = config.diskRatio;
+                  ratio = 1;
                 }
                 {type = "temp";}
               ];

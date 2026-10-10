@@ -1,40 +1,4 @@
 {inputs, ...}: {
-  flake.nixosModules.yazi = {
-    config,
-    pkgs,
-    lib,
-    ...
-  }: {
-    imports = [inputs.self.wrappers.yazi.install inputs.self.wrappers.termfilechooser.install];
-    wrappers.yazi = {
-      enable = true;
-    };
-    xdg.portal = {
-      enable = true;
-      extraPortals = [config.wrappers.termfilechooser.wrapper];
-      config.niri."org.freedesktop.impl.portal.FileChooser" = lib.mkForce ["termfilechooser"];
-    };
-
-    environment.etc."mime.types".source = "${pkgs.mailcap}/etc/mime.types";
-    services.udisks2.enable = true;
-    security.polkit.extraConfig = ''
-      polkit.addRule(function(action, subject) {
-        if (subject.isInGroup("wheel") && action.id.startsWith("org.freedesktop.udisks2.")) {
-          return polkit.Result.YES;
-        }
-      });
-    '';
-  };
-
-  flake.wrappers.termfilechooser = {pkgs, ...}: {
-    imports = ["${inputs.wrapper-xdg-desktop-portal-termfilechooser}/wrapperModules/x/xdg-desktop-portal-termfilechooser/module.nix"];
-    settings.filechooser = {
-      cmd = "${pkgs.xdg-desktop-portal-termfilechooser}/share/xdg-desktop-portal-termfilechooser/yazi-wrapper.sh";
-      default_dir = "$HOME";
-      env = "TERMCMD=monstar -o background-opacity=0.6 --title=filepicker -e";
-    };
-  };
-
   flake.wrappers.yazi = {
     lib,
     pkgs,
@@ -47,6 +11,10 @@
     catppuccin = inputs.catppuccin.packages.${pkgs.stdenv.hostPlatform.system};
     theme = lib.importTOML "${catppuccin.yazi}/mocha/catppuccin-mocha-mauve.toml";
   in {
+    config.install.modules.nixos = {pkgs, ...}: {
+      wrappers.yazi.enable = true;
+      environment.etc."mime.types".source = "${pkgs.mailcap}/etc/mime.types";
+    };
     imports = ["${inputs.wrapper-yazi}/wrapperModules/y/yazi/module.nix"];
     config = {
       runtimePkgs = [pkgs.starship pkgs.udisks2 (lib.getBin pkgs.util-linux)];
@@ -54,7 +22,7 @@
       settings.theme =
         theme
         // {
-          app = builtins.removeAttrs theme.app ["overall"];
+          app = removeAttrs theme.app ["overall"];
           mgr =
             theme.mgr
             // {
@@ -141,5 +109,63 @@
         (plug ["M"] "mount" "Mount manager")
       ];
     };
+  };
+
+  flake.wrappers.termfilechooser = {pkgs, ...}: {
+    install.modules.nixos = {
+      config,
+      lib,
+      ...
+    }: {
+      xdg.portal = {
+        enable = true;
+        extraPortals = [config.wrappers.termfilechooser.wrapper];
+        config.niri."org.freedesktop.impl.portal.FileChooser" = lib.mkForce ["termfilechooser"];
+      };
+    };
+    imports = ["${inputs.wrapper-xdg-desktop-portal-termfilechooser}/wrapperModules/x/xdg-desktop-portal-termfilechooser/module.nix"];
+    settings.filechooser = {
+      cmd = "${pkgs.xdg-desktop-portal-termfilechooser}/share/xdg-desktop-portal-termfilechooser/yazi-wrapper.sh";
+      default_dir = "$HOME";
+      env = "TERMCMD=monstar -o background-opacity=0.6 --title=filepicker -e";
+    };
+  };
+
+  flake.nixosModules.sshfs = {
+    pkgs,
+    utils,
+    ...
+  }: {
+    environment.systemPackages = [pkgs.sshfs];
+    systemd.tmpfiles.rules = [
+      "d /home/server 0700 grey users -"
+    ];
+    systemd.user.services.server-files = {
+      description = "Server home folder";
+      wantedBy = ["default.target"];
+      unitConfig.ConditionUser = "grey";
+      serviceConfig = {
+        Type = "exec";
+        ExecStart = utils.escapeSystemdExecArgs [
+          "${pkgs.sshfs}/bin/sshfs"
+          "-f"
+          "grey@server.tail1785c.ts.net:/home/grey"
+          "/home/server"
+          "-o"
+          "reconnect,auto_unmount,ServerAliveInterval=15,ServerAliveCountMax=3,ConnectTimeout=10,BatchMode=yes,IdentityFile=/home/grey/.ssh/id_ed25519"
+        ];
+        ExecStop = "/run/wrappers/bin/fusermount3 -u /home/server";
+        Restart = "on-failure";
+        RestartSec = "15s";
+        TimeoutStopSec = "10s";
+      };
+    };
+    wrappers.yazi.settings.keymap.mgr.prepend_keymap = [
+      {
+        on = ["g" "s"];
+        run = "cd /home/server";
+        desc = "Go to server home";
+      }
+    ];
   };
 }

@@ -1,15 +1,14 @@
 {inputs, ...}: {
-  flake.nixosModules.ssh = {
-    imports = [inputs.self.wrappers.openssh.install];
-    wrappers.openssh.enable = true;
-    services.openssh = {
-      enable = true;
-      openFirewall = true;
-      startWhenNeeded = true;
-    };
-    programs.ssh.startAgent = true;
-  };
   flake.wrappers.openssh = {...}: {
+    install.modules.nixos = {
+      wrappers.openssh.enable = true;
+      services.openssh = {
+        enable = true;
+        openFirewall = true;
+        startWhenNeeded = true;
+      };
+      programs.ssh.startAgent = true;
+    };
     imports = ["${inputs.wrapper-openssh}/wrapperModules/o/openssh/module.nix"];
     settings = {
       "*" = {

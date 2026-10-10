@@ -1,16 +1,15 @@
 {inputs, ...}: {
-  flake.nixosModules.nushell = {config, ...}: {
-    imports = [inputs.inshellah.nixosModules.default inputs.self.wrappers.nushell.install];
-    programs.inshellah.enable = true;
-    wrappers.nushell.enable = true;
-    environment.shells = [config.wrappers.nushell.wrapper];
-    users.users.grey.shell = config.wrappers.nushell.wrapper;
-  };
-
   flake.wrappers.nushell = {pkgs, ...}: let
     starship = inputs.self.wrappers.starship.wrap {inherit pkgs;};
     nix-index = inputs.nix-index-database.packages.${pkgs.stdenv.hostPlatform.system}.nix-index-with-db;
   in {
+    install.modules.nixos = {config, ...}: {
+      imports = [inputs.inshellah.nixosModules.default];
+      programs.inshellah.enable = true;
+      wrappers.nushell.enable = true;
+      environment.shells = [config.wrappers.nushell.wrapper];
+      users.users.grey.shell = config.wrappers.nushell.wrapper;
+    };
     imports = ["${inputs.wrapper-nushell}/wrapperModules/n/nushell/module.nix"];
     env.STARSHIP_CONFIG = "${starship}/starship.toml";
     settings.show_banner = false;

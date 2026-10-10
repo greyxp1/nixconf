@@ -29,9 +29,5 @@
   '';
 in {
   imports = [(import ./shell.nix {inherit inputs;})];
-  environment.systemPackages = [
-    alma-rebuild
-    inputs.ncr.packages.${pkgs.stdenv.hostPlatform.system}.default
-    pkgs.tack
-  ];
+  environment.systemPackages = [alma-rebuild];
 }

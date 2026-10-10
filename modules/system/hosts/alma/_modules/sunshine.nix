@@ -1,10 +1,11 @@
 {
   inputs,
   lib,
+  nixos,
   pkgs,
   ...
 }: let
-  sunshine = inputs.self.sunshinePackage;
+  sunshine = nixos.services.sunshine.package;
   hostSunshine = pkgs.replaceDirectDependencies {
     drv = sunshine;
     replacements = [
@@ -14,7 +15,7 @@
       }
     ];
   };
-  display = inputs.self.sunshineDisplay pkgs;
+  display = inputs.self.mkSunshineDisplay pkgs;
   prepCommands = builtins.toJSON [
     {
       do = "${lib.getExe display} start";

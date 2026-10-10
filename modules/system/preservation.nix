@@ -15,6 +15,10 @@
             inInitrd = true;
           }
           "/var/lib/NetworkManager"
+          {
+            directory = "/var/lib/tailscale";
+            mode = "0700";
+          }
           "/var/lib/flatpak"
           "/var/log"
         ];

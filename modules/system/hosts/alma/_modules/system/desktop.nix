@@ -1,10 +1,9 @@
 {
-  inputs,
+  helium,
   pkgs,
   ...
 }: let
-  helium = inputs.self.wrappers.helium.wrap {inherit pkgs;};
-  heliumPolicy = pkgs.writeText "helium-policy.json" (builtins.toJSON helium.configuration.policies);
+  heliumPolicy = pkgs.writeText "helium-policy.json" helium.finalPolicyJson;
   drivers = pkgs.buildEnv {
     name = "alma-gpu-drivers";
     paths = with pkgs; [mesa libglvnd libvdpau-va-gl intel-media-driver];
