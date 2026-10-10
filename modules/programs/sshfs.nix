@@ -1,15 +1,14 @@
-{lib, ...}: {
+{
   flake.nixosModules.sshfs = {
-    config,
     pkgs,
     utils,
     ...
   }: {
     environment.systemPackages = [pkgs.sshfs];
-    systemd.tmpfiles.rules = lib.mkIf (config.networking.hostName == "desktop") [
+    systemd.tmpfiles.rules = [
       "d /home/server 0700 grey users -"
     ];
-    systemd.user.services.server-files = lib.mkIf (config.networking.hostName == "desktop") {
+    systemd.user.services.server-files = {
       description = "Server home folder";
       wantedBy = ["default.target"];
       unitConfig.ConditionUser = "grey";
@@ -29,7 +28,7 @@
         TimeoutStopSec = "10s";
       };
     };
-    wrappers.yazi.settings.keymap.mgr.prepend_keymap = lib.mkIf (config.networking.hostName == "desktop") [
+    wrappers.yazi.settings.keymap.mgr.prepend_keymap = [
       {
         on = ["g" "s"];
         run = "cd /home/server";

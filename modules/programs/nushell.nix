@@ -69,7 +69,6 @@
         enable = true;
         options = ["--cmd" "cd"];
       };
-      yazi.enable = true;
     };
     shellAliases = {
       rebuild = "nh os switch";

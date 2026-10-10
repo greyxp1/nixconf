@@ -1,4 +1,5 @@
 {inputs, ...}: {
+  flake.cliPackages = pkgs: with pkgs; [curl wget fzf fd ripgrep microfetch zoxide];
   flake.nhModule = {
     imports = [
       "${inputs.nixpkgs}/nixos/modules/programs/nh.nix"
@@ -19,7 +20,7 @@
     imports = [inputs.self.nhModule inputs.ncr.nixosModules.default inputs.self.wrappers.bat.install inputs.self.wrappers.tlrc.install inputs.nix-index-database.nixosModules.nix-index inputs.self.nixosModules.monstar-terminfo];
     wrappers.bat.enable = true;
     wrappers.tlrc.enable = true;
-    environment.systemPackages = with pkgs; [curl wget fzf fd ripgrep microfetch zoxide];
+    environment.systemPackages = inputs.self.cliPackages pkgs;
     programs = {
       tack.enable = true;
       nix-index.enable = true;

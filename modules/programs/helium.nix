@@ -1,4 +1,10 @@
 {inputs, ...}: {
+  flake.browserMimeDefaults = ''
+    [Default Applications]
+    text/html=helium.desktop
+    x-scheme-handler/http=helium.desktop
+    x-scheme-handler/https=helium.desktop
+  '';
   flake.nixosModules.helium = {
     config,
     lib,
@@ -13,18 +19,10 @@
         "helium/policies/managed/helium.json"
       ] (_: {text = builtins.toJSON config.wrappers.helium.policies;})
       // {
-        "xdg/mimeapps.list".text = ''
-          [Default Applications]
-          text/html=helium.desktop
-          x-scheme-handler/http=helium.desktop
-          x-scheme-handler/https=helium.desktop
-        '';
+        "xdg/mimeapps.list".text = inputs.self.browserMimeDefaults;
       };
   };
-  flake.wrappers.helium = {
-    pkgs,
-    ...
-  }: {
+  flake.wrappers.helium = {pkgs, ...}: {
     imports = ["${inputs.wrapper-helium}/wrapperModules/h/helium/module.nix"];
     package = inputs.helium.packages.${pkgs.stdenv.hostPlatform.system}.default;
 

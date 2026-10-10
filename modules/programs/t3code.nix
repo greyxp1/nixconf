@@ -37,7 +37,13 @@
       };
     };
   };
-  flake.nixosModules.t3code = {
+  flake.nixosModules.t3code = {config, ...}: {
+    imports = [inputs.self.t3codeSystemModule inputs.self.wrappers.codex.install];
+    _module.args.uid = config.users.users.grey.uid;
+    wrappers.codex.enable = true;
+    users.users.grey.linger = true;
+  };
+  flake.nixosModules.computer-use = {
     config,
     lib,
     pkgs,
@@ -45,31 +51,21 @@
   }: let
     computerUse = inputs.computer-use-linux.packages.${pkgs.stdenv.hostPlatform.system}.default;
   in {
-    imports = [inputs.self.t3codeSystemModule inputs.self.wrappers.codex.install];
-    config = lib.mkMerge [
-      {
-        _module.args.uid = config.users.users.grey.uid;
-        wrappers.codex.enable = true;
-        users.users.grey.linger = true;
-      }
-      (lib.mkIf (config.networking.hostName == "desktop") {
-        environment.systemPackages = [computerUse];
-        services.gnome.at-spi2-core.enable = true;
-        programs.ydotool = {
-          enable = true;
-          group = "uinput";
-        };
-        users.users.grey.extraGroups = [config.programs.ydotool.group];
-        environment.etc."codex/config.toml".source = (pkgs.formats.toml {}).generate "codex-system-config.toml" {
-          mcp_servers.computer_use = {
-            command = lib.getExe computerUse;
-            args = ["mcp"];
-            env_vars = ["XDG_RUNTIME_DIR" "DBUS_SESSION_BUS_ADDRESS"];
-            env.YDOTOOL_SOCKET = config.environment.variables.YDOTOOL_SOCKET;
-          };
-        };
-      })
-    ];
+    environment.systemPackages = [computerUse];
+    services.gnome.at-spi2-core.enable = true;
+    programs.ydotool = {
+      enable = true;
+      group = "uinput";
+    };
+    users.users.grey.extraGroups = [config.programs.ydotool.group];
+    environment.etc."codex/config.toml".source = (pkgs.formats.toml {}).generate "codex-system-config.toml" {
+      mcp_servers.computer_use = {
+        command = lib.getExe computerUse;
+        args = ["mcp"];
+        env_vars = ["XDG_RUNTIME_DIR" "DBUS_SESSION_BUS_ADDRESS"];
+        env.YDOTOOL_SOCKET = config.environment.variables.YDOTOOL_SOCKET;
+      };
+    };
   };
   flake.wrappers.codex = {pkgs, ...}: {
     imports = ["${inputs.wrapper-codex}/wrapperModules/c/codex/module.nix"];

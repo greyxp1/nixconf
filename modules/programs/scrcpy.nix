@@ -1,5 +1,6 @@
-{
-  flake.nixosModules.scrcpy = {pkgs, ...}: {
+{inputs, ...}: {
+  flake.nixosModules.scrcpy = inputs.self.scrcpyModule;
+  flake.scrcpyModule = {pkgs, ...}: {
     environment.systemPackages = [
       pkgs.scrcpy
       pkgs.android-tools

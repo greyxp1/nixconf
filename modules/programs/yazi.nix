@@ -1,7 +1,4 @@
-{
-  inputs,
-  ...
-}: {
+{inputs, ...}: {
   flake.nixosModules.yazi = {
     config,
     pkgs,
@@ -29,10 +26,7 @@
     '';
   };
 
-  flake.wrappers.termfilechooser = {
-    pkgs,
-    ...
-  }: {
+  flake.wrappers.termfilechooser = {pkgs, ...}: {
     imports = ["${inputs.wrapper-xdg-desktop-portal-termfilechooser}/wrapperModules/x/xdg-desktop-portal-termfilechooser/module.nix"];
     settings.filechooser = {
       cmd = "${pkgs.xdg-desktop-portal-termfilechooser}/share/xdg-desktop-portal-termfilechooser/yazi-wrapper.sh";

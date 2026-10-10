@@ -21,9 +21,6 @@
   '';
 in {
   imports = [
-    inputs.self.nhModule
-    inputs.self.t3codeSystemModule
-    ../../../../programs/remote/_alma.nix
     ./system
     ./system/packages.nix
     ./system/boot.nix

@@ -2,6 +2,7 @@
   mkHost = import ../_mkHost.nix inputs;
 in {
   flake.nixosConfigurations.vm = mkHost "vm" {
+    imports = [inputs.self.nixosModules.profile-desktop inputs.self.nixosModules.sunshine];
     environment.sessionVariables.LIBGL_ALWAYS_SOFTWARE = "true";
     services.qemuGuest.enable = true;
     boot = {

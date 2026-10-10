@@ -8,12 +8,6 @@
         SystemMaxUse = "500M";
         MaxFileSec = "1week";
       };
-
-      pipewire = {
-        enable = true;
-        pulse.enable = true;
-        alsa.enable = true;
-      };
     };
 
     users = {
@@ -39,13 +33,11 @@
 
     security = {
       polkit.enable = true;
-      rtkit.enable = true;
       sudo.wheelNeedsPassword = false;
     };
 
     hardware = {
       enableRedistributableFirmware = true;
-      graphics.enable = true;
     };
   };
 }

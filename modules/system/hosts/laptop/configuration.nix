@@ -2,7 +2,11 @@
   mkHost = import ../_mkHost.nix inputs;
 in {
   flake.nixosConfigurations.laptop = mkHost "laptop" ({lib, ...}: {
-    imports = [./_hardware.nix];
+    imports = [
+      inputs.self.nixosModules.profile-desktop
+      inputs.self.nixosModules.sunshine
+      ./_hardware.nix
+    ];
 
     services.upower.enable = true;
     programs.git.enable = true;

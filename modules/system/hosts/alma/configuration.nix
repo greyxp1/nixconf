@@ -1,8 +1,4 @@
-{
-  config,
-  inputs,
-  ...
-}: let
+{inputs, ...}: let
   mkAlmaSystemConfig = {
     uid,
     gid,
@@ -17,48 +13,7 @@
         inherit gid inputs primaryGroup uid;
       };
       modules = [
-        ({pkgs, ...}: {
-          environment.variables = {
-            EDITOR = "hx";
-            VISUAL = "hx";
-          };
-          environment.systemPackages = [
-            pkgs.gh
-            pkgs.curl
-            pkgs.wget
-            pkgs.fd
-            pkgs.ripgrep
-            pkgs.microfetch
-            pkgs.zoxide
-            inputs.nix-index-database.packages.${pkgs.stdenv.hostPlatform.system}.nix-index-with-db
-            inputs.nix-index-database.packages.${pkgs.stdenv.hostPlatform.system}.comma-with-db
-            (config.flake.wrappers.bat.wrap {inherit pkgs;})
-            (config.flake.wrappers.tlrc.wrap {inherit pkgs;})
-            (config.flake.wrappers.lazygit.wrap {inherit pkgs;})
-            (config.flake.wrappers.openssh.wrap {inherit pkgs;})
-            (config.flake.wrappers.monstar.wrap {inherit pkgs;})
-            (config.flake.wrappers.codex.wrap {inherit pkgs;})
-            (config.flake.wrappers.helium.wrap {inherit pkgs;})
-            (config.flake.wrappers.starship.wrap {inherit pkgs;})
-            (config.flake.wrappers.git.wrap {inherit pkgs;})
-            (config.flake.wrappers.delta.wrap {inherit pkgs;})
-            (config.flake.wrappers.mpv.wrap {inherit pkgs;})
-            inputs.mpv-smartcut.packages.${pkgs.stdenv.hostPlatform.system}.default
-            (config.flake.wrappers.helix.wrap {
-              inherit pkgs;
-              nixconfSystem = "systemConfigs.alma";
-            })
-            (config.flake.wrappers.yazi.wrap {
-              inherit pkgs;
-            })
-            (config.flake.wrappers.bottom.wrap {
-              inherit pkgs;
-              diskRatio = 2;
-              settings.disk.mount_filter.is_list_ignored = inputs.nixpkgs.lib.mkForce true;
-            })
-          ];
-        })
-        ./_modules/session.nix
+        ./_modules/desktop.nix
         ./_modules/host.nix
       ];
     };

@@ -1,8 +1,9 @@
 {inputs, ...}: let
   mkHost = import ../_mkHost.nix inputs;
 in {
-  flake.nixosConfigurations.server = mkHost "server" ({lib, ...}: {
+  flake.nixosConfigurations.server = mkHost "server" {
     imports = [
+      inputs.self.nixosModules.profile-core
       ./_modules/pelican.nix
       ./_modules/jellyfin.nix
       ./_modules/livesync.nix
@@ -13,10 +14,11 @@ in {
     boot.initrd.availableKernelModules = ["ahci" "xhci_pci" "usb_storage" "sd_mod"];
     hardware.cpu.intel.updateMicrocode = true;
 
-    services.pipewire.enable = lib.mkForce false;
-    services.greetd.enable = lib.mkForce false;
-    services.sunshine.enable = lib.mkForce false;
-    security.rtkit.enable = lib.mkForce false;
+    hardware.graphics.enable = true;
+    services.tailscale = {
+      useRoutingFeatures = "server";
+      extraSetFlags = ["--advertise-exit-node=true"];
+    };
 
     users.users.grey = {
       homeMode = "0710";
@@ -25,5 +27,5 @@ in {
       ];
     };
     systemd.tmpfiles.rules = ["a+ /home/grey - - - - u:jellyfin:--x,m::--x"];
-  });
+  };
 }

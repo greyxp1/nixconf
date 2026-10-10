@@ -1,10 +1,7 @@
 {inputs, ...}: {
   flake.nixosModules.monstar-terminfo = {pkgs, ...}: {
     environment.systemPackages = [
-      (pkgs.runCommand "monstar-terminfo" {nativeBuildInputs = [pkgs.ncurses];} ''
-        mkdir -p "$out/share/terminfo"
-        tic -x -o "$out/share/terminfo" ${inputs.monstar}/dist/monstar.terminfo
-      '')
+      inputs.monstar.packages.${pkgs.stdenv.hostPlatform.system}.default.terminfo
     ];
   };
   flake.nixosModules.monstar = {pkgs, ...}: {
