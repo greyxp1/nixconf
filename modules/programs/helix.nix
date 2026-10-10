@@ -12,10 +12,7 @@
     };
   };
 
-  flake.wrappers.lazygit = {
-    pkgs,
-    ...
-  }: {
+  flake.wrappers.lazygit = {pkgs, ...}: {
     imports = ["${inputs.wrapper-lazygit}/wrapperModules/l/lazygit/module.nix"];
     settings.notARepository = "skip";
     extraConfigFiles = [
@@ -92,6 +89,8 @@
         language-server.mpls = {
           command = "mpls";
           args = ["--theme" "catppuccin-mocha"];
+          # The browser needs the user config directory, not Helix's wrapper config.
+          environment.XDG_CONFIG_HOME = "/home/grey/.config";
         };
         language-server.nixd = {
           command = "nixd";
