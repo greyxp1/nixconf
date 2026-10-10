@@ -1,12 +1,7 @@
 {inputs, ...}: let
   mkHost = import ../_mkHost.nix inputs;
 in {
-  flake.nixosConfigurations.laptop = mkHost "laptop" ({lib, pkgs, ...}: let
-    bind = command: lib.mkForce (_: {
-      props.repeat = false;
-      content.spawn = command;
-    });
-  in {
+  flake.nixosConfigurations.laptop = mkHost "laptop" ({lib, ...}: {
     imports = [./_hardware.nix];
 
     services.upower.enable = true;
@@ -23,14 +18,6 @@ in {
       cores = 1;
     };
     wrappers = {
-      kitty.enable = lib.mkForce false;
-      monstar.package = lib.mkForce inputs.monstar.packages.${pkgs.stdenv.hostPlatform.system}.default;
-      niri.settings.binds = {
-        "Mod+Return" = bind ["monstar"];
-        "Mod+Escape" = bind ["monstar" "-e" "btm"];
-        "Mod+E" = bind ["monstar" "-e" "nu" "-e" "y"];
-      };
-      termfilechooser.settings.filechooser.env = lib.mkForce "TERMCMD=monstar -o background-opacity=0.6 --title=filepicker -e";
       noctalia.settings = {
         bar.default = {
           margin_ends = lib.mkForce 32;

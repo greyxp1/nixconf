@@ -1,46 +1,12 @@
 {inputs, ...}: {
-  flake.nixosModules.monstar = {
+  flake.nixosModules.monstar = {pkgs, ...}: {
     imports = [inputs.self.wrappers.monstar.install];
     wrappers.monstar.enable = true;
+    fonts.packages = [pkgs.jetbrains-mono pkgs.nerd-fonts.symbols-only];
   };
-  flake.wrappers.monstar = {
-    pkgs,
-    lib,
-    ...
-  }: let
-    monstar = pkgs.stdenvNoCC.mkDerivation rec {
-      pname = "monstar";
-      version = "1.0.1";
-
-      src = pkgs.fetchurl {
-        url = "https://github.com/rockorager/monstar/releases/download/v${version}/monstar-${version}-x86_64-linux.tar.gz";
-        hash = "sha256-Jx/PaNPmc1AyfrpDwGHwvZBOxOWnBJ7mDXyeeZkdS7w=";
-      };
-
-      nativeBuildInputs = [pkgs.autoPatchelfHook];
-      buildInputs = with pkgs; [wayland fontconfig freetype harfbuzz libxkbcommon];
-      dontBuild = true;
-      dontStrip = true;
-
-      installPhase = ''
-        runHook preInstall
-        mkdir -p "$out"
-        cp -r bin share "$out/"
-        cp -r ${pkgs.ghostty.terminfo}/share/terminfo "$out/share/"
-        runHook postInstall
-      '';
-
-      meta = {
-        description = "Wayland terminal emulator built on libghostty";
-        homepage = "https://github.com/rockorager/monstar";
-        license = lib.licenses.mit;
-        mainProgram = "monstar";
-        platforms = ["x86_64-linux"];
-      };
-    };
-  in {
+  flake.wrappers.monstar = {pkgs, ...}: {
     imports = ["${inputs.wrapper-monstar}/wrapperModules/m/monstar/module.nix"];
-    package = monstar;
+    package = inputs.monstar.packages.${pkgs.stdenv.hostPlatform.system}.default;
     settings = {
       font-family = "JetBrains Mono";
       font-size = 14;

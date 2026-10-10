@@ -75,7 +75,7 @@
           open-floating = true;
         }
         {
-          matches = [{"app-id" = "^kitty$";}];
+          matches = [{"app-id" = "^dev\\.rockorager\\.monstar$";}];
           background-effect = {
             blur = true;
             xray = false;
@@ -133,9 +133,9 @@
       ];
 
       binds = {
-        "Mod+Return" = bind {spawn = ["kitty"];};
-        "Mod+Escape" = bind {spawn = ["kitty" "btm"];};
-        "Mod+E" = bind {spawn = ["kitty" "nu" "-e" "y"];};
+        "Mod+Return" = bind {spawn = ["monstar"];};
+        "Mod+Escape" = bind {spawn = ["monstar" "-e" "btm"];};
+        "Mod+E" = bind {spawn = ["monstar" "-e" "nu" "-e" "y"];};
         "Mod+B" = bind {spawn = "helium";};
 
         "Mod+C" = bind {spawn-sh = "noctalia msg panel-toggle control-center";};

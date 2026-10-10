@@ -47,7 +47,7 @@ in {
     settings.binds = {
       "Mod+E" = lib.mkForce (_: {
         props.repeat = false;
-        content.spawn = ["kitty" "yazi"];
+        content.spawn = ["monstar" "-e" "yazi"];
       });
       "Mod+Shift+O" = _: {
         props.repeat = false;

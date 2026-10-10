@@ -37,7 +37,7 @@
     settings.filechooser = {
       cmd = "${pkgs.xdg-desktop-portal-termfilechooser}/share/xdg-desktop-portal-termfilechooser/yazi-wrapper.sh";
       default_dir = "$HOME";
-      env = "TERMCMD=kitty -o background_opacity=0.6 --title=filepicker";
+      env = "TERMCMD=monstar -o background-opacity=0.6 --title=filepicker -e";
     };
   };
 

@@ -128,7 +128,7 @@ in {
             {
               pair = {
                 name = "Pair";
-                exec = "kitty --hold moonlight pair ${address} -keydir ${keyDirectory}";
+                exec = "monstar --hold -e moonlight pair ${address} -keydir ${keyDirectory}";
               };
             }
             // lib.optionalAttrs (name == "desktop") {
