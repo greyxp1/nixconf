@@ -27,9 +27,9 @@
     "type": "github",
     "owner": "greyxp1",
     "repo": "cord-stash",
-    "rev": "179d9de68f7ddad57c972fa072001b7704c0e90b",
-    "narHash": "sha256-n4Jccs+8tH5ToOs7OIOD45OtjxNtpum2llSM1hEMLrw=",
-    "lastModified": 1784870889
+    "rev": "523853efce7ae605801cc03c02efe7265b7a0d76",
+    "narHash": "sha256-DVa8r+61gUamyq3xnclUCTg13+Yk/Oh9WsSyAlTT3AE=",
+    "lastModified": 1791612840
   },
   "disko": {
     "type": "github",

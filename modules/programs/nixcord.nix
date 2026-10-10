@@ -34,6 +34,7 @@
       userPlugins = {
         autoReact = "${inputs.cord-stash}/plugins/AutoReact";
         betterAudioDefaults = "${inputs.cord-stash}/plugins/BetterAudioDefaults";
+        discordPopoutTitle = "${inputs.cord-stash}/plugins/DiscordPopoutTitle";
         fakeDeafen = "${inputs.cord-stash}/plugins/FakeDeafen";
         localEdit = "${inputs.cord-stash}/plugins/LocalEdit";
       };
@@ -41,10 +42,14 @@
       settings = {
         useQuickCSS = true;
         plugins = {
+          # User plugins
           AutoReact.enabled = true;
           BetterAudioDefaults.enabled = true;
+          DiscordPopoutTitle.enabled = true;
           FakeDeafen.enabled = true;
           LocalEdit.enabled = true;
+
+          # Normal plugins
           AddAttachments.enabled = true;
           AlwaysTrust.enabled = true;
           BetterCommands.enabled = true;

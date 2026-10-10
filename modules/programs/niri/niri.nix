@@ -97,12 +97,11 @@
           matches = [
             {
               "app-id" = "^helium$";
-              title = " - Helium$";
+              title = "^Discord Popout: ";
             }
             {title = "^Picture in picture$";}
             {"app-id" = "^chrome-ldgfbffkinooeloadekpmfoklnobpien-Default$";}
           ];
-          excludes = [{title = "^• Discord.* - Helium$";}];
           open-floating = true;
           focus-ring.off = {};
           default-column-width.fixed = 1024;
