@@ -15,11 +15,8 @@
     };
   };
 
-  flake.nixosModules.cli = {
-    pkgs,
-    ...
-  }: {
-    imports = [inputs.self.nhModule inputs.ncr.nixosModules.default inputs.self.wrappers.bat.install inputs.self.wrappers.tlrc.install inputs.nix-index-database.nixosModules.nix-index];
+  flake.nixosModules.cli = {pkgs, ...}: {
+    imports = [inputs.self.nhModule inputs.ncr.nixosModules.default inputs.self.wrappers.bat.install inputs.self.wrappers.tlrc.install inputs.nix-index-database.nixosModules.nix-index inputs.self.nixosModules.monstar-terminfo];
     wrappers.bat.enable = true;
     wrappers.tlrc.enable = true;
     environment.systemPackages = with pkgs; [curl wget fzf fd ripgrep microfetch zoxide];
@@ -37,10 +34,7 @@
 
   flake.wrappers.zsh = {...}: {imports = ["${inputs.wrapper-zsh}/wrapperModules/z/zsh/module.nix"];};
 
-  flake.wrappers.bat = {
-    pkgs,
-    ...
-  }: {
+  flake.wrappers.bat = {pkgs, ...}: {
     imports = ["${inputs.wrapper-bat}/wrapperModules/b/bat/module.nix"];
     settings = {
       style = "numbers,changes,rule,snip";

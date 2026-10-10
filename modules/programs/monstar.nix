@@ -1,4 +1,12 @@
 {inputs, ...}: {
+  flake.nixosModules.monstar-terminfo = {pkgs, ...}: {
+    environment.systemPackages = [
+      (pkgs.runCommand "monstar-terminfo" {nativeBuildInputs = [pkgs.ncurses];} ''
+        mkdir -p "$out/share/terminfo"
+        tic -x -o "$out/share/terminfo" ${inputs.monstar}/dist/monstar.terminfo
+      '')
+    ];
+  };
   flake.nixosModules.monstar = {pkgs, ...}: {
     imports = [inputs.self.wrappers.monstar.install];
     wrappers.monstar.enable = true;
