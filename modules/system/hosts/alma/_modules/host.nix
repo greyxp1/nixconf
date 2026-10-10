@@ -126,7 +126,7 @@ in {
       max-free = 10 * 1024 * 1024 * 1024;
       build-dir = "/home/.nix-build";
       trusted-users = ["@wheel"];
-      max-jobs = "auto";
+      max-jobs = 1;
       cores = 0;
       warn-dirty = false;
       extra-substituters = cache.substituters;
@@ -135,6 +135,9 @@ in {
   };
   systemd.tmpfiles.rules = ["d /home/.nix-build 0711 root root -"];
   environment.etc."nix/nix.conf".mode = "0644";
+  environment.etc."udev/rules.d/98-block-io-scheduler.rules".text = ''
+    SUBSYSTEM=="block", ACTION=="add|change", TEST=="queue/scheduler", KERNEL!="loop[0-9]*", ATTR{queue/scheduler}="mq-deadline"
+  '';
   environment.etc."NetworkManager/dispatcher.d/90-school-exit-node" = {
     mode = "0755";
     source = pkgs.writeShellScript "school-exit-node-dispatcher" ''
@@ -205,11 +208,18 @@ in {
     replaceExisting = true;
     text = ''
       [Service]
+      Slice=nixbuild.slice
+      Nice=19
       CPUSchedulingPolicy=idle
       IOSchedulingClass=idle
-      MemoryHigh=70%
-      MemoryMax=85%
       OOMScoreAdjust=500
     '';
   };
+  environment.etc."systemd/system/nixbuild.slice".text = ''
+    [Slice]
+    CPUWeight=idle
+    MemoryHigh=50%
+    MemoryMax=60%
+    MemorySwapMax=0
+  '';
 }

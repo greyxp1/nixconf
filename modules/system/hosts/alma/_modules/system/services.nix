@@ -14,6 +14,8 @@ in {
     /usr/bin/timedatectl set-timezone ${lib.escapeShellArg config.alma.timeZone}
     /usr/bin/systemctl set-default ${lib.escapeShellArg config.alma.defaultTarget}
     /usr/bin/systemctl daemon-reload
+    /usr/bin/udevadm control --reload
+    /usr/bin/udevadm trigger --subsystem-match=block --action=change
 
     /usr/bin/loginctl enable-linger grey
 

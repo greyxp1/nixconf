@@ -3,9 +3,16 @@
     config,
     pkgs,
     ...
-  }: {
+  }: let
+    daemonResources = {
+      Slice = "nixbuild.slice";
+      Nice = 19;
+      OOMScoreAdjust = 500;
+    };
+  in {
     nixpkgs.config.allowUnfree = true;
     documentation.nixos.enable = false;
+    hardware.block.defaultScheduler = "mq-deadline";
     security.sudo.extraConfig = ''
       Defaults secure_path="/run/wrappers/bin:/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin"
     '';
@@ -14,20 +21,24 @@
       package = pkgs.lix;
       daemonCPUSchedPolicy = "idle";
       daemonIOSchedClass = "idle";
-      settings =
-        {
-          trusted-users = ["@wheel"];
-          experimental-features = ["nix-command" "flakes"];
-          warn-dirty = false;
-        }
-        // import ./_cache.nix;
+      settings = {
+        trusted-users = ["@wheel"];
+        experimental-features = ["nix-command" "flakes"];
+        warn-dirty = false;
+        max-jobs = 1;
+        cores = 0;
+      };
     };
 
     systemd = {
-      services."nix-daemon@".serviceConfig.OOMScoreAdjust = 500;
-      slices."system-nix\\x2ddaemon".sliceConfig = {
-        MemoryHigh = "70%";
-        MemoryMax = "85%";
+      services.systemd-udevd.postStart = "${pkgs.systemd}/bin/udevadm trigger --subsystem-match=block --action=change";
+      services.nix-daemon.serviceConfig = daemonResources;
+      services."nix-daemon@".serviceConfig = daemonResources;
+      slices.nixbuild.sliceConfig = {
+        CPUWeight = "idle";
+        MemoryHigh = "50%";
+        MemoryMax = "60%";
+        MemorySwapMax = 0;
       };
     };
 
