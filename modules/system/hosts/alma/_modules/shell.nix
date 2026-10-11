@@ -27,7 +27,7 @@
     historySubstringSearch.enable = true;
     zshAliases = {
       rebuild = "alma-rebuild";
-      update = "cd /home/grey/Projects/nixconf && tack update && alma-rebuild";
+      update = "cd /home/grey/Projects/nixconf && GH_TOKEN=\"$(gh auth token --hostname github.com)\" tack update && alma-rebuild";
       clean = "nix store gc";
       ls = "eza -l --icons --git --group-directories-first --time-style=relative --no-user --no-permissions --no-filesize";
       ll = "eza --total-size";

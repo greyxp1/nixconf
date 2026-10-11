@@ -71,7 +71,7 @@
     };
     shellAliases = {
       rebuild = "nh os switch";
-      update = "do { cd /home/grey/Projects/nixconf; ^tack update; ^nh os switch }";
+      update = "do { cd /home/grey/Projects/nixconf; with-env { GH_TOKEN: (^gh auth token --hostname github.com) } { ^tack update }; ^nh os switch }";
       clean = "do { ^nh clean all --optimise --keep 1 }";
     };
     extraConfig = ''
