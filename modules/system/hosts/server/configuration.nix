@@ -9,6 +9,7 @@ in {
       ./_modules/livesync.nix
       ./_modules/obsidian.nix
       ./_modules/docker.nix
+      ./_modules/freedns.nix
     ];
     disko.devices.disk.main.device = import ./_device.nix;
     boot.initrd.availableKernelModules = ["ahci" "xhci_pci" "usb_storage" "sd_mod"];
