@@ -169,6 +169,17 @@
           ---
           Review the requested change for correctness, usability, performance, and unnecessary code. Make improvements supported by the code or measurements. Prefer existing library capabilities when they reduce the complete integration cost. Preserve the requested behavior. Stop when no substantive improvement remains; do not churn code to produce a diff. Fold fixes into the relevant commit.
         '';
+        refine-change = ''
+          ---
+          name: refine-change
+          description: Repeat auditing, fixing, reviewing, and optimizing a requested change until a full pass finds nothing actionable.
+          ---
+          Identify the requested commits or working changes and their relevant callers. Keep that scope throughout the loop. Use audit-codebase to inspect the affected design and behavior, then fix-findings to implement supported findings. Follow with review and optimize on the resulting change.
+
+          Verify fixes with the checks appropriate to the affected behavior. Repeat the full cycle after substantive edits, using independent reviewers for distinct areas when useful. Track findings and their evidence so resolved concerns stay closed unless new evidence appears. Preserve intended behavior and avoid speculative improvements, cosmetic churn, and scope expansion.
+
+          Stop when a complete audit, review, and optimization cycle requires no changes and the relevant checks pass. If a concern cannot be resolved or verified within the authorized scope, report it and the blocker instead of claiming the change is clean or repeating the same attempt. Follow the existing commit rules and report the fixes, validation, remaining limitations, and resulting commits.
+        '';
         # Adapted from https://github.com/mattpocock/skills/blob/main/skills/engineering/diagnosing-bugs/SKILL.md
         diagnosing-bugs = ''
           ---
