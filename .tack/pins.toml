@@ -88,9 +88,6 @@ url = "gh:numtide/llm-agents.nix"
 exclude_follow = ["nixpkgs"]
 
 # Wrappers
-[inputs.wrapper-bat]
-url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=bat-wrapper"
-type = "fetch"
 [inputs.wrapper-codex]
 url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=codex-wrapper"
 type = "fetch"
@@ -105,9 +102,6 @@ url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=noctalia-v5"
 type = "fetch"
 [inputs.wrapper-nushell]
 url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=nushell-structured-config"
-type = "fetch"
-[inputs.wrapper-openssh]
-url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=openssh-wrapper"
 type = "fetch"
 [inputs.wrapper-tlrc]
 url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=tlrc-wrapper"

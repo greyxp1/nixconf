@@ -9,8 +9,8 @@
       nixosModules.preservation
       nixosModules.cachix
       nixosModules.cli
-      wrappers.openssh.install
-      wrappers.git.install
+      nixosModules.ssh
+      nixosModules.git
       wrappers.helix.install
       wrappers.bottom.install
       wrappers.nushell.install

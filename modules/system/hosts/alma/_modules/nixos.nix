@@ -20,7 +20,7 @@
     ];
   };
   extended = base.extendModules {
-    modules = with inputs.self.nixosModules; [cli theme t3code helium scrcpy remote-client sunshine];
+    modules = with inputs.self.nixosModules; [cli git ssh theme t3code helium scrcpy remote-client sunshine];
   };
   nixos = extended.config;
   baseSources = map (definition: definition.file) base.options.environment.systemPackages.definitionsWithLocations;

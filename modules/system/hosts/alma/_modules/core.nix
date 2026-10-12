@@ -30,6 +30,11 @@ in {
     VISUAL = "hx";
     OPENCODE_CONFIG = nixos.environment.variables.OPENCODE_CONFIG;
   };
+  environment.etc = {
+    gitconfig.text = nixos.environment.etc.gitconfig.text;
+    "ssh/ssh_config".text = nixos.environment.etc."ssh/ssh_config".text;
+    "bat/config".source = nixos.environment.etc."bat/config".source;
+  };
   programs.nh = nixos.programs.nh;
   systemd.services.t3code =
     (lib.getAttrs ["description" "wantedBy" "after" "environment" "serviceConfig"]
@@ -43,7 +48,7 @@ in {
     };
   environment.systemPackages =
     [
-      pkgs.gh
+      pkgs.openssh
       (inputs.self.wrappers.helix.wrap {
         inherit pkgs;
         languages.language-server.nixd.config.options.nixos.expr = "(builtins.getFlake \"path:/home/grey/Projects/nixconf\").systemConfigs.alma.options";
@@ -56,11 +61,8 @@ in {
     ]
     ++ map (wrapper: wrapper.wrap {inherit pkgs;}) (with inputs.self.wrappers; [
       lazygit
-      openssh
       codex
       starship
-      git
-      delta
       yazi
     ]);
 }

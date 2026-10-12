@@ -224,14 +224,6 @@
     "narHash": "sha256-5ICnHg4ckrTT1N1i9wgbfQ3/sfMcIo4ylNYEmvG8KEM=",
     "lastModified": 1791736395
   },
-  "wrapper-bat": {
-    "type": "git",
-    "url": "https://github.com/greyxp1/nix-wrapper-modules",
-    "ref": "refs/heads/bat-wrapper",
-    "rev": "27c8d1dc6ae44dfcb71616be3bf7c8570f8fb608",
-    "narHash": "sha256-gKUyQ9vJWYgAMOQ6fuGaZRayj9wfYsT2/7qsQCF6fD8=",
-    "lastModified": 1791300569
-  },
   "wrapper-codex": {
     "type": "git",
     "url": "https://github.com/greyxp1/nix-wrapper-modules",
@@ -271,14 +263,6 @@
     "rev": "03fae4ae05d29f45da363edd37d4c991b32684ce",
     "narHash": "sha256-WoKn96JCCzuZNBtSSRhQ5KkIXM2TAHqKt1MpYivn3lY=",
     "lastModified": 1791314879
-  },
-  "wrapper-openssh": {
-    "type": "git",
-    "url": "https://github.com/greyxp1/nix-wrapper-modules",
-    "ref": "refs/heads/openssh-wrapper",
-    "rev": "04b67f6ac27f6d65a0e33aa185e918fdfe48ec8c",
-    "narHash": "sha256-AXpr5pS8yvmXWq9tAAIoukYZaud5RSbtsggBstd1U+s=",
-    "lastModified": 1791300569
   },
   "wrapper-tlrc": {
     "type": "git",
