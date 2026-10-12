@@ -251,14 +251,13 @@ by_id() {
 # Host selection
 echo "Select a host:"
 echo "  [0] desktop"
-echo "  [1] vm"
-echo "  [2] generic"
-echo "  [3] alma"
-echo "  [4] laptop"
-echo "  [5] server"
+echo "  [1] generic"
+echo "  [2] alma"
+echo "  [3] laptop"
+echo "  [4] server"
 read -rp "Choice: " n < /dev/tty
 case "$n" in
-  0) HOST=desktop ;; 1) HOST=vm ;; 2) HOST=generic ;; 3) HOST=alma ;; 4) HOST=laptop ;; 5) HOST=server ;;
+  0) HOST=desktop ;; 1) HOST=generic ;; 2) HOST=alma ;; 3) HOST=laptop ;; 4) HOST=server ;;
   *) echo "Invalid choice"; exit 1 ;;
 esac
 
