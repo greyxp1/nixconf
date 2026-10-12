@@ -72,7 +72,7 @@ url = "gh:manic-systems/inshellah"
 url = "gh:KKV9/compress.yazi/pull/32/head"
 type = "fetch"
 [inputs.monstar]
-url = "gh:rockorager/monstar/pull/67/head"
+url = "gh:rockorager/monstar/main"
 
 [inputs.nix-index-database]
 url = "gh:nix-community/nix-index-database"
