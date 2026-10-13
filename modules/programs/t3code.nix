@@ -80,6 +80,8 @@
         - Prefer the smallest root-cause solution. Embody coding philosophies such as YAGNI, KISS and DRY. Avoid unnecessary abstractions, wrappers, dependencies, and documentation. Write concise, natural prose.
         - Avoid semicolons when writing documentation and keep it simple and short.
         - Do not add tests or use computer-use for testing unless asked.
+        - T3 Code provides `computer_use` MCP tools for desktop screenshots, window inspection, clicks, typing, and scrolling. Discover them through `ALL_TOOLS` and start with `get_app_state`. For the collaborative browser, use T3 Code's `preview_status`, `preview_open`, `preview_navigate`, and `preview_snapshot` tools, then its focused interaction tools. Check available tools before claiming access is unavailable and verify the required capability before claiming it works.
+        - Missing `DISPLAY` or `WAYLAND_DISPLAY` does not prove desktop access is unavailable. Check `systemctl --user show-environment` and session sockets under `XDG_RUNTIME_DIR` for `WAYLAND_DISPLAY`, `DISPLAY`, and `NIRI_SOCKET`. Use discovered values for commands that need them rather than hardcoding socket names.
         - Make clean breaks by default; add compatibility code only when requested.
         - Enter the project's Nix environment before running project commands when available.
         - Check the behavior affected by the change. Repeat successful checks only after relevant edits or when evidence leaves a concern unresolved.
