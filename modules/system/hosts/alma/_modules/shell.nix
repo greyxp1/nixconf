@@ -10,7 +10,7 @@
       };
       starship = {
         enable = true;
-        package = inputs.self.wrappers.starship.wrap {inherit pkgs;};
+        package = pkgs.starship;
       };
       yazi.enable = true;
     };

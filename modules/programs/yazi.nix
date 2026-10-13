@@ -27,7 +27,7 @@
             end
             require("keep-preferences"):setup({ path_preferences = preferences })
             require("smart-enter"):setup({ open_multi = true })
-            require("starship"):setup({ config_file = "${./starship/starship.toml}" })
+            require("starship"):setup({ config_file = "${inputs.starship-config}/starship.toml" })
           '';
           settings.theme = lib.recursiveUpdate (theme // {app = removeAttrs theme.app ["overall"];}) {
             mgr.syntect_theme = "${catppuccin.bat}/Catppuccin Mocha.tmTheme";
