@@ -232,14 +232,6 @@
     "narHash": "sha256-AxIvyd2Sj2k/Lwqhx0H6I6U20nKPTkeS/DMjh8uUzU4=",
     "lastModified": 1791300569
   },
-  "wrapper-lazygit": {
-    "type": "git",
-    "url": "https://github.com/greyxp1/nix-wrapper-modules",
-    "ref": "refs/heads/lazygit-wrapper",
-    "rev": "2abc114f9bcf07f9defcf016c0d3dbd16291e09b",
-    "narHash": "sha256-gR8s/Ap4YGJxbs5Q6k6eTib2LRsz9V3nRlTCd6TR1dc=",
-    "lastModified": 1791300569
-  },
   "wrapper-monstar": {
     "type": "git",
     "url": "https://github.com/greyxp1/nix-wrapper-modules",
@@ -278,14 +270,6 @@
     "ref": "refs/heads/xdg-desktop-portal-termfilechooser-wrapper",
     "rev": "90e88da5f6e4ff808b7c2784f463fd824e3adcfa",
     "narHash": "sha256-DW9Hi42v6R4tVxLJx4wBKHu2EqAv+Qh0qIDzmhMkpLQ=",
-    "lastModified": 1791300569
-  },
-  "wrapper-yazi": {
-    "type": "git",
-    "url": "https://github.com/greyxp1/nix-wrapper-modules",
-    "ref": "refs/heads/yazi-plugin-setup",
-    "rev": "8ecf3d9a40649528e263e184cd0566e1a7fe53b0",
-    "narHash": "sha256-wZduySQq3hpopObu6C17r16UYaWksMNj4DUtwrwMXo8=",
     "lastModified": 1791300569
   },
   "wrapper-zsh": {

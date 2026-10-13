@@ -7,16 +7,14 @@
       nixosModules.boot
       nixosModules.filesystem
       nixosModules.preservation
-      nixosModules.cachix
       nixosModules.cli
       nixosModules.ssh
       nixosModules.git
+      nixosModules.yazi
       wrappers.helix.install
       wrappers.bottom.install
       wrappers.nushell.install
       wrappers.starship.install
-      wrappers.codex.install
-      wrappers.yazi.install
     ];
   };
 }

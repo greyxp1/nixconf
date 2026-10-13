@@ -28,24 +28,14 @@ in {
   environment.variables = {
     EDITOR = "hx";
     VISUAL = "hx";
-    OPENCODE_CONFIG = nixos.environment.variables.OPENCODE_CONFIG;
   };
   environment.etc = {
     gitconfig.text = nixos.environment.etc.gitconfig.text;
     "ssh/ssh_config".text = nixos.environment.etc."ssh/ssh_config".text;
+    "xdg/lazygit/config.yml".source = nixos.environment.etc."xdg/lazygit/config.yml".source;
     "bat/config".source = nixos.environment.etc."bat/config".source;
   };
   programs.nh = nixos.programs.nh;
-  systemd.services.t3code =
-    (lib.getAttrs ["description" "wantedBy" "after" "environment" "serviceConfig"]
-      nixos.systemd.services.t3code)
-    // {
-      environment =
-        nixos.systemd.services.t3code.environment
-        // {
-          PATH = lib.mkForce "/run/system-manager/sw/bin:/nix/var/nix/profiles/default/bin:/usr/local/bin:/usr/bin:/bin";
-        };
-    };
   environment.systemPackages =
     [
       pkgs.openssh
@@ -60,9 +50,6 @@ in {
       })
     ]
     ++ map (wrapper: wrapper.wrap {inherit pkgs;}) (with inputs.self.wrappers; [
-      lazygit
-      codex
       starship
-      yazi
     ]);
 }

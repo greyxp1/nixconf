@@ -6,12 +6,16 @@
       pkgs,
       ...
     }: let
+      computerUse = inputs.computer-use-linux.packages.${pkgs.stdenv.hostPlatform.system}.default;
       t3code = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.t3code.unwrapped;
       runtimeDir = "/run/user/${toString config.users.users.grey.uid}";
       opencodeConfig = toString (pkgs.writeText "opencode.json" (builtins.toJSON {permission = "allow";}));
     in {
+      imports = [inputs.self.wrappers.codex.install];
+
       environment.systemPackages = [
         t3code
+        computerUse
         (pkgs.writeShellScriptBin "t3-restart" ''
           set -euo pipefail
 
@@ -50,17 +54,6 @@
           UMask = "0077";
         };
       };
-    };
-
-    nixosModules.computer-use = {
-      config,
-      lib,
-      pkgs,
-      ...
-    }: let
-      computerUse = inputs.computer-use-linux.packages.${pkgs.stdenv.hostPlatform.system}.default;
-    in {
-      environment.systemPackages = [computerUse];
       services.gnome.at-spi2-core.enable = true;
       programs.ydotool = {
         enable = true;
@@ -75,14 +68,11 @@
           env.YDOTOOL_SOCKET = config.environment.variables.YDOTOOL_SOCKET;
         };
       };
+      users.users.grey.linger = true;
     };
 
     wrappers.codex = {pkgs, ...}: {
-      install.modules.nixos = {
-        imports = [inputs.self.nixosModules.t3code];
-        wrappers.codex.enable = true;
-        users.users.grey.linger = true;
-      };
+      install.modules.nixos.wrappers.codex.enable = true;
       imports = ["${inputs.wrapper-codex}/wrapperModules/c/codex/module.nix"];
       package = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.codex;
       context = ''

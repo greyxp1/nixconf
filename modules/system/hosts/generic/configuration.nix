@@ -2,7 +2,7 @@
   mkHost = import ../_mkHost.nix inputs;
 in {
   flake.nixosConfigurations.generic = mkHost "generic" {
-    imports = [inputs.self.nixosModules.profile-desktop inputs.self.nixosModules.sunshine];
+    imports = [inputs.self.nixosModules.profile-desktop];
     services.qemuGuest.enable = true;
     boot = {
       kernelModules = ["virtio_gpu"];

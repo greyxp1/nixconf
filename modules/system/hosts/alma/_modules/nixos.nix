@@ -15,12 +15,13 @@
           inherit uid;
           isNormalUser = true;
         };
+        programs.ydotool.group = lib.mkForce "input";
         xdg.mime.defaultApplications."inode/directory" = "yazi.desktop";
       }
     ];
   };
   extended = base.extendModules {
-    modules = with inputs.self.nixosModules; [cli git ssh theme t3code helium scrcpy remote-client sunshine];
+    modules = with inputs.self.nixosModules; [cli git ssh lazygit yazi theme t3code helium scrcpy remote-client sunshine];
   };
   nixos = extended.config;
   baseSources = map (definition: definition.file) base.options.environment.systemPackages.definitionsWithLocations;

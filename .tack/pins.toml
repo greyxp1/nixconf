@@ -91,9 +91,6 @@ exclude_follow = ["nixpkgs"]
 [inputs.wrapper-codex]
 url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=codex-wrapper"
 type = "fetch"
-[inputs.wrapper-lazygit]
-url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=lazygit-wrapper"
-type = "fetch"
 [inputs.wrapper-monstar]
 url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=monstar-wrapper"
 type = "fetch"
@@ -108,9 +105,6 @@ url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=tlrc-wrapper"
 type = "fetch"
 [inputs.wrapper-xdg-desktop-portal-termfilechooser]
 url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=xdg-desktop-portal-termfilechooser-wrapper"
-type = "fetch"
-[inputs.wrapper-yazi]
-url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=yazi-plugin-setup"
 type = "fetch"
 [inputs.wrapper-zsh]
 url = "git+https://github.com/greyxp1/nix-wrapper-modules?ref=zsh-structured-config"

@@ -1,17 +1,6 @@
 {inputs, ...}: {
   flake = {
     wrappers = {
-      lazygit = {pkgs, ...}: {
-        imports = ["${inputs.wrapper-lazygit}/wrapperModules/l/lazygit/module.nix"];
-        settings.notARepository = "skip";
-        extraConfigFiles = [
-          (pkgs.runCommand "catppuccin-lazygit-mocha-mauve.yml" {} ''
-            ${pkgs.yq-go}/bin/yq '.gui.theme.authorColors = .gui.authorColors | del(.gui.authorColors)' \
-              ${inputs.catppuccin.packages.${pkgs.stdenv.hostPlatform.system}.lazygit}/mocha/mauve.yml > "$out"
-          '')
-        ];
-      };
-
       helix = {
         pkgs,
         wlib,
@@ -23,8 +12,7 @@
         '';
       in {
         config.install.modules.nixos = {config, ...}: {
-          imports = [inputs.self.wrappers.lazygit.install];
-          wrappers.lazygit.enable = true;
+          imports = [inputs.self.nixosModules.lazygit];
           wrappers.helix = {
             enable = true;
             languages.language-server.nixd.config.options.nixos.expr =
@@ -38,7 +26,7 @@
         };
         imports = [wlib.wrapperModules.helix];
         config = {
-          runtimePkgs = [nix-format pkgs.mpls pkgs.nixd (inputs.self.wrappers.lazygit.wrap {inherit pkgs;})];
+          runtimePkgs = [nix-format pkgs.mpls pkgs.nixd pkgs.lazygit];
           themes.catppuccin_transparent = {
             inherits = "catppuccin_mocha";
             "ui.background".bg = "none";

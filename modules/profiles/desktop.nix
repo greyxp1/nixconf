@@ -8,6 +8,8 @@
       nixosModules.discord
       nixosModules.scrcpy
       nixosModules.remote-client
+      nixosModules.sunshine
+      nixosModules.t3code
       wrappers.niri.install
       wrappers.noctalia.install
       wrappers.monstar.install

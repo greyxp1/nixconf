@@ -6,6 +6,7 @@
 }: {
   imports = [
     ./core.nix
+    ./t3code.nix
     ./helium.nix
     ./niri.nix
     ./noctalia.nix

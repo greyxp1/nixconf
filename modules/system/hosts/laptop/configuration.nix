@@ -4,7 +4,6 @@ in {
   flake.nixosConfigurations.laptop = mkHost "laptop" ({lib, ...}: {
     imports = [
       inputs.self.nixosModules.profile-desktop
-      inputs.self.nixosModules.sunshine
       ./_hardware.nix
     ];
 

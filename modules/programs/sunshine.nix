@@ -99,6 +99,16 @@
     '';
   };
 in {
+  perSystem = {pkgs, ...}: {
+    packages.sunshine-cuda =
+      ((import inputs.sunshine-nixpkgs {
+        system = pkgs.stdenv.hostPlatform.system;
+        config.allowUnfree = true;
+      }).sunshine.override {cudaSupport = true;}).overrideAttrs (sunshineOverride {
+        cudaSupport = true;
+      });
+  };
+
   flake = {
     mkSunshineDisplay = mkSunshineDisplay;
     nixosModules = {
@@ -122,43 +132,6 @@ in {
           (lib.getExe config.services.sunshine.package)
           "csrf_allowed_origins=https://${config.networking.hostName}.tail1785c.ts.net:47990"
         ]);
-      };
-
-      sunshine-cuda = {
-        config,
-        pkgs,
-        utils,
-        ...
-      }: let
-        cudaSunshine =
-          ((import inputs.sunshine-nixpkgs {
-            system = pkgs.stdenv.hostPlatform.system;
-            config.allowUnfree = true;
-          }).sunshine.override {cudaSupport = true;}).overrideAttrs (sunshineOverride {
-            cudaSupport = true;
-          });
-        display = mkSunshineDisplay pkgs;
-        prepCommands = builtins.toJSON [
-          {
-            do = "${lib.getExe display} start";
-            undo = "${lib.getExe display} restore";
-          }
-        ];
-      in {
-        imports = [inputs.self.nixosModules.sunshine];
-        services.sunshine.package = cudaSunshine;
-        environment.systemPackages = [display];
-        systemd.user.services.sunshine = {
-          environment.LD_LIBRARY_PATH = "/run/opengl-driver/lib";
-          serviceConfig = {
-            ExecStart = lib.mkOverride 40 (utils.escapeSystemdExecArgs [
-              (lib.getExe config.services.sunshine.package)
-              "csrf_allowed_origins=https://${config.networking.hostName}.tail1785c.ts.net:47990"
-              "global_prep_cmd=${prepCommands}"
-            ]);
-            ExecStopPost = "-${lib.getExe display} restore";
-          };
-        };
       };
     };
   };

@@ -24,10 +24,9 @@ in {
 
     imports = [
       inputs.self.nixosModules.profile-desktop
-      inputs.self.nixosModules.sshfs
-      inputs.self.nixosModules.computer-use
-      inputs.self.nixosModules.sunshine-cuda
-      inputs.self.cachixPublisherModule
+      ./_modules/sshfs.nix
+      ./_modules/sunshine.nix
+      ./_modules/cachix-publisher.nix
       ./_modules/noctalia.nix
       ./_modules/at2005usb.nix
       ./_modules/gaming.nix

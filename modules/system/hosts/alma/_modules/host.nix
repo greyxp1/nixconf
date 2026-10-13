@@ -92,7 +92,6 @@ in {
       "irqbalance.service"
       "sshd.service"
       "tailscaled.service"
-      "t3code.service"
       "alma-school-exit-node.service"
     ];
 
@@ -153,10 +152,6 @@ in {
     "/share/xdg-desktop-portal"
   ];
   environment.systemPackages = [pkgs.tailscale];
-  systemd.services.t3code.environment = {
-    TUNNEL_TRANSPORT_PROTOCOL = "http2";
-    NIX_SSL_CERT_FILE = "/etc/pki/tls/certs/ca-bundle.crt";
-  };
 
   systemd.maskedUnits = [
     "NetworkManager-wait-online.service"

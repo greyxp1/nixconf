@@ -21,13 +21,15 @@
       package = pkgs.lix;
       daemonCPUSchedPolicy = "idle";
       daemonIOSchedClass = "idle";
-      settings = {
-        trusted-users = ["@wheel"];
-        experimental-features = ["nix-command" "flakes"];
-        warn-dirty = false;
-        max-jobs = 1;
-        cores = 0;
-      };
+      settings =
+        (import ./_cache.nix)
+        // {
+          trusted-users = ["@wheel"];
+          experimental-features = ["nix-command" "flakes"];
+          warn-dirty = false;
+          max-jobs = 1;
+          cores = 0;
+        };
     };
 
     systemd = {
