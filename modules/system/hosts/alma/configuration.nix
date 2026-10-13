@@ -23,6 +23,7 @@ in {
   };
 
   flake = {
+    wrappers.zsh = {...}: {imports = ["${inputs.wrapper-zsh}/wrapperModules/z/zsh/module.nix"];};
     lib.mkAlmaSystemConfig = mkAlmaSystemConfig;
     # Keep a pure, stable output for checks and cache builds. The installer and
     # alma-rebuild call mkAlmaSystemConfig with the native account IDs.

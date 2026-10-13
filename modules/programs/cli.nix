@@ -38,8 +38,6 @@
     };
 
     wrappers = {
-      zsh = {...}: {imports = ["${inputs.wrapper-zsh}/wrapperModules/z/zsh/module.nix"];};
-
       tlrc = {...}: {
         imports = ["${inputs.wrapper-tlrc}/wrapperModules/t/tlrc/module.nix"];
         settings = {
