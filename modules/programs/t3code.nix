@@ -78,6 +78,7 @@
       context = ''
         # Global
         - Prefer the smallest root-cause solution. Embody coding philosophies such as YAGNI, KISS and DRY. Avoid unnecessary abstractions, wrappers, dependencies, and documentation. Write concise, natural prose.
+        - Judge simplicity by complete integration and maintenance cost. Before recommending architecture or dependency replacements, compare against the current approach and disclose added dependencies, platform-specific code, startup and package costs, and uncertainty. Reconsider prototypes when fixes accumulate complexity. A working happy path does not justify adopting them.
         - Avoid semicolons when writing documentation and keep it simple and short.
         - Do not add tests or use computer-use for testing unless asked.
         - T3 Code provides `computer_use` MCP tools for desktop screenshots, window inspection, clicks, typing, and scrolling. Discover them through `ALL_TOOLS` and start with `get_app_state`. For the collaborative browser, use T3 Code's `preview_status`, `preview_open`, `preview_navigate`, and `preview_snapshot` tools, then its focused interaction tools. Check available tools before claiming access is unavailable and verify the required capability before claiming it works.
@@ -96,6 +97,9 @@
 
         # Projects
         Apply conventions to the repository being changed, including worktrees and work performed from a thread opened in another repository.
+
+        ## Suncord `/home/grey/Projects/Suncord`
+        - Prioritize startup speed, responsiveness and package size.
 
         ## nixconf `/home/grey/Projects/nixconf`
         - Use a program's package/PATH integration and readable command names, such as Helix `extraPackages` with `command = "mpls"`.
