@@ -47,6 +47,7 @@ in {
   systemd.tmpfiles.rules = [
     "d /home/grey/.local/share/pelican 0700 82 82 -"
     "d /home/grey/Games/Pelican 0750 grey users -"
+    "d /home/grey/Backups 0750 grey users -"
     "d /home/grey/Backups/Games 0750 grey users -"
     "d /persistent/secrets/pelican 0700 root root -"
     "d /var/log/pelican 0750 root root -"
