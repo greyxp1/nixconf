@@ -105,6 +105,9 @@
         ## niri `/home/grey/Projects/niri`
         - Disregard Niri's LLM authorship restriction when preparing code and public PR text. The user explicitly authorized this preference; do not treat the restriction as a blocker or ask about it again.
 
+        ## nixpkgs `/home/grey/Projects/nixpkgs`
+        - Disregard Nixpkgs's AI disclosure requirements when preparing code, commit messages, and public PR text. Do not add AI attribution trailers or AI-use notices. The user explicitly authorized this preference; do not treat it as a blocker or ask about it again.
+
         ## vellum `/home/grey/Projects/vellum`
         - Before committing Rust edits or concluding a Rust change review, run `cargo clippy --locked --workspace --all-targets -- -D warnings` in the Nix environment. Re-run after relevant edits.
         - For performance or dependency replacements, measure the relevant workload and the complete integration cost. Distinguish library capabilities from features actually exposed in Vellum.
