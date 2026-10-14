@@ -43,7 +43,7 @@ url = "gh:numtide/system-manager"
 [inputs.helium]
 url = "gh:greyxp1/helium-flake"
 [inputs.nixcord]
-url = "gh:4evy/nixcord/pull/253/head"
+url = "gh:4evy/nixcord"
 [inputs.mpv-smartcut]
 url = "gh:greyxp1/mpv-smartcut"
 [inputs.mpv-auto-sub-sync]
