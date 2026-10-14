@@ -29,6 +29,7 @@ in {
       ./_modules/cachix-publisher.nix
       ./_modules/noctalia.nix
       ./_modules/at2005usb.nix
+      ./_modules/whisrs.nix
       ./_modules/gaming.nix
       ./_modules/kovaaks.nix
       ./_modules/sober.nix
