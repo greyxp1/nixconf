@@ -12,7 +12,7 @@
       nixosModules.yazi
       nixosModules.nushell
       nixosModules.starship
-      wrappers.helix.install
+      nixosModules.helix
       wrappers.bottom.install
     ];
   };

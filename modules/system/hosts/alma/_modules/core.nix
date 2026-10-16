@@ -40,10 +40,6 @@ in {
   programs.nh = nixos.programs.nh;
   environment.systemPackages = [
     pkgs.openssh
-    (inputs.self.wrappers.helix.wrap {
-      inherit pkgs;
-      languages.language-server.nixd.config.options.nixos.expr = "(builtins.getFlake \"path:/home/grey/Projects/nixconf\").systemConfigs.alma.options";
-    })
     (inputs.self.wrappers.bottom.wrap {
       inherit pkgs;
       settings.row = lib.mkForce (map resizeDisk (inputs.self.wrappers.bottom.wrap {inherit pkgs;}).configuration.settings.row);

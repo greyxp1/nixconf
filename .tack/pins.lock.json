@@ -55,6 +55,14 @@
     "narHash": "sha256-zqFFPcGPNpO2DjUrt1RPV5byl+XV2h7koFTZh9cd4AY=",
     "lastModified": 1792019720
   },
+  "home-manager": {
+    "type": "github",
+    "owner": "nix-community",
+    "repo": "home-manager",
+    "rev": "640725978b99076e18e069f6e7d2959124584f8f",
+    "narHash": "sha256-u4DIIZgznEGzByxXrxWCXK19VcMtTBmi/M9gZ7Jk9bM=",
+    "lastModified": 1792098797
+  },
   "import-tree": {
     "type": "github",
     "owner": "vic",

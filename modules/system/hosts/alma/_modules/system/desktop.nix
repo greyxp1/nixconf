@@ -70,14 +70,6 @@ in {
     install_helium_policy /etc/helium/policies/managed/helium.json
   '';
   alma.activation.finish = ''
-    for directory in /home/grey/.config /home/grey/.local/share /home/grey/.codex /home/grey/.ssh; do
-      [[ -d $directory ]] || continue
-      while IFS= read -r -d "" link; do
-        case "$(/usr/bin/readlink "$link")" in
-          /nix/store/*-home-manager-files/*) /usr/bin/rm "$link" ;;
-        esac
-      done < <(/usr/bin/find "$directory" -type l -print0)
-    done
     /usr/bin/systemctl disable --now home-manager-grey.service 2>/dev/null || true
     if [[ -x /usr/sbin/restorecon ]]; then
       /usr/sbin/restorecon -RF \
