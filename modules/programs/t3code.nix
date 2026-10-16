@@ -16,20 +16,6 @@
       environment.systemPackages = [
         t3code
         computerUse
-        (pkgs.writeShellScriptBin "t3-restart" ''
-          set -euo pipefail
-
-          # T3 preserves its managed tunnel when this fresh restart marker exists.
-          marker="''${T3CODE_HOME:-$HOME/.t3}/runtime/desktop-update-restart"
-          touch "$marker"
-          trap 'rm -f "$marker"' EXIT
-
-          if systemctl cat t3code.service >/dev/null 2>&1; then
-            sudo systemctl restart t3code.service
-          else
-            systemctl --user restart t3code.service
-          fi
-        '')
       ];
       environment.variables.OPENCODE_CONFIG = opencodeConfig;
       systemd.services.t3code = {
