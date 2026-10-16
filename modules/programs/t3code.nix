@@ -18,6 +18,12 @@
         computerUse
       ];
       environment.variables.OPENCODE_CONFIG = opencodeConfig;
+      # T3 sets runtime limits on its agents slice, so cap the parent instead.
+      systemd.user.slices.app-t3code.sliceConfig = {
+        MemoryHigh = "40%";
+        MemoryMax = "50%";
+        MemorySwapMax = "10%";
+      };
       systemd.services.t3code = {
         description = "T3 Code headless server";
         wantedBy = ["multi-user.target"];

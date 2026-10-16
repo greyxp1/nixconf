@@ -20,9 +20,19 @@
       };
     };
 
-    systemd.oomd = {
-      enableSystemSlice = true;
-      enableUserSlices = true;
+    systemd = {
+      oomd.enableSystemSlice = true;
+      # Target workloads without making the desktop session an oomd candidate.
+      user.slices.app.sliceConfig = {
+        ManagedOOMMemoryPressure = "kill";
+        ManagedOOMMemoryPressureLimit = "50%";
+        ManagedOOMMemoryPressureDurationSec = "10s";
+      };
+      user.slices.background.sliceConfig = {
+        ManagedOOMMemoryPressure = "kill";
+        ManagedOOMMemoryPressureLimit = "50%";
+        ManagedOOMMemoryPressureDurationSec = "10s";
+      };
     };
 
     zramSwap.enable = true;

@@ -41,6 +41,9 @@
         MemoryHigh = "50%";
         MemoryMax = "60%";
         MemorySwapMax = 0;
+        ManagedOOMMemoryPressure = "kill";
+        ManagedOOMMemoryPressureLimit = "50%";
+        ManagedOOMMemoryPressureDurationSec = "10s";
       };
     };
 
