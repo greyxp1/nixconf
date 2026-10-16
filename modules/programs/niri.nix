@@ -19,7 +19,7 @@
       ];
       services = {
         gnome.gnome-keyring.enable = lib.mkForce false;
-        vellum.enable = true;
+        #vellum.enable = true;
         greetd = {
           enable = true;
           settings.default_session = {
