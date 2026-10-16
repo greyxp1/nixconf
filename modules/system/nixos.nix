@@ -18,7 +18,6 @@
     '';
 
     nix = {
-      package = pkgs.lix;
       daemonCPUSchedPolicy = "idle";
       daemonIOSchedClass = "idle";
       settings =
