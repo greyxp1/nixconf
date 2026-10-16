@@ -16,32 +16,35 @@
       imports = [
         inputs.niri-screenshare.nixosModules.default
         inputs.perch.nixosModules.default
-        inputs.vellum.nixosModules.default
       ];
-      programs.perch.enable = true;
-      services.vellum.enable = true;
-      services.niri-screenshare = {
-        enable = true;
-        withPicker = false;
+      services = {
+        gnome.gnome-keyring.enable = lib.mkForce false;
+        vellum.enable = true;
+        greetd = {
+          enable = true;
+          settings.default_session = {
+            command = "niri-session";
+            user = "grey";
+          };
+        };
+        niri-screenshare = {
+          enable = true;
+          withPicker = false;
+        };
       };
-      services.gnome.gnome-keyring.enable = lib.mkForce false;
       xdg.portal.config.niri."org.freedesktop.impl.portal.Secret" = lib.mkForce "none";
       wrappers.niri.enable = true;
-      programs.niri = {
-        enable = true;
-        package = config.wrappers.niri.wrapper;
-        useNautilus = false;
+      programs = {
+        perch.enable = true;
+        niri = {
+          enable = true;
+          package = config.wrappers.niri.wrapper;
+          useNautilus = false;
+        };
       };
       nixpkgs.overlays = [inputs.niri.overlays.default];
       environment.pathsToLink = ["/share/applications"];
       environment.systemPackages = [tesseract pkgs.wl-clipboard pkgs.xwayland-satellite];
-      services.greetd = {
-        enable = true;
-        settings.default_session = {
-          command = "niri-session";
-          user = "grey";
-        };
-      };
     };
     imports = [wlib.wrapperModules.niri];
     extraSettings = [

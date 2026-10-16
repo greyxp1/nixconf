@@ -82,9 +82,6 @@ url = "gh:catppuccin/nix"
 url = "git+https://github.com/greyxp1/starship-config?ref=main"
 type = "fetch"
 
-[inputs.vellum]
-url = "gh:greyxp1/vellum"
-
 # Preserve upstream Nixpkgs
 [inputs.llm-agents]
 url = "gh:numtide/llm-agents.nix"
