@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  uid,
   ...
 }: let
   serviceManifest = pkgs.writeText "alma-native-services" (
@@ -18,6 +19,11 @@ in {
     /usr/bin/udevadm trigger --subsystem-match=block --action=change
 
     /usr/bin/loginctl enable-linger grey
+    /usr/bin/systemctl start user@${toString uid}.service
+    /usr/sbin/runuser -u grey -- /usr/bin/env \
+      XDG_RUNTIME_DIR=/run/user/${toString uid} \
+      DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/${toString uid}/bus \
+      /usr/bin/systemctl --user daemon-reload
 
     if [[ -f $previous_services ]]; then
       while IFS= read -r service; do
