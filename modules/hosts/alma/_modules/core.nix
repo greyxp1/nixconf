@@ -22,10 +22,8 @@
   environment.variables = {
     EDITOR = "hx";
     VISUAL = "hx";
-    STARSHIP_CONFIG = nixos.environment.variables.STARSHIP_CONFIG;
   };
   environment.etc = {
-    "starship.toml".source = nixos.environment.etc."starship.toml".source;
     gitconfig.text = nixos.environment.etc.gitconfig.text;
     "ssh/ssh_config" = {
       text = nixos.environment.etc."ssh/ssh_config".text;

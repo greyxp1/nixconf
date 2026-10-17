@@ -11,7 +11,7 @@ in {
   programs.yazi = {
     enable = true;
     package = pkgs.yazi.override {
-      extraPackages = [pkgs.starship pkgs.udisks2 (lib.getBin pkgs.util-linux)];
+      extraPackages = [pkgs.udisks2 (lib.getBin pkgs.util-linux)];
     };
     initLua = pkgs.writeText "yazi-init.lua" ''
       require("full-border"):setup({})
@@ -25,7 +25,6 @@ in {
       end
       require("keep-preferences"):setup({ path_preferences = preferences })
       require("smart-enter"):setup({ open_multi = true })
-      require("starship"):setup({ config_file = "${inputs.starship-config}/starship.toml" })
     '';
     settings.theme = lib.recursiveUpdate (theme // {app = removeAttrs theme.app ["overall"];}) {
       mgr.syntect_theme = "${catppuccin.bat}/Catppuccin Mocha.tmTheme";
@@ -74,7 +73,7 @@ in {
 
     plugins = with pkgs.yaziPlugins; {
       compress = inputs.compress-yazi;
-      inherit mount full-border keep-preferences smart-enter starship;
+      inherit mount full-border keep-preferences smart-enter;
     };
     settings.keymap.mgr.prepend_keymap = [
       {

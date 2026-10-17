@@ -1,13 +1,11 @@
 {
   inputs,
-  config,
   pkgs,
   ...
 }: let
   nix-index = inputs.nix-index-database.packages.${pkgs.stdenv.hostPlatform.system}.nix-index-with-db;
   integrations = pkgs.runCommand "nushell-integrations" {} ''
     mkdir -p "$out"
-    STARSHIP_CACHE="$TMPDIR/starship" ${config.programs.starship.package}/bin/starship init nu > "$out/starship.nu"
     ${pkgs.zoxide}/bin/zoxide init nushell --cmd cd > "$out/zoxide.nu"
   '';
   settings = {
@@ -76,9 +74,119 @@ in {
         load-env $system_env
 
         $env.config = ($env.config | merge deep (${builtins.toJSON (builtins.toJSON settings)} | from json))
-        $env.STARSHIP_CONFIG = ${builtins.toJSON config.environment.variables.STARSHIP_CONFIG}
         source ${integrations}/zoxide.nu
-        use ${integrations}/starship.nu
+        const prompt_style = {
+            start: $"(ansi reset)(ansi {fg: '#f2f2f2'})"
+            nix: (ansi {fg: '#a6e3a1'})
+            identity: $"(ansi reset)(ansi {fg: '#f2f2f2'})"
+            root: (ansi {fg: '#eb4d28'})
+            directory: (ansi {fg: '#f2f2f2'})
+            branch: (ansi {fg: '#769ff0'})
+            duration: (ansi {fg: '#999999'})
+            success: $"(ansi {fg: '#769ff0' attr: b})❯(ansi reset) "
+            error: $"(ansi {fg: '#eb4d28' attr: b})❯(ansi reset) "
+        }
+
+        let prompt_hostname = (sys host | get hostname | prompt-clean $in)
+
+        def prompt-repository [directory: string] {
+            if ($env.GIT_DIR? | is-not-empty) {
+                return {head: ($env.GIT_DIR | path join HEAD), root: $directory}
+            }
+            mut directory = $directory
+            loop {
+                let git = ($directory | path join .git)
+                let kind = ($git | path type | default "")
+                let kind = if $kind == symlink { $git | path expand | path type | default "" } else { $kind }
+                if $kind == dir {
+                    return {head: ($git | path join HEAD), root: $directory}
+                }
+                if $kind == file {
+                    let target = (try { open --raw $git | str trim | str replace 'gitdir: ' "" } catch { "" })
+                    if $target != "" {
+                        let gitdir = if ($target | str starts-with '/') {
+                            $target
+                        } else {
+                            $directory | path join $target
+                        }
+                        return {head: ($gitdir | path join HEAD), root: $directory}
+                    }
+                }
+                let parent = ($directory | path dirname)
+                if $parent == $directory { return null }
+                $directory = $parent
+            }
+        }
+
+        def prompt-clean [text: string] {
+            $text | str replace --all --regex '[\x00-\x1f\x7f-\x9f]' ""
+        }
+
+        def prompt-directory [directory: string, root: any] {
+            let path = if $env.PWD == $nu.home-dir {
+                '~'
+            } else if ($env.PWD | str starts-with $"($nu.home-dir)/") {
+                $"~/($env.PWD | path relative-to $nu.home-dir)"
+            } else {
+                $env.PWD
+            }
+            let root = if $root != null and ($env.GIT_WORK_TREE? | is-not-empty) {
+                $env.GIT_WORK_TREE | path expand
+            } else { $root }
+            let display = if $root != null and $root != '/' and $root != $nu.home-dir {
+                let relative = (try { $directory | path relative-to $root } catch { null })
+                if $relative == null { $path } else if $relative == "" { $root | path basename } else { $"($root | path basename)/($relative)" }
+            } else { $path }
+            prompt-clean $display
+        }
+
+        def prompt-render [] {
+            let directory = ($env.PWD | path expand)
+            let repository = (prompt-repository $directory)
+            let branch = if $repository == null { "" } else {
+                let head = (try { open --raw $repository.head | str trim } catch { "" })
+                if ($head | str starts-with 'ref: refs/heads/') {
+                    $" ($prompt_style.branch) (prompt-clean ($head | str substring 16..))"
+                } else if $head != "" {
+                    $" ($prompt_style.branch) (prompt-clean ($head | str substring 0..<8))"
+                } else { "" }
+            }
+            let directory_style = if ($env.IN_NIX_SHELL? | default "") in [pure impure] {
+                $prompt_style.nix
+            } else { $prompt_style.directory }
+            let user = ($env.USER? | default ($nu.home-dir | path basename))
+            let remote = ($env.SSH_CONNECTION? | is-not-empty) or ($env.SSH_TTY? | is-not-empty) or ($env.SSH_CLIENT? | is-not-empty)
+            let identity = if $remote or $user != 'grey' {
+                let style = if $user == root { $prompt_style.root } else { $prompt_style.identity }
+                $"($style)(prompt-clean $user)@($prompt_hostname) "
+            } else { "" }
+            let milliseconds = if $env.__prompt_has_command {
+                $env.CMD_DURATION_MS? | default 0 | into int
+            } else { 0 }
+            let duration = if $milliseconds >= 500 {
+                let elapsed = if $milliseconds < 1000 {
+                    $"($milliseconds)ms"
+                } else if $milliseconds < 60000 {
+                    $"($milliseconds / 1000 | math round --precision 1)s"
+                } else if $milliseconds < 3600000 {
+                    $"($milliseconds / 60000 | math round --precision 1)m"
+                } else {
+                    $"($milliseconds / 3600000 | math round --precision 1)h"
+                }
+                $" ($prompt_style.duration)($elapsed)"
+            } else { "" }
+            $"($prompt_style.start)($identity)($directory_style)(prompt-directory $directory $repository.root?)($branch)($duration)(ansi reset) "
+        }
+
+        $env.__prompt_has_command = false
+        $env.config.hooks.pre_execution = ($env.config.hooks.pre_execution | append {|| $env.__prompt_has_command = true })
+        $env.PROMPT_COMMAND = { prompt-render }
+        $env.PROMPT_COMMAND_RIGHT = { "" }
+        $env.PROMPT_INDICATOR = { if ($env.LAST_EXIT_CODE? | default 0) == 0 { $prompt_style.success } else { $prompt_style.error } }
+        $env.PROMPT_INDICATOR_VI_INSERT = $env.PROMPT_INDICATOR
+        $env.PROMPT_INDICATOR_VI_NORMAL = $env.PROMPT_INDICATOR
+        $env.PROMPT_MULTILINE_INDICATOR = '::: '
+        $env.config.shell_integration.osc133 = true
 
         def --env y [...args] {
           let tmp = (mktemp -t "yazi-cwd.XXXXX")
@@ -93,6 +201,14 @@ in {
         alias rebuild = nh os switch
         alias update = do { cd /home/grey/Projects/nixconf; with-env { GH_TOKEN: (^gh auth token --hostname github.com) } { ^tack update }; ^nh os switch }
         alias clean = do { ^nh clean all --optimise --keep 1 }
+
+        def --wrapped "nix develop" [...args: string] {
+          if ($args | any {|arg| $arg in [--command -c --help -h] or ($arg | str starts-with '--command=') }) {
+            ^nix develop ...$args
+          } else {
+            ^nix develop ...$args --command $nu.current-exe
+          }
+        }
 
         $env.config.hooks.command_not_found = (source ${nix-index}/etc/profile.d/command-not-found.nu)
         source ${inputs.catppuccin.packages.${pkgs.stdenv.hostPlatform.system}.nushell}/catppuccin_mocha.nu
@@ -110,13 +226,11 @@ in {
           }
         }
 
-        $env.__skip_prompt_spacing = true
         $env.config.hooks.display_output = { table --icons --index false}
 
         def --env clear [] {
           ^clear
           print -n "\u{1b}[3J"
-          $env.__skip_prompt_spacing = true
         }
 
         def restore-ssh-key [] {
@@ -128,17 +242,6 @@ in {
           do { ^ssh-add ~/.ssh/id_ed25519 e> /dev/null } | complete | ignore
           print "SSH private key restored"
         }
-
-        $env.config.hooks.pre_prompt = (
-          $env.config.hooks.pre_prompt
-          | append {||
-              if ($env.__skip_prompt_spacing? | default false) {
-                hide-env __skip_prompt_spacing
-              } else {
-                print ""
-              }
-            }
-        )
       '')
     ];
   };

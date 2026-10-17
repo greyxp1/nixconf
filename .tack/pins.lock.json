@@ -200,14 +200,6 @@
     "narHash": "sha256-mMI9IanU+Xw+pVogD2oT0I2kTmvz2Un/Apc5+CwUpEY=",
     "lastModified": 1757436102
   },
-  "starship-config": {
-    "type": "git",
-    "url": "https://github.com/greyxp1/starship-config",
-    "ref": "refs/heads/main",
-    "rev": "8b4f35f152bb2412680c28cb71946b0f79c15162",
-    "narHash": "sha256-btE2tvEl67BuOGLbfhzDocGftrXj4XSqzbpftP4QGeY=",
-    "lastModified": 1791919159
-  },
   "sunshine-nixpkgs": {
     "type": "github",
     "owner": "nixos",

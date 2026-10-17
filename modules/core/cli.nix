@@ -21,11 +21,7 @@
     }
   ];
 
-  environment = {
-    systemPackages = with pkgs; [curl wget fzf fd ripgrep microfetch zoxide];
-    etc."starship.toml".source = (pkgs.formats.toml {}).generate "starship.toml" config.programs.starship.settings;
-    variables.STARSHIP_CONFIG = "/etc/starship.toml";
-  };
+  environment.systemPackages = with pkgs; [curl wget fzf fd ripgrep microfetch zoxide];
 
   programs = {
     tack.enable = true;
@@ -73,11 +69,6 @@
     ncr = {
       enable = true;
       flake = config.programs.nh.flake;
-    };
-
-    starship = {
-      enable = true;
-      settings = fromTOML (builtins.readFile "${inputs.starship-config}/starship.toml");
     };
   };
 }
