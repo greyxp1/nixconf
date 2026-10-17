@@ -11,6 +11,28 @@
   supportedAlmaMajors = lib.concatStringsSep "|" almaMajors;
   supportedAlmaMajorsText = lib.concatStringsSep " or " almaMajors;
   storeScriptUnits = ["alma-host.service" "system-manager-path.service" "nh-clean.service"];
+  enabledUnits = lib.filterAttrs (_: unit: unit.enable) config.systemd.units;
+  # Match System Manager's target substitution while keeping unit files local.
+  substituteTarget = target:
+    if builtins.elem target ["multi-user.target" "timers.target"]
+    then "system-manager.target"
+    else target;
+  unitDependencies = field: directive:
+    lib.listToAttrs (lib.concatLists (lib.mapAttrsToList (
+        name: unit:
+          map (
+            target:
+              lib.nameValuePair "systemd/system/${substituteTarget target}.d/system-manager-${name}-${field}.conf" {
+                mode = "0644";
+                replaceExisting = true;
+                text = ''
+                  [Unit]
+                  ${directive}=${name}
+                '';
+              }
+          ) (unit.${field} or [])
+      )
+      enabledUnits));
 in {
   # nh clean all does not discover System Manager's nested profile directory.
   systemd.services.nh-clean.serviceConfig.ExecStartPre =
@@ -98,5 +120,7 @@ in {
           mode = "0644";
           replaceExisting = true;
         }
-    ) (lib.filterAttrs (_: unit: unit.enable) config.systemd.units);
+    ) enabledUnits
+    // unitDependencies "wantedBy" "Wants"
+    // unitDependencies "requiredBy" "Requires";
 }
