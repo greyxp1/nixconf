@@ -28,6 +28,12 @@ in {
     "virt-viewer"
   ];
   alma.services = virtualizationSockets;
+  systemd.maskedUnits = [
+    "libvirtd.service"
+    "libvirtd.socket"
+    "libvirtd-ro.socket"
+    "libvirtd-admin.socket"
+  ];
   alma.activation.virtualisation = ''
     # Keep VM images on Alma's large /home filesystem without granting QEMU
     # traversal access to the user's private home directory.
