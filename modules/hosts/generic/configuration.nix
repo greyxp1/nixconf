@@ -6,7 +6,16 @@ in {
       (inputs.import-tree ../../core)
       (inputs.import-tree ../../desktop)
     ];
+
     services.qemuGuest.enable = true;
+    disko.devices.disk.main = {
+      device = import ./_device.nix;
+      content.partitions.swap = {
+        size = "8G";
+        content.type = "swap";
+      };
+    };
+
     boot = {
       kernelModules = ["virtio_gpu"];
       initrd.availableKernelModules = [
@@ -21,13 +30,6 @@ in {
         "virtio_blk"
         "virtio_scsi"
       ];
-    };
-    disko.devices.disk.main = {
-      device = import ./_device.nix;
-      content.partitions.swap = {
-        size = "8G";
-        content.type = "swap";
-      };
     };
   };
 }

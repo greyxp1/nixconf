@@ -10,26 +10,16 @@ in {
 
     services.upower.enable = true;
     programs.git.enable = true;
-    users.users.grey.openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINNpHu5c/ykb/08PRxkU63jqkrn/F7FbSzHh6QqfnwC3 grey@desktop"
-    ];
+    users.users.grey.openssh.authorizedKeys.keys = ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINNpHu5c/ykb/08PRxkU63jqkrn/F7FbSzHh6QqfnwC3 grey@desktop"];
     networking.firewall = {
       extraCommands = "iptables -I nixos-fw 1 -s 192.168.1.3/32 -p tcp --dport 22 -j nixos-fw-accept";
       extraStopCommands = "iptables -D nixos-fw -s 192.168.1.3/32 -p tcp --dport 22 -j nixos-fw-accept || true";
     };
-    programs = {
-      noctalia.settings = {
-        bar.default = {
-          margin_ends = lib.mkForce 32;
-          scale = lib.mkForce 1.0;
-          start = lib.mkForce [];
-        };
-        plugin_settings."noctalia/screen_recorder".replay_enabled = lib.mkForce false;
-        hooks.started = lib.mkForce ''
-          noctalia msg session lock
-          systemctl --user start xdg-desktop-portal.service niri-screenshare.service
-        '';
-      };
+
+    boot.loader = {
+      systemd-boot.enable = false;
+      efi.canTouchEfiVariables = false;
+      grub.enable = true;
     };
 
     disko.devices.disk.main = {
@@ -52,10 +42,19 @@ in {
       };
     };
 
-    boot.loader = {
-      systemd-boot.enable = false;
-      efi.canTouchEfiVariables = false;
-      grub.enable = true;
+    programs = {
+      noctalia.settings = {
+        bar.default = {
+          margin_ends = lib.mkForce 32;
+          scale = lib.mkForce 1.0;
+          start = lib.mkForce [];
+        };
+        plugin_settings."noctalia/screen_recorder".replay_enabled = lib.mkForce false;
+        hooks.started = lib.mkForce ''
+          noctalia msg session lock
+          systemctl --user start xdg-desktop-portal.service niri-screenshare.service
+        '';
+      };
     };
   });
 }

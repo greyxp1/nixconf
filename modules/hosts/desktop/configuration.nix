@@ -3,12 +3,9 @@
 in {
   flake.nixosConfigurations.desktop = mkHost "desktop" {
     disko.devices.disk.main.device = import ./_device.nix;
-    services.scx = {
-      enable = true;
-      scheduler = "scx_cosmos";
-    };
     hardware.cpu.amd.updateMicrocode = true;
     powerManagement.cpuFreqGovernor = "performance";
+
     boot = {
       kernelModules = ["kvm-amd" "ntsync"];
       kernelParams = [
@@ -20,6 +17,11 @@ in {
         systemd.network.wait-online.enable = false;
         availableKernelModules = ["nvme"];
       };
+    };
+
+    services.scx = {
+      enable = true;
+      scheduler = "scx_cosmos";
     };
 
     imports = [
