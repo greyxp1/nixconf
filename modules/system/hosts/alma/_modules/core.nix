@@ -27,7 +27,11 @@
   environment.etc = {
     "starship.toml".source = nixos.environment.etc."starship.toml".source;
     gitconfig.text = nixos.environment.etc.gitconfig.text;
-    "ssh/ssh_config".text = nixos.environment.etc."ssh/ssh_config".text;
+    "ssh/ssh_config" = {
+      text = nixos.environment.etc."ssh/ssh_config".text;
+      mode = "0644";
+      replaceExisting = true;
+    };
     "xdg/lazygit/config.yml".source = nixos.environment.etc."xdg/lazygit/config.yml".source;
     "bat/config".source = nixos.environment.etc."bat/config".source;
   };
