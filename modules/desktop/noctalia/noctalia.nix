@@ -1,5 +1,5 @@
 {pkgs, ...}: {
-  imports = [../../_nixos-modules/noctalia.nix];
+  imports = [../../_custom-modules/noctalia.nix];
   programs.noctalia = {
     enable = true;
     systemd.enable = true;

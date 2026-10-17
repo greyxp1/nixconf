@@ -3,7 +3,7 @@
   pkgs,
   ...
 }: {
-  imports = [../_nixos-modules/monstar.nix];
+  imports = [../_custom-modules/monstar.nix];
   programs.monstar.enable = true;
   fonts.packages = [pkgs.jetbrains-mono pkgs.nerd-fonts.symbols-only];
   programs.monstar.package = inputs.monstar.packages.${pkgs.stdenv.hostPlatform.system}.default;

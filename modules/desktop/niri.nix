@@ -11,7 +11,7 @@
   tesseract = pkgs.tesseract.override {enableLanguages = ["eng"];};
 in {
   imports = [
-    ../_nixos-modules/niri.nix
+    ../_custom-modules/niri.nix
     inputs.niri-screenshare.nixosModules.default
     inputs.perch.nixosModules.default
   ];

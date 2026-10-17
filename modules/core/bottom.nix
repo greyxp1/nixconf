@@ -4,7 +4,7 @@
   pkgs,
   ...
 }: {
-  imports = [../_nixos-modules/bottom.nix];
+  imports = [../_custom-modules/bottom.nix];
   programs.bottom.enable = true;
   programs.bottom.settings = {
     styles = (lib.importTOML "${inputs.catppuccin.packages.${pkgs.stdenv.hostPlatform.system}.bottom}/mocha.toml").styles;

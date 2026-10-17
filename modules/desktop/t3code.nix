@@ -10,7 +10,7 @@
   runtimeDir = "/run/user/${toString config.users.users.grey.uid}";
   opencodeConfig = toString (pkgs.writeText "opencode.json" (builtins.toJSON {permission = "allow";}));
 in {
-  imports = [../_nixos-modules/codex.nix];
+  imports = [../_custom-modules/codex.nix];
 
   environment.systemPackages = [
     t3code

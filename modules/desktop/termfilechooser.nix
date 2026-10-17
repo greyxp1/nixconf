@@ -3,7 +3,7 @@
   lib,
   ...
 }: {
-  imports = [../_nixos-modules/termfilechooser.nix];
+  imports = [../_custom-modules/termfilechooser.nix];
   xdg.portal.termfilechooser.enable = true;
   xdg.portal.config.niri."org.freedesktop.impl.portal.FileChooser" = lib.mkForce ["termfilechooser"];
   xdg.portal.termfilechooser.settings.filechooser = {

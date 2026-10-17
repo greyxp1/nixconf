@@ -3,7 +3,7 @@
   pkgs,
   ...
 }: {
-  imports = [../_nixos-modules/mpv.nix];
+  imports = [../_custom-modules/mpv.nix];
   programs.mpv.enable = true;
   environment.systemPackages = [inputs.mpv-smartcut.packages.${pkgs.stdenv.hostPlatform.system}.default];
   programs.mpv.settings = {

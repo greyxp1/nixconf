@@ -3,7 +3,7 @@
   pkgs,
   ...
 }: {
-  imports = [../_nixos-modules/helix.nix];
+  imports = [../_custom-modules/helix.nix];
   programs.helix = {
     enable = true;
     defaultEditor = true;

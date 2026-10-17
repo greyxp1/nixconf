@@ -5,7 +5,7 @@
   ...
 }: {
   imports = [
-    ../_nixos-modules/tlrc.nix
+    ../_custom-modules/tlrc.nix
     inputs.ncr.nixosModules.default
     inputs.nix-index-database.nixosModules.nix-index
   ];
