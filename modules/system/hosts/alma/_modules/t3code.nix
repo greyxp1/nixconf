@@ -10,7 +10,14 @@
     YDOTOOL_SOCKET = nixos.environment.variables.YDOTOOL_SOCKET;
   };
   environment.etc =
-    lib.mapAttrs (_: file: {inherit (file) source;})
+    {
+      "systemd/user/app-t3code.slice" = {
+        source = "${nixos.systemd.user.units."app-t3code.slice".unit}/app-t3code.slice";
+        mode = "0644";
+        replaceExisting = true;
+      };
+    }
+    // lib.mapAttrs (_: file: {inherit (file) source;})
     (lib.filterAttrs (name: _: lib.hasPrefix "codex/" name) nixos.environment.etc);
   systemd.services.t3code =
     (lib.getAttrs ["description" "wantedBy" "after" "environment" "serviceConfig"]
