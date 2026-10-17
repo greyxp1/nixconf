@@ -148,7 +148,6 @@ install_alma() {
   "$system_manager/bin/system-manager" activate --store-path "$system_config" --sudo
   [[ ! -L result ]] || /usr/bin/rm -f result
   restart_and_wait_for_unit alma-host.service 900
-  restart_and_wait_for_unit home-manager-grey.service 300
 
   echo "Alma setup for grey is complete. Verify Niri on tty1 before rebooting; tty2 remains the recovery console."
 }
