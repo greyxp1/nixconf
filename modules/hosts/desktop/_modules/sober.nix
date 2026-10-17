@@ -1,5 +1,6 @@
 {inputs, ...}: {
   imports = [inputs.nix-flatpak.nixosModules.nix-flatpak];
+  preservation.preserveAt."/persistent".directories = ["/var/lib/flatpak"];
   environment.sessionVariables.XDG_DATA_DIRS = ["/var/lib/flatpak/exports/share"];
   services.flatpak = {
     enable = true;

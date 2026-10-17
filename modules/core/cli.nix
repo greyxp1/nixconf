@@ -10,22 +10,21 @@
     inputs.nix-index-database.nixosModules.nix-index
   ];
 
+  services.tailscale = {
+    enable = true;
+    extraSetFlags = ["--operator=grey"];
+  };
+  preservation.preserveAt."/persistent".directories = [
+    {
+      directory = "/var/lib/tailscale";
+      mode = "0700";
+    }
+  ];
+
   environment = {
     systemPackages = with pkgs; [curl wget fzf fd ripgrep microfetch zoxide];
     etc."starship.toml".source = (pkgs.formats.toml {}).generate "starship.toml" config.programs.starship.settings;
     variables.STARSHIP_CONFIG = "/etc/starship.toml";
-  };
-
-  services = {
-    openssh = {
-      enable = true;
-      openFirewall = true;
-      startWhenNeeded = true;
-    };
-    tailscale = {
-      enable = true;
-      extraSetFlags = ["--operator=grey"];
-    };
   };
 
   programs = {
@@ -50,18 +49,6 @@
           };
         };
       };
-    };
-
-    ssh = {
-      startAgent = true;
-      extraConfig = ''
-        Host *
-          AddKeysToAgent yes
-          IdentitiesOnly yes
-        Host github.com gitlab.com codeberg.org
-          User git
-          IdentityFile ~/.ssh/id_ed25519
-      '';
     };
 
     nh = {

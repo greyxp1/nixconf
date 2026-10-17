@@ -9,6 +9,7 @@
     inherit pkgs;
     specialArgs = {inherit inputs;};
     modules = [
+      inputs.preservation.nixosModules.preservation
       {
         system.stateVersion = "26.11";
         networking.hostName = "alma";
@@ -29,6 +30,7 @@
       ../../../core/git.nix
       ../../../core/helix.nix
       ../../../core/nushell.nix
+      ../../../core/ssh.nix
       ../../../core/yazi.nix
       ../../../desktop/helium.nix
       ../../../desktop/monstar.nix
