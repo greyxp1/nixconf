@@ -33,10 +33,7 @@ bootstrap_alma_sudo() {
 
 update_alma_checkout() {
   local repo_dir="$1"
-  local backup_branch
   local branch
-  local previous_head
-  local remote_head
 
   if [[ -n $(git -C "$repo_dir" status --porcelain --untracked-files=all) ]]; then
     echo "Refusing to update a checkout with local changes: $repo_dir" >&2
@@ -51,21 +48,8 @@ update_alma_checkout() {
   fi
 
   echo "==> Updating existing checkout: $repo_dir"
-  previous_head=$(git -C "$repo_dir" rev-parse HEAD)
   git -C "$repo_dir" fetch --prune origin main
-  remote_head=$(git -C "$repo_dir" rev-parse FETCH_HEAD)
-
-  if [[ $previous_head == "$remote_head" ]]; then
-    return
-  fi
-  if ! git -C "$repo_dir" merge-base --is-ancestor "$previous_head" "$remote_head"; then
-    backup_branch="alma-installer-backup/${previous_head:0:12}"
-    if ! git -C "$repo_dir" show-ref --verify --quiet "refs/heads/$backup_branch"; then
-      git -C "$repo_dir" branch "$backup_branch" "$previous_head"
-    fi
-    echo "==> Preserved rewritten local history as $backup_branch"
-  fi
-  git -C "$repo_dir" reset --hard "$remote_head"
+  git -C "$repo_dir" rebase FETCH_HEAD
 }
 
 build_alma_system_config() {
