@@ -40,6 +40,13 @@ in {
         vm.page-cluster=0
       '';
     };
+    "tmpfiles.d/non-nixos-gpu.conf" = {
+      mode = "0644";
+      replaceExisting = true;
+      text = ''
+        L+ /run/opengl-driver - - - - ${drivers}
+      '';
+    };
     "systemd/zram-generator.conf" = {
       mode = "0644";
       replaceExisting = true;
@@ -93,6 +100,5 @@ in {
     /usr/bin/journalctl --flush
     /usr/bin/systemctl try-restart nix-daemon.service
     /usr/bin/systemctl start dev-zram0.swap
-    /usr/bin/ln -sfn ${drivers} /run/opengl-driver
   '';
 }
