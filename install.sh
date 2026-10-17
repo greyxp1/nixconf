@@ -63,7 +63,7 @@ build_alma_system_config() {
   NIXCONF_GID="$gid" \
   NIXCONF_PRIMARY_GROUP="$primary_group" \
     nix build --impure --no-link --print-out-paths \
-      --file "$repo_dir/modules/system/hosts/alma/_build.nix"
+      --file "$repo_dir/modules/hosts/alma/_build.nix"
 }
 
 install_alma() {
@@ -137,7 +137,7 @@ install_alma() {
 }
 
 configure_alma_nix() {
-  local cache_file="$1/modules/system/hosts/alma/_cache.nix"
+  local cache_file="$1/modules/hosts/alma/_cache.nix"
   local substituters
   local trusted_public_keys
 
@@ -297,14 +297,14 @@ echo "==> Fetching config..."
 git clone -q "$REPO" "$WORK_DIR"
 
 # Write the device consumed directly by the host's Disko configuration.
-echo "\"$DEV_FINAL\"" > "$WORK_DIR/modules/system/hosts/$HOST/_device.nix"
+echo "\"$DEV_FINAL\"" > "$WORK_DIR/modules/hosts/$HOST/_device.nix"
 echo "==> Using device: $DEV_FINAL"
 
 cache_attr() {
   nix eval --raw \
     --impure \
     --extra-experimental-features "nix-command" \
-    --expr "builtins.concatStringsSep \" \" (import $WORK_DIR/modules/system/_cache.nix).\"$1\""
+    --expr "builtins.concatStringsSep \" \" (import $WORK_DIR/modules/core/_cache.nix).\"$1\""
 }
 
 NIX_OPTS=(
