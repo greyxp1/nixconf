@@ -21,8 +21,6 @@ url = "gh:hercules-ci/flake-parts"
 follows = { nixpkgs-lib = "nixpkgs" }
 [inputs.nixpkgs]
 url = "gh:nixos/nixpkgs/nixos-unstable"
-[inputs.home-manager]
-url = "gh:nix-community/home-manager"
 [inputs.sunshine-nixpkgs]
 url = "gh:nixos/nixpkgs/fd29d673b014a4f88f9bb9ec628b46055243cf96"
 [inputs.libvirtualhid]

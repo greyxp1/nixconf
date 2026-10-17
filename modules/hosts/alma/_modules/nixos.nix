@@ -70,15 +70,11 @@
             bar.default.margin_ends = lib.mkForce 415;
             plugin_settings."noctalia/screen_recorder".video_codec = lib.mkForce "h264";
           };
-          home-manager.sharedModules = [
-            {
-              programs.helix.languages.language-server.nixd.config = {
-                nixpkgs.expr = "import ${pkgs.path} {}";
-                options.nixos.expr =
-                  lib.mkForce "(builtins.getFlake \"path:${config.programs.nh.flake}\").systemConfigs.alma.options";
-              };
-            }
-          ];
+          programs.helix.languages.language-server.nixd.config = {
+            nixpkgs.expr = "import ${pkgs.path} {}";
+            options.nixos.expr =
+              lib.mkForce "(builtins.getFlake \"path:${config.programs.nh.flake}\").systemConfigs.alma.options";
+          };
         };
       })
     ];
@@ -90,11 +86,6 @@
     extended.options.environment.systemPackages.definitionsWithLocations);
 in {
   _module.args.nixos = nixos;
-  alma.activation.finish = lib.mkAfter (lib.concatMapStringsSep "\n" (user: ''
-    /usr/sbin/runuser -u ${lib.escapeShellArg user} -- /usr/bin/env \
-      USER=${lib.escapeShellArg user} LOGNAME=${lib.escapeShellArg user} \
-      ${nixos.home-manager.users.${user}.home.activationPackage}/activate --driver-version 1
-  '') (builtins.attrNames nixos.home-manager.users));
   # Install program additions without replacing Alma's native system tools.
   environment.systemPackages = builtins.filter (package: toString package != toString nixos.services.sunshine.package) packages;
 }
