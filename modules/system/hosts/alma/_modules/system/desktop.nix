@@ -1,5 +1,6 @@
 {
   helium,
+  lib,
   pkgs,
   ...
 }: let
@@ -49,7 +50,18 @@ in {
         swap-priority = 5
       '';
     };
-  };
+  } // lib.genAttrs (map (service: "systemd/user/${service}.service.d/native-data.conf") [
+    "pipewire"
+    "pipewire-pulse"
+    "wireplumber"
+  ]) (_: {
+    mode = "0644";
+    replaceExisting = true;
+    text = ''
+      [Service]
+      Environment=XDG_DATA_DIRS=/usr/local/share:/usr/share
+    '';
+  });
   systemd.tmpfiles.rules = ["d /var/log/journal 2755 root systemd-journal -"];
   alma.activation.policy = ''
     install_helium_policy() {
