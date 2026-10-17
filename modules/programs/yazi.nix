@@ -99,20 +99,15 @@
       };
     };
 
-    wrappers.termfilechooser = {pkgs, ...}: {
-      install.modules.nixos = {
-        config,
-        lib,
-        ...
-      }: {
-        xdg.portal = {
-          enable = true;
-          extraPortals = [config.wrappers.termfilechooser.wrapper];
-          config.niri."org.freedesktop.impl.portal.FileChooser" = lib.mkForce ["termfilechooser"];
-        };
-      };
-      imports = ["${inputs.wrapper-xdg-desktop-portal-termfilechooser}/wrapperModules/x/xdg-desktop-portal-termfilechooser/module.nix"];
-      settings.filechooser = {
+    nixosModules.termfilechooser = {
+      pkgs,
+      lib,
+      ...
+    }: {
+      imports = [./_nixos-modules/termfilechooser.nix];
+      xdg.portal.termfilechooser.enable = true;
+      xdg.portal.config.niri."org.freedesktop.impl.portal.FileChooser" = lib.mkForce ["termfilechooser"];
+      xdg.portal.termfilechooser.settings.filechooser = {
         cmd = "${pkgs.xdg-desktop-portal-termfilechooser}/share/xdg-desktop-portal-termfilechooser/yazi-wrapper.sh";
         default_dir = "$HOME";
         env = "TERMCMD=monstar -o background-opacity=0.6 --title=filepicker -e";

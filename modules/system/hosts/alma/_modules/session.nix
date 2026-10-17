@@ -28,6 +28,6 @@
     sudo /usr/bin/systemctl restart alma-host.service
   '';
 in {
-  imports = [(import ./shell.nix {inherit inputs;})];
+  imports = [./shell.nix];
   environment.systemPackages = [alma-rebuild];
 }

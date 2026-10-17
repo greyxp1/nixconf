@@ -1,12 +1,10 @@
 {inputs, ...}: {
-  flake.wrappers.monstar = {pkgs, ...}: {
-    install.modules.nixos = {pkgs, ...}: {
-      wrappers.monstar.enable = true;
-      fonts.packages = [pkgs.jetbrains-mono pkgs.nerd-fonts.symbols-only];
-    };
-    imports = ["${inputs.wrapper-monstar}/wrapperModules/m/monstar/module.nix"];
-    package = inputs.monstar.packages.${pkgs.stdenv.hostPlatform.system}.default;
-    settings = {
+  flake.nixosModules.monstar = {pkgs, ...}: {
+    imports = [./_nixos-modules/monstar.nix];
+    programs.monstar.enable = true;
+    fonts.packages = [pkgs.jetbrains-mono pkgs.nerd-fonts.symbols-only];
+    programs.monstar.package = inputs.monstar.packages.${pkgs.stdenv.hostPlatform.system}.default;
+    programs.monstar.settings = {
       font-family = "JetBrains Mono";
       font-size = 14;
       background-opacity = 0.8;

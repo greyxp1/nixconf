@@ -13,7 +13,7 @@
       nixosModules.nushell
       nixosModules.starship
       nixosModules.helix
-      wrappers.bottom.install
+      nixosModules.bottom
     ];
   };
 }

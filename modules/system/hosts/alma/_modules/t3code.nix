@@ -9,7 +9,9 @@
     OPENCODE_CONFIG = nixos.environment.variables.OPENCODE_CONFIG;
     YDOTOOL_SOCKET = nixos.environment.variables.YDOTOOL_SOCKET;
   };
-  environment.etc."codex/config.toml".source = nixos.environment.etc."codex/config.toml".source;
+  environment.etc =
+    lib.mapAttrs (_: file: {inherit (file) source;})
+    (lib.filterAttrs (name: _: lib.hasPrefix "codex/" name) nixos.environment.etc);
   systemd.services.t3code =
     (lib.getAttrs ["description" "wantedBy" "after" "environment" "serviceConfig"]
       nixos.systemd.services.t3code)

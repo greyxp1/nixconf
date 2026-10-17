@@ -22,18 +22,46 @@
   };
   extended = base.extendModules {
     modules =
-      (with inputs.self.nixosModules; [cli git ssh helix lazygit yazi starship theme t3code helium scrcpy remote-client sunshine])
+      (with inputs.self.nixosModules; [cli git ssh helix lazygit yazi starship theme t3code helium scrcpy remote-client sunshine bottom monstar mpv niri noctalia zsh termfilechooser])
       ++ [
-        ({config, ...}: {
-          home-manager.sharedModules = [
-            {
-              programs.helix.languages.language-server.nixd.config = {
-                nixpkgs.expr = "import ${pkgs.path} {}";
-                options.nixos.expr =
-                  lib.mkForce "(builtins.getFlake \"path:${config.programs.nh.flake}\").systemConfigs.alma.options";
+        ({config, ...}: let
+          resizeDisk = widget: widget // lib.optionalAttrs ((widget.type or "") == "disk") {ratio = 2;} // lib.optionalAttrs (widget ? child) {child = map resizeDisk widget.child;};
+        in {
+          options.programs.bottom.settings = lib.mkOption {
+            apply = settings:
+              lib.recursiveUpdate settings {
+                row = map resizeDisk settings.row;
+                disk.mount_filter.is_list_ignored = true;
               };
-            }
-          ];
+          };
+          config = {
+            programs.niri.settings.binds = {
+              "Mod+E" = lib.mkForce {
+                repeat = false;
+                action.spawn = ["monstar" "-e" "yazi"];
+              };
+              "Mod+Shift+O" = {
+                repeat = false;
+                action.spawn = "niri-swap-outputs";
+              };
+            };
+            programs.noctalia.settings = {
+              bar.default.margin_ends = lib.mkForce 415;
+              plugin_settings."noctalia/screen_recorder".video_codec = lib.mkForce "h264";
+            };
+            programs.zsh.loginShellFinish = ''
+              if [[ $USER == grey && $TTY == /dev/tty1 ]]; then niri-session -l; fi
+            '';
+            home-manager.sharedModules = [
+              {
+                programs.helix.languages.language-server.nixd.config = {
+                  nixpkgs.expr = "import ${pkgs.path} {}";
+                  options.nixos.expr =
+                    lib.mkForce "(builtins.getFlake \"path:${config.programs.nh.flake}\").systemConfigs.alma.options";
+                };
+              }
+            ];
+          };
         })
       ];
   };

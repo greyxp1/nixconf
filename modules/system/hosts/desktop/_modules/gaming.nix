@@ -14,10 +14,10 @@
   };
 
   environment.systemPackages = with pkgs; [pandora-launcher heroic];
-  wrappers.niri.settings = {
+  programs.niri.settings = {
     outputs.DP-2 = {
       mode = "2560x1440@170.071";
-      variable-refresh-rate = _: {props.on-demand = true;};
+      variable-refresh-rate.on-demand = true;
     };
     window-rules = [
       {
@@ -38,12 +38,10 @@
       {
         matches = [{"app-id" = ''^notificationtoasts_\d+_desktop$'';}];
         open-floating = true;
-        default-floating-position = _: {
-          props = {
-            relative-to = "bottom-right";
-            x = 12;
-            y = 12;
-          };
+        default-floating-position = {
+          relative-to = "bottom-right";
+          x = 12;
+          y = 12;
         };
       }
     ];

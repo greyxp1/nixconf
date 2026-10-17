@@ -1,15 +1,12 @@
 {inputs, ...}: {
-  flake.wrappers.bottom = {
+  flake.nixosModules.bottom = {
     lib,
     pkgs,
-    wlib,
     ...
   }: {
-    config.install.modules.nixos = {
-      wrappers.bottom.enable = true;
-    };
-    imports = [wlib.wrapperModules.bottom];
-    config.settings = {
+    imports = [./_nixos-modules/bottom.nix];
+    programs.bottom.enable = true;
+    programs.bottom.settings = {
       styles = (lib.importTOML "${inputs.catppuccin.packages.${pkgs.stdenv.hostPlatform.system}.bottom}/mocha.toml").styles;
       processes = {
         columns = ["Name" "CPU%" "GPU%" "Mem%" "GMem%"];

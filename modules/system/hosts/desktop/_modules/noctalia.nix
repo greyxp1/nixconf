@@ -1,5 +1,5 @@
 {
-  wrappers.noctalia.settings.lockscreen_widgets = {
+  programs.noctalia.settings.lockscreen_widgets = {
     enabled = true;
     widget = {
       "lockscreen-login-box@DP-2" = {

@@ -7,7 +7,7 @@
     update.onActivation = true;
   };
 
-  wrappers.niri.settings.window-rules = [
+  programs.niri.settings.window-rules = [
     {
       matches = [{app-id = "^org\\.vinegarhq\\.Sober$";}];
       open-fullscreen = true;

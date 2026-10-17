@@ -1,20 +1,10 @@
 {inputs, ...}: {
-  perSystem = {system, ...}: {
-    packages.mpv-smartcut = inputs.mpv-smartcut.packages.${system}.default;
-  };
-
-  flake.wrappers.mpv = {
-    lib,
-    pkgs,
-    wlib,
-    ...
-  }: {
-    install.modules.nixos = {pkgs, ...}: {
-      wrappers.mpv.enable = true;
-      environment.systemPackages = [inputs.mpv-smartcut.packages.${pkgs.stdenv.hostPlatform.system}.default];
-    };
-    imports = [wlib.wrapperModules.mpv];
-    "mpv.conf".content = lib.generators.toKeyValue {} {
+  perSystem = {system, ...}: {packages.mpv-smartcut = inputs.mpv-smartcut.packages.${system}.default;};
+  flake.nixosModules.mpv = {pkgs, ...}: {
+    imports = [./_nixos-modules/mpv.nix];
+    programs.mpv.enable = true;
+    environment.systemPackages = [inputs.mpv-smartcut.packages.${pkgs.stdenv.hostPlatform.system}.default];
+    programs.mpv.settings = {
       vo = "gpu";
       gpu-context = "wayland";
       hwdec = "auto-safe";
@@ -32,14 +22,17 @@
       watch-later-options-remove = "sid";
       ytdl-format = "bestvideo+bestaudio";
     };
-    script = {
-      modernz.path = pkgs.mpvScripts.modernz;
-      thumbfast.path = pkgs.mpvScripts.thumbfast;
-      mpris.path = pkgs.mpvScripts.mpris;
-      visualizer.path = pkgs.mpvScripts.visualizer;
-      auto-sub-sync.path = inputs.mpv-auto-sub-sync.packages.${pkgs.stdenv.hostPlatform.system}.default;
-      "mpv-smartcut.lua".path = "${inputs.mpv-smartcut.packages.${pkgs.stdenv.hostPlatform.system}.default}/share/mpv/scripts/mpv-smartcut.lua";
-      "short-loop.lua".content = ''
+    programs.mpv.scripts = [
+      pkgs.mpvScripts.modernz
+      pkgs.mpvScripts.thumbfast
+      pkgs.mpvScripts.mpris
+      pkgs.mpvScripts.visualizer
+      inputs.mpv-auto-sub-sync.packages.${pkgs.stdenv.hostPlatform.system}.default
+      (pkgs.runCommand "mpv-smartcut-script" {passthru.scriptName = "mpv-smartcut.lua";} ''
+        mkdir -p $out/share/mpv/scripts
+        ln -s ${inputs.mpv-smartcut.packages.${pkgs.stdenv.hostPlatform.system}.default}/share/mpv/scripts/mpv-smartcut.lua $out/share/mpv/scripts/
+      '')
+      ((pkgs.writeTextDir "share/mpv/scripts/short-loop.lua" ''
         local function has_real_video()
           local tracks = mp.get_property_native("track-list")
           if not tracks then return false end
@@ -59,12 +52,13 @@
         end
 
         mp.register_event("file-loaded", maybe_loop)
-      '';
+      '').overrideAttrs (_: {passthru.scriptName = "short-loop.lua";}))
+    ];
+
+    programs.mpv.scriptOpts.modernz = {
+      window_controls = "no";
+      vidscale = "no";
+      sub_margins = "no";
     };
-    configDir."script-opts/modernz.conf".content = ''
-      window_controls=no
-      vidscale=no
-      sub_margins=no
-    '';
   };
 }

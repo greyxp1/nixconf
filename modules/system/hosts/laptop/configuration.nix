@@ -16,7 +16,7 @@ in {
       extraCommands = "iptables -I nixos-fw 1 -s 192.168.1.3/32 -p tcp --dport 22 -j nixos-fw-accept";
       extraStopCommands = "iptables -D nixos-fw -s 192.168.1.3/32 -p tcp --dport 22 -j nixos-fw-accept || true";
     };
-    wrappers = {
+    programs = {
       noctalia.settings = {
         bar.default = {
           margin_ends = lib.mkForce 32;

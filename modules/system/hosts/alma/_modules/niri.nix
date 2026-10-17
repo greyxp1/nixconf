@@ -1,6 +1,7 @@
 {
   inputs,
   lib,
+  nixos,
   pkgs,
   ...
 }: let
@@ -39,21 +40,8 @@
       niri msg output "$left_output" position set "$((left_x + right_width + output_gap))" "$right_y"
     '';
   };
-  almaNiri = inputs.self.wrappers.niri.wrap {
-    inherit pkgs;
-    settings.binds = {
-      "Mod+E" = lib.mkForce (_: {
-        props.repeat = false;
-        content.spawn = ["monstar" "-e" "yazi"];
-      });
-      "Mod+Shift+O" = _: {
-        props.repeat = false;
-        content.spawn = "niri-swap-outputs";
-      };
-    };
-  };
-  wrappers = inputs.self.wrappers;
-  termfilechooser = wrappers.termfilechooser.wrap {inherit pkgs;};
+  almaNiri = nixos.programs.niri.package;
+  termfilechooser = nixos.xdg.portal.termfilechooser.finalPackage;
   screenshots = pkgs.niri-screenshare.override {withPicker = false;};
   sessionService = command: {
     Unit = {
@@ -67,9 +55,6 @@
     Install.WantedBy = "graphical-session.target";
   };
   services = {
-    vellum = lib.recursiveUpdate (sessionService "${inputs.vellum.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/vellum") {
-      Service.Environment = "LD_LIBRARY_PATH=${lib.makeLibraryPath [pkgs.vulkan-loader]}";
-    };
     perch = sessionService "${inputs.perch.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/perch --daemon";
     xdg-desktop-portal = {
       Service = {
@@ -105,8 +90,14 @@ in {
     (import ./_userServices.nix services)
   ];
   environment.etc = {
+    "niri/config.kdl".source = nixos.programs.niri.configFile;
     "systemd/user/niri.service" = {
       source = "${almaNiri}/share/systemd/user/niri.service";
+      mode = "0644";
+      replaceExisting = true;
+    };
+    "systemd/user/niri.service.d/overrides.conf" = {
+      source = "${nixos.systemd.user.units."niri.service".unit}/niri.service";
       mode = "0644";
       replaceExisting = true;
     };

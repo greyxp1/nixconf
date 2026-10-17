@@ -10,11 +10,11 @@
       nixosModules.remote-client
       nixosModules.sunshine
       nixosModules.t3code
-      wrappers.niri.install
-      wrappers.noctalia.install
-      wrappers.monstar.install
-      wrappers.mpv.install
-      wrappers.termfilechooser.install
+      nixosModules.niri
+      nixosModules.noctalia
+      nixosModules.monstar
+      nixosModules.mpv
+      nixosModules.termfilechooser
     ];
     environment.systemPackages = [pkgs.sshfs];
     services.tailscale.extraSetFlags = ["--advertise-exit-node=false"];

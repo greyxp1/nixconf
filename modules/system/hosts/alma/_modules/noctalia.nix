@@ -1,17 +1,4 @@
-{
-  pkgs,
-  inputs,
-  lib,
-  ...
-}: let
-  noctalia = inputs.self.wrappers.noctalia.wrap {
-    inherit pkgs;
-    settings = {
-      bar.default.margin_ends = lib.mkForce 415;
-      plugin_settings."noctalia/screen_recorder".video_codec = lib.mkForce "h264";
-    };
-  };
-in {
+{nixos, ...}: {
   imports = [
     (import ./_userServices.nix {
       noctalia = {
@@ -19,13 +6,9 @@ in {
           After = "graphical-session.target";
           PartOf = "graphical-session.target";
         };
-        Service = {
-          ExecStart = "${noctalia}/bin/noctalia";
-          Restart = "on-failure";
-        };
+        Service = nixos.systemd.user.services.noctalia.serviceConfig;
         Install.WantedBy = "graphical-session.target";
       };
     })
   ];
-  environment.systemPackages = [noctalia pkgs.gpu-screen-recorder];
 }

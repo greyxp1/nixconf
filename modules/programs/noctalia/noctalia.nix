@@ -1,27 +1,13 @@
 {inputs, ...}: {
-  flake.wrappers.noctalia = {...}: {
-    install.modules.nixos = {
-      config,
-      pkgs,
-      ...
-    }: {
-      wrappers.noctalia.enable = true;
-      environment.systemPackages = [pkgs.gpu-screen-recorder];
-      security.pam.services.noctalia = {};
-      systemd.user.services.noctalia = {
-        enableDefaultPath = false;
-        description = "Noctalia desktop shell";
-        after = ["graphical-session.target"];
-        partOf = ["graphical-session.target"];
-        wantedBy = ["graphical-session.target"];
-        serviceConfig = {
-          ExecStart = "${config.wrappers.noctalia.wrapper}/bin/noctalia";
-          Restart = "on-failure";
-        };
-      };
+  flake.nixosModules.noctalia = {pkgs, ...}: {
+    imports = [../_nixos-modules/noctalia.nix];
+    programs.noctalia = {
+      enable = true;
+      systemd.enable = true;
     };
-    imports = ["${inputs.wrapper-noctalia-shell}/wrapperModules/n/noctalia-shell/module.nix"];
-    settings = {
+    environment.systemPackages = [pkgs.gpu-screen-recorder];
+    security.pam.services.noctalia = {};
+    programs.noctalia.settings = {
       desktop_widgets.enabled = false;
       notification.background_opacity = 0.9;
       system.monitor.enabled = false;

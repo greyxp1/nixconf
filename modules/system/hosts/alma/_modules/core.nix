@@ -1,15 +1,9 @@
 {
   inputs,
-  lib,
   nixos,
   pkgs,
   ...
-}: let
-  resizeDisk = widget:
-    widget
-    // lib.optionalAttrs ((widget.type or "") == "disk") {ratio = 2;}
-    // lib.optionalAttrs (widget ? child) {child = map resizeDisk widget.child;};
-in {
+}: {
   imports = [
     ./nixos.nix
     "${inputs.nixpkgs}/nixos/modules/programs/nh.nix"
@@ -40,10 +34,5 @@ in {
   programs.nh = nixos.programs.nh;
   environment.systemPackages = [
     pkgs.openssh
-    (inputs.self.wrappers.bottom.wrap {
-      inherit pkgs;
-      settings.row = lib.mkForce (map resizeDisk (inputs.self.wrappers.bottom.wrap {inherit pkgs;}).configuration.settings.row);
-      settings.disk.mount_filter.is_list_ignored = lib.mkForce true;
-    })
   ];
 }

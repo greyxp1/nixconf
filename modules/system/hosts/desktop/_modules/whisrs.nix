@@ -19,9 +19,9 @@
   };
 in {
   environment.systemPackages = [pkgs.whisrs];
-  wrappers.niri.settings.binds."Mod+Space" = _: {
-    props.repeat = false;
-    content.spawn = ["whisrs" "toggle"];
+  programs.niri.settings.binds."Mod+Space" = {
+    repeat = false;
+    action.spawn = ["whisrs" "toggle"];
   };
   hardware.uinput.enable = true;
   users.users.grey.extraGroups = ["uinput"];

@@ -1,9 +1,8 @@
 {inputs, ...}: {
   flake = {
     nixosModules.cli = {pkgs, ...}: {
-      imports = [inputs.ncr.nixosModules.default inputs.self.wrappers.tlrc.install inputs.nix-index-database.nixosModules.nix-index];
-      wrappers.tlrc.enable = true;
-      environment.systemPackages = (with pkgs; [curl wget fzf fd ripgrep microfetch zoxide]) ++ [inputs.monstar.packages.${pkgs.stdenv.hostPlatform.system}.default.terminfo];
+      imports = [inputs.ncr.nixosModules.default inputs.self.nixosModules.tlrc inputs.nix-index-database.nixosModules.nix-index];
+      environment.systemPackages = with pkgs; [curl wget fzf fd ripgrep microfetch zoxide];
       services.tailscale = {
         enable = true;
         extraSetFlags = ["--operator=grey"];
@@ -37,9 +36,10 @@
       };
     };
 
-    wrappers = {
-      tlrc = {...}: {
-        imports = ["${inputs.wrapper-tlrc}/wrapperModules/t/tlrc/module.nix"];
+    nixosModules.tlrc = {...}: {
+      imports = [./_nixos-modules/tlrc.nix];
+      programs.tlrc = {
+        enable = true;
         settings = {
           output = {
             show_title = false;

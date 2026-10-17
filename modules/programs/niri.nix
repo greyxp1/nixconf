@@ -1,57 +1,51 @@
 {inputs, ...}: {
-  flake.wrappers.niri = {wlib, ...}: let
-    bind = action: _: {
-      props.repeat = false;
-      content = action;
+  flake.nixosModules.niri = {
+    lib,
+    pkgs,
+    ...
+  }: let
+    bind = action: {
+      repeat = false;
+      inherit action;
     };
+    tesseract = pkgs.tesseract.override {enableLanguages = ["eng"];};
   in {
-    install.modules.nixos = {
-      config,
-      lib,
-      pkgs,
-      ...
-    }: let
-      tesseract = pkgs.tesseract.override {enableLanguages = ["eng"];};
-    in {
-      imports = [
-        inputs.niri-screenshare.nixosModules.default
-        inputs.perch.nixosModules.default
-      ];
-      services = {
-        gnome.gnome-keyring.enable = lib.mkForce false;
-        #vellum.enable = true;
-        greetd = {
-          enable = true;
-          settings.default_session = {
-            command = "niri-session";
-            user = "grey";
-          };
-        };
-        niri-screenshare = {
-          enable = true;
-          withPicker = false;
-        };
-      };
-      xdg.portal.config.niri."org.freedesktop.impl.portal.Secret" = lib.mkForce "none";
-      wrappers.niri.enable = true;
-      programs = {
-        perch.enable = true;
-        niri = {
-          enable = true;
-          package = config.wrappers.niri.wrapper;
-          useNautilus = false;
-        };
-      };
-      nixpkgs.overlays = [inputs.niri.overlays.default];
-      environment.pathsToLink = ["/share/applications"];
-      environment.systemPackages = [tesseract pkgs.wl-clipboard pkgs.xwayland-satellite];
-    };
-    imports = [wlib.wrapperModules.niri];
-    extraSettings = [
-      {workspace = _: {props = "browser";};}
-      {workspace = _: {props = "default";};}
+    imports = [
+      ./_nixos-modules/niri.nix
+      inputs.niri-screenshare.nixosModules.default
+      inputs.perch.nixosModules.default
     ];
-    settings = {
+    services = {
+      gnome.gnome-keyring.enable = lib.mkForce false;
+      #vellum.enable = true;
+      greetd = {
+        enable = true;
+        settings.default_session = {
+          command = "niri-session";
+          user = "grey";
+        };
+      };
+      niri-screenshare = {
+        enable = true;
+        withPicker = false;
+      };
+    };
+    xdg.portal.config.niri."org.freedesktop.impl.portal.Secret" = lib.mkForce "none";
+    programs = {
+      perch.enable = true;
+      niri = {
+        enable = true;
+        useNautilus = false;
+      };
+    };
+    nixpkgs.overlays = [inputs.niri.overlays.default];
+    environment.pathsToLink = ["/share/applications"];
+    environment.systemPackages = [tesseract pkgs.wl-clipboard pkgs.xwayland-satellite];
+    programs.niri.settings = {
+      workspaces = {
+        browser = {};
+        default = {};
+      };
       window-rules = [
         {
           matches = [{"app-id" = "^perch$";}];
@@ -104,12 +98,10 @@
           focus-ring.off = {};
           default-column-width.fixed = 1024;
           default-window-height.fixed = 576;
-          default-floating-position = _: {
-            props = {
-              x = 10;
-              y = 10;
-              relative-to = "top-right";
-            };
+          default-floating-position = {
+            x = 10;
+            y = 10;
+            relative-to = "top-right";
           };
         }
         {

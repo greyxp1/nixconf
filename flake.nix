@@ -4,7 +4,7 @@
     inputs = tackInputs // {inherit self;};
   in
     inputs.flake-parts.lib.mkFlake {inherit inputs;} {
-      imports = [inputs.wrappers.flakeModules.wrappers (inputs.import-tree ./modules)];
+      imports = [(inputs.import-tree ./modules)];
       systems = ["x86_64-linux"];
       perSystem = {system, ...}: {
         _module.args.pkgs = inputs.nixpkgs.legacyPackages.${system};
