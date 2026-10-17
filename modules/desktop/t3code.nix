@@ -35,7 +35,8 @@
       - Make clean breaks by default; add compatibility code only when requested.
       - Enter the project's Nix environment before running project commands when available.
       - Check the behavior affected by the change. Repeat successful checks only after relevant edits or when evidence leaves a concern unresolved.
-      - Commit completed work automatically but don't push unless asked. Use one commit per independently useful change and fold its follow-up fixes and related changes into it. Never amend, squash, rebase, or otherwise rewrite pushed commits unless the user explicitly asks to rewrite published history; a general request to squash fixes does not authorize it. Use short lowercase past-tense messages. Follow the user's requested commit grouping.
+      - Commit completed work automatically but don't push unless asked. Use one commit per independently useful change and fold its follow-up fixes and related changes into it. Never amend, squash, rebase, or otherwise rewrite pushed commits unless the user explicitly asks to rewrite published history; a general request to squash fixes does not authorize it. Follow the user's requested commit grouping.
+      - Before writing or renaming commits, check the target repository's agent instructions and commit conventions. Use short lowercase past-tense messages in my own projects. For contributions to external projects, including my forks, follow that project's agent instructions and commit-message format instead.
       - Pull with rebase so unpushed commits stay on top of upstream. Resolve conflicts during the rebase. Never override this with `--no-rebase` or create a pull merge commit unless explicitly requested. Drop changes already present upstream.
       - Never make online changes on the user's behalf, including opening or editing PRs or issues, posting comments, sending messages, or publishing content. Read-only online access is allowed.
       - Keep agent instructions in `/home/grey/Projects/nixconf/modules/desktop/t3code.nix`; do not create project `AGENTS.md` or `.agents/` files.
@@ -51,6 +52,7 @@
       - Prioritize startup speed, responsiveness and package size.
 
       ## nixconf `/home/grey/Projects/nixconf`
+      - Custom NixOS modules are intended for submission to nixpkgs. Design reusable options and defaults for upstream use, follow existing NixOS module conventions, and keep personal settings in consuming modules. Use Home Manager as a reference without requiring identical interfaces.
       - Use a program's package/PATH integration and readable command names, such as Helix `extraPackages` with `command = "mpls"`.
       - Edit `.tack/pins.toml` and run `tack update` for input changes.
       - NixOS modules are the source of truth. Keep program settings inside them. Design shared layout, module boundaries, settings and defaults for NixOS. Keep Alma-specific module selection, exclusions, overrides and compatibility code under `modules/hosts/alma`. Never reshape shared configuration or architecture to simplify Alma integration.
