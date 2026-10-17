@@ -87,14 +87,6 @@
     "narHash": "sha256-xurQfAU6l4nuaJ6fcZiYiu80zgdgu8ND3buIYChQyzw=",
     "lastModified": 1792112145
   },
-  "llm-agents": {
-    "type": "github",
-    "owner": "numtide",
-    "repo": "llm-agents.nix",
-    "rev": "c250766160603f5ef582adecb4f453b009f63365",
-    "narHash": "sha256-IFe04Zpq0aJ/sLYPBABcW7EZlqky4Bb46wubC8A50cs=",
-    "lastModified": 1792226690
-  },
   "monstar": {
     "type": "github",
     "owner": "rockorager",
@@ -215,5 +207,13 @@
     "rev": "c397860e511383fe554ccd2b8366ee34fc88cff4",
     "narHash": "sha256-kp8zGdTh85Wm7WJP0ko8WOhnjaxQkUyt4Bg0abnhkqM=",
     "lastModified": 1792060118
+  },
+  "t3": {
+    "type": "github",
+    "owner": "numtide",
+    "repo": "llm-agents.nix",
+    "rev": "c250766160603f5ef582adecb4f453b009f63365",
+    "narHash": "sha256-IFe04Zpq0aJ/sLYPBABcW7EZlqky4Bb46wubC8A50cs=",
+    "lastModified": 1792226690
   }
 }

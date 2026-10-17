@@ -78,6 +78,6 @@ url = "gh:nix-community/nix-index-database"
 url = "gh:catppuccin/nix"
 
 # Preserve upstream Nixpkgs
-[inputs.llm-agents]
+[inputs.t3]
 url = "gh:numtide/llm-agents.nix"
 exclude_follow = ["nixpkgs"]

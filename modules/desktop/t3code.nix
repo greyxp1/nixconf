@@ -1,69 +1,29 @@
 {
   inputs,
-  config,
-  lib,
   pkgs,
   ...
-}: let
-  computerUse = inputs.computer-use-linux.packages.${pkgs.stdenv.hostPlatform.system}.default;
-  t3code = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.t3code.unwrapped;
-  runtimeDir = "/run/user/${toString config.users.users.grey.uid}";
-  opencodeConfig = toString (pkgs.writeText "opencode.json" (builtins.toJSON {permission = "allow";}));
-in {
-  imports = [../_custom-modules/codex.nix];
-
-  environment.systemPackages = [
-    t3code
-    computerUse
+}: {
+  imports = [
+    ../_custom-modules/codex.nix
+    ../_custom-modules/t3code.nix
   ];
-  environment.variables.OPENCODE_CONFIG = opencodeConfig;
-  # T3 sets runtime limits on its agents slice, so cap the parent instead.
+
+  environment.variables.OPENCODE_CONFIG = toString (pkgs.writeText "opencode.json" (builtins.toJSON {permission = "allow";}));
+  programs.t3code.package = inputs.t3.packages.${pkgs.stdenv.hostPlatform.system}.t3code.unwrapped;
+  services.t3code.enable = true;
   systemd.user.slices.app-t3code.sliceConfig = {
     MemoryHigh = "40%";
     MemoryMax = "50%";
     MemorySwapMax = "10%";
   };
-  systemd.services.t3code = {
-    description = "T3 Code headless server";
-    wantedBy = ["multi-user.target"];
-    after = ["network.target"];
-    environment = {
-      HOME = "/home/grey";
-      PATH = lib.mkForce "/run/wrappers/bin:/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin";
-      OPENCODE_CONFIG = opencodeConfig;
-      SSH_AUTH_SOCK = "${runtimeDir}/ssh-agent";
-      XDG_RUNTIME_DIR = runtimeDir;
-      DBUS_SESSION_BUS_ADDRESS = "unix:path=${runtimeDir}/bus";
-    };
-    serviceConfig = {
-      User = "grey";
-      WorkingDirectory = "/home/grey";
-      ExecStart = "${lib.getExe t3code} serve --host 127.0.0.1 --port 3773";
-      Restart = "on-failure";
-      RestartSec = 5;
-      KillMode = "mixed";
-      UMask = "0077";
-    };
-  };
-  services.gnome.at-spi2-core.enable = true;
-  programs.ydotool = {
-    enable = true;
-    group = "uinput";
-  };
-  users.users.grey.extraGroups = [config.programs.ydotool.group];
-  programs.codex.settings = {
-    mcp_servers.computer_use = {
-      command = lib.getExe computerUse;
-      args = ["mcp"];
-      env_vars = ["XDG_RUNTIME_DIR" "DBUS_SESSION_BUS_ADDRESS"];
-      env.YDOTOOL_SOCKET = config.environment.variables.YDOTOOL_SOCKET;
-    };
-  };
-  users.users.grey.linger = true;
 
   programs.codex = {
     enable = true;
-    package = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.codex;
+    package = inputs.t3.packages.${pkgs.stdenv.hostPlatform.system}.codex;
+    computerUse = {
+      enable = true;
+      users = ["grey"];
+    };
     instructions = ''
       # Global
       - Prefer the smallest root-cause solution. Embody coding philosophies such as YAGNI, KISS and DRY. Avoid unnecessary abstractions, wrappers, dependencies, and documentation. Write concise, natural prose. Keep in mind though that I don't mind rewriting the entire program or thing we're working on if it means we end up with a better result. Writing code is cheap, we should treat it as such.
