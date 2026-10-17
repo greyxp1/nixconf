@@ -69,7 +69,7 @@
       package = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.codex;
       context = ''
         # Global
-        - Prefer the smallest root-cause solution. Embody coding philosophies such as YAGNI, KISS and DRY. Avoid unnecessary abstractions, wrappers, dependencies, and documentation. Write concise, natural prose.
+        - Prefer the smallest root-cause solution. Embody coding philosophies such as YAGNI, KISS and DRY. Avoid unnecessary abstractions, wrappers, dependencies, and documentation. Write concise, natural prose. Keep in mind though that I don't mind rewriting the entire program or thing we're working on if it means we end up with a better result. Writing code is cheap, we should treat it as such.
         - Judge simplicity by complete integration and maintenance cost. Before recommending architecture or dependency replacements, compare against the current approach and disclose added dependencies, platform-specific code, startup and package costs, and uncertainty. Reconsider prototypes when fixes accumulate complexity. A working happy path does not justify adopting them.
         - Avoid semicolons when writing documentation and keep it simple and short.
         - Do not add tests or use computer-use for testing unless asked.
