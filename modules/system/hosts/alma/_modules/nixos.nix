@@ -71,7 +71,9 @@
 in {
   _module.args.nixos = nixos;
   alma.activation.finish = lib.mkAfter (lib.concatMapStringsSep "\n" (user: ''
-    /usr/sbin/runuser -u ${lib.escapeShellArg user} -- ${nixos.home-manager.users.${user}.home.activationPackage}/activate --driver-version 1
+    /usr/sbin/runuser -u ${lib.escapeShellArg user} -- /usr/bin/env \
+      USER=${lib.escapeShellArg user} LOGNAME=${lib.escapeShellArg user} \
+      ${nixos.home-manager.users.${user}.home.activationPackage}/activate --driver-version 1
   '') (builtins.attrNames nixos.home-manager.users));
   # Install program additions without replacing Alma's native system tools.
   environment.systemPackages = builtins.filter (package: toString package != toString nixos.services.sunshine.package) packages;
