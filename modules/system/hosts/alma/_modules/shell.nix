@@ -1,56 +1,38 @@
 {
+  config,
   lib,
   nixos,
   pkgs,
   ...
 }: {
-  environment.systemPackages = [nixos.programs.zsh.package pkgs.eza pkgs.fzf];
-  environment.etc =
-    (lib.genAttrs ["zshrc" "zprofile" "zinputrc" "zlogin"] (name: {
-      source = nixos.environment.etc.${name}.source;
-      replaceExisting = true;
+  environment.etc."set-environment".source = config.environment.etc."profile.d/system-manager-path.sh".source;
+  environment.pathsToLink = nixos.environment.pathsToLink;
+  environment.extraSetup = nixos.environment.extraSetup;
+  environment.systemPackages = [
+    (lib.hiPrio (pkgs.symlinkJoin {
+      name = "alma-nushell";
+      paths = [nixos.programs.nushell.package];
+      nativeBuildInputs = [pkgs.makeWrapper];
+      postBuild = ''
+        wrapProgram $out/bin/nu \
+          --set-default XDG_DATA_DIRS /usr/local/share:/usr/share \
+          --prefix XDG_DATA_DIRS : /run/system-manager/sw/share
+      '';
+      meta = nixos.programs.nushell.package.meta;
     }))
-    // {
-      zshenv = {
-        replaceExisting = true;
-        text = ''
-          [[ ! -r /etc/profile.d/system-manager-path.sh ]] || source /etc/profile.d/system-manager-path.sh
-          if [[ -n $XDG_RUNTIME_DIR && -z $SSH_AUTH_SOCK ]]; then
-            export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent"
-          fi
-          typeset -U path
-          path=(
-            /run/system-manager/sw/bin
-            /nix/var/nix/profiles/default/bin
-            /home/grey/.local/bin
-            /usr/local/bin
-            /usr/bin
-            /bin
-            /usr/local/sbin
-            /usr/sbin
-            /sbin
-            $path
-          )
-          export PATH
+    (pkgs.writeTextDir "share/nushell/vendor/autoload/90-alma.nu" ''
+      alias rebuild = alma-rebuild
+      alias update = do { cd /home/grey/Projects/nixconf; with-env { GH_TOKEN: (^gh auth token --hostname github.com) } { ^tack update }; ^alma-rebuild }
+      alias clean = nix store gc
 
-          typeset -aU xdg_data_dirs
-          xdg_data_dirs=(
-            /run/system-manager/sw/share
-            /nix/var/nix/profiles/default/share
-            /usr/local/share
-            /usr/share
-            ''${(s.:.)XDG_DATA_DIRS}
-          )
-          export XDG_DATA_DIRS="''${(j.:.)xdg_data_dirs}"
-          unset xdg_data_dirs
-
-          for p in /run/system-manager/sw /nix/var/nix/profiles/default; do
-            fpath=($p/share/zsh/site-functions $p/share/zsh/$ZSH_VERSION/functions $p/share/zsh/vendor-completions $fpath)
-          done
-        '';
-      };
-    };
-  environment.pathsToLink = ["/share/zsh"];
+      if $nu.is-login and $nu.is-interactive and ($env.USER? == 'grey') {
+        let tty = (do { ^${pkgs.coreutils}/bin/tty } | complete | get stdout | str trim)
+        if $tty == '/dev/tty1' {
+          ^niri-session -l
+        }
+      }
+    '')
+  ];
   environment.variables = {
     NCR_FLAKE = "/home/grey/Projects/nixconf";
     NH_FLAKE = "/home/grey/Projects/nixconf";

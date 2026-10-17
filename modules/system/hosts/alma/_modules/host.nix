@@ -148,7 +148,6 @@ in {
 
   environment.pathsToLink = [
     "/share/applications"
-    "/share/zsh"
     "/share/xdg-desktop-portal"
   ];
   environment.systemPackages = [pkgs.tailscale];

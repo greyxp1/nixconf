@@ -119,7 +119,6 @@ in {
     '';
   };
   environment.variables = {
-    XDG_DATA_DIRS = "/run/system-manager/sw/share:/usr/local/share:/usr/share";
     XDG_CONFIG_DIRS = "/etc/xdg";
   };
   environment.pathsToLink = ["/share/fonts" "/share/icons" "/share/terminfo" "/share/dbus-1" "/share/xdg-desktop-portal"];

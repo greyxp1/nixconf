@@ -22,7 +22,7 @@
   };
   extended = base.extendModules {
     modules =
-      (with inputs.self.nixosModules; [cli git ssh helix lazygit yazi starship theme t3code helium scrcpy remote-client sunshine bottom monstar mpv niri noctalia zsh termfilechooser])
+      (with inputs.self.nixosModules; [cli git ssh helix lazygit yazi starship theme t3code helium scrcpy remote-client sunshine bottom monstar mpv niri noctalia nushell termfilechooser])
       ++ [
         ({config, ...}: let
           resizeDisk = widget: widget // lib.optionalAttrs ((widget.type or "") == "disk") {ratio = 2;} // lib.optionalAttrs (widget ? child) {child = map resizeDisk widget.child;};
@@ -35,6 +35,7 @@
               };
           };
           config = {
+            programs.inshellah.extraDirs = ["/run/system-manager/sw/share/inshellah"];
             programs.niri.settings.binds = {
               "Mod+E" = lib.mkForce {
                 repeat = false;
@@ -49,9 +50,6 @@
               bar.default.margin_ends = lib.mkForce 415;
               plugin_settings."noctalia/screen_recorder".video_codec = lib.mkForce "h264";
             };
-            programs.zsh.loginShellFinish = ''
-              if [[ $USER == grey && $TTY == /dev/tty1 ]]; then niri-session -l; fi
-            '';
             home-manager.sharedModules = [
               {
                 programs.helix.languages.language-server.nixd.config = {

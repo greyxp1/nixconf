@@ -4,12 +4,18 @@
   pkgs,
   ...
 }: let
-  loginShellLauncher = pkgs.writeText "nixconf-zsh" ''
+  loginShellLauncher = pkgs.writeText "nixconf-nu" ''
     #!/bin/sh
-    if [ -x /run/system-manager/sw/bin/zsh ]; then
-      exec /run/system-manager/sw/bin/zsh --login "$@"
+    if [ -r /etc/profile.d/system-manager-path.sh ]; then
+      case ":$PATH:" in
+        *:/run/system-manager/sw/bin:*) ;;
+        *) . /etc/profile.d/system-manager-path.sh ;;
+      esac
     fi
-    echo "The declarative Zsh is unavailable; starting Alma Bash." >&2
+    if [ -x /run/system-manager/sw/bin/nu ]; then
+      exec /run/system-manager/sw/bin/nu --login "$@"
+    fi
+    echo "The declarative Nushell is unavailable; starting Alma Bash." >&2
     exec /bin/bash -l "$@"
   '';
 in {
@@ -57,10 +63,10 @@ in {
       echo "$unix_chkpwd must exist, be owned by root, and be setuid" >&2
       exit 1
     fi
-    shell=/usr/local/bin/nixconf-zsh
-    zsh=/run/system-manager/sw/bin/zsh
-    if [[ ! -x $zsh ]]; then
-      echo "System Manager's Zsh is missing at $zsh" >&2
+    shell=/usr/local/bin/nixconf-nu
+    nu=/run/system-manager/sw/bin/nu
+    if [[ ! -x $nu ]]; then
+      echo "System Manager's Nushell is missing at $nu" >&2
       exit 1
     fi
     /usr/bin/install -d -m 0755 /usr/local/bin
@@ -76,8 +82,8 @@ in {
       /usr/bin/getent group "$group" >/dev/null \
         && /usr/sbin/usermod --append --groups "$group" grey
     done
-    /usr/bin/rm -f /etc/profile.d/nixconf-niri.sh /usr/local/bin/nixconf-nu
-    /usr/bin/sed -i '\|^/usr/local/bin/nixconf-nu$|d' /etc/shells
+    /usr/bin/rm -f /etc/profile.d/nixconf-niri.sh /usr/local/bin/nixconf-zsh
+    /usr/bin/sed -i '\|^/usr/local/bin/nixconf-zsh$|d' /etc/shells
 
     /usr/sbin/visudo --check --file /etc/sudoers.d/nixconf
   '';
