@@ -1,26 +1,12 @@
-# edit by hand or with tack add / rm / alias
-
 [shorturls]
 gh = "github:{path}"
-
 [all_follow]
-nixpkgs = ["nixpkgs-unstable"]
-
-# inputs.<name> fields
-#   url             required, shorturl ok, ?rev=<sha> pins an exact commit
-#   type            flake (default), fetch, or fixed
-#   flake           legacy false means type = "fetch"
-#   follows         { child = "pin" } override map
-#   exclude_follow  all_follow names to skip
-#   dir             subdir holding flake.nix
-#   submodules      fetch git submodules
-#   unpack          fixed-only tarball or file
-
+nixpkgs = "nixpkgs"
+[inputs.nixpkgs]
+url = "gh:nixos/nixpkgs/nixos-unstable"
 [inputs.flake-parts]
 url = "gh:hercules-ci/flake-parts"
 follows = { nixpkgs-lib = "nixpkgs" }
-[inputs.nixpkgs]
-url = "gh:nixos/nixpkgs/nixos-unstable"
 [inputs.sunshine]
 url = "git+https://github.com/LizardByte/Sunshine?ref=master"
 type = "fetch"
@@ -76,12 +62,9 @@ url = "gh:sonorahq/sonora/pull/1006/head"
 url = "gh:nix-community/nix-index-database"
 [inputs.catppuccin]
 url = "gh:catppuccin/nix"
-
-# Preserve upstream Nixpkgs
 [inputs.t3]
 url = "gh:numtide/llm-agents.nix"
 exclude_follow = ["nixpkgs"]
-
 [inputs.hydro]
 url = "gh:greyxp1/hydro"
 type = "fetch"
