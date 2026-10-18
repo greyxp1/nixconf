@@ -63,8 +63,8 @@ url = "gh:greyxp1/kovaaks-config"
 type = "fetch"
 [inputs.nix-flatpak]
 url = "gh:gmodena/nix-flatpak"
-[inputs.inshellah]
-url = "gh:manic-systems/inshellah"
+[inputs.neo-ls]
+url = "gh:nolight132/nls"
 [inputs.compress-yazi]
 url = "gh:KKV9/compress.yazi/pull/32/head"
 type = "fetch"
@@ -81,3 +81,7 @@ url = "gh:catppuccin/nix"
 [inputs.t3]
 url = "gh:numtide/llm-agents.nix"
 exclude_follow = ["nixpkgs"]
+
+[inputs.hydro]
+url = "gh:greyxp1/hydro"
+type = "fetch"

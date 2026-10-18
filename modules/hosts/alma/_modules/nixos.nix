@@ -29,7 +29,7 @@
       ../../../core/cli.nix
       ../../../core/git.nix
       ../../../core/helix.nix
-      ../../../core/nushell.nix
+      ../../../core/fish.nix
       ../../../core/ssh.nix
       ../../../core/yazi.nix
       ../../../desktop/helium.nix
@@ -55,12 +55,7 @@
         };
         config = {
           programs.nixcord.discord.enable = lib.mkForce false;
-          programs.inshellah.extraDirs = ["/run/system-manager/sw/share/inshellah"];
           programs.niri.settings.binds = {
-            "Mod+E" = lib.mkForce {
-              repeat = false;
-              action.spawn = ["monstar" "-e" "yazi"];
-            };
             "Mod+Shift+O" = {
               repeat = false;
               action.spawn = "niri-swap-outputs";

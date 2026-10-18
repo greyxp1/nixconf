@@ -55,6 +55,14 @@
     "narHash": "sha256-mKSPpBR/2/+ZIb8K0Z3U2BrtwADQNtUwAEP1wcg35Og=",
     "lastModified": 1792220304
   },
+  "hydro": {
+    "type": "github",
+    "owner": "greyxp1",
+    "repo": "hydro",
+    "rev": "980c7c4b17225be2bd04a5be0fc4606798d31430",
+    "narHash": "sha256-wP/O/WXRQAa1Ke/rWVlZIhG2CkQ85+ydzVpQcnwLm74=",
+    "lastModified": 1792358139
+  },
   "import-tree": {
     "type": "github",
     "owner": "vic",
@@ -62,14 +70,6 @@
     "rev": "eb1b52eaecc57f7c136d07ae8a93e724dfecac46",
     "narHash": "sha256-ljEMTXP/rH0tOvDzc9gzwww6KcHRPRnEHzd9lK48V7s=",
     "lastModified": 1788467110
-  },
-  "inshellah": {
-    "type": "github",
-    "owner": "manic-systems",
-    "repo": "inshellah",
-    "rev": "10fb1ce61a1ab582da6779fabbf6c322e5efd8c5",
-    "narHash": "sha256-fSfqKvXbwvM/VE8V57Qnmy0/XU09Yfy1tbGga4uexXY=",
-    "lastModified": 1792206236
   },
   "kovaaks-config": {
     "type": "github",
@@ -119,6 +119,14 @@
     "rev": "61960f31ea20ed7c07ee8bc7c213d39bb01597af",
     "narHash": "sha256-7AVCNFeBSGTm+hpZXGsgnOEVrIcVl5gUGqBqcimk28c=",
     "lastModified": 1792168823
+  },
+  "neo-ls": {
+    "type": "github",
+    "owner": "nolight132",
+    "repo": "nls",
+    "rev": "1d9bdac4f8697a6cb02e4d6e4f94824af907bfbd",
+    "narHash": "sha256-mqCgNs6ogKy9G5NDYgs4Luk73eKm4SzShckNEY/Nv+8=",
+    "lastModified": 1786557188
   },
   "niri": {
     "type": "github",

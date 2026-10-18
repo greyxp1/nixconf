@@ -4,7 +4,7 @@
   pkgs,
   ...
 }: let
-  loginShellLauncher = pkgs.writeText "nixconf-nu" ''
+  loginShellLauncher = pkgs.writeText "nixconf-fish" ''
     #!/bin/sh
     if [ -r /etc/profile.d/system-manager-path.sh ]; then
       case ":$PATH:" in
@@ -12,10 +12,10 @@
         *) . /etc/profile.d/system-manager-path.sh ;;
       esac
     fi
-    if [ -x /run/system-manager/sw/bin/nu ]; then
-      exec /run/system-manager/sw/bin/nu --login "$@"
+    if [ -x /run/system-manager/sw/bin/fish ]; then
+      exec /run/system-manager/sw/bin/fish --login "$@"
     fi
-    echo "The declarative Nushell is unavailable; starting Alma Bash." >&2
+    echo "The declarative Fish is unavailable; starting Alma Bash." >&2
     exec /bin/bash -l "$@"
   '';
 in {
@@ -63,10 +63,10 @@ in {
       echo "$unix_chkpwd must exist, be owned by root, and be setuid" >&2
       exit 1
     fi
-    shell=/usr/local/bin/nixconf-nu
-    nu=/run/system-manager/sw/bin/nu
-    if [[ ! -x $nu ]]; then
-      echo "System Manager's Nushell is missing at $nu" >&2
+    shell=/usr/local/bin/nixconf-fish
+    fish=/run/system-manager/sw/bin/fish
+    if [[ ! -x $fish ]]; then
+      echo "System Manager's Fish is missing at $fish" >&2
       exit 1
     fi
     /usr/bin/install -d -m 0755 /usr/local/bin
@@ -82,8 +82,9 @@ in {
       /usr/bin/getent group "$group" >/dev/null \
         && /usr/sbin/usermod --append --groups "$group" grey
     done
-    /usr/bin/rm -f /etc/profile.d/nixconf-niri.sh /usr/local/bin/nixconf-zsh
+    /usr/bin/rm -f /etc/profile.d/nixconf-niri.sh /usr/local/bin/nixconf-zsh /usr/local/bin/nixconf-nu
     /usr/bin/sed -i '\|^/usr/local/bin/nixconf-zsh$|d' /etc/shells
+    /usr/bin/sed -i '\|^/usr/local/bin/nixconf-nu$|d' /etc/shells
 
     /usr/sbin/visudo --check --file /etc/sudoers.d/nixconf
   '';

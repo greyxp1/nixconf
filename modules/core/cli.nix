@@ -22,9 +22,10 @@
     }
   ];
 
-  environment.systemPackages = with pkgs; [curl wget fzf fd ripgrep microfetch zoxide];
+  environment.systemPackages = with pkgs; [curl wget fzf fd ripgrep microfetch];
 
   programs = {
+    direnv.enable = true;
     tack.enable = true;
     nix-index.enable = true;
     nix-index-database.comma.enable = true;
@@ -82,6 +83,11 @@
     ncr = {
       enable = true;
       flake = config.programs.nh.flake;
+    };
+
+    zoxide = {
+      enable = true;
+      flags = ["--cmd cd"];
     };
   };
 }

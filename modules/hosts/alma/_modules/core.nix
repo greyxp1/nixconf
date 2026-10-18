@@ -1,5 +1,6 @@
 {
   inputs,
+  lib,
   nixos,
   pkgs,
   ...
@@ -20,6 +21,7 @@
     })
   ];
   environment.variables = {
+    inherit (nixos.environment.variables) DIRENV_CONFIG;
     EDITOR = "hx";
     VISUAL = "hx";
   };
@@ -32,7 +34,8 @@
     };
     "xdg/lazygit/config.yml".source = nixos.environment.etc."xdg/lazygit/config.yml".source;
     "bat/config".source = nixos.environment.etc."bat/config".source;
-  };
+  } // lib.mapAttrs (_: file: {inherit (file) source;})
+    (lib.filterAttrs (name: _: lib.hasPrefix "direnv/" name) nixos.environment.etc);
   programs.nh = nixos.programs.nh;
   environment.systemPackages = [
     pkgs.openssh

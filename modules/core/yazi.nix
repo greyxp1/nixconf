@@ -7,6 +7,7 @@
   catppuccin = inputs.catppuccin.packages.${pkgs.stdenv.hostPlatform.system};
   theme = lib.importTOML "${catppuccin.yazi}/mocha/catppuccin-mocha-mauve.toml";
 in {
+  imports = [../_custom-modules/yazi.nix];
   environment.etc."mime.types".source = "${pkgs.mailcap}/etc/mime.types";
   programs.yazi = {
     enable = true;
