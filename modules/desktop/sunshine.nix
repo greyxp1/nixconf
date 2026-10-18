@@ -7,32 +7,42 @@
   ...
 }: let
   cfg = config.services.sunshine;
-  sunshinePkgs =
-    if cfg.cudaSupport
-    then
-      import inputs.sunshine-nixpkgs {
-        system = pkgs.stdenv.hostPlatform.system;
-        config.allowUnfree = true;
-      }
-    else inputs.sunshine-nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system};
-  sunshine = (sunshinePkgs.sunshine.override {inherit (cfg) cudaSupport;}).overrideAttrs (old: {
-    postPatch =
-      (old.postPatch or "")
-      + ''
-        cp -r ${inputs.libvirtualhid}/. third-party/libvirtualhid/
-      '';
+  sunshinePin = (builtins.fromJSON (builtins.readFile ../../.tack/pins.lock.json)).sunshine;
+  ffmpeg = pkgs.fetchzip {
+    url = "https://github.com/LizardByte/build-deps/releases/download/v2026.1017.131201/Linux-x86_64-ffmpeg.tar.gz";
+    hash = "sha256-ZFtxcQvlC8k4Nv3HOV5CVhV1F8Yz0McJ98oQ6Gs2slU=";
+  };
+  sunshine = (pkgs.sunshine.override {inherit (cfg) cudaSupport;}).overrideAttrs (final: old: {
+    version = "unstable-${builtins.substring 0 7 sunshinePin.rev}";
+    src = inputs.sunshine;
+    env =
+      old.env
+      // {
+        BUILD_VERSION = final.version;
+        COMMIT = sunshinePin.rev;
+      };
+    ui = old.ui.overrideAttrs (ui: {
+      npmDeps = ui.npmDeps.overrideAttrs {
+        outputHash = "sha256-eOhQxVEV4Nhps1WzN4igI8xdOjXPvGn/fOFCvGemKjc=";
+      };
+    });
     preBuild =
       (old.preBuild or "")
       + ''
         # Keep C++ compilation within the build slice's memory budget.
         NIX_BUILD_CORES=$((NIX_BUILD_CORES > 2 ? 2 : NIX_BUILD_CORES))
       '';
-    cmakeFlags = (old.cmakeFlags or []) ++ ["-DSUNSHINE_ENABLE_TRAY=OFF"];
-    buildInputs = lib.filter (input: !(builtins.elem input [sunshinePkgs.qt6.qtbase sunshinePkgs.qt6.qtsvg])) old.buildInputs;
-    nativeBuildInputs = lib.filter (input: input != sunshinePkgs.qt6.wrapQtAppsHook) old.nativeBuildInputs;
+    cmakeFlags =
+      builtins.filter (flag: !(lib.hasPrefix "-DFFMPEG_PREPARED_BINARIES" flag)) (old.cmakeFlags or [])
+      ++ [
+        "-DSUNSHINE_ENABLE_TRAY=OFF"
+        (lib.cmakeFeature "FFMPEG_PREPARED_BINARIES" "${ffmpeg}")
+      ];
+    buildInputs = lib.filter (input: !(builtins.elem input [pkgs.qt6.qtbase pkgs.qt6.qtsvg])) old.buildInputs;
+    nativeBuildInputs = lib.filter (input: input != pkgs.qt6.wrapQtAppsHook) old.nativeBuildInputs;
     postFixup = lib.optionalString cfg.cudaSupport ''
       wrapProgram $out/bin/sunshine \
-        --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [sunshinePkgs.vulkan-loader]}
+        --prefix LD_LIBRARY_PATH : ${lib.makeLibraryPath [pkgs.vulkan-loader]}
     '';
   });
 in {

@@ -79,14 +79,6 @@
     "narHash": "sha256-D+bdwP1OCMctzaEtghwhj5XKbd4iv3tL5dR9u7XAybY=",
     "lastModified": 1784842832
   },
-  "libvirtualhid": {
-    "type": "github",
-    "owner": "LizardByte",
-    "repo": "libvirtualhid",
-    "rev": "dfff3ea8c34022c915799740806c17c0ed5c2492",
-    "narHash": "sha256-xurQfAU6l4nuaJ6fcZiYiu80zgdgu8ND3buIYChQyzw=",
-    "lastModified": 1792112145
-  },
   "monstar": {
     "type": "github",
     "owner": "rockorager",
@@ -200,13 +192,14 @@
     "narHash": "sha256-zAN0IBdtV3bDP9oVOzGQ7J70NcJ3XJjYejBmNUHr+T0=",
     "lastModified": 1792338601
   },
-  "sunshine-nixpkgs": {
-    "type": "github",
-    "owner": "nixos",
-    "repo": "nixpkgs",
-    "rev": "fd29d673b014a4f88f9bb9ec628b46055243cf96",
-    "narHash": "sha256-lSAB6CZem3CWe0Qqk14uzrysQePYgn2Aul7Wxmns6eY=",
-    "lastModified": 1790541915
+  "sunshine": {
+    "type": "git",
+    "url": "https://github.com/LizardByte/Sunshine",
+    "ref": "refs/heads/master",
+    "rev": "3d6e1d6008bd4a24906283ab25fcd0becc0a1c07",
+    "narHash": "sha256-AOJCHmDBFnGuilfzqg3+FWmuKaZhO7D7fF5dX14Q93k=",
+    "lastModified": 1792284822,
+    "submodules": true
   },
   "system-manager": {
     "type": "github",

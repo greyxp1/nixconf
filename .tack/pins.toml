@@ -21,11 +21,10 @@ url = "gh:hercules-ci/flake-parts"
 follows = { nixpkgs-lib = "nixpkgs" }
 [inputs.nixpkgs]
 url = "gh:nixos/nixpkgs/nixos-unstable"
-[inputs.sunshine-nixpkgs]
-url = "gh:nixos/nixpkgs/fd29d673b014a4f88f9bb9ec628b46055243cf96"
-[inputs.libvirtualhid]
-url = "gh:LizardByte/libvirtualhid/master"
+[inputs.sunshine]
+url = "git+https://github.com/LizardByte/Sunshine?ref=master"
 type = "fetch"
+submodules = true
 [inputs.moonlight-embedded]
 url = "git+https://github.com/moonlight-stream/moonlight-embedded?ref=refs/pull/940/head"
 type = "fetch"

@@ -1,20 +1,10 @@
 {
-  inputs,
   lib,
   nixos,
   pkgs,
   ...
 }: let
   sunshine = nixos.services.sunshine.package;
-  hostSunshine = pkgs.replaceDirectDependencies {
-    drv = sunshine;
-    replacements = [
-      {
-        oldDependency = inputs.sunshine-nixpkgs.legacyPackages.x86_64-linux.glibc;
-        newDependency = pkgs.glibc;
-      }
-    ];
-  };
   display = import ../../../desktop/_sunshine-display.nix {inherit pkgs;};
   prepCommands = builtins.toJSON [
     {
@@ -42,7 +32,7 @@ in {
   imports = [
     (import ./_userServices.nix {
       "app-dev.lizardbyte.app.Sunshine" = lib.recursiveUpdate (sessionService (lib.escapeShellArgs [
-        "${hostSunshine}/bin/sunshine"
+        "${sunshine}/bin/sunshine"
         "hevc_mode=1"
         "csrf_allowed_origins=https://alma.tail1785c.ts.net:47990"
         "vaapi_quality=balanced"
@@ -51,5 +41,5 @@ in {
       ])) {Service.ExecStopPost = "-${lib.getExe display} restore";};
     })
   ];
-  environment.systemPackages = [hostSunshine];
+  environment.systemPackages = [sunshine];
 }
