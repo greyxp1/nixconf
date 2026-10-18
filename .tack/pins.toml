@@ -71,7 +71,8 @@ url = "gh:KKV9/compress.yazi/pull/32/head"
 type = "fetch"
 [inputs.monstar]
 url = "gh:rockorager/monstar/main"
-
+[inputs.sonora]
+url = "gh:sonorahq/sonora/pull/1006/head"
 [inputs.nix-index-database]
 url = "gh:nix-community/nix-index-database"
 [inputs.catppuccin]

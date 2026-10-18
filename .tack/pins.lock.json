@@ -19,9 +19,9 @@
     "type": "github",
     "owner": "greyxp1",
     "repo": "computer-use-linux-flake",
-    "rev": "bf74527d6703e6484e392414c596f33d0ebb128d",
-    "narHash": "sha256-+vhHhxrQEbovmRPmxq/QkNM6IB1ewF+ej70t7K2eAsA=",
-    "lastModified": 1792266114
+    "rev": "c002d0d8251b942cb0bfaf4ff4517c70004b78ea",
+    "narHash": "sha256-vsE7UCPtISMvisjVnmvee5cXQKuv4tfeooxTo9T5xMA=",
+    "lastModified": 1792332531
   },
   "cord-stash": {
     "type": "github",
@@ -191,6 +191,14 @@
     "rev": "93416f4614ad2dfed5b0dcf12f27e57d27a5ab11",
     "narHash": "sha256-mMI9IanU+Xw+pVogD2oT0I2kTmvz2Un/Apc5+CwUpEY=",
     "lastModified": 1757436102
+  },
+  "sonora": {
+    "type": "github",
+    "owner": "sonorahq",
+    "repo": "sonora",
+    "rev": "1e8cb662198ebc1a58b0630634433e692ae45229",
+    "narHash": "sha256-zAN0IBdtV3bDP9oVOzGQ7J70NcJ3XJjYejBmNUHr+T0=",
+    "lastModified": 1792338601
   },
   "sunshine-nixpkgs": {
     "type": "github",
