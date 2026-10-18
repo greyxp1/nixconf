@@ -13,6 +13,8 @@
     background-opacity = 0.8;
     window-padding-x = 8;
     window-padding-y = 8;
+    notify-on-command-finish = "unfocused";
+    notify-on-command-finish-action = "no-bell,notify";
     selection-background = "#0078D7";
     theme = pkgs.runCommand "monstar-catppuccin-mocha" {} ''
       sed '/^split-divider-color =/d' \
