@@ -7,7 +7,6 @@
   imports = [
     ../_custom-modules/tlrc.nix
     inputs.ncr.nixosModules.default
-    inputs.sonora.nixosModules.default
     inputs.nix-index-database.nixosModules.nix-index
   ];
 
@@ -44,18 +43,6 @@
             color.hex = "#fab387";
             italic = true;
           };
-        };
-      };
-    };
-
-    sonora = {
-      enable = true;
-      settings = {
-        tray_icon = false;
-        provider = "youtube";
-        appearance = {
-          transparent = true;
-          transparency = 0.2;
         };
       };
     };
