@@ -6,6 +6,7 @@ in {
       (inputs.import-tree ../../core)
       (inputs.import-tree ../../desktop)
       ./_hardware.nix
+      ./_network.nix
     ];
 
     services.upower.enable = true;
