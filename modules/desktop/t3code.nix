@@ -11,11 +11,6 @@
   environment.variables.OPENCODE_CONFIG = toString (pkgs.writeText "opencode.json" (builtins.toJSON {permission = "allow";}));
   programs.t3code.package = inputs.t3.packages.${pkgs.stdenv.hostPlatform.system}.t3code.unwrapped;
   services.t3code.enable = true;
-  systemd.user.slices.app-t3code.sliceConfig = {
-    MemoryHigh = "40%";
-    MemoryMax = "50%";
-    MemorySwapMax = "10%";
-  };
 
   programs.codex = {
     enable = true;

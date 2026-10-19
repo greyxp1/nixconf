@@ -9,6 +9,14 @@ in {
     ];
 
     services.upower.enable = true;
+    swapDevices = [
+      {
+        device = "/persistent/swapfile";
+        size = 8192;
+      }
+    ];
+    environment.variables.TMPDIR = "/persistent/tmp";
+    systemd.tmpfiles.rules = ["d /persistent/tmp 1777 root root 7d"];
     programs.git.enable = true;
     users.users.grey.openssh.authorizedKeys.keys = ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINNpHu5c/ykb/08PRxkU63jqkrn/F7FbSzHh6QqfnwC3 grey@desktop"];
     networking.firewall = {
