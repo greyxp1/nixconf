@@ -25,7 +25,6 @@
   environment.systemPackages = with pkgs; [curl wget fzf fd ripgrep microfetch];
 
   programs = {
-    direnv.enable = true;
     tack.enable = true;
     nix-index.enable = true;
     nix-index-database.comma.enable = true;
@@ -88,6 +87,11 @@
     zoxide = {
       enable = true;
       flags = ["--cmd cd"];
+    };
+
+    direnv = {
+      enable = true;
+      silent = true;
     };
   };
 }
