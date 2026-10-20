@@ -21,11 +21,12 @@
         BUILD_VERSION = final.version;
         COMMIT = sunshinePin.rev;
       };
-    ui = old.ui.overrideAttrs (ui: {
-      npmDeps = ui.npmDeps.overrideAttrs {
-        outputHash = "sha256-eOhQxVEV4Nhps1WzN4igI8xdOjXPvGn/fOFCvGemKjc=";
-      };
-    });
+    ui = pkgs.buildNpmPackage {
+      inherit (final) src version;
+      inherit (old.ui) pname installPhase;
+      npmDeps = pkgs.importNpmLock {npmRoot = final.src;};
+      npmConfigHook = pkgs.importNpmLock.npmConfigHook;
+    };
     preBuild =
       (old.preBuild or "")
       + ''
