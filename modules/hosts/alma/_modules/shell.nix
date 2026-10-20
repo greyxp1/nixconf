@@ -55,5 +55,6 @@
     NH_FLAKE = "/home/grey/Projects/nixconf";
     NIX_PROFILES = "/nix/var/nix/profiles/default /run/system-manager/sw";
     NIX_SSL_CERT_FILE = "/etc/pki/tls/certs/ca-bundle.crt";
+    TERMINFO_DIRS = "/run/system-manager/sw/share/terminfo:";
   };
 }
