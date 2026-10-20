@@ -34,7 +34,11 @@ in {
     "sudoers.d/nixconf" = {
       mode = "0440";
       replaceExisting = true;
-      text = "%wheel ALL=(ALL:ALL) NOPASSWD: ALL\n";
+      text = ''
+        Defaults secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/run/system-manager/sw/bin:/nix/var/nix/profiles/default/bin"
+        Defaults:root,%wheel env_keep += "TERMINFO TERMINFO_DIRS"
+        %wheel ALL=(ALL:ALL) NOPASSWD: ALL
+      '';
     };
     "systemd/system/getty@tty1.service.d/autologin.conf" = {
       mode = "0644";
