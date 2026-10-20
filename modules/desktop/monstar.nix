@@ -1,12 +1,24 @@
 {
   inputs,
+  lib,
   pkgs,
   ...
 }: {
   imports = [../_custom-modules/monstar.nix];
   programs.monstar.enable = true;
   fonts.packages = [pkgs.jetbrains-mono pkgs.nerd-fonts.symbols-only];
-  programs.monstar.package = inputs.monstar.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  # Monstar's Ghostty dependency requires Zig 0.16.
+  programs.monstar.package =
+    (inputs.monstar.packages.${pkgs.stdenv.hostPlatform.system}.default).overrideAttrs (old: {
+      nativeBuildInputs =
+        map (
+          input:
+            if lib.isDerivation input && input.drvPath == pkgs.zig.drvPath
+            then pkgs.zig_0_16
+            else input
+        )
+        old.nativeBuildInputs;
+    });
   programs.monstar.settings = {
     font-family = "JetBrains Mono";
     font-size = 14;
