@@ -132,9 +132,9 @@
     "type": "github",
     "owner": "greyxp1",
     "repo": "niri",
-    "rev": "d0b2184ac582afea3f06c1053911e85548ea2641",
-    "narHash": "sha256-Isku6CPhQ2hf44EVw7KVOnzrE/hSCcOpPs24jFuiF00=",
-    "lastModified": 1790545591
+    "rev": "d23dbfe887c91b9a06a660b1ad5146e2e683a3cb",
+    "narHash": "sha256-6OQCgfvm/e10/DgO8DNka1cUhKW5lqVxPH9Zb2JCtg0=",
+    "lastModified": 1792621581
   },
   "niri-screenshare": {
     "type": "github",
@@ -164,9 +164,9 @@
     "type": "github",
     "owner": "4evy",
     "repo": "nixcord",
-    "rev": "99ad1fb696c3b761ea6dac99211c862b9ca64571",
-    "narHash": "sha256-XpP8ws1IYlvoQVN27adsJkLP5IsJ6H/o8aWtS3WrE2s=",
-    "lastModified": 1792571875
+    "rev": "4c03b0a847f017b949334d39f318c72c1ad05253",
+    "narHash": "sha256-2yP5F5xz0rjGcjop4i5wJiPWejlLME1KI6EwU1PVOGw=",
+    "lastModified": 1792620469
   },
   "nixpkgs": {
     "type": "github",
@@ -204,25 +204,25 @@
     "type": "git",
     "url": "https://github.com/LizardByte/Sunshine",
     "ref": "refs/heads/master",
-    "rev": "3494b23e20b13d27b88fa08b97d07cb6d917f919",
-    "narHash": "sha256-uRRjBuPFzABQeDq6nBNtP5zx+8jewUsBOSnlUDCx/tg=",
-    "lastModified": 1792550721,
+    "rev": "d0b4a88ef727f8dabf80cc970a14739b55c885de",
+    "narHash": "sha256-F93PSEtyi3aK16+BkBs58pztaZY+UdbQI3y6hdSS5Oo=",
+    "lastModified": 1792591621,
     "submodules": true
   },
   "system-manager": {
     "type": "github",
     "owner": "numtide",
     "repo": "system-manager",
-    "rev": "c397860e511383fe554ccd2b8366ee34fc88cff4",
-    "narHash": "sha256-kp8zGdTh85Wm7WJP0ko8WOhnjaxQkUyt4Bg0abnhkqM=",
-    "lastModified": 1792060118
+    "rev": "15d8876e7001965441384ad6a6ab52dce6fa478a",
+    "narHash": "sha256-pwFFodVRmQObesGOg3RFBq7EXE2sAX5N5Ob72vhi8Wk=",
+    "lastModified": 1792607061
   },
   "t3": {
     "type": "github",
     "owner": "numtide",
     "repo": "llm-agents.nix",
-    "rev": "4c0e549dab7167b1fe7433af15adf892a299fb83",
-    "narHash": "sha256-YRvnXVnyZGr6+v118Lb4pTtzLzeJet2Y69qf00katjQ=",
-    "lastModified": 1792577217
+    "rev": "8b5adae4ae8782171ff6aaef94e444525cdd023d",
+    "narHash": "sha256-5unRGvOzL3dWQqXbDP9VL3ndco8MtvCKYUVECDxHYvE=",
+    "lastModified": 1792620735
   }
 }
