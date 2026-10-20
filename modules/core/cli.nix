@@ -21,7 +21,7 @@
     }
   ];
 
-  environment.systemPackages = with pkgs; [curl wget fzf fd ripgrep microfetch];
+  environment.systemPackages = with pkgs; [curl wget fzf fd ripgrep microfetch nixpkgs-track];
 
   programs = {
     tack.enable = true;
