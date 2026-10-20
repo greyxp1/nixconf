@@ -1,16 +1,6 @@
 {inputs, ...}: {
   imports = [inputs.preservation.nixosModules.preservation];
-  systemd.suppressedSystemUnits = ["systemd-machine-id-commit.service"];
-  fileSystems = {
-    "/" = {
-      device = "none";
-      fsType = "tmpfs";
-      options = ["size=4G" "mode=755"];
-    };
-    "/nix".neededForBoot = true;
-    "/persistent".neededForBoot = true;
-  };
-
+  environment.variables.TMPDIR = "/persistent/tmp";
   preservation = {
     enable = true;
     preserveAt."/persistent" = {
@@ -32,5 +22,20 @@
         }
       ];
     };
+  };
+
+  fileSystems = {
+    "/" = {
+      device = "none";
+      fsType = "tmpfs";
+      options = ["size=4G" "mode=755"];
+    };
+    "/nix".neededForBoot = true;
+    "/persistent".neededForBoot = true;
+  };
+
+  systemd = {
+    suppressedSystemUnits = ["systemd-machine-id-commit.service"];
+    tmpfiles.rules = ["d /persistent/tmp 1777 root root 7d"];
   };
 }
