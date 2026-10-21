@@ -131,6 +131,10 @@ in {
   };
   systemd.tmpfiles.rules = ["d /home/.nix-build 0711 root root -"];
   environment.etc."nix/nix.conf".mode = "0644";
+  environment.etc."sysctl.d/90-ipv4-only.conf".text = ''
+    net.ipv6.conf.all.disable_ipv6 = 1
+    net.ipv6.conf.default.disable_ipv6 = 1
+  '';
   environment.etc."udev/rules.d/98-block-io-scheduler.rules".text = ''
     SUBSYSTEM=="block", ACTION=="add|change", TEST=="queue/scheduler", KERNEL!="loop[0-9]*", ATTR{queue/scheduler}="mq-deadline"
   '';
