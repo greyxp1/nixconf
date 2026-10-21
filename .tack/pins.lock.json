@@ -19,9 +19,9 @@
     "type": "github",
     "owner": "greyxp1",
     "repo": "computer-use-linux-flake",
-    "rev": "c002d0d8251b942cb0bfaf4ff4517c70004b78ea",
-    "narHash": "sha256-vsE7UCPtISMvisjVnmvee5cXQKuv4tfeooxTo9T5xMA=",
-    "lastModified": 1792332531
+    "rev": "fdbfc257abf28922eef9cd96d535284a529c50e1",
+    "narHash": "sha256-zy0gyhfTDiZxC7hFYx00ilclmu1XBGzr5+NTk2HnUwE=",
+    "lastModified": 1792529423
   },
   "cord-stash": {
     "type": "github",
@@ -35,9 +35,9 @@
     "type": "github",
     "owner": "nix-community",
     "repo": "disko",
-    "rev": "fb50c22daa522e9a155ff18f9730ec6013e3fc7d",
-    "narHash": "sha256-r3C+5Gk2ex6Q2ZX3tgTbOHyKBYLYD+bmunnvebErqZA=",
-    "lastModified": 1792522401
+    "rev": "cedd626e11b635470fa6f9fdb8ad79b0075dd7f9",
+    "narHash": "sha256-3hSJlv8mUVnZPMWK2+CM7a9O+nR6Z4mCh27NfLCmTPc=",
+    "lastModified": 1792526520
   },
   "flake-parts": {
     "type": "github",
@@ -164,9 +164,9 @@
     "type": "github",
     "owner": "4evy",
     "repo": "nixcord",
-    "rev": "fbad3c6cd2f0521fdac9ba7168a60b49172939b3",
-    "narHash": "sha256-qrNYp+8SEtWoYYI7d6kDHAjCI8UMLljqOaga5TQT15Q=",
-    "lastModified": 1792522600
+    "rev": "99ad1fb696c3b761ea6dac99211c862b9ca64571",
+    "narHash": "sha256-XpP8ws1IYlvoQVN27adsJkLP5IsJ6H/o8aWtS3WrE2s=",
+    "lastModified": 1792571875
   },
   "nixpkgs": {
     "type": "github",
@@ -204,9 +204,9 @@
     "type": "git",
     "url": "https://github.com/LizardByte/Sunshine",
     "ref": "refs/heads/master",
-    "rev": "cf0fff256399c9632c540cb0240498dc707b740a",
-    "narHash": "sha256-JJPG0x2e4fl+Dvkl48r0sutCE9BfDeAhsMdmnjFq610=",
-    "lastModified": 1792499979,
+    "rev": "3494b23e20b13d27b88fa08b97d07cb6d917f919",
+    "narHash": "sha256-uRRjBuPFzABQeDq6nBNtP5zx+8jewUsBOSnlUDCx/tg=",
+    "lastModified": 1792550721,
     "submodules": true
   },
   "system-manager": {
@@ -221,8 +221,8 @@
     "type": "github",
     "owner": "numtide",
     "repo": "llm-agents.nix",
-    "rev": "06419f6a482c5a4d38d703f4b88b128740d3124e",
-    "narHash": "sha256-vGjr+2nzejufjFvsqgGhvEEO6yN+fRj6ukKUItAULZ8=",
-    "lastModified": 1792490949
+    "rev": "4c0e549dab7167b1fe7433af15adf892a299fb83",
+    "narHash": "sha256-YRvnXVnyZGr6+v118Lb4pTtzLzeJet2Y69qf00katjQ=",
+    "lastModified": 1792577217
   }
 }
