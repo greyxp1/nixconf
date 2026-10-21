@@ -31,7 +31,6 @@ in {
     volumes = [
       "/home/grey/.local/share/pelican:/pelican-data"
       "${caddyConfig}:/etc/caddy/Caddyfile:ro"
-      "${./pelican-backup.php}:/opt/pelican-backup.php:ro"
     ];
     environment = {
       APP_URL = "https://server.tail1785c.ts.net:8444";
@@ -88,23 +87,8 @@ in {
       ${pkgs.tailscale}/bin/tailscale serve --bg --https=8445 http://127.0.0.1:18081
     '';
   };
-  systemd.services.pelican-backup = {
-    description = "Back up Pelican games and rotate old backups";
-    requires = ["docker-pelican.service" "pelican-wings.service"];
-    after = ["docker-pelican.service" "pelican-wings.service"];
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = "${pkgs.docker}/bin/docker exec pelican php /opt/pelican-backup.php";
-      TimeoutStartSec = "2h";
-      ExecStartPost = "${pkgs.coreutils}/bin/chown -R grey:users /home/grey/Backups/Games";
-    };
+  networking.firewall = {
+    allowedTCPPorts = [25565];
+    allowedUDPPorts = [8211];
   };
-  systemd.timers.pelican-backup = {
-    wantedBy = ["timers.target"];
-    timerConfig = {
-      OnCalendar = "*-*-* 05:00:00";
-      Persistent = true;
-    };
-  };
-  networking.firewall.allowedTCPPorts = [25565];
 }

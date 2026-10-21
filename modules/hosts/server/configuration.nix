@@ -20,11 +20,9 @@ in {
 
     imports = [
       (inputs.import-tree ../../core)
-      ./_modules/pelican.nix
       ./_modules/jellyfin.nix
       ./_modules/livesync.nix
-      ./_modules/obsidian.nix
-      ./_modules/docker.nix
+      ./_modules/docker/docker.nix
       ./_modules/freedns.nix
       ./_modules/website.nix
     ];

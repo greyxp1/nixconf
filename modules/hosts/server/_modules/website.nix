@@ -111,6 +111,4 @@
     wants = ["network-online.target"];
     unitConfig.RequiresMountsFor = ["/var/lib/caddy"];
   };
-
-  networking.firewall.allowedUDPPorts = [8211];
 }
