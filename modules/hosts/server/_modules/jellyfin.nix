@@ -1,4 +1,4 @@
-{...}: {
+{pkgs, ...}: {
   services.jellyfin = {
     enable = true;
   };
@@ -26,6 +26,14 @@
     "a+ /home/grey/Videos/Shows - - - - d:u:jellyfin:r-x"
   ];
   systemd.services.jellyfin = {
+    preStart = ''
+      ${pkgs.xmlstarlet}/bin/xmlstarlet ed --inplace \
+        --update /NetworkConfiguration/BaseUrl --value /jellyfin \
+        --update /NetworkConfiguration/EnableUPnP --value false \
+        --delete /NetworkConfiguration/KnownProxies/string \
+        --subnode /NetworkConfiguration/KnownProxies --type elem --name string --value 127.0.0.1 \
+        /var/lib/jellyfin/config/network.xml
+    '';
     requires = ["preservation.target"];
     after = ["preservation.target"];
     unitConfig = {

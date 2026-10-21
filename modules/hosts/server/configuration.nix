@@ -26,6 +26,7 @@ in {
       ./_modules/obsidian.nix
       ./_modules/docker.nix
       ./_modules/freedns.nix
+      ./_modules/website.nix
     ];
   };
 }
