@@ -28,6 +28,7 @@ in {
     ./system/boot.nix
     ./system/login.nix
     ./system/services.nix
+    ./system/backup.nix
     ./system/virtualisation.nix
     ./system/desktop.nix
   ];
