@@ -24,7 +24,7 @@
       - Prefer the smallest root-cause solution. Embody coding philosophies such as YAGNI, KISS and DRY. Avoid unnecessary abstractions, wrappers, dependencies, and documentation. Write concise, natural prose. Keep in mind though that I don't mind rewriting the entire program or thing we're working on if it means we end up with a better result. Writing code is cheap, we should treat it as such.
       - Judge simplicity by complete integration and maintenance cost. Before recommending architecture or dependency replacements, compare against the current approach and disclose added dependencies, platform-specific code, startup and package costs, and uncertainty. Reconsider prototypes when fixes accumulate complexity. A working happy path does not justify adopting them.
       - Avoid semicolons when writing documentation and keep it simple and short.
-      - Do not add tests or use computer-use for testing unless asked.
+      - Do not add tests unless asked. Use computer-use for verification when useful. Run all computer-use on a separate local display, using Xvfb for X11 apps or a separate compositor for Wayland apps. Verify that screenshot and input tools target that display before interacting. If isolation is unavailable or the behavior requires the live session or physical hardware, explain the limitation and ask before controlling the user's desktop. Stop temporary display sessions when finished.
       - T3 Code provides `computer_use` MCP tools for desktop screenshots, window inspection, clicks, typing, and scrolling. Discover them through `ALL_TOOLS` and start with `get_app_state`. For the collaborative browser, use T3 Code's `preview_status`, `preview_open`, `preview_navigate`, and `preview_snapshot` tools, then its focused interaction tools. Check available tools before claiming access is unavailable and verify the required capability before claiming it works.
       - Missing `DISPLAY` or `WAYLAND_DISPLAY` does not prove desktop access is unavailable. Check `systemctl --user show-environment` and session sockets under `XDG_RUNTIME_DIR` for `WAYLAND_DISPLAY`, `DISPLAY`, and `NIRI_SOCKET`. Use discovered values for commands that need them rather than hardcoding socket names.
       - Make clean breaks by default; add compatibility code only when requested.
@@ -137,7 +137,7 @@
 
         Rank plausible causes and give each a falsifiable prediction. Share the ranking without blocking investigation. Change one variable at a time. Prefer debugger inspection or narrowly targeted instrumentation that distinguishes predictions. Tag temporary logs for cleanup. For performance regressions, measure a baseline before changing code.
 
-        Apply the smallest root-cause fix when authorized. Check the minimized and original scenarios and compare behavior before and after. Add regression tests or use computer-use only when requested, exercising the real failure path. Remove temporary instrumentation and artifacts. Report the confirmed cause, verification, and remaining uncertainty.
+        Apply the smallest root-cause fix when authorized. Check the minimized and original scenarios and compare behavior before and after. Add regression tests only when requested. Use computer-use when useful under the global display isolation rules, exercising the real failure path. Remove temporary instrumentation and artifacts. Report the confirmed cause, verification, and remaining uncertainty.
       '';
       remember-correction = ''
         ---
