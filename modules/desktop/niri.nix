@@ -210,6 +210,7 @@ in {
       maximize-single-window-to-edges = {};
       insert-hint.off = {};
       background-color = "transparent";
+      fullscreen-backdrop-color = "transparent";
       focus-ring.active-color = "#cba6f7";
     };
 
