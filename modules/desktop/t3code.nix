@@ -15,8 +15,8 @@
   # T3 sets its own agents slice limits, so enforce the shared budget on its parent.
   systemd.user.slices.app-t3code.sliceConfig = {
     CPUWeight = "idle";
-    MemoryHigh = "20%";
-    MemoryMax = "25%";
+    MemoryHigh = "60%";
+    MemoryMax = "75%";
     MemorySwapMax = "10%";
     ManagedOOMMemoryPressure = "kill";
   };
