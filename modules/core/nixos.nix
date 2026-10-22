@@ -12,9 +12,7 @@ in {
   nixpkgs.config.allowUnfree = true;
   documentation.nixos.enable = false;
   hardware.block.defaultScheduler = "mq-deadline";
-  security.sudo.extraConfig = ''
-    Defaults secure_path="/run/wrappers/bin:/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin"
-  '';
+  security.sudo.extraConfig = "Defaults secure_path=\"/run/wrappers/bin:/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin\"";
 
   nix = {
     daemonCPUSchedPolicy = "idle";
@@ -31,17 +29,19 @@ in {
   };
 
   systemd = {
-    services.systemd-udevd.postStart = "${pkgs.systemd}/bin/udevadm trigger --subsystem-match=block --action=change";
-    services.nix-daemon.serviceConfig = daemonResources;
-    services."nix-daemon@".serviceConfig = daemonResources;
+    services = {
+      systemd-udevd.postStart = "${pkgs.systemd}/bin/udevadm trigger --subsystem-match=block --action=change";
+      nix-daemon.serviceConfig = daemonResources;
+      "nix-daemon@".serviceConfig = daemonResources;
+    };
+
     slices.nixbuild.sliceConfig = {
       CPUWeight = "idle";
-      MemoryHigh = "50%";
-      MemoryMax = "60%";
-      MemorySwapMax = 0;
+      MemoryHigh = "45%";
+      MemoryMax = "50%";
+      MemorySwapMax = "10%";
+      ManagedOOMSwap = "kill";
       ManagedOOMMemoryPressure = "kill";
-      ManagedOOMMemoryPressureLimit = "50%";
-      ManagedOOMMemoryPressureDurationSec = "10s";
     };
   };
 

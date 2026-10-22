@@ -12,6 +12,15 @@
   programs.t3code.package = inputs.t3.packages.${pkgs.stdenv.hostPlatform.system}.t3code.unwrapped;
   services.t3code.enable = true;
 
+  # T3 sets its own agents slice limits, so enforce the shared budget on its parent.
+  systemd.user.slices.app-t3code.sliceConfig = {
+    CPUWeight = "idle";
+    MemoryHigh = "20%";
+    MemoryMax = "25%";
+    MemorySwapMax = "10%";
+    ManagedOOMMemoryPressure = "kill";
+  };
+
   programs.codex = {
     enable = true;
     package = inputs.t3.packages.${pkgs.stdenv.hostPlatform.system}.codex;

@@ -1,22 +1,39 @@
-{lib, ...}: {
+{
+  config,
+  lib,
+  ...
+}: {
   time.timeZone = "America/Montreal";
   networking.networkmanager.enable = true;
   preservation.preserveAt."/persistent".directories = ["/var/lib/NetworkManager"];
   hardware.enableRedistributableFirmware = true;
+
   systemd = {
-    oomd.enableSystemSlice = true;
-    # Target workloads without making the desktop session an oomd candidate.
-    user.slices.app.sliceConfig = {
-      ManagedOOMSwap = "kill";
-      ManagedOOMMemoryPressure = "kill";
-      ManagedOOMMemoryPressureLimit = "50%";
-      ManagedOOMMemoryPressureDurationSec = "10s";
+    services.systemd-oomd.restartTriggers = [config.environment.etc."systemd/oomd.conf".source];
+    user.slices = {
+      app.sliceConfig = {
+        ManagedOOMSwap = "kill";
+        ManagedOOMMemoryPressure = "kill";
+      };
+
+      background.sliceConfig = {
+        ManagedOOMSwap = "kill";
+        ManagedOOMMemoryPressure = "kill";
+      };
     };
-    user.slices.background.sliceConfig = {
-      ManagedOOMSwap = "kill";
-      ManagedOOMMemoryPressure = "kill";
-      ManagedOOMMemoryPressureLimit = "50%";
-      ManagedOOMMemoryPressureDurationSec = "10s";
+
+    oomd = {
+      enableSystemSlice = true;
+      settings.OOM = {
+        DefaultMemoryPressureLimit = "20%";
+        DefaultMemoryPressureDurationSec = "5s";
+      };
+    };
+
+    slices = {
+      # Use the shared oomd default instead of NixOS's system.slice override.
+      system.sliceConfig.ManagedOOMMemoryPressureLimit = "0%";
+      user.sliceConfig.MemoryLow = "25%";
     };
   };
 
