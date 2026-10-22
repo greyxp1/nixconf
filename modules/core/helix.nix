@@ -29,15 +29,11 @@
         color-modes = true;
         default-yank-register = "+";
         continue-comments = false;
+        soft-wrap.enable = true;
         cursor-shape = {
           normal = "bar";
           insert = "bar";
           select = "bar";
-        };
-
-        soft-wrap = {
-          enable = true;
-          wrap-indicator = "";
         };
       };
 
