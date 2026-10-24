@@ -83,9 +83,9 @@
     "type": "github",
     "owner": "rockorager",
     "repo": "monstar",
-    "rev": "2ef17791aa6597d9a5a19d92de650c14930b0c9d",
-    "narHash": "sha256-3RM+JNFZvSHdeRgD1gutYs23VDfE7+IEAXNUNkaGRbo=",
-    "lastModified": 1792413913
+    "rev": "03fb3402d2b0929f8635fceec431bfacf2c73f0d",
+    "narHash": "sha256-cYzGHFqSPwomrQeEbJ8OB0CCTerQJUp3ixn+hZflCIM=",
+    "lastModified": 1792881535
   },
   "moonlight-embedded": {
     "type": "git",

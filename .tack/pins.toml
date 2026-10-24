@@ -55,7 +55,7 @@ url = "gh:nolight132/nls"
 url = "gh:KKV9/compress.yazi/pull/32/head"
 type = "fetch"
 [inputs.monstar]
-url = "gh:rockorager/monstar/main"
+url = "gh:rockorager/monstar/pull/72/head"
 [inputs.sonora]
 url = "gh:sonorahq/sonora/pull/1006/head"
 [inputs.nix-index-database]
