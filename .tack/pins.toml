@@ -16,7 +16,7 @@ url = "git+https://github.com/moonlight-stream/moonlight-embedded?ref=refs/pull/
 type = "fetch"
 submodules = true
 [inputs.preservation]
-url = "gh:nix-community/preservation"
+url = "gh:nix-community/preservation/bdcf5e82027324eac32c03331d4ea9c4948228b6"
 [inputs.import-tree]
 url = "gh:vic/import-tree"
 [inputs.disko]

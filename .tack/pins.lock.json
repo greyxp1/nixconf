@@ -3,9 +3,9 @@
     "type": "github",
     "owner": "catppuccin",
     "repo": "nix",
-    "rev": "30c87b95a628e81ec82a4fa0ed4db85d7c7d46d6",
-    "narHash": "sha256-mRsa8oJ8R7fkvR5K+uQYfuxX9Np0ai/KvzTE8FYVx7E=",
-    "lastModified": 1792238796
+    "rev": "a08c7948f09cdd3c7f80f718b1d9b93eeaacca0c",
+    "narHash": "sha256-wDEAxTyksYFu9HVo8L6ozCRoW2k6QGlJkedujlY+VA4=",
+    "lastModified": 1792851666
   },
   "compress-yazi": {
     "type": "github",
@@ -19,9 +19,9 @@
     "type": "github",
     "owner": "greyxp1",
     "repo": "computer-use-linux-flake",
-    "rev": "fdbfc257abf28922eef9cd96d535284a529c50e1",
-    "narHash": "sha256-zy0gyhfTDiZxC7hFYx00ilclmu1XBGzr5+NTk2HnUwE=",
-    "lastModified": 1792529423
+    "rev": "ddbe216b8609db4cda10279e6f59806ecd3c7671",
+    "narHash": "sha256-5EiGb8Ka1Sf1EUk9Dsm9QX8ra5GwJ0vyX8pqM2Nj/2g=",
+    "lastModified": 1792876147
   },
   "cord-stash": {
     "type": "github",
@@ -164,17 +164,17 @@
     "type": "github",
     "owner": "4evy",
     "repo": "nixcord",
-    "rev": "18eee24217ebc5633ebb4f710686276beb2a2c2f",
-    "narHash": "sha256-wBrYfc/+cCHSIW8IcgFjrEqkya86Xsok1di+Cr3r8DM=",
-    "lastModified": 1792693177
+    "rev": "5e720f01d326ffd0ca157a3d2456a5d2b490db3d",
+    "narHash": "sha256-/jqKho4Hq2k5kgFr9/cONiDYj6p0j668+dB/jvnTn0M=",
+    "lastModified": 1792831283
   },
   "nixpkgs": {
     "type": "github",
     "owner": "nixos",
     "repo": "nixpkgs",
-    "rev": "02c087f3fe673c9e317f206a627cb6b910336dbe",
-    "narHash": "sha256-IoNisKcGbUjdd45qCqywGMCYmZ5EnkxezvLII0FWwNA=",
-    "lastModified": 1792502884
+    "rev": "3ec636362e1816bc2f0888fa0fa2c69f1bc9e504",
+    "narHash": "sha256-rZLrzrC6i+jnTAlvPZHogKDulY7WWDEv9hJeHieO7Zw=",
+    "lastModified": 1792773339
   },
   "perch": {
     "type": "github",
@@ -188,9 +188,9 @@
     "type": "github",
     "owner": "nix-community",
     "repo": "preservation",
-    "rev": "93416f4614ad2dfed5b0dcf12f27e57d27a5ab11",
-    "narHash": "sha256-mMI9IanU+Xw+pVogD2oT0I2kTmvz2Un/Apc5+CwUpEY=",
-    "lastModified": 1757436102
+    "rev": "bdcf5e82027324eac32c03331d4ea9c4948228b6",
+    "narHash": "sha256-4LzAX+1rfnSGgD1Ha5/dMKxfgGbQ37GcpWNxULWJRlo=",
+    "lastModified": 1792605001
   },
   "sonora": {
     "type": "github",
@@ -221,8 +221,8 @@
     "type": "github",
     "owner": "numtide",
     "repo": "llm-agents.nix",
-    "rev": "24cf271f40105749bb82ad318013c372183ef28e",
-    "narHash": "sha256-O8JsXXPl26uxJ2nITotVnq7FAubqzsK4pWhZuh78bDA=",
-    "lastModified": 1792687927
+    "rev": "043e47dcce40af42870f123e9e3fa9c70660c466",
+    "narHash": "sha256-qhDruOozChmM2JVOj/ZEt3QjBOdmaiKhGBqPZLW8i54=",
+    "lastModified": 1792875685
   }
 }
