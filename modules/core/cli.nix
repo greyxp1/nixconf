@@ -12,7 +12,7 @@
 
   services.tailscale = {
     enable = true;
-    extraSetFlags = ["--operator=grey"];
+    extraSetFlags = ["--operator=grey" "--ssh"];
   };
   preservation.preserveAt."/persistent".directories = [
     {

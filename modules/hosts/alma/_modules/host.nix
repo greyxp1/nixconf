@@ -1,5 +1,7 @@
 {
   inputs,
+  lib,
+  nixos,
   pkgs,
   ...
 }: let
@@ -56,7 +58,6 @@ in {
       "mesa-dri-drivers"
       "microcode_ctl"
       "openssh-clients"
-      "openssh-server"
       "pipewire"
       "pipewire-alsa"
       "pipewire-pulseaudio"
@@ -90,7 +91,6 @@ in {
       "getty@tty1.service"
       "getty@tty2.service"
       "irqbalance.service"
-      "sshd.service"
       "tailscaled.service"
       "alma-school-exit-node.service"
     ];
@@ -153,6 +153,7 @@ in {
   environment.systemPackages = [pkgs.tailscale];
 
   systemd.maskedUnits = [
+    "sshd.service"
     "NetworkManager-wait-online.service"
     "firewalld.service"
     "kdump.service"
@@ -186,10 +187,20 @@ in {
     services.tailscaled = {
       wantedBy = ["multi-user.target"];
       serviceConfig = {
+        Type = "notify";
         ExecStart = "${pkgs.tailscale}/bin/tailscaled --state=/var/lib/tailscale/tailscaled.state --socket=/run/tailscale/tailscaled.sock --port=41641";
         StateDirectory = "tailscale";
         RuntimeDirectory = "tailscale";
         Restart = "on-failure";
+      };
+    };
+    services.tailscaled-set = {
+      wantedBy = ["tailscaled.service"];
+      after = ["tailscaled.service"];
+      requires = ["tailscaled.service"];
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = "${pkgs.tailscale}/bin/tailscale set ${lib.escapeShellArgs nixos.services.tailscale.extraSetFlags}";
       };
     };
     targets.system-manager.wants = ["system-manager-path.service"];

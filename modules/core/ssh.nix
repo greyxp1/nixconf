@@ -1,10 +1,4 @@
 {
-  services.openssh = {
-    enable = true;
-    openFirewall = true;
-    startWhenNeeded = true;
-  };
-
   programs.ssh = {
     startAgent = true;
     extraConfig = ''
@@ -16,17 +10,4 @@
         IdentityFile ~/.ssh/id_ed25519
     '';
   };
-
-  preservation.preserveAt."/persistent".files = [
-    {
-      file = "/etc/ssh/ssh_host_ed25519_key";
-      how = "symlink";
-      configureParent = true;
-    }
-    {
-      file = "/etc/ssh/ssh_host_rsa_key";
-      how = "symlink";
-      configureParent = true;
-    }
-  ];
 }
