@@ -125,7 +125,7 @@ in {
     binds = {
       "Mod+Return" = bind {spawn = ["monstar"];};
       "Mod+Escape" = bind {spawn = ["monstar" "-e" "btm"];};
-      "Mod+E" = bind {spawn = ["monstar" "-e" "yazi"];};
+      "Mod+E" = bind {spawn = ["monstar" "-e" "fish" "-C" "y"];};
       "Mod+B" = bind {spawn = "helium";};
 
       "Mod+C" = bind {spawn-sh = "noctalia msg panel-toggle control-center";};
