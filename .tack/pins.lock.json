@@ -188,9 +188,9 @@
     "type": "github",
     "owner": "nix-community",
     "repo": "preservation",
-    "rev": "bdcf5e82027324eac32c03331d4ea9c4948228b6",
-    "narHash": "sha256-4LzAX+1rfnSGgD1Ha5/dMKxfgGbQ37GcpWNxULWJRlo=",
-    "lastModified": 1792605001
+    "rev": "00be7f7dd1a11ae0605386f2272288de7cf33abe",
+    "narHash": "sha256-s/A2rSO2Ndf8Y5yiouesnI/3Zkn9pmVGF2NxFxOUvx8=",
+    "lastModified": 1792953443
   },
   "sonora": {
     "type": "github",
