@@ -1,8 +1,4 @@
-{
-  config,
-  lib,
-  ...
-}: {
+{config, ...}: {
   time.timeZone = "America/Montreal";
   networking.networkmanager.enable = true;
   preservation.preserveAt."/persistent".directories = ["/var/lib/NetworkManager"];
@@ -34,8 +30,8 @@
     kernelParams = ["systemd.show_status=auto"];
     consoleLogLevel = 3;
     loader = {
-      efi.canTouchEfiVariables = lib.mkDefault true;
-      systemd-boot.enable = lib.mkDefault true;
+      efi.canTouchEfiVariables = true;
+      systemd-boot.enable = true;
       timeout = 0;
     };
   };

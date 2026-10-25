@@ -1,7 +1,13 @@
 # Installation
 
 ```bash
-curl -fsSL https://greyxp1.github.io/nixconf/i | bash
+curl -fsSL greyxp1.github.io/nixconf/i | bash
+```
+
+For AlmaLinux:
+
+```bash
+curl -fsSL https://greyxp1.github.io/nixconf/alma | bash
 ```
 
 # T3 Code

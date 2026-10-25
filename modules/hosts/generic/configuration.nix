@@ -9,7 +9,6 @@ in {
 
     services.qemuGuest.enable = true;
     disko.devices.disk.main = {
-      device = import ./_device.nix;
       content.partitions.swap = {
         size = "8G";
         content.type = "swap";

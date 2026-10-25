@@ -2,7 +2,6 @@
   mkHost = import ../_mkHost.nix inputs;
 in {
   flake.nixosConfigurations.desktop = mkHost "desktop" {
-    disko.devices.disk.main.device = import ./_device.nix;
     hardware.cpu.amd.updateMicrocode = true;
     powerManagement.cpuFreqGovernor = "performance";
 

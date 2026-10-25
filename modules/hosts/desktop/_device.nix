@@ -1,1 +1,0 @@
-"/dev/disk/by-id/nvme-KINGSTON_SNV2S1000G_50026B778557B959"

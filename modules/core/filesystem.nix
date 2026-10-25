@@ -5,6 +5,8 @@
 }: {
   imports = [inputs.disko.nixosModules.disko];
   disko.devices.disk.main = {
+    # The installer links the selected disk here.
+    device = "/dev/nixos-disk";
     type = "disk";
     content = {
       type = "gpt";

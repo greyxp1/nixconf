@@ -3,272 +3,24 @@ set -euo pipefail
 umask 022
 
 REPO="${NIXCONF_REPO:-https://github.com/greyxp1/nixconf.git}"
-
-use_alma_https_repositories() {
-  local repo_file
-
-  for repo_file in /etc/yum.repos.d/almalinux-*.repo; do
-    [[ -f $repo_file ]] || continue
-    sudo /usr/bin/sed -i \
-      -e 's|^mirrorlist=|# mirrorlist=|' \
-      -e 's|^# *baseurl=https://repo.almalinux.org/almalinux/|baseurl=https://repo.almalinux.org/almalinux/|' \
-      "$repo_file"
-  done
-}
-
-bootstrap_alma_sudo() {
-  local policy_file
-
-  policy_file=$(/usr/bin/mktemp -t nixconf-sudoers.XXXXXX)
-  /usr/bin/printf '%s\n' '%wheel ALL=(ALL:ALL) NOPASSWD: ALL' >"$policy_file"
-  /usr/sbin/visudo --check --file "$policy_file"
-  sudo /usr/bin/install -o root -g root -m 0440 \
-    "$policy_file" /etc/sudoers.d/nixconf
-  /usr/bin/rm -f "$policy_file"
-
-  # Everything after this point must remain unattended-safe, including the
-  # privileged System Manager activation after a potentially long Nix build.
-  sudo -n /usr/bin/true
-}
-
-update_alma_checkout() {
-  local repo_dir="$1"
-  local branch
-
-  if [[ -n $(git -C "$repo_dir" status --porcelain --untracked-files=all) ]]; then
-    echo "Refusing to update a checkout with local changes: $repo_dir" >&2
-    echo "Commit or stash those changes, then run the installer again." >&2
-    exit 1
-  fi
-
-  branch=$(git -C "$repo_dir" symbolic-ref --quiet --short HEAD || true)
-  if [[ $branch != main ]]; then
-    echo "Refusing to replace the current Git branch '$branch'; expected 'main'." >&2
-    exit 1
-  fi
-
-  echo "==> Updating existing checkout: $repo_dir"
-  git -C "$repo_dir" fetch --prune origin main
-  git -C "$repo_dir" rebase FETCH_HEAD
-}
-
-build_alma_system_config() {
-  local repo_dir="$1"
-  local uid="$2"
-  local gid="$3"
-  local primary_group="$4"
-
-  NIX_PATH='' \
-  NIXCONF_UID="$uid" \
-  NIXCONF_GID="$gid" \
-  NIXCONF_PRIMARY_GROUP="$primary_group" \
-    nix build --impure --no-link --print-out-paths \
-      --file "$repo_dir/modules/hosts/alma/_build.nix"
-}
-
-install_alma() {
-  local gid
-  local nix_profile="/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"
-  local primary_group
-  local repo_dir
-  local system_config
-  local system_manager
-  local uid
-
-  [[ $EUID -ne 0 ]] || {
-    echo "Run the Alma installer as the account that will use this system, not root." >&2
-    exit 1
-  }
-  if [[ $(id -un) != grey || $(getent passwd grey | /usr/bin/cut -d: -f6) != /home/grey ]]; then
-    echo "Run the Alma installer as grey with home directory /home/grey." >&2
-    exit 1
-  fi
-  uid=$(id -u)
-  gid=$(id -g)
-  primary_group=$(id -gn)
-  if [[ ! $primary_group =~ ^[a-zA-Z_][a-zA-Z0-9_.-]*$ || ! -d /home/grey ]]; then
-    echo "The current native account has unsupported identity data." >&2
-    exit 1
-  fi
-  repo_dir="/home/grey/Projects/nixconf"
-  # shellcheck disable=SC1091
-  source /etc/os-release
-  if [[ ${ID:-} != almalinux || ! ${VERSION_ID:-} =~ ^(9|10)(\.|$) ]]; then
-    echo "The Alma installer supports only AlmaLinux 9 and 10." >&2
-    exit 1
-  fi
-  if ! id -nG grey | /usr/bin/tr ' ' '\n' | /usr/bin/grep -Fqx wheel; then
-    echo "grey must belong to the wheel group." >&2
-    exit 1
-  fi
-  sudo -v
-  bootstrap_alma_sudo
-  use_alma_https_repositories
-  rpm --quiet -q git || sudo dnf install -y git
-
-  if [[ ! -e "$nix_profile" ]]; then
-    curl -fsSL https://artifacts.nixos.org/nix-installer \
-      | sh -s -- install --enable-flakes --no-confirm
-  fi
-  # shellcheck disable=SC1090
-  source "$nix_profile"
-
-  mkdir -p "$(dirname "$repo_dir")"
-  if [[ -d "$repo_dir/.git" ]]; then
-    update_alma_checkout "$repo_dir"
-  elif [[ -e "$repo_dir" ]]; then
-    echo "Refusing to replace existing path: $repo_dir" >&2
-    exit 1
-  else
-    git clone "$REPO" "$repo_dir"
-  fi
-
-  cd "$repo_dir"
-  configure_alma_nix "$repo_dir"
-  system_manager=$(nix build --no-link --print-out-paths .#system-manager)
-  system_config=$(build_alma_system_config \
-    "$repo_dir" "$uid" "$gid" "$primary_group")
-  "$system_manager/bin/system-manager" register --store-path "$system_config" --sudo
-  "$system_manager/bin/system-manager" activate --store-path "$system_config" --sudo
-  [[ ! -L result ]] || /usr/bin/rm -f result
-  restart_and_wait_for_unit alma-host.service 900
-
-  echo "Alma setup for grey is complete. Verify Niri on tty1 before rebooting; tty2 remains the recovery console."
-}
-
-configure_alma_nix() {
-  local cache_file="$1/modules/hosts/alma/_cache.nix"
-  local substituters
-  local trusted_public_keys
-
-  substituters=$(nix eval --raw --impure --expr \
-    "builtins.concatStringsSep \" \" (import $cache_file).substituters")
-  trusted_public_keys=$(nix eval --raw --impure --expr \
-    "builtins.concatStringsSep \" \" (import $cache_file).trusted-public-keys")
-
-  sudo /usr/bin/install -d -m 0755 /etc/nix
-  /usr/bin/printf '%s\n' \
-    'trusted-users = root @wheel' \
-    'max-jobs = 2' \
-    'cores = 6' \
-    'warn-dirty = false' \
-    "extra-substituters = $substituters" \
-    "extra-trusted-public-keys = $trusted_public_keys" \
-    | sudo /usr/bin/tee /etc/nix/nix.custom.conf >/dev/null
-  /usr/bin/grep -Fqx '!include nix.custom.conf' /etc/nix/nix.conf \
-    || /usr/bin/printf '%s\n' '!include nix.custom.conf' \
-      | sudo /usr/bin/tee -a /etc/nix/nix.conf >/dev/null
-  sudo /usr/bin/systemctl restart nix-daemon.service
-}
-
-restart_and_wait_for_unit() {
-  local unit="$1"
-  local timeout="$2"
-  local before_invocation
-  local current_invocation
-  local deadline
-  local queued=false
-  local state
-
-  echo "==> Starting $unit..."
-  before_invocation=$(sudo /usr/bin/systemctl show \
-    --property=InvocationID --value "$unit" 2>/dev/null || true)
-  if sudo /usr/bin/systemctl restart --no-block "$unit"; then
-    queued=true
-  else
-    # The queued job can survive a transient system-bus disconnect. Reconnect
-    # and identify the new invocation before deciding that it failed.
-    deadline=$((SECONDS + 30))
-    while ((SECONDS < deadline)); do
-      current_invocation=$(sudo /usr/bin/systemctl show \
-        --property=InvocationID --value "$unit" 2>/dev/null || true)
-      if [[ -n $current_invocation && $current_invocation != "$before_invocation" ]]; then
-        queued=true
-        break
-      fi
-      /usr/bin/sleep 1
-    done
-    if [[ $queued != true ]]; then
-      sudo /usr/bin/journalctl --boot --unit "$unit" --no-pager --lines 200
-      return 1
-    fi
-  fi
-
-  deadline=$((SECONDS + timeout))
-  while ((SECONDS < deadline)); do
-    current_invocation=$(sudo /usr/bin/systemctl show \
-      --property=InvocationID --value "$unit" 2>/dev/null || true)
-    state=$(sudo /usr/bin/systemctl show \
-      --property=ActiveState --value "$unit" 2>/dev/null || true)
-    if [[ -n $current_invocation && $current_invocation != "$before_invocation" ]]; then
-      case "$state" in
-        active)
-          echo "==> $unit finished successfully."
-          return 0
-          ;;
-        failed)
-          sudo /usr/bin/journalctl --boot --unit "$unit" --no-pager --lines 200
-          return 1
-          ;;
-      esac
-    fi
-    /usr/bin/sleep 1
-  done
-
-  echo "Timed out waiting for $unit." >&2
-  sudo /usr/bin/journalctl --boot --unit "$unit" --no-pager --lines 200
-  return 1
-}
-
-# Returns the most stable device path for a given block device:
-# prefers /dev/disk/by-id/<name> (excluding partition entries),
-# falls back to the raw /dev/... path if no by-id symlink exists (e.g. VirtIO).
-by_id() {
-  local link
-  for link in /dev/disk/by-id/*; do
-    [[ "$link" != *-part* && "$link" -ef "$1" ]] && echo "$link" && return
-  done
-  echo "$1"
-}
-
-# Host selection
-echo "Select a host:"
-echo "  [0] desktop"
-echo "  [1] generic"
-echo "  [2] alma"
-echo "  [3] laptop"
-echo "  [4] server"
-read -rp "Choice: " n < /dev/tty
-case "$n" in
-  0) HOST=desktop ;; 1) HOST=generic ;; 2) HOST=alma ;; 3) HOST=laptop ;; 4) HOST=server ;;
-  *) echo "Invalid choice"; exit 1 ;;
-esac
-
-if [[ "$HOST" == alma ]]; then
-  install_alma
-  exit
+HOST=${1:-}
+if [[ -z $HOST ]]; then
+  PS3="Select a host: "
+  select HOST in desktop generic laptop server; do
+    [[ -n $HOST ]] && break
+  done < /dev/tty
 fi
-
-WORK_DIR=$(mktemp -d -t nixconf.XXXXXX)
-INSTALL_MANAGES_MNT=false
-
-cleanup() {
-  if [[ "$INSTALL_MANAGES_MNT" == true ]]; then
-    sudo umount -R /mnt 2>/dev/null || true
-  fi
-  rm -rf -- "$WORK_DIR"
-}
-trap cleanup EXIT
-
-PASSWORD_HASH=$(mkpasswd --method=yescrypt)
-
-if [[ "$HOST" != laptop && ! -d /sys/firmware/efi/efivars ]]; then
-  echo "UEFI required for $HOST"
+case "$HOST" in
+  desktop|generic|laptop|server) ;;
+  *) echo "Unknown host: $HOST" >&2; exit 1 ;;
+esac
+if [[ $HOST != laptop && ! -d /sys/firmware/efi/efivars ]]; then
+  echo "UEFI required for $HOST" >&2
   exit 1
 fi
 
-# Disk selection — exclude loop devices (-e 7) and the ISO boot disk
-ISO_DISK=$(findmnt -n -o SOURCE /iso 2>/dev/null | xargs -r lsblk -no PKNAME 2>/dev/null || true)
+# Exclude loop devices and the ISO boot disk.
+ISO_DISK=$(findmnt -nro SOURCE /iso 2>/dev/null | xargs -r lsblk -snro NAME,TYPE 2>/dev/null | awk '$2 == "disk" { print $1 }' || true)
 mapfile -t DISKS < <(lsblk -dn -o NAME,TYPE -e 7 | awk -v iso="$ISO_DISK" '$2 == "disk" && $1 != iso { print $1 }')
 [[ ${#DISKS[@]} -gt 0 ]] || { echo "No disks found"; exit 1; }
 
@@ -289,63 +41,57 @@ else
   DEV="/dev/${DISKS[$i]}"
 fi
 
-DEV_FINAL=$(by_id "$DEV")
-read -rp "Type WIPE to erase $DEV_FINAL: " confirm < /dev/tty
-[[ "$confirm" == "WIPE" ]] || { echo "Aborted"; exit 1; }
+read -rp "Type WIPE to erase $DEV: " confirm < /dev/tty
+[[ $confirm == WIPE ]] || { echo "Aborted"; exit 1; }
+PASSWORD_HASH=$(mkpasswd --method=yescrypt < /dev/tty)
 
-echo "==> Fetching config..."
-git clone -q "$REPO" "$WORK_DIR"
-
-# Write the device consumed directly by the host's Disko configuration.
-echo "\"$DEV_FINAL\"" > "$WORK_DIR/modules/hosts/$HOST/_device.nix"
-echo "==> Using device: $DEV_FINAL"
-
-cache_attr() {
-  nix eval --raw \
-    --impure \
-    --extra-experimental-features "nix-command" \
-    --expr "builtins.concatStringsSep \" \" (import $WORK_DIR/modules/core/_cache.nix).\"$1\""
+WORK_DIR=$(mktemp -d -t nixconf.XXXXXX)
+INSTALL_MANAGES_MNT=false
+target_mounts() {
+  findmnt -rn -o TARGET | awk '$0 == "/mnt" || index($0, "/mnt/") == 1'
 }
+cleanup() {
+  if [[ $INSTALL_MANAGES_MNT == true ]]; then
+    target_mounts | sort -r | xargs -r sudo umount || true
+    sudo rm -f /dev/nixos-disk
+  fi
+  rm -rf -- "$WORK_DIR"
+}
+trap cleanup EXIT
 
+git clone -q --depth 1 "$REPO" "$WORK_DIR"
+cache_attr() {
+  nix eval --extra-experimental-features nix-command --raw --impure --expr \
+    "builtins.concatStringsSep \" \" (import $WORK_DIR/modules/core/_cache.nix).\"$1\""
+}
 NIX_OPTS=(
+  --option extra-experimental-features 'nix-command flakes'
   --option download-buffer-size 536870912
-  --option substituters "$(cache_attr substituters)"
-  --option trusted-public-keys "$(cache_attr trusted-public-keys)"
+  --option extra-substituters "$(cache_attr substituters)"
+  --option extra-trusted-public-keys "$(cache_attr trusted-public-keys)"
 )
 
-# Disko formats and mounts first so nixos-install builds directly on the target;
-# disko-install can OOM low-memory VMs by building the closure in RAM.
-echo "==> Formatting ($HOST)..."
-if findmnt -rn -o TARGET | awk '$0 == "/mnt" || index($0, "/mnt/") == 1 { found=1 } END { exit !found }'; then
-  echo "Refusing to replace existing mounts under /mnt"
+if [[ $HOST == laptop ]]; then
+  GRUB_DEVICE=$(nix eval "${NIX_OPTS[@]}" --raw "$WORK_DIR#nixosConfigurations.laptop.config.boot.loader.grub.devices" --apply builtins.head)
+  [[ $DEV -ef $GRUB_DEVICE ]] || { echo "The laptop bootloader requires $GRUB_DEVICE" >&2; exit 1; }
+fi
+if [[ -n $(target_mounts) ]]; then
+  echo "Refusing to replace existing mounts under /mnt" >&2
   exit 1
 fi
+sudo ln -s "$DEV" /dev/nixos-disk
 INSTALL_MANAGES_MNT=true
-sudo nix run \
-  --extra-experimental-features "nix-command flakes" \
-  "${NIX_OPTS[@]}" \
-  "$WORK_DIR#disko" -- \
-  --flake "$WORK_DIR#$HOST" \
-  --mode destroy,format,mount \
-  --yes-wipe-all-disks
-
+# Format first so nixos-install builds on disk instead of in the ISO's RAM.
+sudo nix run "${NIX_OPTS[@]}" "$WORK_DIR#disko" -- \
+  --flake "$WORK_DIR#$HOST" --mode destroy,format,mount --yes-wipe-all-disks
 sudo install -d -m700 /mnt/persistent/passwords
 printf '%s\n' "$PASSWORD_HASH" | sudo tee /mnt/persistent/passwords/grey >/dev/null
 sudo chmod 600 /mnt/persistent/passwords/grey
 unset PASSWORD_HASH
-
-echo "==> Installing NixOS ($HOST)..."
-sudo nixos-install \
-  --root /mnt \
-  --flake "$WORK_DIR#$HOST" \
-  --no-root-passwd \
-  "${NIX_OPTS[@]}"
-
-# The copied config already has the correct device baked in for future disko runs.
-echo "==> Copying nixconf..."
+sudo nixos-install "${NIX_OPTS[@]}" --root /mnt --flake "$WORK_DIR#$HOST" --no-root-passwd --no-channel-copy
 sudo install -d -o 1000 -g 100 /mnt/home/grey/Projects
 sudo cp -rT "$WORK_DIR" /mnt/home/grey/Projects/nixconf
 sudo chown -R 1000:100 /mnt/home/grey/Projects/nixconf
-
-echo "==> Done! Rebooting..."
+cleanup
+trap - EXIT
 sudo reboot

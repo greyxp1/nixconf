@@ -18,13 +18,12 @@ in {
 
     services.upower.enable = true;
     boot.loader = {
-      systemd-boot.enable = false;
-      efi.canTouchEfiVariables = false;
+      systemd-boot.enable = lib.mkForce false;
+      efi.canTouchEfiVariables = lib.mkForce false;
       grub.enable = true;
     };
 
     disko.devices.disk.main = {
-      device = import ./_device.nix;
       content.partitions = {
         bios = {
           size = "1M";

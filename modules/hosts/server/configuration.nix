@@ -2,7 +2,6 @@
   mkHost = import ../_mkHost.nix inputs;
 in {
   flake.nixosConfigurations.server = mkHost "server" {
-    disko.devices.disk.main.device = import ./_device.nix;
     boot.initrd.availableKernelModules = ["ahci" "xhci_pci" "usb_storage" "sd_mod"];
     users.users.grey.homeMode = "0710";
     systemd.tmpfiles.rules = ["a+ /home/grey - - - - u:jellyfin:--x,m::--x"];
