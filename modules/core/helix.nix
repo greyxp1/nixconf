@@ -48,7 +48,7 @@
     languages = {
       language-server.mpls = {
         command = "mpls";
-        args = ["--theme" "catppuccin-mocha"];
+        args = ["--theme" "dark" "--code-style" "github-dark"];
       };
       language-server.nixd.config.options.nixos.expr = ''
         (builtins.getFlake "path:${config.programs.nh.flake}")
