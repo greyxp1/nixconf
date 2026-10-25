@@ -6,6 +6,17 @@ in {
     hardware.cpu.amd.updateMicrocode = true;
     powerManagement.cpuFreqGovernor = "performance";
 
+    services.journald.settings.Journal.SyncIntervalSec = "30s";
+    programs.atop.enable = true;
+    systemd.services.atop = {
+      environment = {
+        LOGINTERVAL = "10";
+        LOGGENERATIONS = "7";
+        LOGOPTS = "-a";
+      };
+      serviceConfig.StandardOutput = "null";
+    };
+
     boot = {
       kernelModules = ["kvm-amd" "ntsync"];
       kernelParams = [
