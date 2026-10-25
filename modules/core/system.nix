@@ -10,6 +10,7 @@
 
   systemd = {
     services.systemd-oomd.restartTriggers = [config.environment.etc."systemd/oomd.conf".source];
+    oomd.enableSystemSlice = true;
     user.slices = {
       app.sliceConfig = {
         ManagedOOMSwap = "kill";
@@ -19,14 +20,6 @@
       background.sliceConfig = {
         ManagedOOMSwap = "kill";
         ManagedOOMMemoryPressure = "kill";
-      };
-    };
-
-    oomd = {
-      enableSystemSlice = true;
-      settings.OOM = {
-        DefaultMemoryPressureLimit = "20%";
-        DefaultMemoryPressureDurationSec = "5s";
       };
     };
 
