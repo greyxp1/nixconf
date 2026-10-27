@@ -36,7 +36,7 @@ url = "gh:greyxp1/ncr"
 [inputs.niri]
 url = "gh:greyxp1/niri/personal"
 [inputs.niri-screenshare]
-url = "gh:pantarune/niri-screenshare"
+url = "gh:pantarune/niri-screenshare/pull/17/head"
 [inputs.perch]
 url = "gh:greyxp1/perch"
 [inputs.computer-use-linux]
