@@ -10,6 +10,7 @@
     ./niri.nix
     ./noctalia.nix
     ./sunshine.nix
+    ./vellum.nix
     ./session.nix
   ];
   environment.etc =
