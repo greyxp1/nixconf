@@ -23,6 +23,7 @@ in {
       ./_modules/docker/docker.nix
       ./_modules/freedns.nix
       ./_modules/website.nix
+      ./_modules/cliproxyapi.nix
     ];
   };
 }
