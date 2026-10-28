@@ -3,9 +3,9 @@
     "type": "github",
     "owner": "catppuccin",
     "repo": "nix",
-    "rev": "96f08f364265c5ac66aa61f8f36946279e2c3b00",
-    "narHash": "sha256-Nwt7keMo7rYq33UL4sk4YpD63Pbokr0lMU7hmVEtEPI=",
-    "lastModified": 1793011355
+    "rev": "ddfe53d3304399d50a89ef6503b6ca1be9349fab",
+    "narHash": "sha256-8objiXPnGhtvbOJGUhTDJkKKqMAcmzulmRnTkHRCykc=",
+    "lastModified": 1793189487
   },
   "compress-yazi": {
     "type": "github",
@@ -19,9 +19,9 @@
     "type": "github",
     "owner": "greyxp1",
     "repo": "computer-use-linux-flake",
-    "rev": "75f6dd112bda49e656d84fcf0190be217dab8bb1",
-    "narHash": "sha256-TIfFMSsRLmLcmnlrFpT7H9mUQpO7K9t6cbBvUVjRWOc=",
-    "lastModified": 1793107967
+    "rev": "136235505dddb964f1d9c3b2717ef751fe1052e8",
+    "narHash": "sha256-UQJY9ryoiHelqXFkcKjq8QbFxxV8EHVkhs+Zkdf1oC0=",
+    "lastModified": 1793154839
   },
   "cord-stash": {
     "type": "github",
@@ -108,9 +108,9 @@
     "type": "github",
     "owner": "greyxp1",
     "repo": "mpv-smartcut",
-    "rev": "dcbddcf8917925c5a45dee94c23a6e6b5cc50640",
-    "narHash": "sha256-0k0shXc8EUYWRpJeVLDhsJO4xYsP/isJeQM4Qf8t0Ik=",
-    "lastModified": 1793028173
+    "rev": "f33fdef956838828a4900368a19e2222123eb50b",
+    "narHash": "sha256-e0tG4cMrrYvrjMdo9/mFMhpCJm4glXmXWcMr7MRQCPk=",
+    "lastModified": 1793193576
   },
   "ncr": {
     "type": "github",
@@ -140,9 +140,9 @@
     "type": "github",
     "owner": "pantarune",
     "repo": "niri-screenshare",
-    "rev": "fe9de828103b3e19e54204df9a2d0b2824d88030",
+    "rev": "b06cdcf6ce812e007410ad8c36c26597e1f5435a",
     "narHash": "sha256-XFfrpKAVmxbqW+gT33bddaDfaFmvmUCHhsj/neDlx/Q=",
-    "lastModified": 1793106583
+    "lastModified": 1793197332
   },
   "nix-flatpak": {
     "type": "github",
@@ -164,17 +164,17 @@
     "type": "github",
     "owner": "4evy",
     "repo": "nixcord",
-    "rev": "f873f1e32925b870e68addeeb193fbc07e80a598",
-    "narHash": "sha256-2eOpPaHhUwU084AlTUQLbyZ9BOajgep8oTWe5OGE+ro=",
-    "lastModified": 1793089800
+    "rev": "cd1bc642dbf447b2d6b16178be2e280452c3421d",
+    "narHash": "sha256-EVRN7qHplmADaP1FxAyUfHfYhg7l8ednd+qpmcWwKtQ=",
+    "lastModified": 1793197500
   },
   "nixpkgs": {
     "type": "github",
     "owner": "nixos",
     "repo": "nixpkgs",
-    "rev": "3ec636362e1816bc2f0888fa0fa2c69f1bc9e504",
-    "narHash": "sha256-rZLrzrC6i+jnTAlvPZHogKDulY7WWDEv9hJeHieO7Zw=",
-    "lastModified": 1792773339
+    "rev": "31ecbaca1bdefa45dffc409f0250bd8039ea0010",
+    "narHash": "sha256-dhoW6VgFWlaodSY5jrBn+CF2FLmaUvDVgM7+C7T2+NM=",
+    "lastModified": 1793110635
   },
   "perch": {
     "type": "github",
@@ -204,9 +204,9 @@
     "type": "git",
     "url": "https://github.com/LizardByte/Sunshine",
     "ref": "refs/heads/master",
-    "rev": "d0b4a88ef727f8dabf80cc970a14739b55c885de",
-    "narHash": "sha256-F93PSEtyi3aK16+BkBs58pztaZY+UdbQI3y6hdSS5Oo=",
-    "lastModified": 1792591621,
+    "rev": "d7e5fe00701539a5be4a0304239730e1dfec4cf9",
+    "narHash": "sha256-JL0lopZRT8MNAdu+pvgCwvYYyqxAVxUFZ07VjhlmmRw=",
+    "lastModified": 1793190402,
     "submodules": true
   },
   "system-manager": {
@@ -221,8 +221,8 @@
     "type": "github",
     "owner": "numtide",
     "repo": "llm-agents.nix",
-    "rev": "b4356aceeec72ec5fd8aa4f24964ed70c95ec45a",
-    "narHash": "sha256-YpKslbxJYK4aMcI+JjqbUUmd5iA9h7/sahVrdU8j4Rc=",
-    "lastModified": 1793103329
+    "rev": "724537386a90f2cf3033fa3f13b5df087aae34fa",
+    "narHash": "sha256-RT8DeWAgOqGqtPGo9nxUdXSBNaFeK6hMF1vH5hKPkns=",
+    "lastModified": 1793194732
   }
 }
