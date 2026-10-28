@@ -208,7 +208,7 @@ in {
         ---
         Map the codebase and trace relevant callers before judging patterns. Investigate dead code, redundant wrappers and stubs, speculative abstractions, duplicated logic, stale compatibility paths, inconsistent conventions, and tests with little behavioral value. Establish why code or a test is unnecessary; absence checks can protect real invariants, and a small wrapper can provide a useful boundary. Do not manufacture findings.
 
-        Delegate distinct areas to gpt-6.1-sol subagents, then verify and deduplicate their findings. Report coverage and gaps; distinguish confirmed problems from hypotheses. For each actionable finding, give file locations, evidence, impact, confidence, and the smallest proposed fix. Prioritize by practical benefit and identify dependencies between fixes. Stay read-only unless implementation is requested.
+        Delegate distinct areas to subagents running your current model, then verify and deduplicate their findings. Report coverage and gaps; distinguish confirmed problems from hypotheses. For each actionable finding, give file locations, evidence, impact, confidence, and the smallest proposed fix. Prioritize by practical benefit and identify dependencies between fixes. Stay read-only unless implementation is requested.
 
         When ratings are requested, define a 1-10 rubric appropriate to the project before scoring. Consider correctness, maintainability, architecture, test usefulness, performance, and build/operations. Support category scores with evidence, explain any overall score, and mark unassessed areas instead of inventing precision. Report strengths as well as weaknesses. Keep this audit scoped to the requested codebase or areas; use change review for requests limited to a diff.
       '';
@@ -219,7 +219,7 @@ in {
         ---
         Recheck requested findings against the current code and implement justified fixes. Resolve routine implementation choices without another approval round; preserve the requested scope and explain any finding that is unsupported or cannot be completed. Order dependent fixes and group changes by root cause and independently reviewable behavior, rather than a fixed number of findings or files per commit.
 
-        Delegate independent complex work to gpt-6.1-sol subagents, using gpt-6-luna for simple, bounded changes. Give each agent clear ownership and integrate its work before checking the affected behavior. Follow the user's test policy.
+        Delegate independent complex work to subagents running your current model. Give each agent clear ownership and integrate its work before checking the affected behavior. Follow the user's test policy.
 
         Commit completed changes under the global commit rules. Fold follow-up fixes into the relevant introducing commits only when eligible under those rules; otherwise retain separate fix commits. Report what changed, verification results, unresolved findings, and the resulting commit grouping.
       '';
