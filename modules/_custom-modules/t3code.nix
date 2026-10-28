@@ -53,6 +53,12 @@ in {
     };
     services.t3code = {
       enable = lib.mkEnableOption "the T3 Code headless server";
+      target = lib.mkOption {
+        type = lib.types.str;
+        default = "default.target";
+        example = "graphical-session.target";
+        description = "User target that starts and stops the server. Use the graphical session when agents need the desktop.";
+      };
       host = lib.mkOption {
         type = lib.types.str;
         default = "127.0.0.1";
@@ -101,9 +107,9 @@ in {
       systemd.user.services.t3code = {
         description = "T3 Code headless server";
         enableDefaultPath = false;
-        wantedBy = ["graphical-session.target"];
-        after = ["graphical-session.target"];
-        partOf = ["graphical-session.target"];
+        wantedBy = [server.target];
+        after = [server.target];
+        partOf = [server.target];
         serviceConfig = {
           WorkingDirectory = "%h";
           ExecStart = utils.escapeSystemdExecArgs (

@@ -6,7 +6,14 @@
   ...
 }: let
   llmAgents = inputs.t3.packages.${pkgs.stdenv.hostPlatform.system};
-  proxyEndpoint = "https://server.tail1785c.ts.net:8317";
+  hub = config.services.cliproxyapi;
+  # The hub host skips Tailscale, which it does not resolve for itself.
+  proxyEndpoint =
+    if hub.enable
+    then "http://${hub.settings.server.host}:${toString hub.settings.server.port}"
+    else "https://server.tail1785c.ts.net:8317";
+  # The server imports this module too, without a desktop for computer use.
+  graphical = config.services.graphical-desktop.enable;
   computerUse = {
     command = "computer-use-linux";
     args = ["mcp"];
@@ -25,6 +32,7 @@ in {
   programs.t3code.package = llmAgents.t3code.unwrapped;
   services.t3code = {
     enable = true;
+    target = lib.mkIf graphical "graphical-session.target";
     settings = {
       defaultModelSelection = {
         instanceId = "codex";
@@ -65,19 +73,19 @@ in {
           driver = "claudeAgent";
           enabled = true;
           # T3 only lists skills from user, project and added dirs, not Claude's managed dir.
-          config.launchArgs = "--mcp-config ${claudeMcpConfig} --add-dir=/etc/claude-code";
+          config.launchArgs = "${lib.optionalString graphical "--mcp-config ${claudeMcpConfig} "}--add-dir=/etc/claude-code";
         };
       };
     };
   };
 
-  environment.systemPackages = [inputs.computer-use-linux.packages.${pkgs.stdenv.hostPlatform.system}.default];
-  services.gnome.at-spi2-core.enable = true;
-  programs.ydotool = {
+  environment.systemPackages = lib.mkIf graphical [inputs.computer-use-linux.packages.${pkgs.stdenv.hostPlatform.system}.default];
+  services.gnome.at-spi2-core.enable = lib.mkIf graphical true;
+  programs.ydotool = lib.mkIf graphical {
     enable = true;
     group = lib.mkDefault "uinput";
   };
-  users.users.grey.extraGroups = [config.programs.ydotool.group];
+  users.users.grey.extraGroups = lib.mkIf graphical [config.programs.ydotool.group];
 
   # T3 sets its own agents slice limits, so enforce the shared budget on its parent.
   systemd.user.slices.app-t3code.sliceConfig = {
@@ -120,7 +128,7 @@ in {
           args = ["-c" "cat \"$HOME/.config/cliproxyapi/client-key\""];
         };
       };
-      mcp_servers.computer_use = {
+      mcp_servers.computer_use = lib.mkIf graphical {
         inherit (computerUse) command args env;
         env_vars = ["XDG_RUNTIME_DIR" "DBUS_SESSION_BUS_ADDRESS"];
       };
