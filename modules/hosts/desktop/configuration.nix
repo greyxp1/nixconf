@@ -48,6 +48,7 @@ in {
       ./_modules/sober.nix
       ./_modules/nvidia.nix
       ./_modules/virt.nix
+      ./_modules/remote-builder.nix
     ];
   };
 }
