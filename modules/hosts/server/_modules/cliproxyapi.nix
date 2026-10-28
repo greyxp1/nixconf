@@ -5,6 +5,10 @@
 }: {
   services.cliproxyapi = {
     enable = true;
+    # Puts the reset time in the cooldown message so T3 Code can resume threads after it.
+    package = pkgs.cliproxyapi.overrideAttrs (old: {
+      patches = old.patches or [] ++ [./cliproxyapi-cooldown-reset.patch];
+    });
     settings = {
       config-version = 8;
       server = {
