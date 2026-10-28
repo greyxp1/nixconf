@@ -159,6 +159,9 @@ in {
 
       # Host configuration
       - Before inspecting or changing host configuration, run `hostnamectl` and read `/etc/os-release`. Use that host's target; never infer it from the checkout.
+      - Before deploying, compare the deployment checkout, pins and intended changes with the running host. Build once, retain the exact output path and working system path, and inspect the activation diff. Resolve unrelated removals, downgrades or service changes before activation. A successful evaluation or build plan alone is insufficient.
+      - Never guess Nix store paths or derive executable paths from derivation filenames. Use actual build outputs and verify referenced executables exist before using them. Fix Nix-managed services through their modules, not manual unit replacements or runtime overrides.
+      - Check affected services and authenticated client requests immediately after activation. If they regress, restore and verify the captured working deployment before attempting another fix. When changing the proxy that carries the active agent session, keep an independent recovery connection open and arrange automatic rollback unless client checks pass.
       - After host configuration changes, evaluate that host's configuration to catch evaluation errors and inspect the build plan. Run routine rebuilds and activation for small configuration changes yourself. Leave rebuilds with long or large source compilations or broad program updates to the user unless explicitly requested.
 
       # Projects
