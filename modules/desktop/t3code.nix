@@ -12,8 +12,12 @@
     args = ["mcp"];
     env.YDOTOOL_SOCKET = config.environment.variables.YDOTOOL_SOCKET;
   };
+  claudeMcpConfig = pkgs.writeText "claude-mcp.json" (builtins.toJSON {
+    mcpServers.computer_use = computerUse // {type = "stdio";};
+  });
 in {
   imports = [
+    ../_custom-modules/claude-code.nix
     ../_custom-modules/codex.nix
     ../_custom-modules/t3code.nix
   ];
@@ -57,6 +61,12 @@ in {
           driver = "codex";
           enabled = false;
         };
+        claudeAgent = {
+          driver = "claudeAgent";
+          enabled = true;
+          # T3 only lists skills from user, project and added dirs, not Claude's managed dir.
+          config.launchArgs = "--mcp-config ${claudeMcpConfig} --add-dir=/etc/claude-code";
+        };
       };
     };
   };
@@ -76,6 +86,17 @@ in {
     MemoryMax = "75%";
     MemorySwapMax = "10%";
     ManagedOOMMemoryPressure = "kill";
+  };
+
+  # Claude subscriptions are only used from Claude Code, as Theo's proxy guide requires.
+  programs.claude-code = {
+    enable = true;
+    package = llmAgents.claude-code;
+    settings = {
+      env.ANTHROPIC_BASE_URL = proxyEndpoint;
+      apiKeyHelper = "cat \"$HOME/.config/cliproxyapi/client-key\"";
+    };
+    inherit (config.programs.codex) instructions skills;
   };
 
   # GPT goes through Codex on the hub, configured as in Theo's proxy guide.
@@ -106,7 +127,7 @@ in {
       - Judge simplicity by complete integration and maintenance cost. Before recommending architecture or dependency replacements, compare against the current approach and disclose added dependencies, platform-specific code, startup and package costs, and uncertainty. Reconsider prototypes when fixes accumulate complexity. A working happy path does not justify adopting them.
       - Avoid semicolons when writing documentation and keep it simple and short.
       - Do not add tests unless asked. Use computer-use for verification when useful. Run all computer-use on a separate local display, using Xvfb for X11 apps or a separate compositor for Wayland apps. Verify that screenshot and input tools target that display before interacting. If isolation is unavailable or the behavior requires the live session or physical hardware, explain the limitation and ask before controlling the user's desktop. Stop temporary display sessions when finished.
-      - T3 Code provides `computer_use` MCP tools for desktop screenshots, window inspection, clicks, typing, and scrolling. Discover them through `ALL_TOOLS` and start with `get_app_state`. For the collaborative browser, use T3 Code's `preview_status`, `preview_open`, `preview_navigate`, and `preview_snapshot` tools, then its focused interaction tools. Check available tools before claiming access is unavailable and verify the required capability before claiming it works.
+      - T3 Code provides `computer_use` MCP tools for desktop screenshots, window inspection, clicks, typing, and scrolling. Discover the available MCP tools and start with `get_app_state`. For the collaborative browser, use T3 Code's `preview_status`, `preview_open`, `preview_navigate`, and `preview_snapshot` tools, then its focused interaction tools. Check available tools before claiming access is unavailable and verify the required capability before claiming it works.
       - Missing `DISPLAY` or `WAYLAND_DISPLAY` does not prove desktop access is unavailable. Check `systemctl --user show-environment` and session sockets under `XDG_RUNTIME_DIR` for `WAYLAND_DISPLAY`, `DISPLAY`, and `NIRI_SOCKET`. Use discovered values for commands that need them rather than hardcoding socket names.
       - Make clean breaks by default; add compatibility code only when requested.
       - Enter the project's Nix environment before running project commands when available.

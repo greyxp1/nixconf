@@ -31,6 +31,6 @@
       };
     }
     // lib.mapAttrs (_: file: {inherit (file) source;})
-    (lib.filterAttrs (name: _: lib.hasPrefix "codex/" name) nixos.environment.etc);
+    (lib.filterAttrs (name: _: lib.hasPrefix "codex/" name || lib.hasPrefix "claude-code/" name) nixos.environment.etc);
   systemd.services.ydotoold = lib.getAttrs ["description" "wantedBy" "partOf" "serviceConfig"] nixos.systemd.services.ydotoold;
 }
