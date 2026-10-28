@@ -1,6 +1,5 @@
 {
   config,
-  inputs,
   lib,
   pkgs,
   ...
@@ -12,14 +11,6 @@ in {
   options.programs.codex = {
     enable = lib.mkEnableOption "Codex";
     package = lib.mkPackageOption pkgs "codex" {};
-    computerUse = {
-      enable = lib.mkEnableOption "Linux desktop control for Codex";
-      users = lib.mkOption {
-        type = lib.types.listOf lib.types.str;
-        default = [];
-        description = "Users granted access to desktop input injection.";
-      };
-    };
     settings = lib.mkOption {
       type = format.type;
       default = {};
@@ -42,54 +33,36 @@ in {
       description = "Codex with its managed instructions.";
     };
   };
-  config = lib.mkIf cfg.enable (lib.mkMerge [
-    {
-      programs.codex.finalPackage =
-        if cfg.instructions == ""
-        then cfg.package
-        else
-          pkgs.symlinkJoin {
-            name = "codex-configured";
-            paths = [cfg.package];
-            nativeBuildInputs = [pkgs.makeWrapper];
-            postBuild = ''
-              wrapProgram $out/bin/codex --run ${lib.escapeShellArg ''
-                codex_home="''${CODEX_HOME:-$HOME/.codex}"
-                if [ "$(${pkgs.coreutils}/bin/readlink "$codex_home/AGENTS.md" 2>/dev/null)" != ${lib.escapeShellArg (toString instructionsFile)} ]; then
-                  ${pkgs.coreutils}/bin/mkdir -p "$codex_home"
-                  ${pkgs.coreutils}/bin/ln -sfnT ${instructionsFile} "$codex_home/AGENTS.md"
-                fi
-              ''}
-            '';
-            meta = cfg.package.meta;
-          };
-      environment.systemPackages = [cfg.finalPackage];
-      environment.etc =
-        {
-          "codex/config.toml".source = format.generate "codex-system-config.toml" cfg.settings;
-        }
-        // lib.mapAttrs' (name: content:
-          lib.nameValuePair "codex/skills/${name}" {
-            source = pkgs.writeTextDir "SKILL.md" content;
-          })
-        cfg.skills;
-    }
-    (lib.mkIf cfg.computerUse.enable {
-      environment.systemPackages = [inputs.computer-use-linux.packages.${pkgs.stdenv.hostPlatform.system}.default];
-      services.gnome.at-spi2-core.enable = true;
-      programs.ydotool = {
-        enable = true;
-        group = lib.mkDefault "uinput";
-      };
-      users.users = lib.genAttrs cfg.computerUse.users (_: {
-        extraGroups = [config.programs.ydotool.group];
-      });
-      programs.codex.settings.mcp_servers.computer_use = {
-        command = "computer-use-linux";
-        args = ["mcp"];
-        env_vars = ["XDG_RUNTIME_DIR" "DBUS_SESSION_BUS_ADDRESS"];
-        env.YDOTOOL_SOCKET = config.environment.variables.YDOTOOL_SOCKET;
-      };
-    })
-  ]);
+
+  config = lib.mkIf cfg.enable {
+    programs.codex.finalPackage =
+      if cfg.instructions == ""
+      then cfg.package
+      else
+        pkgs.symlinkJoin {
+          name = "codex-configured";
+          paths = [cfg.package];
+          nativeBuildInputs = [pkgs.makeWrapper];
+          postBuild = ''
+            wrapProgram $out/bin/codex --run ${lib.escapeShellArg ''
+              codex_home="''${CODEX_HOME:-$HOME/.codex}"
+              if [ "$(${pkgs.coreutils}/bin/readlink "$codex_home/AGENTS.md" 2>/dev/null)" != ${lib.escapeShellArg (toString instructionsFile)} ]; then
+                ${pkgs.coreutils}/bin/mkdir -p "$codex_home"
+                ${pkgs.coreutils}/bin/ln -sfnT ${instructionsFile} "$codex_home/AGENTS.md"
+              fi
+            ''}
+          '';
+          meta = cfg.package.meta;
+        };
+    environment.systemPackages = [cfg.finalPackage];
+    environment.etc =
+      {
+        "codex/config.toml".source = format.generate "codex-system-config.toml" cfg.settings;
+      }
+      // lib.mapAttrs' (name: content:
+        lib.nameValuePair "codex/skills/${name}" {
+          source = pkgs.writeTextDir "SKILL.md" content;
+        })
+      cfg.skills;
+  };
 }

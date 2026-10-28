@@ -6,7 +6,6 @@
   alma.packages = ["at-spi2-core"];
   alma.services = ["ydotoold.service"];
   environment.variables = {
-    OPENCODE_CONFIG = nixos.environment.variables.OPENCODE_CONFIG;
     YDOTOOL_SOCKET = nixos.environment.variables.YDOTOOL_SOCKET;
   };
   environment.etc =

@@ -1,16 +1,73 @@
 {
+  config,
   inputs,
+  lib,
   pkgs,
   ...
-}: {
+}: let
+  llmAgents = inputs.t3.packages.${pkgs.stdenv.hostPlatform.system};
+  proxyEndpoint = "https://server.tail1785c.ts.net:8317";
+  computerUse = {
+    command = "computer-use-linux";
+    args = ["mcp"];
+    env.YDOTOOL_SOCKET = config.environment.variables.YDOTOOL_SOCKET;
+  };
+in {
   imports = [
     ../_custom-modules/codex.nix
     ../_custom-modules/t3code.nix
   ];
 
-  environment.variables.OPENCODE_CONFIG = toString (pkgs.writeText "opencode.json" (builtins.toJSON {permission = "allow";}));
-  programs.t3code.package = inputs.t3.packages.${pkgs.stdenv.hostPlatform.system}.t3code.unwrapped;
-  services.t3code.enable = true;
+  programs.t3code.package = llmAgents.t3code.unwrapped;
+  services.t3code = {
+    enable = true;
+    settings = {
+      defaultModelSelection = {
+        instanceId = "codex";
+        model = "gpt-6.1-sol";
+        options = [
+          {
+            id = "reasoningEffort";
+            value = "medium";
+          }
+        ];
+      };
+      textGenerationModelSelection = {
+        instanceId = "codex";
+        model = "gpt-6-luna";
+        options = [
+          {
+            id = "reasoningEffort";
+            value = "low";
+          }
+        ];
+      };
+      providerInstances = {
+        opencode = {
+          driver = "opencode";
+          enabled = false;
+        };
+        # Use the existing CLI so Codex reads the hub provider from its config.
+        codex = {
+          driver = "codex";
+          enabled = true;
+          config.setupMode = "existing";
+        };
+        greyxp999 = {
+          driver = "codex";
+          enabled = false;
+        };
+      };
+    };
+  };
+
+  environment.systemPackages = [inputs.computer-use-linux.packages.${pkgs.stdenv.hostPlatform.system}.default];
+  services.gnome.at-spi2-core.enable = true;
+  programs.ydotool = {
+    enable = true;
+    group = lib.mkDefault "uinput";
+  };
+  users.users.grey.extraGroups = [config.programs.ydotool.group];
 
   # T3 sets its own agents slice limits, so enforce the shared budget on its parent.
   systemd.user.slices.app-t3code.sliceConfig = {
@@ -21,12 +78,27 @@
     ManagedOOMMemoryPressure = "kill";
   };
 
+  # GPT goes through Codex on the hub, configured as in Theo's proxy guide.
   programs.codex = {
     enable = true;
-    package = inputs.t3.packages.${pkgs.stdenv.hostPlatform.system}.codex;
-    computerUse = {
-      enable = true;
-      users = ["grey"];
+    package = llmAgents.codex;
+    settings = {
+      model_provider = "cliproxy";
+      model_providers.cliproxy = {
+        name = "CLIProxyAPI";
+        base_url = "${proxyEndpoint}/v1";
+        wire_api = "responses";
+        requires_openai_auth = false;
+        supports_websockets = true;
+        auth = {
+          command = "sh";
+          args = ["-c" "cat \"$HOME/.config/cliproxyapi/client-key\""];
+        };
+      };
+      mcp_servers.computer_use = {
+        inherit (computerUse) command args env;
+        env_vars = ["XDG_RUNTIME_DIR" "DBUS_SESSION_BUS_ADDRESS"];
+      };
     };
     instructions = ''
       # Global
