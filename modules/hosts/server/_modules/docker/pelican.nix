@@ -80,8 +80,13 @@ in {
     requires = ["tailscaled.service"];
     after = ["tailscaled.service" "network-online.target"];
     wants = ["network-online.target"];
-    serviceConfig.Type = "oneshot";
-    serviceConfig.RemainAfterExit = true;
+    # tailscale serve fails until tailscaled has connected, so retry at boot.
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      Restart = "on-failure";
+      RestartSec = 5;
+    };
     script = ''
       ${pkgs.tailscale}/bin/tailscale serve --bg --https=8444 http://127.0.0.1:18080
       ${pkgs.tailscale}/bin/tailscale serve --bg --https=8445 http://127.0.0.1:18081
