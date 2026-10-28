@@ -153,6 +153,7 @@ in {
       - Custom NixOS modules are intended for submission to nixpkgs. Design reusable options and defaults for upstream use, follow existing NixOS module conventions, and keep personal settings in consuming modules. Use Home Manager as a reference without requiring identical interfaces.
       - Use a program's package/PATH integration and readable command names, such as Helix `extraPackages` with `command = "mpls"`.
       - Edit `.tack/pins.toml` and run `tack update` for input changes.
+      - Hosts serve SSH through Tailscale, not OpenSSH. Reach them with `tailscale ssh grey@<host>`, never plain `ssh`.
       - NixOS modules are the source of truth. Keep program settings inside them. Design shared layout, module boundaries, settings and defaults for NixOS. Keep Alma-specific module selection, exclusions, overrides and compatibility code under `modules/hosts/alma`. Never reshape shared configuration or architecture to simplify Alma integration.
       - Alma is a portable school SSD. Its network permits HTTPS but blocks HTTP and ICMP. Use direct HTTPS repository URLs; never gate connectivity on ping.
       - Alma boot/login must use SELinux-labelled local launchers, not Nix-store executables. Preserve native TTY2 recovery and prove tty1 graphical login before recommending a reboot.
