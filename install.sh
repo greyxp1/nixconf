@@ -85,6 +85,8 @@ INSTALL_MANAGES_MNT=true
 sudo nix run "${NIX_OPTS[@]}" "$WORK_DIR#disko" -- \
   --flake "$WORK_DIR#$HOST" --mode destroy,format,mount --yes-wipe-all-disks
 sudo install -d -m700 /mnt/persistent/passwords
+# /tmp bind-mounts this at boot, before tmpfiles could create it.
+sudo install -d -m1777 /mnt/persistent/tmp
 printf '%s\n' "$PASSWORD_HASH" | sudo tee /mnt/persistent/passwords/grey >/dev/null
 sudo chmod 600 /mnt/persistent/passwords/grey
 unset PASSWORD_HASH

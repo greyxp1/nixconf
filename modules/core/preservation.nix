@@ -1,6 +1,5 @@
 {inputs, ...}: {
   imports = [inputs.preservation.nixosModules.preservation];
-  environment.variables.TMPDIR = "/persistent/tmp";
   preservation = {
     enable = true;
     preserveAt."/persistent" = {
@@ -24,6 +23,8 @@
     };
   };
 
+  boot.tmp.cleanOnBoot = true;
+
   fileSystems = {
     "/" = {
       device = "none";
@@ -32,6 +33,11 @@
     };
     "/nix".neededForBoot = true;
     "/persistent".neededForBoot = true;
+    "/tmp" = {
+      device = "/persistent/tmp";
+      fsType = "none";
+      options = ["bind"];
+    };
   };
 
   systemd = {
