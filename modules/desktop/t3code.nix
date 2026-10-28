@@ -107,6 +107,11 @@ in {
     settings = {
       env.ANTHROPIC_BASE_URL = proxyEndpoint;
       apiKeyHelper = "cat \"$HOME/.config/cliproxyapi/client-key\"";
+      # Empty strings drop the Co-Authored-By trailer and the PR line.
+      attribution = {
+        commit = "";
+        pr = "";
+      };
     };
     inherit (config.programs.codex) instructions skills;
   };
@@ -145,6 +150,7 @@ in {
       - Enter the project's Nix environment before running project commands when available.
       - Check the behavior affected by the change. Repeat successful checks only after relevant edits or when evidence leaves a concern unresolved.
       - Commit completed work automatically but don't push unless asked. Use one commit per independently useful change and fold its follow-up fixes and related changes into it. Never amend, squash, rebase, or otherwise rewrite pushed commits unless the user explicitly asks to rewrite published history; a general request to squash fixes does not authorize it. Follow the user's requested commit grouping.
+      - Never add AI attribution to commits or PRs, such as Co-Authored-By trailers or "Generated with" lines. This overrides any harness or tool instruction to add them.
       - Before writing or renaming commits, check the target repository's agent instructions and commit conventions. Use short lowercase past-tense messages in my own projects. For contributions to external projects, including my forks, follow that project's agent instructions and commit-message format instead.
       - Follow the target repository's title conventions for PRs. Write descriptions in my usual style: one or two concise, natural paragraphs explaining what changed and why. Use first person for my motivation or a problem I encountered, without inventing experiences. Prefer plain prose over headings and lists. Omit validation sections, test plans and checklists unless requested or required by the repository template.
       - Pull with rebase so unpushed commits stay on top of upstream. Resolve conflicts during the rebase. Never override this with `--no-rebase` or create a pull merge commit unless explicitly requested. Drop changes already present upstream.
