@@ -2,7 +2,9 @@
   lib,
   pkgs,
   ...
-}: {
+}: let
+  expiringQuotaFirst = pkgs.callPackage ../../../../pkgs/cliproxyapi-expiring-quota-first.nix {};
+in {
   services.cliproxyapi = {
     enable = true;
     # Puts the reset time in the cooldown message so T3 Code can resume threads after it.
@@ -32,6 +34,15 @@
         };
       };
       oauth.auth-dir = "/var/lib/cliproxyapi/auth";
+      plugins = {
+        enabled = true;
+        dir = "${expiringQuotaFirst}/lib/cliproxyapi/plugins";
+        configs.expiring-quota-first = {
+          enabled = true;
+          mode = "active";
+          state_file = "/var/lib/cliproxyapi/expiring-quota-first/state.json";
+        };
+      };
     };
   };
 
