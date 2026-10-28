@@ -5,7 +5,6 @@
 }: {
   imports = [../_custom-modules/mpv.nix];
   programs.mpv.enable = true;
-  environment.systemPackages = [inputs.mpv-smartcut.packages.${pkgs.stdenv.hostPlatform.system}.default];
   programs.mpv.settings = {
     vo = "gpu";
     gpu-context = "wayland";
@@ -30,10 +29,7 @@
     pkgs.mpvScripts.mpris
     pkgs.mpvScripts.visualizer
     inputs.mpv-auto-sub-sync.packages.${pkgs.stdenv.hostPlatform.system}.default
-    (pkgs.runCommand "mpv-smartcut-script" {passthru.scriptName = "mpv-smartcut.lua";} ''
-      mkdir -p $out/share/mpv/scripts
-      ln -s ${inputs.mpv-smartcut.packages.${pkgs.stdenv.hostPlatform.system}.default}/share/mpv/scripts/mpv-smartcut.lua $out/share/mpv/scripts/
-    '')
+    inputs.mpv-smartcut.packages.${pkgs.stdenv.hostPlatform.system}.default
     ((pkgs.writeTextDir "share/mpv/scripts/short-loop.lua" ''
       local function has_real_video()
         local tracks = mp.get_property_native("track-list")
