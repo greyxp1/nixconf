@@ -86,6 +86,10 @@ in {
     MemoryMax = "75%";
     MemorySwapMax = "10%";
     ManagedOOMMemoryPressure = "kill";
+    # Agents capped at MemoryHigh thrash the page cache and stall the disk for the whole
+    # machine while staying under oomd's 60% default, so kill them sooner.
+    ManagedOOMMemoryPressureLimit = "20%";
+    ManagedOOMMemoryPressureDurationSec = "20s";
   };
 
   # Claude subscriptions are only used from Claude Code, as Theo's proxy guide requires.
