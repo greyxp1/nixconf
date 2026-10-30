@@ -33,48 +33,48 @@ in {
   services.t3code = {
     enable = true;
     target = lib.mkIf graphical "graphical-session.target";
-    settings = {
-      defaultModelSelection = {
-        instanceId = "codex";
-        model = "gpt-6.1-sol";
-        options = [
-          {
-            id = "reasoningEffort";
-            value = "medium";
-          }
-        ];
+  };
+  programs.t3code.settings = {
+    defaultModelSelection = {
+      instanceId = "codex";
+      model = "gpt-6.1-sol";
+      options = [
+        {
+          id = "reasoningEffort";
+          value = "medium";
+        }
+      ];
+    };
+    textGenerationModelSelection = {
+      instanceId = "codex";
+      model = "gpt-6-luna";
+      options = [
+        {
+          id = "reasoningEffort";
+          value = "low";
+        }
+      ];
+    };
+    providerInstances = {
+      opencode = {
+        driver = "opencode";
+        enabled = false;
       };
-      textGenerationModelSelection = {
-        instanceId = "codex";
-        model = "gpt-6-luna";
-        options = [
-          {
-            id = "reasoningEffort";
-            value = "low";
-          }
-        ];
+      # Use the existing CLI so Codex reads the hub provider from its config.
+      codex = {
+        driver = "codex";
+        enabled = true;
+        config.setupMode = "existing";
       };
-      providerInstances = {
-        opencode = {
-          driver = "opencode";
-          enabled = false;
-        };
-        # Use the existing CLI so Codex reads the hub provider from its config.
-        codex = {
-          driver = "codex";
-          enabled = true;
-          config.setupMode = "existing";
-        };
-        greyxp999 = {
-          driver = "codex";
-          enabled = false;
-        };
-        claudeAgent = {
-          driver = "claudeAgent";
-          enabled = true;
-          # T3 only lists skills from user, project and added dirs, not Claude's managed dir.
-          config.launchArgs = "${lib.optionalString graphical "--mcp-config ${claudeMcpConfig} "}--add-dir=/etc/claude-code";
-        };
+      greyxp999 = {
+        driver = "codex";
+        enabled = false;
+      };
+      claudeAgent = {
+        driver = "claudeAgent";
+        enabled = true;
+        # T3 only lists skills from user, project and added dirs, not Claude's managed dir.
+        config.launchArgs = "${lib.optionalString graphical "--mcp-config ${claudeMcpConfig} "}--add-dir=/etc/claude-code";
       };
     };
   };

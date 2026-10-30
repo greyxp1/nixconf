@@ -8,6 +8,8 @@
   cfg = config.programs.t3code;
   server = config.services.t3code;
   json = pkgs.formats.json {};
+  # The headless server applies settings itself before starting.
+  loginSettings = cfg.settings != {} && !server.enable;
   mergeSettings = name: settings: let
     settingsFile = json.generate "t3code-${name}.json" settings;
   in pkgs.writeShellApplication {
@@ -34,16 +36,21 @@ in {
       enable = lib.mkEnableOption "the T3 Code CLI";
       package = lib.mkOption {
         type = lib.types.package;
-        description = "T3 Code CLI/server package with a separate desktop output.";
+        description = "T3 Code package providing the `t3` server, optionally with a separate desktop output.";
       };
       desktop = {
         enable = lib.mkEnableOption "the T3 Code desktop app";
         package = lib.mkOption {
           type = lib.types.package;
-          default = cfg.package.desktop;
-          defaultText = lib.literalExpression "config.programs.t3code.package.desktop";
+          default = cfg.package.desktop or cfg.package;
+          defaultText = lib.literalExpression "config.programs.t3code.package.desktop or config.programs.t3code.package";
           description = "T3 Code desktop package.";
         };
+      };
+      settings = lib.mkOption {
+        type = lib.types.attrsOf json.type;
+        default = {};
+        description = "Server settings merged into each user's userdata/settings.json before the server starts, or at login without the headless server.";
       };
       clientSettings = lib.mkOption {
         type = lib.types.attrsOf json.type;
@@ -74,11 +81,6 @@ in {
         default = ".t3";
         description = "T3 Code data directory, relative to the user's home unless absolute.";
       };
-      settings = lib.mkOption {
-        type = lib.types.attrsOf json.type;
-        default = {};
-        description = "Server settings merged into userdata/settings.json before starting.";
-      };
     };
   };
 
@@ -92,14 +94,16 @@ in {
     (lib.mkIf cfg.desktop.enable {
       environment.systemPackages = [cfg.desktop.package];
     })
-    (lib.mkIf ((cfg.enable || cfg.desktop.enable) && cfg.clientSettings != {}) {
+    (lib.mkIf ((cfg.enable || cfg.desktop.enable) && (loginSettings || cfg.clientSettings != {})) {
       systemd.user.services.t3code-settings = {
-        description = "Apply T3 Code desktop settings";
+        description = "Apply T3 Code settings";
         wantedBy = ["default.target"];
         serviceConfig = {
           Type = "oneshot";
           RemainAfterExit = true;
-          ExecStart = ''${lib.getExe (mergeSettings "client" cfg.clientSettings)} %h/.t3/userdata/client-settings.json'';
+          ExecStart =
+            lib.optional loginSettings "${lib.getExe (mergeSettings "server" cfg.settings)} %h/.t3/userdata/settings.json"
+            ++ lib.optional (cfg.clientSettings != {}) "${lib.getExe (mergeSettings "client" cfg.clientSettings)} %h/.t3/userdata/client-settings.json";
         };
       };
     })
@@ -113,11 +117,11 @@ in {
         serviceConfig = {
           WorkingDirectory = "%h";
           ExecStart = utils.escapeSystemdExecArgs (
-            [(lib.getExe cfg.package) "serve" "--host" server.host "--port" server.port]
+            [(lib.getExe' cfg.package "t3") "serve" "--host" server.host "--port" server.port]
             ++ lib.optionals (server.dataDir != ".t3") ["--base-dir" server.dataDir]
           );
-          ExecStartPre = lib.optional (server.settings != {})
-            (utils.escapeSystemdExecArgs [(lib.getExe (mergeSettings "server" server.settings)) "${server.dataDir}/userdata/settings.json"]);
+          ExecStartPre = lib.optional (cfg.settings != {})
+            (utils.escapeSystemdExecArgs [(lib.getExe (mergeSettings "server" cfg.settings)) "${server.dataDir}/userdata/settings.json"]);
           Restart = "on-failure";
           RestartSec = 5;
           KillMode = "mixed";
