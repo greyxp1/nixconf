@@ -55,7 +55,6 @@
     Install.WantedBy = "graphical-session.target";
   };
   services = {
-    perch = sessionService "${inputs.perch.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/perch --daemon";
     xdg-desktop-portal = {
       Service = {
         Type = "dbus";
@@ -91,16 +90,6 @@ in {
   ];
   environment.etc = {
     "niri/config.kdl".source = nixos.programs.niri.configFile;
-    "systemd/user/niri.service" = {
-      source = "${almaNiri}/share/systemd/user/niri.service";
-      mode = "0644";
-      replaceExisting = true;
-    };
-    "systemd/user/niri.service.d/overrides.conf" = {
-      source = "${nixos.systemd.user.units."niri.service".unit}/niri.service";
-      mode = "0644";
-      replaceExisting = true;
-    };
     "systemd/user/niri-shutdown.target" = {
       source = "${almaNiri}/share/systemd/user/niri-shutdown.target";
       mode = "0644";

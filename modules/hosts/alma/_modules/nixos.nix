@@ -54,6 +54,8 @@
             };
         };
         config = {
+          # Alma's systemd does not support this newer slice setting.
+          systemd.user.slices.app-t3code.sliceConfig.ManagedOOMMemoryPressureDurationSec = lib.mkForce [];
           programs.nixcord.discord.enable = lib.mkForce false;
           programs.niri.settings.binds = {
             "Mod+Shift+O" = {

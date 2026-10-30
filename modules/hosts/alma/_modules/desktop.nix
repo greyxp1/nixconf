@@ -8,9 +8,8 @@
     ./t3code.nix
     ./helium.nix
     ./niri.nix
-    ./noctalia.nix
     ./sunshine.nix
-    ./vellum.nix
+    ./user-services.nix
     ./session.nix
   ];
   environment.etc =

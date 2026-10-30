@@ -9,16 +9,6 @@
     ./nixos.nix
     "${inputs.nixpkgs}/nixos/modules/programs/nh.nix"
     "${inputs.nixpkgs}/nixos/modules/services/misc/nix-gc.nix"
-    (import ./_userServices.nix {
-      ssh-agent = {
-        Service = {
-          ExecStartPre = "${pkgs.coreutils}/bin/rm -f %t/ssh-agent";
-          ExecStart = "${pkgs.openssh}/bin/ssh-agent -D -a %t/ssh-agent";
-          Restart = "on-failure";
-        };
-        Install.WantedBy = "default.target";
-      };
-    })
   ];
   environment.variables = {
     inherit (nixos.environment.variables) DIRENV_CONFIG;

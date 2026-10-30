@@ -10,16 +10,6 @@
   };
   environment.etc =
     {
-      "systemd/user/t3code.service" = {
-        source = "${nixos.systemd.user.units."t3code.service".unit}/t3code.service";
-        mode = "0644";
-        replaceExisting = true;
-      };
-      "systemd/user/graphical-session.target.d/nixconf-t3code.conf" = {
-        text = "[Unit]\nWants=t3code.service\n";
-        mode = "0644";
-        replaceExisting = true;
-      };
       "systemd/user/t3code.service.d/environment.conf" = {
         text = ''
           [Service]
