@@ -9,6 +9,15 @@
       logFormat = null;
       extraConfig = ''
         encode zstd gzip
+        handle /favicon.svg {
+          root * ${pkgs.writeTextDir "favicon.svg" ''
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+            <rect width="32" height="32" rx="8" fill="#161618"/>
+            <path d="m8 10 6 6-6 6m10 0h6" fill="none" stroke="#f5f5f7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        ''}
+          file_server
+        }
         redir /jellyfin /jellyfin/ 308
         handle /jellyfin/* {
           reverse_proxy 127.0.0.1:8097
@@ -22,6 +31,7 @@
               <meta name="viewport" content="width=device-width, initial-scale=1">
               <meta name="theme-color" content="#141414">
               <title>grey</title>
+              <link rel="icon" type="image/svg+xml" href="/favicon.svg">
               <style>
                 :root { color-scheme: dark; font-family: system-ui, sans-serif; background: #141414; color: #eee; }
                 * { box-sizing: border-box; }
@@ -51,6 +61,9 @@
               <main>
                 <section aria-labelledby="jellyfin">
                   <div class="row"><h2 id="jellyfin">Jellyfin</h2><a class="open" href="/jellyfin/web/#/login">Open Jellyfin ↗</a></div>
+                </section>
+                <section aria-labelledby="proxy">
+                  <div class="row"><h2 id="proxy">CLI Proxy</h2><a class="open" href="/proxy">Open CLI Proxy ↗</a></div>
                 </section>
                 <section aria-labelledby="minecraft">
                   <div class="row"><h2 id="minecraft">Minecraft</h2><button type="button" data-copy="greyxp1.root.sx" aria-label="Copy Minecraft address">Copy address</button></div>

@@ -7,6 +7,14 @@
     "narHash": "sha256-8objiXPnGhtvbOJGUhTDJkKKqMAcmzulmRnTkHRCykc=",
     "lastModified": 1793189487
   },
+  "cliproxyapi": {
+    "type": "github",
+    "owner": "greyxp1",
+    "repo": "CLIProxyAPI",
+    "rev": "f8125018da66f09916b653f05b84a8f981f801fc",
+    "narHash": "sha256-qhIO0nYsVZ7+wsdZe/J5t60/Hex5M6d9+0ka903DON4=",
+    "lastModified": 1793338974
+  },
   "compress-yazi": {
     "type": "github",
     "owner": "KKV9",

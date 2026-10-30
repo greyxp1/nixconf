@@ -1,16 +1,13 @@
 {
+  config,
+  inputs,
   lib,
   pkgs,
   ...
-}: let
-  expiringQuotaFirst = pkgs.callPackage ../../../../pkgs/cliproxyapi-expiring-quota-first.nix {};
-in {
+}: {
   services.cliproxyapi = {
     enable = true;
-    # Puts the reset time in the cooldown message so T3 Code can resume threads after it.
-    package = pkgs.cliproxyapi.overrideAttrs (old: {
-      patches = old.patches or [] ++ [./cliproxyapi-cooldown-reset.patch];
-    });
+    package = inputs.cliproxyapi.packages.${pkgs.stdenv.hostPlatform.system}.default;
     settings = {
       config-version = 8;
       server = {
@@ -19,13 +16,23 @@ in {
       };
       management = {
         allow-remote = true;
+        disable-control-panel = true;
         secret-key._secret = "/persistent/secrets/cliproxyapi/management-key";
       };
       access.api-keys = [
         {_secret = "/persistent/secrets/cliproxyapi/grey-key";}
         {_secret = "/persistent/secrets/cliproxyapi/friend-key";}
       ];
+      pool = {
+        enabled = true;
+        address = "127.0.0.1:8318";
+        origin = "https://greyxp1.root.sx";
+        clients-file = "/var/lib/cliproxyapi/clients.json";
+        database = "/var/lib/cliproxyapi/pool.sqlite";
+        maintenance = true;
+      };
       routing = {
+        strategy = "quota-pressure";
         session-affinity = true;
         # Retries are off unless set. These match Theo's proxy guide.
         retry = {
@@ -34,17 +41,10 @@ in {
         };
       };
       oauth.auth-dir = "/var/lib/cliproxyapi/auth";
-      plugins = {
-        enabled = true;
-        dir = "${expiringQuotaFirst}/lib/cliproxyapi/plugins";
-        configs.expiring-quota-first = {
-          enabled = true;
-          mode = "active";
-          state_file = "/var/lib/cliproxyapi/expiring-quota-first/state.json";
-        };
-      };
     };
   };
+
+  environment.systemPackages = [config.services.cliproxyapi.package];
 
   preservation.preserveAt."/persistent".directories = [
     {
@@ -63,6 +63,32 @@ in {
     after = ["preservation.target"];
     unitConfig.RequiresMountsFor = ["/var/lib/cliproxyapi"];
   };
+
+  services.caddy.virtualHosts."greyxp1.root.sx".extraConfig = lib.mkBefore ''
+    @proxy path /v1/models /v1/models/* /v1/messages /v1/messages/count_tokens /v1/chat/completions /v1/completions /v1/responses /v1/responses/compact /v1/alpha/search /responses /responses/compact
+    handle @proxy {
+      route {
+        forward_auth 127.0.0.1:8318 {
+          uri /authorize
+          copy_headers Authorization
+        }
+        request_header -X-Api-Key
+        request_body {
+          max_size 32MB
+        }
+        reverse_proxy 127.0.0.1:8317 {
+          flush_interval -1
+        }
+      }
+    }
+    @page path /proxy /proxy/*
+    handle @page {
+      request_body {
+        max_size 16KB
+      }
+      reverse_proxy 127.0.0.1:8318
+    }
+  '';
 
   systemd.services.cliproxyapi-access = {
     description = "CLIProxyAPI HTTPS access over Tailscale";

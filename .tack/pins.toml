@@ -68,3 +68,6 @@ exclude_follow = ["nixpkgs"]
 [inputs.hydro]
 url = "gh:greyxp1/hydro"
 type = "fetch"
+
+[inputs.cliproxyapi]
+url = "gh:greyxp1/CLIProxyAPI/pool"
