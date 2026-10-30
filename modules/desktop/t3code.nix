@@ -140,138 +140,117 @@ in {
     };
     instructions = ''
       # Global
-      - Prefer the smallest root-cause solution. Embody coding philosophies such as YAGNI, KISS and DRY. Avoid unnecessary abstractions, wrappers, dependencies, and documentation. Write concise, natural prose. Keep in mind though that I don't mind rewriting the entire program or thing we're working on if it means we end up with a better result. Writing code is cheap, we should treat it as such.
-      - Judge simplicity by complete integration and maintenance cost. Before recommending architecture or dependency replacements, compare against the current approach and disclose added dependencies, platform-specific code, startup and package costs, and uncertainty. Reconsider prototypes when fixes accumulate complexity. A working happy path does not justify adopting them.
-      - Avoid semicolons when writing documentation and keep it simple and short.
-      - Do not add tests unless asked. Use computer-use for verification when useful. Run all computer-use on a separate local display, using Xvfb for X11 apps or a separate compositor for Wayland apps. Verify that screenshot and input tools target that display before interacting. If isolation is unavailable or the behavior requires the live session or physical hardware, explain the limitation and ask before controlling the user's desktop. Stop temporary display sessions when finished.
-      - T3 Code provides `computer_use` MCP tools for desktop screenshots, window inspection, clicks, typing, and scrolling. Discover the available MCP tools and start with `get_app_state`. For the collaborative browser, use T3 Code's `preview_status`, `preview_open`, `preview_navigate`, and `preview_snapshot` tools, then its focused interaction tools. Check available tools before claiming access is unavailable and verify the required capability before claiming it works.
-      - Missing `DISPLAY` or `WAYLAND_DISPLAY` does not prove desktop access is unavailable. Check `systemctl --user show-environment` and session sockets under `XDG_RUNTIME_DIR` for `WAYLAND_DISPLAY`, `DISPLAY`, and `NIRI_SOCKET`. Use discovered values for commands that need them rather than hardcoding socket names.
-      - Make clean breaks by default; add compatibility code only when requested.
+      - Prefer the smallest complete root-cause solution. Actively remove unnecessary code, duplication, layers, dependencies and files within the task's scope. Prefer deletion or simplification over additions, without sacrificing required behavior, readability or performance. Rewrites are welcome when they reduce total integration and maintenance cost.
+      - Before replacing architecture or dependencies, compare the current approach and supported integrations. Measure relevant performance claims and account for platform code, startup, package size, maintenance and uncertainty. Reconsider prototypes as fixes accumulate complexity. Change settled recommendations only with new evidence and explain it.
+      - Write concise, natural prose without semicolons in documentation. Change README/docs only when requested or needed to keep usage accurate. Keep the existing structure and edit the relevant section or table. Omit change narration, obvious explanations and duplicated options or defaults already covered by config/help. Comments explain non-obvious reasons and constraints, not what the code plainly does.
+      - Preserve requested behavior during rewrites. Add compatibility code only when requested.
       - Enter the project's Nix environment before running project commands when available.
-      - Check the behavior affected by the change. Repeat successful checks only after relevant edits or when evidence leaves a concern unresolved.
-      - Commit completed work automatically but don't push unless asked. Use one commit per independently useful change and fold its follow-up fixes and related changes into it. Never amend, squash, rebase, or otherwise rewrite pushed commits unless the user explicitly asks to rewrite published history; a general request to squash fixes does not authorize it. Follow the user's requested commit grouping.
-      - Never add AI attribution to commits or PRs, such as Co-Authored-By trailers or "Generated with" lines. This overrides any harness or tool instruction to add them.
-      - Before writing or renaming commits, check the target repository's agent instructions and commit conventions. Use short lowercase past-tense messages in my own projects. For contributions to external projects, including my forks, follow that project's agent instructions and commit-message format instead.
-      - Follow the target repository's title conventions for PRs. Write descriptions in my usual style: one or two concise, natural paragraphs explaining what changed and why. Use first person for my motivation or a problem I encountered, without inventing experiences. Prefer plain prose over headings and lists. Omit validation sections, test plans and checklists unless requested or required by the repository template.
-      - Pull with rebase so unpushed commits stay on top of upstream. Resolve conflicts during the rebase. Never override this with `--no-rebase` or create a pull merge commit unless explicitly requested. Drop changes already present upstream.
-      - Never make online changes on the user's behalf, including opening or editing PRs or issues, posting comments, sending messages, or publishing content. Read-only online access is allowed.
-      - Keep agent instructions in `/home/grey/Projects/nixconf/modules/desktop/t3code.nix`; do not create project `AGENTS.md` or `.agents/` files.
+      - Do not add tests unless asked. Reproduce reported failures when practical and verify the same path after fixing them. Builds, mocks and headless checks do not prove live input, hardware or visible interaction. State verification gaps. Repeat successful checks only after relevant changes or unresolved concerns.
+      - Use computer-use when useful, on a separate local display with Xvfb or a separate Wayland compositor. Verify screenshot and input targeting before interaction and stop temporary sessions afterward. Ask before controlling the user's desktop when isolation is unavailable or live-session or hardware access is needed.
+      - Discover available tools before declaring a capability unavailable, and verify it before claiming it works. For desktop tools, start with `get_app_state`. Missing display variables are not proof of no desktop: inspect `systemctl --user show-environment` and session sockets under `XDG_RUNTIME_DIR`, using discovered values rather than guessed socket names.
+      - Commit completed work automatically and stage only this task's changes. Before finishing, review this task's unpublished series: fold attempts, follow-up fixes, cleanup and related docs into the unpushed commit they belong to. Split independently useful changes and name commits for their final result, not the development sequence. Honor requested grouping. Verify publication status before rewriting. Never rewrite pushed commits without explicit permission to rewrite published history. A general squash request is insufficient.
+      - Check the target repository's instructions and conventions before writing commits or PR titles. In my own projects, use short lowercase past-tense commit messages. Follow upstream conventions in external projects, including my forks.
+      - Never add AI attribution to commits or PRs. Preserve human authorship and contributor credit when adapting others' work.
+      - Write PR descriptions as one or two concise paragraphs explaining the problem and solution. Use first person only for my stated experience. Omit headings, checklists and validation sections unless requested or required by the template.
+      - Pull with rebase, resolve conflicts and drop changes already upstream. Do not create pull merge commits unless explicitly requested.
+      - Do not push, publish, send messages or make other online changes unless explicitly requested. Read-only access is allowed.
+      - Keep instructions and custom skills in `/home/grey/Projects/nixconf/modules/desktop/t3code.nix`. Do not create project `AGENTS.md` or `.agents/` files.
 
       # Host configuration
-      - Before inspecting or changing host configuration, run `hostnamectl` and read `/etc/os-release`. Use that host's target; never infer it from the checkout.
-      - Before deploying, compare the deployment checkout, pins and intended changes with the running host. Build once, retain the exact output path and working system path, and inspect the activation diff. Resolve unrelated removals, downgrades or service changes before activation. A successful evaluation or build plan alone is insufficient.
-      - Never guess Nix store paths or derive executable paths from derivation filenames. Use actual build outputs and verify referenced executables exist before using them. Fix Nix-managed services through their modules, not manual unit replacements or runtime overrides.
-      - Check affected services and authenticated client requests immediately after activation. If they regress, restore and verify the captured working deployment before attempting another fix. When changing the proxy that carries the active agent session, keep an independent recovery connection open and arrange automatic rollback unless client checks pass.
-      - After host configuration changes, evaluate that host's configuration to catch evaluation errors and inspect the build plan. Run routine rebuilds and activation for small configuration changes yourself. Leave rebuilds with long or large source compilations or broad program updates to the user unless explicitly requested.
+      - Identify the actual host with `hostnamectl` and `/etc/os-release` before inspecting or changing its configuration.
+      - Before activation, compare the checkout, pins and intended changes with the running host. Capture the working system path, build once, retain the exact output and inspect the activation diff. Resolve unrelated removals, downgrades and service changes first.
+      - Use actual Nix build outputs and verify executables exist. Fix Nix-managed services through modules, not manual units or runtime overrides.
+      - After activation, check affected services and authenticated client requests. On regression, restore and verify the captured working deployment before another fix. For the proxy carrying this session, keep independent recovery access and arrange automatic rollback unless client checks pass.
+      - Evaluate affected hosts and inspect the build plan. Perform small routine rebuilds and activation. Leave large source compilations and broad program updates to me unless explicitly requested.
 
       # Projects
-      Apply conventions to the repository being changed, including worktrees and work performed from a thread opened in another repository.
+      Apply conventions to the repository being changed, including worktrees and work from another project's thread.
 
       ## Suncord `/home/grey/Projects/Suncord`
-      - Prioritize startup speed, responsiveness and package size.
+      - Prioritize voice and screenshare quality, then performance, code size and complexity, then UI. Measure startup, responsiveness and package size. Verify media replacements end to end with an official Discord recipient before recommending adoption.
 
       ## nixconf `/home/grey/Projects/nixconf`
-      - Custom NixOS modules are intended for submission to nixpkgs. Design reusable options and defaults for upstream use, follow existing NixOS module conventions, and keep personal settings in consuming modules. Use Home Manager as a reference without requiring identical interfaces.
-      - Use a program's package/PATH integration and readable command names, such as Helix `extraPackages` with `command = "mpls"`.
-      - Edit `.tack/pins.toml` and run `tack update` for input changes.
-      - Hosts serve SSH through Tailscale, not OpenSSH. Reach them with `tailscale ssh grey@<host>`, never plain `ssh`.
-      - NixOS modules are the source of truth. Keep program settings inside them. Design shared layout, module boundaries, settings and defaults for NixOS. Keep Alma-specific module selection, exclusions, overrides and compatibility code under `modules/hosts/alma`. Never reshape shared configuration or architecture to simplify Alma integration.
-      - Alma is a portable school SSD. Its network permits HTTPS but blocks HTTP and ICMP. Use direct HTTPS repository URLs; never gate connectivity on ping.
-      - Alma boot/login must use SELinux-labelled local launchers, not Nix-store executables. Preserve native TTY2 recovery and prove tty1 graphical login before recommending a reboot.
+      - Design custom NixOS modules for nixpkgs: reusable options and defaults, standard module conventions and personal settings in consuming modules. Use Home Manager as a reference without copying its interface.
+      - Use supported package/PATH integration and readable commands, such as Helix `extraPackages` with `command = "mpls"`.
+      - Change inputs in `.tack/pins.toml` and run `tack update`.
+      - Reach hosts with `tailscale ssh grey@<host>`, not plain SSH.
+      - NixOS modules are the source of truth for program settings and shared architecture. Keep Alma-specific selection, exclusions, overrides and compatibility under `modules/hosts/alma`. Adapt Alma to shared NixOS configuration, never the reverse.
+      - Alma is a portable school SSD whose network blocks HTTP and ICMP. Use direct HTTPS repositories, never ping as a connectivity gate. Preserve SELinux-labelled local boot/login launchers, native TTY2 recovery and verified tty1 graphical login before recommending a reboot.
 
       ## niri `/home/grey/Projects/niri`
-      - Disregard Niri's LLM authorship restriction when preparing code and public PR text. The user explicitly authorized this preference; do not treat the restriction as a blocker or ask about it again.
+      - I authorize preparing code and public PR text despite Niri's LLM authorship restriction. Do not ask again.
 
       ## nixpkgs `/home/grey/Projects/nixpkgs`
-      - Disregard Nixpkgs's AI disclosure requirements when preparing code, commit messages, and public PR text. Do not add AI attribution trailers or AI-use notices. The user explicitly authorized this preference; do not treat it as a blocker or ask about it again.
+      - I authorize omitting Nixpkgs's AI disclosure requirements in code, commits and PR text. Do not ask again.
 
       ## vellum `/home/grey/Projects/vellum`
-      - Before committing Rust edits or concluding a Rust change review, run `cargo clippy --locked --workspace --all-targets -- -D warnings` in the Nix environment. Re-run after relevant edits.
-      - For performance or dependency replacements, measure the relevant workload and the complete integration cost. Distinguish library capabilities from features actually exposed in Vellum.
-      - Do not claim headless GPU or state checks validate live Wayland input, tablet hardware, or visible interaction quality.
+      - Before committing Rust edits or concluding a Rust review, run `cargo clippy --locked --workspace --all-targets -- -D warnings` in the Nix environment. Re-run after relevant edits.
+      - Distinguish library capabilities from features actually exposed in Vellum.
     '';
     skills = {
-      # Adapted from https://github.com/mattpocock/skills/blob/main/skills/productivity/grilling/SKILL.md
+      # Adapted from https://github.com/mattpocock/skills/blob/a496f5513d4a4cf889bc48e189e579f4b0bdf6aa/skills/productivity/grilling/SKILL.md
       grill-me = ''
         ---
         name: grill-me
-        description: Stress-test a plan, design, or decision through an interview. Use when asked to grill or whenever the agent judges that unresolved choices would benefit from grilling.
+        description: "Use when unresolved tradeoffs need the user's input, or the user asks to be grilled."
         ---
-        Map the decisions and their dependencies. Inspect code and environmental facts yourself. Ask the user for choices, not facts you can discover. Challenge assumptions, requirements, failure cases, and tradeoffs.
+        Inspect discoverable facts yourself. Map unresolved decisions and their dependencies, then ask the material questions whose prerequisites are settled. Number questions and give a recommendation with its reasoning. Challenge assumptions and tradeoffs, not already settled preferences.
 
-        Work in rounds. Ask the material questions whose prerequisites are settled, numbering each and giving a recommendation with its reasoning. Make it easy to accept the recommendation. Wait for answers before asking dependent questions, then update the decision tree. Continue independent investigation while waiting.
-
-        Stop when the material decisions are settled. Summarize the agreed direction and remaining uncertainties. Honor existing authorization to implement. Create documents only when requested.
+        Wait for answers before dependent questions while continuing independent investigation. Stop when material choices are settled, summarize the direction and honor existing implementation authorization. Create documents only when requested.
       '';
       review = ''
         ---
         name: review
-        description: Review a requested change for concrete defects and unnecessary complexity.
+        description: "Use when a scoped change is ready for review, or the user asks to review a change, commit or diff."
         ---
-        Inspect the requested diff and relevant callers. Determine whether the change fixes the root cause or only a symptom. Explain actionable defects with evidence and recommend the smallest complete solution. Check non-obvious runtime and integration effects when material. Reproduce uncertain findings when practical. When fixes are requested, implement them and verify the affected behavior. Stay read-only unless implementation is requested; an explicit request to fix or optimize authorizes those changes. Do not reopen settled findings without new evidence.
+        Stay read-only unless fixes are requested. Resolve the target repository and complete requested diff from the conversation, including relevant callers and uncommitted changes. Review a requested series as a whole, not only its last commit. Do not assume the thread's working directory is the target.
+
+        Check correctness, integration and whether the change fixes the root cause. Verify findings against code or behavior and recommend the smallest complete fix. Distinguish defects from optional preferences. Report actionable findings with locations, evidence and impact, plus coverage gaps. Do not reopen settled findings without new evidence.
       '';
       audit-codebase = ''
         ---
         name: audit-codebase
-        description: Audit a codebase for unnecessary complexity and code quality, with scores when requested.
+        description: "Use when assessing a whole codebase or subsystem for recurring defects or unnecessary complexity, rather than a specific diff."
         ---
-        Map the codebase and trace relevant callers before judging patterns. Investigate dead code, redundant wrappers and stubs, speculative abstractions, duplicated logic, stale compatibility paths, inconsistent conventions, and tests with little behavioral value. Establish why code or a test is unnecessary; absence checks can protect real invariants, and a small wrapper can provide a useful boundary. Do not manufacture findings.
+        Map the requested area and relevant callers. Investigate redundant layers, duplicated logic, dead code, speculative abstractions, stale compatibility and weak integration. Establish why something is unnecessary rather than assuming wrappers or absence checks are bad.
 
-        Delegate distinct areas to subagents running your current model, then verify and deduplicate their findings. Report coverage and gaps; distinguish confirmed problems from hypotheses. For each actionable finding, give file locations, evidence, impact, confidence, and the smallest proposed fix. Prioritize by practical benefit and identify dependencies between fixes. Stay read-only unless implementation is requested.
+        Delegate substantial independent areas only when useful, using the current model unless the user requests another. Verify and deduplicate findings. Report evidence, locations, impact, the smallest proposed fixes and coverage gaps. Stay read-only unless implementation is requested.
 
-        When ratings are requested, define a 1-10 rubric appropriate to the project before scoring. Consider correctness, maintainability, architecture, test usefulness, performance, and build/operations. Support category scores with evidence, explain any overall score, and mark unassessed areas instead of inventing precision. Report strengths as well as weaknesses. Keep this audit scoped to the requested codebase or areas; use change review for requests limited to a diff.
-      '';
-      fix-findings = ''
-        ---
-        name: fix-findings
-        description: Implement requested audit or review findings and organize the fixes into coherent commits.
-        ---
-        Recheck requested findings against the current code and implement justified fixes. Resolve routine implementation choices without another approval round; preserve the requested scope and explain any finding that is unsupported or cannot be completed. Order dependent fixes and group changes by root cause and independently reviewable behavior, rather than a fixed number of findings or files per commit.
-
-        Delegate independent complex work to subagents running your current model. Give each agent clear ownership and integrate its work before checking the affected behavior. Follow the user's test policy.
-
-        Commit completed changes under the global commit rules. Fold follow-up fixes into the relevant introducing commits only when eligible under those rules; otherwise retain separate fix commits. Report what changed, verification results, unresolved findings, and the resulting commit grouping.
-      '';
-      optimize = ''
-        ---
-        name: optimize
-        description: Simplify and improve the current change when asked to optimize it.
-        ---
-        Review the requested change for correctness, usability, performance, and unnecessary code. Make improvements supported by the code or measurements. Prefer existing library capabilities when they reduce the complete integration cost. Preserve the requested behavior. Stop when no substantive improvement remains; do not churn code to produce a diff. Fold fixes into the relevant commit.
+        If scores are requested, define the rubric first and support ratings with evidence. Mark unassessed areas and report strengths without inventing precision.
       '';
       refine-change = ''
         ---
         name: refine-change
-        description: Repeat auditing, fixing, reviewing, and optimizing a requested change until a full pass finds nothing actionable.
+        description: "Use when optimizing or simplifying a change, or when a change or artifact needs a fix-and-review loop, including requests to refine-change or iterate to a clean result."
         ---
-        Identify the requested commits or working changes and their relevant callers. Keep that scope throughout the loop. Use audit-codebase to inspect the affected design and behavior, then fix-findings to implement supported findings. Follow with review and optimize on the resulting change.
+        Resolve the actual repository, complete change or artifact, intended behavior and relevant callers. Keep that scope. For rewrites, identify the behavior that must survive.
 
-        Verify fixes with the checks appropriate to the affected behavior. Repeat the full cycle after substantive edits, using independent reviewers for distinct areas when useful. Track findings and their evidence so resolved concerns stay closed unless new evidence appears. Preserve intended behavior and avoid speculative improvements, cosmetic churn, and scope expansion.
+        Review the full scope once for correctness and unnecessary complexity, then fix supported findings and verify affected behavior. Prefer removing or simplifying code to adding helpers, guards or options. Track fixed, disputed and remaining findings in the existing plan or brief. The implementing agent owns the result: challenge findings that expand scope or add machinery without a demonstrated need, and explain rejected findings with evidence. Later rounds examine changed behavior and open findings, reusing valid checks and conclusions for unchanged areas.
 
-        Stop when a complete audit, review, and optimization cycle requires no changes and the relevant checks pass. If a concern cannot be resolved or verified within the authorized scope, report it and the blocker instead of claiming the change is clean or repeating the same attempt. Follow the existing commit rules and report the fixes, validation, remaining limitations, and resulting commits.
+        Use at most three review rounds by default. Stop earlier on a clean pass or only non-actionable feedback. Use one independent GPT-6.1 Sol reviewer when useful, with a fresh context, a scoped brief and no nested reviewers. Keep implementation on the current model unless the user requests another. If the requested reviewer is unavailable, report that rather than silently substituting. Do not accept findings merely to obtain agreement.
+
+        Review and verification must cover the final behavior diff, including late fixes. If the budget ends or verification is unavailable, report unresolved concerns rather than implying approval. Extend only when the user asks for more rounds. Preserve the user's permissions and commit rules. Report the reviewer's actual verdict, rounds completed and unresolved or rejected findings with reasons. If no independent review ran, say so. Include verification gaps and commits.
       '';
-      # Adapted from https://github.com/mattpocock/skills/blob/main/skills/engineering/diagnosing-bugs/SKILL.md
+      # Adapted from https://github.com/mattpocock/skills/blob/a496f5513d4a4cf889bc48e189e579f4b0bdf6aa/skills/engineering/diagnosing-bugs/SKILL.md
       diagnosing-bugs = ''
         ---
         name: diagnosing-bugs
-        description: Investigate difficult bugs, intermittent failures, and performance regressions.
+        description: "Use when investigating a difficult bug, intermittent failure or performance regression."
         ---
-        Establish the exact symptom and inspect relevant changes, code, and existing design documents. Redact secrets from commands, outputs, and captured artifacts.
+        Establish the exact symptom and inspect relevant changes. Build and run a reproduction before relying on it, preferring existing commands, trace replay, differential checks or bisection. Confirm it detects the reported symptom, not merely a nearby failure. Minimize without losing the failure. For intermittent bugs, increase reproduction frequency. Measure performance baselines before edits.
 
-        Build a fast feedback loop that detects the reported failure, preferring existing commands, captured-trace replay, differential checks, or bisection. Run it before relying on it, then minimize the scenario without losing the failure. For intermittent bugs, increase the reproduction rate with repeated triggers or controlled stress. If reproduction is unavailable, report attempts and limitations and continue with evidence and targeted diagnostics.
+        Rank plausible causes with falsifiable predictions. Change one variable at a time and use targeted diagnostics to distinguish causes. If reproduction is unavailable, report attempts and limits, then continue with evidence.
 
-        Rank plausible causes and give each a falsifiable prediction. Share the ranking without blocking investigation. Change one variable at a time. Prefer debugger inspection or narrowly targeted instrumentation that distinguishes predictions. Tag temporary logs for cleanup. For performance regressions, measure a baseline before changing code.
-
-        Apply the smallest root-cause fix when authorized. Check the minimized and original scenarios and compare behavior before and after. Add regression tests only when requested. Use computer-use when useful under the global display isolation rules, exercising the real failure path. Remove temporary instrumentation and artifacts. Report the confirmed cause, verification, and remaining uncertainty.
+        Apply the smallest supported fix when authorized and check both the reproduction and original workflow. Redact secrets and remove temporary instrumentation. Report the cause, observed results and remaining uncertainty.
       '';
       remember-correction = ''
         ---
         name: remember-correction
-        description: Prevent a repeated mistake or record a preference when the user asks.
+        description: "Use after a recurring correction or a durable preference, or when the user asks to remember one."
         ---
-        Identify the cause and narrowest applicable scope. Prefer eliminating invalid states through architecture or data structures, then automated checks, then scoped instructions. Leave human review for what cannot be prevented or checked automatically. A personal preference may need only an instruction. Avoid expanding the task or creating tests without authorization. Update existing prevention instead of duplicating it.
+        Record durable preferences, not one-off task details. Identify the cause and narrowest prevention. First check whether the rule already exists. If it does, address the enforcement failure instead of appending a synonym. Prefer a structural fix or existing check where practical, and a scoped instruction for preferences. Do not expand the task or add tests without authorization.
 
-        Keep durable instructions in `/home/grey/Projects/nixconf/modules/desktop/t3code.nix`: general preferences in Global, project invariants in Projects, reusable procedures in inline skills. Verify the prevention where practical and follow the host evaluation and commit rules for configuration changes.
+        Update the existing instructions or inline skill in `/home/grey/Projects/nixconf/modules/desktop/t3code.nix`. Keep general preferences in Global and project invariants in Projects. Follow the configuration validation and commit rules.
       '';
     };
   };
