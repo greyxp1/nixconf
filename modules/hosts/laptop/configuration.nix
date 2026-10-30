@@ -43,6 +43,8 @@ in {
     };
 
     programs = {
+      # Ironlake only supports GLES 2, so Chromium's GLES 3 initialization fails.
+      helium.flags = ["--disable-gpu"];
       noctalia.settings = {
         bar.default = {
           margin_ends = lib.mkForce 32;
