@@ -3,17 +3,17 @@
     "type": "github",
     "owner": "catppuccin",
     "repo": "nix",
-    "rev": "ddfe53d3304399d50a89ef6503b6ca1be9349fab",
-    "narHash": "sha256-8objiXPnGhtvbOJGUhTDJkKKqMAcmzulmRnTkHRCykc=",
-    "lastModified": 1793189487
+    "rev": "feac189528d08ca7c46bf1605d84b78ea5fe8263",
+    "narHash": "sha256-ojN7KpXLYv6NgJ2OMn7cPioc46g7UB1pd4tBf//3S1U=",
+    "lastModified": 1793368344
   },
   "cliproxyapi": {
     "type": "github",
     "owner": "greyxp1",
     "repo": "CLIProxyAPI",
-    "rev": "f8125018da66f09916b653f05b84a8f981f801fc",
-    "narHash": "sha256-qhIO0nYsVZ7+wsdZe/J5t60/Hex5M6d9+0ka903DON4=",
-    "lastModified": 1793338974
+    "rev": "de92afbb27e1e5a5350e83019740c710f62f6b7b",
+    "narHash": "sha256-dpqYbkVYNpdbRObmi7DfEac193v+EcVYfmGdiEkrIww=",
+    "lastModified": 1793383076
   },
   "compress-yazi": {
     "type": "github",
@@ -212,18 +212,18 @@
     "type": "git",
     "url": "https://github.com/LizardByte/Sunshine",
     "ref": "refs/heads/master",
-    "rev": "a679b059096bcdd502e2192ce4f6a3c3732fbaae",
-    "narHash": "sha256-yKg+kHy3p8YP7ryyIdj8dhGDblYH0i1GqFgtB4U7fb0=",
-    "lastModified": 1793206207,
+    "rev": "2c8825ad5b66cf9750f8154691202f0cd8768ac0",
+    "narHash": "sha256-rKLQtOnYRb6x6B+WOI8kubz01vFRXfn5Cd0HAdmLz74=",
+    "lastModified": 1793381024,
     "submodules": true
   },
   "system-manager": {
     "type": "github",
     "owner": "numtide",
     "repo": "system-manager",
-    "rev": "81d5c1e8b2924679c1adc7b67e536917c12b3571",
-    "narHash": "sha256-ZV34Z3i8D8bbPhWcAlr3PpZHtuqqgnELaciSoOblhlg=",
-    "lastModified": 1793041121
+    "rev": "cba6d1c423c8c88a9f6a093606432e8e447a38f7",
+    "narHash": "sha256-znZDmnxhSYPW+S5jQ+cm2eCZVCmWwlKBftvddvf+4l8=",
+    "lastModified": 1793363453
   },
   "t3": {
     "type": "github",
