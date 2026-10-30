@@ -19,10 +19,6 @@
         disable-control-panel = true;
         secret-key._secret = "/persistent/secrets/cliproxyapi/management-key";
       };
-      access.api-keys = [
-        {_secret = "/persistent/secrets/cliproxyapi/grey-key";}
-        {_secret = "/persistent/secrets/cliproxyapi/friend-key";}
-      ];
       pool = {
         enabled = true;
         address = "127.0.0.1:8318";
