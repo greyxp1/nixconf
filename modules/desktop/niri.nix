@@ -128,14 +128,14 @@ in {
       "Mod+E" = bind {spawn = ["monstar" "-e" "fish" "-C" "y"];};
       "Mod+B" = bind {spawn = "helium";};
 
-      "Mod+C" = bind {spawn-sh = "noctalia msg panel-toggle control-center";};
-      "Alt+Space" = bind {spawn-sh = "noctalia msg panel-toggle launcher";};
-      "Mod+V" = bind {spawn-sh = "noctalia msg panel-toggle clipboard";};
-      "Mod+Print" = bind {spawn-sh = "noctalia msg plugin noctalia/screen_recorder:service all replay-save";};
+      "Mod+C" = bind {spawn = ["noctalia" "msg" "panel-toggle" "control-center"];};
+      "Alt+Space" = bind {spawn = ["noctalia" "msg" "panel-toggle" "launcher"];};
+      "Mod+V" = bind {spawn = ["noctalia" "msg" "panel-toggle" "clipboard"];};
+      "Mod+Print" = bind {spawn = ["noctalia" "msg" "plugin" "noctalia/screen_recorder:service" "all" "replay-save"];};
 
-      "XF86AudioRaiseVolume" = bind {spawn-sh = "noctalia msg volume-up";};
-      "XF86AudioLowerVolume" = bind {spawn-sh = "noctalia msg volume-down";};
-      "XF86AudioMute" = bind {spawn-sh = "noctalia msg media toggle";};
+      "XF86AudioRaiseVolume" = bind {spawn = ["noctalia" "msg" "volume-up"];};
+      "XF86AudioLowerVolume" = bind {spawn = ["noctalia" "msg" "volume-down"];};
+      "XF86AudioMute" = bind {spawn = ["noctalia" "msg" "media" "toggle"];};
 
       "Mod+Q" = bind {close-window = {};};
       "Mod+F" = bind {maximize-window-to-edges = {};};
@@ -148,7 +148,7 @@ in {
       "Shift+Print" = bind {spawn-sh = "niri msg screenshot --stdout | perch -";};
       "Ctrl+Print" = bind {spawn-sh = "niri msg screenshot --stdout | tesseract - - | wl-copy";};
       "Mod+Shift+C" = bind {spawn-sh = "niri msg pick-color | wl-copy";};
-      "Mod+A" = bind {spawn-sh = "vellum toggle";};
+      "Mod+A" = bind {spawn = ["vellum" "toggle"];};
 
       "Mod+H" = bind {focus-column-or-monitor-left = {};};
       "Mod+L" = bind {focus-column-or-monitor-right = {};};
