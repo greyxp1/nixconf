@@ -1,4 +1,8 @@
-{inputs, ...}: let
+{
+  inputs,
+  importTree,
+  ...
+}: let
   mkHost = import ../_mkHost.nix inputs;
 in {
   flake.nixosConfigurations.server = mkHost "server" {
@@ -17,7 +21,7 @@ in {
     };
 
     imports = [
-      (inputs.import-tree ../../core)
+      (importTree ../../core)
       ./_modules/jellyfin.nix
       ./_modules/livesync.nix
       ./_modules/docker/docker.nix

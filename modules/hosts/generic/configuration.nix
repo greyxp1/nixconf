@@ -1,10 +1,14 @@
-{inputs, ...}: let
+{
+  inputs,
+  importTree,
+  ...
+}: let
   mkHost = import ../_mkHost.nix inputs;
 in {
   flake.nixosConfigurations.generic = mkHost "generic" {
     imports = [
-      (inputs.import-tree ../../core)
-      (inputs.import-tree ../../desktop)
+      (importTree ../../core)
+      (importTree ../../desktop)
     ];
 
     services.qemuGuest.enable = true;

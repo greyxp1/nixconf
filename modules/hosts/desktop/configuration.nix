@@ -1,4 +1,8 @@
-{inputs, ...}: let
+{
+  inputs,
+  importTree,
+  ...
+}: let
   mkHost = import ../_mkHost.nix inputs;
 in {
   flake.nixosConfigurations.desktop = mkHost "desktop" ({lib, ...}: {
@@ -40,8 +44,8 @@ in {
     };
 
     imports = [
-      (inputs.import-tree ../../core)
-      (inputs.import-tree ../../desktop)
+      (importTree ../../core)
+      (importTree ../../desktop)
       ./_modules/sshfs.nix
       ./_modules/sunshine.nix
       ./_modules/cachix-publisher.nix

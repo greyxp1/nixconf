@@ -17,8 +17,6 @@ type = "fetch"
 submodules = true
 [inputs.preservation]
 url = "gh:nix-community/preservation"
-[inputs.import-tree]
-url = "gh:vic/import-tree"
 [inputs.disko]
 url = "gh:nix-community/disko"
 [inputs.system-manager]

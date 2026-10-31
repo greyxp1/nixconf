@@ -1,10 +1,14 @@
-{inputs, ...}: let
+{
+  inputs,
+  importTree,
+  ...
+}: let
   mkHost = import ../_mkHost.nix inputs;
 in {
   flake.nixosConfigurations.laptop = mkHost "laptop" ({lib, ...}: {
     imports = [
-      (inputs.import-tree ../../core)
-      (inputs.import-tree ../../desktop)
+      (importTree ../../core)
+      (importTree ../../desktop)
       ./_hardware.nix
       ./_network.nix
     ];
