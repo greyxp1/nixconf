@@ -15,9 +15,8 @@
   # The server imports this module too, without a desktop for computer use.
   graphical = config.services.graphical-desktop.enable;
   computerUse = {
-    command = "computer-use-linux";
-    args = ["mcp"];
-    env.YDOTOOL_SOCKET = config.environment.variables.YDOTOOL_SOCKET;
+    command = "niri";
+    args = ["mcp" "--isolated"];
   };
   claudeMcpConfig = pkgs.writeText "claude-mcp.json" (builtins.toJSON {
     mcpServers.computer_use = computerUse // {type = "stdio";};
@@ -79,14 +78,6 @@ in {
     };
   };
 
-  environment.systemPackages = lib.mkIf graphical [inputs.computer-use-linux.packages.${pkgs.stdenv.hostPlatform.system}.default];
-  services.gnome.at-spi2-core.enable = lib.mkIf graphical true;
-  programs.ydotool = lib.mkIf graphical {
-    enable = true;
-    group = lib.mkDefault "uinput";
-  };
-  users.users.grey.extraGroups = lib.mkIf graphical [config.programs.ydotool.group];
-
   # T3 sets its own agents slice limits, so enforce the shared budget on its parent.
   systemd.user.slices.app-t3code.sliceConfig = {
     CPUWeight = "idle";
@@ -135,8 +126,8 @@ in {
         };
       };
       mcp_servers.computer_use = lib.mkIf graphical {
-        inherit (computerUse) command args env;
-        env_vars = ["XDG_RUNTIME_DIR" "DBUS_SESSION_BUS_ADDRESS"];
+        inherit (computerUse) command args;
+        env_vars = ["XDG_RUNTIME_DIR"];
       };
     };
     instructions = ''
@@ -147,9 +138,9 @@ in {
       - Preserve requested behavior during rewrites. Add compatibility code only when requested.
       - Enter the project's Nix environment before running project commands when available.
       - Do not add tests unless asked. Reproduce reported failures when practical and verify the same path after fixing them. Builds, mocks and headless checks do not prove live input, hardware or visible interaction. State verification gaps. Repeat successful checks only after relevant changes or unresolved concerns.
-      - Use computer-use when useful, on a separate local display with Xvfb or a separate Wayland compositor. Verify screenshot and input targeting before interaction and stop temporary sessions afterward. Ask before controlling the user's desktop when isolation is unavailable or live-session or hardware access is needed.
-      - Discover available tools before declaring a capability unavailable, and verify it before claiming it works. For desktop tools, start with `get_app_state`. Missing display variables are not proof of no desktop: inspect `systemctl --user show-environment` and session sockets under `XDG_RUNTIME_DIR`, using discovered values rather than guessed socket names.
-      - Commit completed work automatically and stage only this task's changes. Before finishing, review this task's unpublished series: fold attempts, follow-up fixes, cleanup and related docs into the unpushed commit they belong to. Split independently useful changes and name commits for their final result, not the development sequence. Honor requested grouping. Verify publication status before rewriting. Never rewrite pushed commits without explicit permission to rewrite published history. A general squash request is insufficient.
+      - Use computer-use through the isolated Niri MCP session by default. X11 is not allowed. Start with list_windows and get_app_state, target a window explicitly and use coordinates from its latest screenshot. Use launch_app to start private applications. Accessibility actions require snapshot_id and element_index from get_app_state. Ask before using niri mcp --desktop to control the user's compositor or accessing live-session hardware. The current project is writable in the isolated session, while its home and application profiles are temporary and removed when the connection ends.
+      - Discover available tools before declaring a capability unavailable, and verify it before claiming it works. In the isolated MCP, start with `list_windows` and `get_app_state`. Missing display variables are not proof of no desktop: inspect `systemctl --user show-environment` and session sockets under `XDG_RUNTIME_DIR`, using discovered values rather than guessed socket names.
+      - Commit completed work automatically and stage only this task's changes. Before finishing, review this task's unpublished series: fold attempts, follow-up fixes, cleanup and related docs into the unpushed commit they belong to. Split independently useful changes and name commits for their final result, not the development sequence. Honor requested grouping. Verify publication status before rewriting. A request to clean up or squash history, or remove a feature, authorizes rewriting affected published history, including dropping a change and its revert. Do not ask separately for history-rewrite permission. Use force-with-lease for authorized force-pushes.
       - Check the target repository's instructions and conventions before writing commits or PR titles. In my own projects, use short lowercase past-tense commit messages. Follow upstream conventions in external projects, including my forks.
       - Never add AI attribution to commits or PRs. Preserve human authorship and contributor credit when adapting others' work.
       - Write PR descriptions as one or two concise paragraphs explaining the problem and solution. Use first person only for my stated experience. Omit headings, checklists and validation sections unless requested or required by the template.
@@ -181,6 +172,8 @@ in {
 
       ## niri `/home/grey/Projects/niri`
       - I authorize preparing code and public PR text despite Niri's LLM authorship restriction. Do not ask again.
+      - Keep fork-specific changes on dedicated branches and cherry-pick selected changes onto `personal`.
+      - Keep computer-use, private-session startup and filesystem isolation in the Niri fork, with nixconf limited to package selection and MCP registration. Avoid extra compositor dependencies such as Sway.
 
       ## nixpkgs `/home/grey/Projects/nixpkgs`
       - I authorize omitting Nixpkgs's AI disclosure requirements in code, commits and PR text. Do not ask again.

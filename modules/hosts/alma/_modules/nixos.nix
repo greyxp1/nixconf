@@ -17,7 +17,6 @@
           inherit uid;
           isNormalUser = true;
         };
-        programs.ydotool.group = lib.mkForce "input";
         xdg.mime.defaultApplications."inode/directory" = "yazi.desktop";
       }
     ];
