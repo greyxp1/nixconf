@@ -125,6 +125,7 @@ in {
       model_providers.cliproxy = {
         name = "CLIProxyAPI";
         base_url = "${proxyEndpoint}/v1";
+        model_catalog_url = "${proxyEndpoint}/v1/models?provider=codex";
         wire_api = "responses";
         requires_openai_auth = false;
         supports_websockets = true;
