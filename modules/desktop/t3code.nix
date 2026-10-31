@@ -7,11 +7,11 @@
 }: let
   llmAgents = inputs.t3.packages.${pkgs.stdenv.hostPlatform.system};
   hub = config.services.cliproxyapi;
-  # The hub host skips Tailscale, which it does not resolve for itself.
+  # The proxy host uses loopback even when the public route is unavailable.
   proxyEndpoint =
     if hub.enable
     then "http://${hub.settings.server.host}:${toString hub.settings.server.port}"
-    else "https://server.tail1785c.ts.net:8317";
+    else "https://greyxp1.root.sx";
   # The server imports this module too, without a desktop for computer use.
   graphical = config.services.graphical-desktop.enable;
   computerUse = {
@@ -34,44 +34,14 @@ in {
     target = lib.mkIf graphical "graphical-session.target";
   };
   programs.t3code.settings = {
-    defaultModelSelection = {
-      instanceId = "codex";
-      model = "gpt-6.1-sol";
-      options = [
-        {
-          id = "reasoningEffort";
-          value = "medium";
-        }
-      ];
-    };
-    textGenerationModelSelection = {
-      instanceId = "codex";
-      model = "gpt-6-luna";
-      options = [
-        {
-          id = "reasoningEffort";
-          value = "low";
-        }
-      ];
-    };
     providerInstances = {
-      opencode = {
-        driver = "opencode";
-        enabled = false;
-      };
       # Use the existing CLI so Codex reads the hub provider from its config.
       codex = {
         driver = "codex";
-        enabled = true;
         config.setupMode = "existing";
-      };
-      greyxp999 = {
-        driver = "codex";
-        enabled = false;
       };
       claudeAgent = {
         driver = "claudeAgent";
-        enabled = true;
         # T3 only lists skills from user, project and added dirs, not Claude's managed dir.
         config.launchArgs = "${lib.optionalString graphical "--mcp-config ${claudeMcpConfig} "}--add-dir=/etc/claude-code";
       };
