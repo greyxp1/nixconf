@@ -146,7 +146,7 @@ in {
       - Write PR descriptions as one or two concise paragraphs explaining the problem and solution. Use first person only for my stated experience. Omit headings, checklists and validation sections unless requested or required by the template.
       - Automatically babysit PRs opened from T3 Code. Address existing review findings, fix verified issues and CI failures, resolve conflicts, then call `watch_pull_request` and end the turn. Handle subsequent events without polling and stop when bot reviews and required checks pass on the latest commit.
       - Pull with rebase, resolve conflicts and drop changes already upstream. Do not create pull merge commits unless explicitly requested.
-      - Do not push, publish, send messages or make other online changes unless explicitly requested. Read-only access is allowed.
+      - Do not push, publish, send messages or make other online changes unless explicitly requested. Publication and deployment authorization carries through related follow-up fixes. Read-only access is allowed.
       - Keep instructions and custom skills in `/home/grey/Projects/nixconf/modules/desktop/t3code.nix`. Do not create project `AGENTS.md` or `.agents/` files.
 
       # Host configuration
