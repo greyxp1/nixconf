@@ -25,11 +25,11 @@
   },
   "computer-use-linux": {
     "type": "github",
-    "owner": "greyxp1",
-    "repo": "computer-use-linux-flake",
-    "rev": "f77add701bfddfc96f156c083206d4babf7b4707",
-    "narHash": "sha256-hdWzlQnhXg3WTlqHf65yaucvbMCNLqzLStTQl9wCBZo=",
-    "lastModified": 1793461901
+    "owner": "lihaoze123",
+    "repo": "niri-computer-use",
+    "rev": "bd6e39f3822ab5e14158def4817f89725064061d",
+    "narHash": "sha256-qDzep6FOCCGlDVXFL3w1GqemOGepvtWdS+LcbVLSgrE=",
+    "lastModified": 1793070469
   },
   "cord-stash": {
     "type": "github",

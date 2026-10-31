@@ -40,7 +40,8 @@ url = "gh:pantarune/niri-screenshare"
 [inputs.perch]
 url = "gh:greyxp1/perch"
 [inputs.computer-use-linux]
-url = "gh:greyxp1/computer-use-linux-flake"
+url = "gh:lihaoze123/niri-computer-use"
+exclude_follow = ["nixpkgs"]
 [inputs.cord-stash]
 url = "gh:greyxp1/cord-stash/396a52eaa9c0430bb9e8022427945840e0e960e1"
 type = "fetch"

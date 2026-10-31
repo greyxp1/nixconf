@@ -1,0 +1,207 @@
+--- a/computer-use-linux/src/niri_agent.rs
++++ b/computer-use-linux/src/niri_agent.rs
+@@ -54,6 +54,11 @@
+     tokio::task::spawn_blocking(move || request_blocking(&socket, &request))
+         .await
+         .map_err(|e| anyhow!("niri IPC task failed: {e}"))?
++}
++
++/// Require per-client Niri input and refuse shared-desktop fallbacks.
++pub fn required() -> bool {
++    std::env::var("CODEX_COMPUTER_USE_NIRI_AGENT_REQUIRED").is_ok_and(|v| v == "1")
+ }
+ 
+ /// Whether the running niri accepts agent requests. Cached per niri socket.
+@@ -188,3 +193,8 @@
+         Some(other) => bail!("unsupported mouse button {other:?}"),
+     })
+ }
++
++/// Queue an application launch without requesting compositor focus.
++pub async fn spawn(command: Vec<String>) -> Result<()> {
++    request(json!({ "AgentSpawn": { "command": command } })).await.map(|_| ())
++}
+--- a/computer-use-linux/src/server.rs
++++ b/computer-use-linux/src/server.rs
+@@ -198,6 +198,26 @@
+     }
+ 
+     #[tool(
++        name = "launch_app",
++        description = "Launch a graphical application in this computer-use session. Pass an executable and its arguments as command. Standard streams are detached. Inspect list_windows after launch.",
++        annotations(read_only_hint = false, destructive_hint = false, idempotent_hint = false, open_world_hint = true)
++    )]
++    async fn launch_app(&self, Parameters(params): Parameters<LaunchAppParams>) -> Json<ActionOutput> {
++        let received = Some(serde_json::json!(params.clone()));
++        let result = crate::niri_agent::spawn(params.command).await;
++        Json(ActionOutput {
++            ok: result.is_ok(),
++            implemented: true,
++            action: "launch_app".to_string(),
++            message: match result {
++                Ok(()) => "Application launch queued. Inspect list_windows to confirm it opened and identify its window.".to_string(),
++                Err(error) => format!("Application launch failed: {error:#}"),
++            },
++            received,
++        })
++    }
++
++    #[tool(
+         name = "list_windows",
+         description = "List compositor windows with title, app id, class, focus state, client type, and known bounds.",
+         annotations(
+@@ -322,7 +342,9 @@
+         let (screenshot, screenshot_error) = if include_screenshot {
+             let result: Result<ScreenshotCapture> = async {
+                 if let Some(window) = window_context.as_ref().filter(|w| w.backend == "niri") {
+-                    ensure_readonly_screenshot_target_is_visible(window)?;
++                    if !crate::niri_agent::applies_to(window) {
++                        ensure_readonly_screenshot_target_is_visible(window)?;
++                    }
+                     let raw = crate::screenshot::capture_niri_window_raw(window.window_id).await?;
+                     return prepare_screenshot_payload(raw, screenshot_options);
+                 }
+@@ -607,6 +629,9 @@
+     )]
+     async fn click(&self, Parameters(mut params): Parameters<ClickParams>) -> Json<ActionOutput> {
+         let received = Some(serde_json::json!(params.clone()));
++        if crate::niri_agent::required() && params.window_target().is_none() {
++            return niri_agent_output("click", Err(anyhow::anyhow!("An explicit window target is required")), received);
++        }
+         let mut input_guard = Arc::clone(&self.input_operation_lock).lock_owned().await;
+         // niri agent input: deliver the click to the window's client without activating it or
+         // moving the user's pointer.
+@@ -1086,6 +1111,9 @@
+     )]
+     async fn scroll(&self, Parameters(mut params): Parameters<ScrollParams>) -> Json<ActionOutput> {
+         let received = Some(serde_json::json!(params.clone()));
++        if crate::niri_agent::required() && params.window_target().is_none() {
++            return niri_agent_output("scroll", Err(anyhow::anyhow!("An explicit window target is required")), received);
++        }
+         let input_guard = Arc::clone(&self.input_operation_lock).lock_owned().await;
+         if params.relative == Some(true) || params.x.is_none() {
+             if let (true, Some(window)) = (
+@@ -1467,6 +1495,9 @@
+     )]
+     async fn drag(&self, Parameters(mut params): Parameters<DragParams>) -> Json<ActionOutput> {
+         let received = Some(serde_json::json!(params.clone()));
++        if crate::niri_agent::required() && params.window_target().is_none() {
++            return niri_agent_output("drag", Err(anyhow::anyhow!("An explicit window target is required")), received);
++        }
+         let mut input_guard = Arc::clone(&self.input_operation_lock).lock_owned().await;
+         if params.relative == Some(true) {
+             if let Some(window) = self.niri_agent_window(params.window_target().as_ref()).await {
+@@ -2225,7 +2256,7 @@
+     // can't be env!("CARGO_PKG_VERSION"); the MCP safety check (CI) fails the
+     // build if it drifts from the Cargo version.
+     version = "0.4.9-linux-alpha1",
+-    instructions = "Begin every turn that uses Computer Use by calling get_app_state. If diagnostics report disabled GNOME accessibility, call setup_accessibility before asking the user to retry. Use list_windows/focused_window before targeted keyboard input. If diagnostics report windowing.can_list_windows=false on GNOME, call setup_window_targeting to install the optional GNOME Shell extension backend, then ask the user to log out and back in if the setup report says a shell reload is required. This Linux backend can capture size-bounded screenshots through GNOME Shell, the Codex GNOME Shell extension, or XDG Desktop Portal, read AT-SPI trees with action/value metadata, invoke native AT-SPI actions, set AT-SPI values or editable text, list/focus compositor windows through registered Linux window backends when the session permits it, attach best-effort terminal tty/process metadata to terminal windows, send coordinate or element-targeted click/scroll/drag input through the Wayland remote desktop portal when available, and send layout-safe literal type_text through KDE clipboard integration on Plasma Wayland or through portal keysyms on other Wayland sessions before falling back to ydotool. Screenshot results include width/height for the returned image plus coordinate_width/coordinate_height and scale for desktop coordinate conversion; request more detail with max_width, max_height, max_bytes, format=jpeg, quality, or a smaller target/crop instead of relying on unbounded screenshots. Tools with readOnlyHint=false may mutate local desktop or application state; hosts should require approval for actions that can submit, delete, send, purchase, or overwrite data. For element-targeted actions, prefer element_index from the latest get_app_state result; click, perform_action, and set_value can also use semantic role/name/text/states selectors when the target is unique. type_text and press_key accept optional window_id, pid, app_id, wm_class, title, tty, terminal_pid, terminal_command, or terminal_cwd selectors and refuse targeted input if focus cannot be verified. After targeted keyboard input, results append focused-element feedback from AT-SPI (role, name, editable) and warn when no editable element holds focus — treat that warning as the input not landing. Screenshot, click, and input results warn when the target window or coordinate is partially or fully off-screen; use move_window/resize_window (GNOME Shell extension backend) to bring a window fully on-screen before retrying. scroll accepts the same window targeting and relative coordinates as click. get_app_state returns a compact readiness block by default; pass verbose=true for the full diagnostics dump. Electron apps expose no AT-SPI tree unless launched with --force-renderer-accessibility."
++    instructions = "Start with get_app_state and list_windows. In required Niri agent mode, input and screenshots require an explicit window target. Coordinate input must use window-relative coordinates. Agent input and window capture preserve the user's focus. Use launch_app for applications that should open without requesting focus. Use separate application processes or profiles for concurrent work. Keyboard input is refused when another window of the same Wayland client has real focus. Prefer perform_action and set_value for semantic accessibility actions. Explicit activate_window changes focus. Electron applications need --force-renderer-accessibility for AT-SPI. If Niri agent routing is unavailable, required mode fails rather than falling back to foreground input."
+ )]
+ impl ServerHandler for ComputerUseLinux {}
+ 
+@@ -2326,6 +2357,11 @@
+     x: i32,
+     /// New frame-top in desktop coordinates.
+     y: i32,
++}
++
++#[derive(Debug, Clone, Deserialize, Serialize, JsonSchema)]
++struct LaunchAppParams {
++    command: Vec<String>,
+ }
+ 
+ #[derive(Debug, Clone, Deserialize, Serialize, JsonSchema)]
+@@ -3097,6 +3133,11 @@
+         target: &WindowTarget,
+         raise_window: bool,
+     ) -> Result<WindowInfo> {
++        if crate::niri_agent::required() {
++            return self.niri_agent_window(Some(target)).await
++                .ok_or_else(|| anyhow::anyhow!("Patched Niri agent input is unavailable"))?
++                .map_err(anyhow::Error::msg);
++        }
+         let agent_window = if raise_window && crate::niri_agent::supported() {
+             let windows = list_windows().await?;
+             let window = resolve_window_target(&windows, target)?.clone();
+@@ -3327,6 +3368,9 @@
+         &self,
+         target: &WindowTarget,
+     ) -> std::result::Result<Option<WindowFocusResult>, String> {
++        if crate::niri_agent::required() {
++            return Err("Per-client Niri input requires an explicit window target and window-relative coordinates. Use perform_action for semantic accessibility actions.".to_string());
++        }
+         if !target.has_target() {
+             return Ok(None);
+         }
+@@ -5148,7 +5192,7 @@
+                 identity.to_ascii_lowercase().as_str(),
+                 "microsoft-edge" | "microsoft-edge-stable" | "google-chrome" |
+                 "google-chrome-stable" | "chromium" | "chromium-browser" |
+-                "brave-browser" | "vivaldi-stable"
++                "brave-browser" | "vivaldi-stable" | "helium"
+             )
+         })
+ }
+--- a/computer-use-linux/src/windowing/registry.rs
++++ b/computer-use-linux/src/windowing/registry.rs
+@@ -144,6 +144,9 @@
+ }
+ 
+ pub async fn list_windows() -> Result<Vec<WindowInfo>> {
++    if crate::niri_agent::required() {
++        return niri::list_windows().await;
++    }
+     let mut errors = Vec::new();
+     for backend in BACKEND_ORDER {
+         if let Some(windows) =
+--- a/computer-use-linux/src/screenshot.rs
++++ b/computer-use-linux/src/screenshot.rs
+@@ -193,6 +193,9 @@
+         let _ = fs::remove_dir(&directory);
+         return result;
+     }
++    if crate::niri_agent::required() {
++        bail!("Patched Niri window capture is unavailable");
++    }
+     use std::os::unix::fs::DirBuilderExt;
+     let mut nonce = [0u8; 16];
+     getrandom::fill(&mut nonce).map_err(|e| anyhow!("screenshot nonce: {e}"))?;
+@@ -229,6 +232,9 @@
+ }
+ 
+ pub async fn capture_screenshot_raw() -> Result<RawScreenshotCapture> {
++    if crate::niri_agent::required() {
++        bail!("An explicit Niri window target is required for screenshots");
++    }
+     hydrate_session_bus_env();
+ 
+     // Explicit override: use exactly the requested backend, no fallback. Lets
+--- a/computer-use-linux/src/diagnostics.rs
++++ b/computer-use-linux/src/diagnostics.rs
+@@ -900,6 +900,9 @@
+     remote_desktop_keyboard: &Check,
+     input: &InputReport,
+ ) -> bool {
++    if crate::niri_agent::required() {
++        return crate::niri_agent::supported();
++    }
+     let force_ydotool = env_flag_enabled_any(FORCE_YDOTOOL_KEYBOARD_ENV_KEYS);
+     let force_xdotool = env_flag_enabled_any(FORCE_XDOTOOL_KEYBOARD_ENV_KEYS);
+     portal_keyboard_input_available(platform, remote_desktop_keyboard)
+--- a/computer-use-linux/src/main.rs
++++ b/computer-use-linux/src/main.rs
+@@ -28,7 +28,12 @@
+     diagnostics::hydrate_session_bus_env();
+ 
+     match std::env::args().nth(1).as_deref() {
+-        Some("mcp") => server::serve_mcp().await,
++        Some("mcp") => {
++            if niri_agent::required() && !niri_agent::supported() {
++                anyhow::bail!("Patched Niri agent input is unavailable. Start the private session or log into the patched compositor.");
++            }
++            server::serve_mcp().await
++        },
+         Some("doctor") => {
+             let report = diagnostics::doctor_report();
+             println!(
