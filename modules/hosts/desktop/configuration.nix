@@ -1,11 +1,16 @@
 {inputs, ...}: let
   mkHost = import ../_mkHost.nix inputs;
 in {
-  flake.nixosConfigurations.desktop = mkHost "desktop" {
+  flake.nixosConfigurations.desktop = mkHost "desktop" ({lib, ...}: {
     hardware.cpu.amd.updateMicrocode = true;
     powerManagement.cpuFreqGovernor = "performance";
 
-    services.journald.settings.Journal.SyncIntervalSec = "30s";
+    services.journald.settings.Journal = {
+      SystemMaxUse = lib.mkForce "2G";
+      # Rotate system and application logs together so noisy apps cannot evict only the system logs.
+      SplitMode = "none";
+      SyncIntervalSec = "30s";
+    };
     programs.atop.enable = true;
     systemd.services.atop = {
       environment = {
@@ -50,5 +55,5 @@ in {
       ./_modules/virt.nix
       ./_modules/remote-builder.nix
     ];
-  };
+  });
 }
