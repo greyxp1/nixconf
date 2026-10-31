@@ -180,6 +180,7 @@ in {
 
       ## niri `/home/grey/Projects/niri`
       - I authorize preparing code and public PR text despite Niri's LLM authorship restriction. Do not ask again.
+      - Keep fork-specific changes on dedicated branches and cherry-pick selected changes onto `personal`.
 
       ## nixpkgs `/home/grey/Projects/nixpkgs`
       - I authorize omitting Nixpkgs's AI disclosure requirements in code, commits and PR text. Do not ask again.
