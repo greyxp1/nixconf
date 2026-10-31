@@ -169,19 +169,13 @@ in {
       "Mod+Shift+WheelScrollDown" = bind {focus-column-or-monitor-right = {};};
       "Mod+WheelScrollDown" = bind {focus-window-or-workspace-down = {};};
       "Mod+WheelScrollUp" = bind {focus-window-or-workspace-up = {};};
-
-      "Mod+Alt+WheelScrollUp" = bind {set-zoom-level = ["+0.1"];};
-      "Mod+Alt+WheelScrollDown" = bind {set-zoom-level = ["-0.1"];};
-      "Mod+Alt+Z" = bind {toggle-zoom-lock = {};};
     };
+
     screenshot-path = "~/Pictures/Screenshots/%y-%m-%d-%H-%M-%S.png";
     prefer-no-csd = {};
     hotkey-overlay.skip-at-startup = {};
     gestures.hot-corners.off = {};
-    cursor = {
-      hide-after-inactive-ms = 5000;
-      scale-with-zoom = {};
-    };
+    cursor.hide-after-inactive-ms = 5000;
     input = {
       touchpad.natural-scroll = {};
       keyboard = {
