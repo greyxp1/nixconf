@@ -11,9 +11,9 @@
     "type": "github",
     "owner": "greyxp1",
     "repo": "CLIProxyAPI",
-    "rev": "17c8259bc3478f521eea6d7abd909b306cbfdd94",
-    "narHash": "sha256-309QRnauqO5yOpuh47wKhgzpFsz9l3DwtUOq+kIe/jw=",
-    "lastModified": 1793484360
+    "rev": "bb7452753b977eb27acd60bb306fd1ef2711f53a",
+    "narHash": "sha256-tMrO8t7rsxF2tde0ukvfVSPu1gSBhHYwrXCaOYNkDHU=",
+    "lastModified": 1793486459
   },
   "compress-yazi": {
     "type": "github",
@@ -83,9 +83,9 @@
     "type": "github",
     "owner": "rockorager",
     "repo": "monstar",
-    "rev": "cbabc5de6d2cd35bf9dd1df551ccf1aa43cfdb4e",
-    "narHash": "sha256-l7ZNXf5+OdnrGC+pvQY96ju3+UMPXItWWmdlEFgYm9U=",
-    "lastModified": 1793448956
+    "rev": "406c48eb938a065997bf5378457d7ca24fbfcea5",
+    "narHash": "sha256-0jwFBt628UtowdxSEttysivzl/LoWsC97dKmmKftpKc=",
+    "lastModified": 1793469515
   },
   "moonlight-embedded": {
     "type": "git",
@@ -132,9 +132,9 @@
     "type": "github",
     "owner": "greyxp1",
     "repo": "niri",
-    "rev": "b2fdf3524c24443a5605facf2c4ea5e2839e4d91",
-    "narHash": "sha256-6OQCgfvm/e10/DgO8DNka1cUhKW5lqVxPH9Zb2JCtg0=",
-    "lastModified": 1792684737
+    "rev": "1bf2f933f6788b8ec5431841803ea67442dd0b35",
+    "narHash": "sha256-u7bNnQSmGGph0XixKiQ2wwwDtYV/bVvV4wZIGyhrn8w=",
+    "lastModified": 1793484977
   },
   "niri-screenshare": {
     "type": "github",
@@ -164,9 +164,9 @@
     "type": "github",
     "owner": "4evy",
     "repo": "nixcord",
-    "rev": "7b23f8a486ec4e6eefd2493bc1ff5f4a39ae56ea",
-    "narHash": "sha256-lz5dWCxZUU2vm91psRYWMvZ3npCzZoLm/JqUbrn9IHQ=",
-    "lastModified": 1793460300
+    "rev": "7765e85b3d4d42d53c0f3d32a9b24225b58ac982",
+    "narHash": "sha256-TuF6aYxfDW8OVgMiXiMhp9TYS9eHoYSdhrjJGzqWtTU=",
+    "lastModified": 1793470332
   },
   "nixpkgs": {
     "type": "github",
@@ -221,8 +221,8 @@
     "type": "github",
     "owner": "numtide",
     "repo": "llm-agents.nix",
-    "rev": "b14f9d18b6d127221bd9f63817a40e1cca2b344b",
-    "narHash": "sha256-kl4L50m8mMMyQLjH2d46ljtdzR+9vlgpoDmOrpNV/SU=",
-    "lastModified": 1793435943
+    "rev": "8a5736991e143964a1494333354822ceadd32b05",
+    "narHash": "sha256-3gQEZ4cmo5YU2Z0zDbMUNT7XaXQlzfHwMLDxFCa+vKc=",
+    "lastModified": 1793484041
   }
 }
