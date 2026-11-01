@@ -39,14 +39,6 @@
     "narHash": "sha256-3hSJlv8mUVnZPMWK2+CM7a9O+nR6Z4mCh27NfLCmTPc=",
     "lastModified": 1792526520
   },
-  "flake-parts": {
-    "type": "github",
-    "owner": "hercules-ci",
-    "repo": "flake-parts",
-    "rev": "024633cd702b10285db5cb19b40ad48d2399ba60",
-    "narHash": "sha256-zTwuwezD0w3hpga6a6P8emidzAZFyWqlNeRBlpWOOl8=",
-    "lastModified": 1790898470
-  },
   "helium": {
     "type": "github",
     "owner": "greyxp1",

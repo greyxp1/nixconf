@@ -18,18 +18,12 @@
       ];
     };
 in {
-  perSystem = {system, ...}: {
-    packages.system-manager = inputs.system-manager.packages.${system}.default;
-  };
-
-  flake = {
-    lib.mkAlmaSystemConfig = mkAlmaSystemConfig;
-    # Keep a pure, stable output for checks and cache builds. The installer and
-    # alma-rebuild call mkAlmaSystemConfig with the native account IDs.
-    systemConfigs.alma = mkAlmaSystemConfig {
-      uid = 1000;
-      gid = 1000;
-      primaryGroup = "grey";
-    };
+  lib.mkAlmaSystemConfig = mkAlmaSystemConfig;
+  # Keep a pure, stable output for checks and cache builds. The installer and
+  # alma-rebuild call mkAlmaSystemConfig with the native account IDs.
+  systemConfigs.alma = mkAlmaSystemConfig {
+    uid = 1000;
+    gid = 1000;
+    primaryGroup = "grey";
   };
 }

@@ -3,15 +3,22 @@
     tackInputs = (import ./.tack) {overrides = args.tackOverrides or {};};
     inputs = tackInputs // {inherit self;};
     importTree = import ./lib/import-tree.nix;
-  in
-    inputs.flake-parts.lib.mkFlake {inherit inputs;} {
-      imports = [(importTree ./modules/hosts)];
-      _module.args.importTree = importTree;
-      systems = ["x86_64-linux"];
-      perSystem = {system, ...}: {
-        _module.args.pkgs = inputs.nixpkgs.legacyPackages.${system};
-        packages.disko = inputs.disko.packages.${system}.disko;
-        packages.mpv-smartcut = inputs.mpv-smartcut.packages.${system}.default;
-      };
+    system = "x86_64-linux";
+  in {
+    nixosConfigurations = inputs.nixpkgs.lib.genAttrs ["desktop" "generic" "laptop" "server"] (hostName:
+      inputs.nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = {inherit inputs importTree;};
+        modules = [
+          {networking.hostName = hostName;}
+          (./modules/hosts + "/${hostName}/configuration.nix")
+        ];
+      });
+    packages.${system} = {
+      disko = inputs.disko.packages.${system}.disko;
+      mpv-smartcut = inputs.mpv-smartcut.packages.${system}.default;
+      system-manager = inputs.system-manager.packages.${system}.default;
     };
+    inherit (import ./modules/hosts/alma/configuration.nix {inherit inputs;}) lib systemConfigs;
+  };
 }

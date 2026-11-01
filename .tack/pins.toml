@@ -4,9 +4,6 @@ gh = "github:{path}"
 nixpkgs = "nixpkgs"
 [inputs.nixpkgs]
 url = "gh:nixos/nixpkgs/nixos-unstable"
-[inputs.flake-parts]
-url = "gh:hercules-ci/flake-parts"
-follows = { nixpkgs-lib = "nixpkgs" }
 [inputs.sunshine]
 url = "git+https://github.com/LizardByte/Sunshine?ref=master"
 type = "fetch"
