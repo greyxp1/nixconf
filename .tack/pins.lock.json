@@ -19,9 +19,9 @@
     "type": "github",
     "owner": "KKV9",
     "repo": "compress.yazi",
-    "rev": "518621c6a7579025c3418761c5a0e2820d1cf9ef",
-    "narHash": "sha256-3paT6vcGbQ6jvvXT/sFuWvIxrVYRRsDtbsFQcdnxyW0=",
-    "lastModified": 1787014773
+    "rev": "d636b6cdca3795d42a4a5e6454b1261e3d7a6dea",
+    "narHash": "sha256-3W4FGKvHBlh9LROBwXGwvKf2NKVqG8rjy+R4gs05uvk=",
+    "lastModified": 1793503624
   },
   "cord-stash": {
     "type": "github",
@@ -108,9 +108,9 @@
     "type": "github",
     "owner": "greyxp1",
     "repo": "niri",
-    "rev": "ae101f2e8f8d734139262bbbd22dcd8a14088ef8",
-    "narHash": "sha256-wQ9b/dLkPP6ZwPpa1THly3IxZU7MNQLMgmmLQcDnNCc=",
-    "lastModified": 1793491250
+    "rev": "bf71e203e9626c3aaffbd7791dd5ebd7127fe810",
+    "narHash": "sha256-VM6r6rDd86fG+asiI43LCDmtnwyohHbGuk7Nz8T7Z1E=",
+    "lastModified": 1793501463
   },
   "niri-screenshare": {
     "type": "github",
