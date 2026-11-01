@@ -42,7 +42,7 @@
   };
   almaNiri = nixos.programs.niri.package;
   termfilechooser = nixos.xdg.portal.termfilechooser.finalPackage;
-  screenshots = pkgs.niri-screenshare.override {withPicker = false;};
+  screenshots = nixos.services.niri-screenshare.package;
   sessionService = command: {
     Unit = {
       After = "graphical-session.target";
@@ -80,7 +80,7 @@
       Service = {
         Type = "dbus";
         BusName = "org.freedesktop.impl.portal.desktop.niri";
-        Environment = "NIRI_SCREENSHARE_NO_PORTAL_CONFIG=1";
+        Environment = lib.escapeShellArgs (lib.mapAttrsToList (name: value: "${name}=${value}") nixos.systemd.user.services.niri-screenshare.environment);
       };
     };
   };

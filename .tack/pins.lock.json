@@ -116,9 +116,9 @@
     "type": "github",
     "owner": "pantarune",
     "repo": "niri-screenshare",
-    "rev": "b06cdcf6ce812e007410ad8c36c26597e1f5435a",
-    "narHash": "sha256-XFfrpKAVmxbqW+gT33bddaDfaFmvmUCHhsj/neDlx/Q=",
-    "lastModified": 1793197332
+    "rev": "0c04ae0d88f77b8f74e3e64a4aafb24a5d949995",
+    "narHash": "sha256-7Mu41sMSzTK4t9V3SD+8MkqMCjx+Ax7b4rjzVEmea1A=",
+    "lastModified": 1793502189
   },
   "nix-flatpak": {
     "type": "github",

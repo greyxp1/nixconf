@@ -28,6 +28,8 @@ in {
     niri-screenshare = {
       enable = true;
       withPicker = false;
+      dynamicCast = true;
+      dynamicCastAutoSelectMonitor = true;
     };
   };
   xdg.portal.config.niri."org.freedesktop.impl.portal.Secret" = lib.mkForce "none";
