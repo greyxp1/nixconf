@@ -1,9 +1,5 @@
-{
-  inputs,
-  pkgs,
-  ...
-}: let
-  src = inputs.kovaaks-config;
+{pkgs, ...}: let
+  src = ./kovaaks;
   dst = "/home/grey/.local/share/Steam/steamapps/common/FPSAimTrainer/FPSAimTrainer";
   save = "${dst}/Saved/SaveGames";
   configure = pkgs.writeShellScript "configure-kovaaks" ''

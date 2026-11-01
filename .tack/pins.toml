@@ -37,9 +37,6 @@ url = "gh:greyxp1/perch"
 [inputs.cord-stash]
 url = "gh:greyxp1/cord-stash/396a52eaa9c0430bb9e8022427945840e0e960e1"
 type = "fetch"
-[inputs.kovaaks-config]
-url = "gh:greyxp1/kovaaks-config"
-type = "fetch"
 [inputs.nix-flatpak]
 url = "gh:gmodena/nix-flatpak"
 [inputs.neo-ls]

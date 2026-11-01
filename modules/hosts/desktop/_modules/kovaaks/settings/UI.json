@@ -1,0 +1,34 @@
+{
+	"windowPositionSettings": [
+		{
+			"windowName": "Weapon",
+			"position":
+			{
+				"x": 881.24993896484375,
+				"y": 947.4998779296875
+			}
+		},
+		{
+			"windowName": "SessionStats",
+			"position":
+			{
+				"x": 32,
+				"y": 32
+			}
+		},
+		{
+			"windowName": "SensitivityRandomizer",
+			"position":
+			{
+				"x": 308,
+				"y": 32
+			}
+		}
+	],
+	"windowScaleSettings": [
+		{
+			"windowName": "Weapon",
+			"scale": 0.50207227468490601
+		}
+	]
+}
