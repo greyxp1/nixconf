@@ -132,6 +132,7 @@ in {
 
       ## Suncord `/home/grey/Projects/Suncord`
       - Prioritize voice and screenshare quality, then performance, code size and complexity, then UI. Measure startup, responsiveness and package size. Verify media replacements end to end with an official Discord recipient before recommending adoption.
+      - Dismiss dialogs with outside clicks or Escape, without close buttons. Arrow keys scroll the focused dialog.
 
       ## nixconf `/home/grey/Projects/nixconf`
       - Design custom NixOS modules for nixpkgs: reusable options and defaults, standard module conventions and personal settings in consuming modules. Use Home Manager as a reference without copying its interface.
