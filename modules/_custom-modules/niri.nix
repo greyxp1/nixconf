@@ -67,6 +67,7 @@ in {
     };
   };
   config = lib.mkIf cfg.enable {
+    services.gnome.at-spi2-core.enable = lib.mkDefault true;
     programs.niri.configFile = pkgs.runCommand "niri-config.kdl" {} ''
       cp ${pkgs.writeText "niri-config.kdl" text} $out
       ${lib.getExe cfg.package} validate -c $out
