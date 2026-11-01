@@ -17,11 +17,11 @@
   },
   "compress-yazi": {
     "type": "github",
-    "owner": "KKV9",
+    "owner": "greyxp1",
     "repo": "compress.yazi",
-    "rev": "d636b6cdca3795d42a4a5e6454b1261e3d7a6dea",
-    "narHash": "sha256-3W4FGKvHBlh9LROBwXGwvKf2NKVqG8rjy+R4gs05uvk=",
-    "lastModified": 1793503624
+    "rev": "b5ec9b108a0d5d6b4ff3cd475577c805e30a0737",
+    "narHash": "sha256-Sf/x+UcqGjdIK9qXgQLKpQMGlw9SLO27sSkfM3mILVM=",
+    "lastModified": 1793505555
   },
   "cord-stash": {
     "type": "github",

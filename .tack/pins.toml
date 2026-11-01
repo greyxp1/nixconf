@@ -42,7 +42,7 @@ url = "gh:gmodena/nix-flatpak"
 [inputs.neo-ls]
 url = "gh:nolight132/nls"
 [inputs.compress-yazi]
-url = "gh:KKV9/compress.yazi/pull/32/head"
+url = "gh:greyxp1/compress.yazi"
 type = "fetch"
 [inputs.monstar]
 url = "gh:rockorager/monstar"
