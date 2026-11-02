@@ -1,10 +1,16 @@
-{pkgs, ...}: {
+{
+  config,
+  lib,
+  ...
+}: let
+  recorderEnabled = builtins.elem "noctalia/screen_recorder" config.programs.noctalia.settings.plugins.enabled;
+in {
   imports = [../../_custom-modules/noctalia.nix];
   programs.noctalia = {
     enable = true;
     systemd.enable = true;
   };
-  environment.systemPackages = [pkgs.gpu-screen-recorder];
+  environment.systemPackages = lib.optionals recorderEnabled [config.programs.gpu-screen-recorder.package];
   security.pam.services.noctalia = {};
   programs.noctalia.settings = {
     desktop_widgets.enabled = false;
@@ -13,13 +19,12 @@
     theme.builtin = "Catppuccin";
     location.auto_locate = true;
     lockscreen.tint_intensity = 0.0;
-    hooks.started = ''
-      noctalia msg session lock
-      (
-        systemctl --user start xdg-desktop-portal.service niri-screenshare.service &&
-        noctalia msg plugin noctalia/screen_recorder:service all replay-start
-      ) &
-    '';
+    hooks = {
+      started = "noctalia msg session lock";
+      session_unlocked = ''
+        systemctl --user start xdg-desktop-portal.service niri-screenshare.service${lib.optionalString recorderEnabled " && noctalia msg plugin noctalia/screen_recorder:service all replay-start"}
+      '';
+    };
 
     wallpaper = {
       default.path = ./assets/wallpaper.jpg;
@@ -28,7 +33,7 @@
     bar.default = {
       auto_hide = true;
       background_opacity = 0.9;
-      start = ["recorder"];
+      start = lib.optionals recorderEnabled ["recorder"];
       center = ["workspaces"];
       end = ["tray" "notifications"];
       margin_ends = 580;
@@ -60,10 +65,11 @@
       up = ["Ctrl+k"];
     };
 
-    plugin_settings."noctalia/screen_recorder" = {
+    plugin_settings."noctalia/screen_recorder" = lib.mkIf recorderEnabled {
       audio_source = "both";
       directory = "~/Videos";
       filename_pattern = "%y-%m-%d-%H-%M-%S";
+      video_bitrate_mode = "qp";
       video_qp = 10;
       video_codec = "av1";
       replay_enabled = true;
@@ -107,7 +113,7 @@
     };
 
     widget = {
-      recorder.type = "noctalia/screen_recorder:recorder";
+      recorder = lib.mkIf recorderEnabled {type = "noctalia/screen_recorder:recorder";};
 
       tray = {
         drawer = true;

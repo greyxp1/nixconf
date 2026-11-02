@@ -1,4 +1,5 @@
-{
+{lib, ...}: {
+  programs.noctalia.settings.plugins.enabled = lib.mkForce [];
   programs.noctalia.settings.lockscreen_widgets = {
     enabled = true;
     widget = {
