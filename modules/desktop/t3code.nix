@@ -16,7 +16,7 @@
   graphical = config.services.graphical-desktop.enable;
   computerUse = {
     command = "niri";
-    args = ["mcp" "--isolated"];
+    args = ["mcp" "--workspace"];
   };
   claudeMcpConfig = pkgs.writeText "claude-mcp.json" (builtins.toJSON {
     mcpServers.computer_use = computerUse // {type = "stdio";};
@@ -106,16 +106,17 @@ in {
       - Before replacing architecture or dependencies, compare the current approach and supported integrations. Measure relevant performance claims and account for platform code, startup, package size, maintenance and uncertainty. Reconsider prototypes as fixes accumulate complexity. Change settled recommendations only with new evidence and explain it.
       - Write concise, natural prose without semicolons in documentation, including CLI help and generated manuals. Change README/docs only when requested or needed to keep usage accurate. Before staging, compare the complete documentation and help-text diff with the branch base and remove additions that do not answer an explicit documentation request or correct inaccurate existing usage. New features and review findings do not by themselves justify expanding documentation. Keep the existing structure and edit the relevant section or table. Omit change narration, obvious explanations and duplicated options or defaults already covered by config/help. Use short CLI help labels and inspect changed help output before committing, removing redundant parentheticals and implementation details. Comments explain non-obvious reasons and constraints, not what the code plainly does.
       - Preserve requested behavior during rewrites. Add compatibility code only when requested.
+      - Use connected sentences instead of splitting related points into clipped statements such as "Use existing navigation. No separate mode." Keep useful bullet lists when revising prose.
       - Load paginated lists automatically as the user scrolls. Do not add manual "load more" buttons.
       - Enter the project's Nix environment before running project commands when available.
       - Do not add tests unless asked. Reproduce reported failures when practical and verify the same path after fixing them. Builds, mocks and headless checks do not prove live input, hardware or visible interaction. State verification gaps. Repeat successful checks only after relevant changes or unresolved concerns.
-      - Use computer-use through the isolated Niri MCP session by default. X11 is not allowed. Start with list_windows and get_app_state, target a window explicitly and use coordinates from its latest screenshot. Use launch_app to start private applications. Accessibility actions require snapshot_id and element_index from get_app_state. Ask before using niri mcp --desktop to control the user's compositor or accessing live-session hardware. The current project is writable in the isolated session, while its home and application profiles are temporary and removed when the connection ends.
-      - Prefer installed Helium (`helium`) for browser work in the isolated session, with a separate temporary profile and `--force-renderer-accessibility`. Check installed browsers before fetching another.
+      - Use the Niri MCP thread workspace by default. It uses normal desktop apps without filesystem isolation. Use an isolated Niri session when filesystem separation is needed. The user's active browser may be used when requested. Preserve the user's existing browser windows and tabs. Close only task-owned tabs and windows that the user has not taken over or asked to keep, and never quit a shared browser process. X11 is not allowed. Start with list_windows and get_app_state, target a window explicitly and use coordinates from its latest screenshot. Use launch_app to start private applications. Accessibility actions require snapshot_id and element_index from get_app_state. Ask before using niri mcp --desktop to control the user's compositor or accessing live-session hardware. The current project is writable in the isolated session, while its home and application profiles are temporary and removed when the connection ends.
+      - Use the installed Helium launcher (`helium --new-window`) with my existing profile, sign-ins, extensions and settings by default. Do not add `--user-data-dir`, change profile environment variables, use incognito or bypass the configured launcher unless I request a separate profile or isolation. For isolated browser work, use a separate profile and `--force-renderer-accessibility`. Never force a separate browser instance onto a live Chromium profile. Check installed browsers before fetching another.
+      - When computer use needs human help, call request_handoff and tell me what to do on the host and exact workspace returned by get_session_state. Stay paused until I explicitly return control in chat, then call resume_session. Inspect the app again before continuing. Never resume just because a sign-in appears complete.
       - Discover available tools before declaring a capability unavailable, and verify it before claiming it works. In the isolated MCP, start with `list_windows` and `get_app_state`. Missing display variables are not proof of no desktop: inspect `systemctl --user show-environment` and session sockets under `XDG_RUNTIME_DIR`, using discovered values rather than guessed socket names.
       - Commit completed work automatically and stage only this task's changes. Before finishing, review this task's unpublished series: fold attempts, follow-up fixes, cleanup and related docs into the unpushed commit they belong to. Split independently useful changes and name commits for their final result, not the development sequence. Honor requested grouping. Verify publication status before rewriting. A request to clean up or squash history, or remove a feature, authorizes rewriting affected published history, including dropping a change and its revert. Do not ask separately for history-rewrite permission. Use force-with-lease for authorized force-pushes.
       - Check the target repository's instructions and conventions before writing commits or PR titles. In my own projects, use short lowercase past-tense commit messages. Follow upstream conventions in external projects, including my forks.
       - Never add AI attribution to commits or PRs. Preserve human authorship and contributor credit when adapting others' work.
-      - Write PR descriptions as one or two short, conversational paragraphs in my voice. Start with what I noticed was wrong and why I wanted the change, then say what I changed. Explain relevant downsides and the choices they led to. End with a direct request for feedback when a maintainer decision is needed. Use my relevant past PRs as style references and first person only for experience or intent I have stated. Omit headings, checklists and validation sections unless requested or required by the template.
       - Automatically babysit PRs opened from T3 Code. Address existing review findings, fix verified issues and CI failures, resolve conflicts, then call `watch_pull_request` and end the turn. Handle subsequent events without polling and stop when bot reviews and required checks pass on the latest commit.
       - Pull with rebase, resolve conflicts and drop changes already upstream. Do not create pull merge commits unless explicitly requested.
       - Do not push, publish, send messages or make other online changes unless explicitly requested. Publication and deployment authorization carries through related follow-up fixes. Read-only access is allowed.
@@ -136,6 +137,7 @@ in {
       - Dismiss dialogs with outside clicks or Escape, without close buttons. Arrow keys scroll the focused dialog.
 
       ## nixconf `/home/grey/Projects/nixconf`
+      - Use stock upstream applications and supported integrations. Do not introduce locally maintained application patches or forks unless I explicitly request them.
       - Design custom NixOS modules for nixpkgs: reusable options and defaults, standard module conventions and personal settings in consuming modules. Use Home Manager as a reference without copying its interface.
       - Use supported package/PATH integration and readable commands, such as Helix `extraPackages` with `command = "mpls"`.
       - Change inputs in `.tack/pins.toml` and run `tack update`.
@@ -156,6 +158,42 @@ in {
       - Distinguish library capabilities from features actually exposed in Vellum.
     '';
     skills = {
+      prepare-pr-or-issue = ''
+        ---
+        name: prepare-pr-or-issue
+        description: "Use when preparing a PR or issue title, description, or prefilled link for me to review and submit myself."
+        ---
+        Prepare the text and a prefilled GitHub creation link, leaving final submission to me. Do not create or edit remote PRs or issues, including draft PRs, or use `gh pr create` even with `--web`. Keep unpublished text local. A link request does not authorize pushes, forks or uploads.
+
+        Read the target repository's contribution rules, current template and title conventions. For PRs, review the complete diff and verify the base and head repositories, branches and published commits. For issues, check existing reports and establish the problem or requested improvement.
+
+        Write in my voice:
+
+        - Start with what bothered me and why I wanted the change, then explain what changed. Use first person only for experiences or intentions I've stated.
+        - Prefer one or two short, conversational paragraphs with contractions and plain words. Avoid formal proposals and implementation inventories. Do not copy typos or force slang.
+        - Explain a relevant downside and the choice it led to. End with a direct question when a maintainer decision is needed, without inventing tradeoffs or adding generic feedback requests.
+        - For bugs, give the trigger, actual and expected behavior, and relevant versions, reproduction steps or workaround. For features, explain the missing capability, what I want and any concrete question about scope. Separate observations from suspected causes.
+        - Preserve my revisions and explicit corrections. Titles follow the target repository's conventions. Avoid semicolons.
+
+        Voice references: [dynamic casting](https://github.com/pantarune/niri-screenshare/pull/18), [Questify](https://github.com/Equicord/Equicord/pull/1397), [recording quality](https://github.com/noctalia-dev/official-plugins/pull/28) and [archive creation](https://github.com/sxyazi/yazi/issues/4471). Exclude obvious agent-written posts, including most T3 Code PRs, even when filed under my account.
+
+        This is wording I explicitly approved, not a fixed template:
+
+        > I noticed that I couldn’t switch monitors or windows while sharing in pickerless mode, so I added support for Niri’s dynamic cast. There’s also an option to automatically start on the focused monitor.
+        >
+        > One downside is that starting a new share with that option also switches existing dynamic shares to the focused monitor, so I kept the current pickerless mode. Let me know if you’d rather replace it.
+
+        Keep required upstream sections and comments. Add headings, checklists or validation sections only when requested or required by the template. Fill fields from evidence and leave unsupported attestations unchecked. Do not invent testing or approval, or include task-status narration.
+
+        Use a URL encoder, preserving newlines, Markdown and special characters:
+
+        - PR: `https://github.com/OWNER/REPO/compare/BASE...HEAD_OWNER:HEAD_BRANCH?quick_pull=1&title=ENCODED_TITLE&body=ENCODED_BODY` for a fork, or `BASE...HEAD_BRANCH` within one repository. Include `HEAD_OWNER:HEAD_REPO:HEAD_BRANCH` when the fork needs a repository qualifier. Use the actual branch names and encode path components too.
+        - Issue: `https://github.com/OWNER/REPO/issues/new?title=ENCODED_TITLE&body=ENCODED_BODY`. Select the appropriate template when required. For YAML issue forms, use `template=FILE.yml` and the supported field IDs as query keys instead of putting everything into `body`.
+
+        Decode the URL locally to verify the destination, branches, title and full text. If the head is unpublished or stale, give the exact push command and explain the prerequisite. If URL limits or unsupported fields prevent full prefill, provide the complete text locally and identify the remaining manual steps. Do not call an incomplete link ready, truncate content or bypass required forms.
+
+        Return a clickable "Review and submit PR" or "Review and submit issue" link and the title and body in the response or a local file. State that nothing was submitted. The link must open an editable creation form.
+      '';
       # Adapted from https://github.com/mattpocock/skills/blob/a496f5513d4a4cf889bc48e189e579f4b0bdf6aa/skills/productivity/grilling/SKILL.md
       grill-me = ''
         ---
