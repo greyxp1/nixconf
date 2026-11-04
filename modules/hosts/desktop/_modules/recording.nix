@@ -10,22 +10,15 @@
     exec ${pkgs.libnotify}/bin/notify-send "Video saved" "$1"
   '';
 in {
+  imports = [../../../_custom-modules/gpu-screen-recorder.nix];
+
   programs.gpu-screen-recorder.package = pkgs.gpu-screen-recorder.overrideAttrs {
     version = "6.1.7";
     src = inputs.gpu-screen-recorder;
   };
-  environment.systemPackages = [recorder];
-
-  systemd.packages = [recorder];
-  systemd.user.services.gpu-screen-recorder = {
-    overrideStrategy = "asDropin";
-    wantedBy = ["graphical-session.target"];
-    partOf = ["graphical-session.target"];
-    wants = ["xdg-desktop-portal.service"];
-    after = ["graphical-session.target" "xdg-desktop-portal.service"];
-    path = [pkgs.bash];
-    environment = {
-      WINDOW = "portal";
+  programs.gpu-screen-recorder.replay = {
+    enable = true;
+    settings = {
       CODEC = "hevc";
       QUALITY = "very_high";
       BITRATE_MODE = "qp";
@@ -35,10 +28,6 @@ in {
       # The dynamic portal stream can initially negotiate a smaller size.
       OUTPUT_RESOLUTION = "2560x1440";
       ADDITIONAL_ARGS = "-fm vfr -pixfmt yuv444 -ffmpeg-video-opts qp=10 -ro %h/Videos -ipc %t/gpu-screen-recorder.sock -sc ${saved}";
-    };
-    serviceConfig = {
-      EnvironmentFile = "";
-      ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p %h/Videos";
     };
   };
 
