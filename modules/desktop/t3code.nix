@@ -90,6 +90,9 @@ in {
         wire_api = "responses";
         requires_openai_auth = false;
         supports_websockets = true;
+        # Upstream overloads can last minutes, and exponential backoff over ten retries spans about three.
+        request_max_retries = 10;
+        stream_max_retries = 10;
         auth = {
           command = "sh";
           args = ["-c" "cat \"$HOME/.config/cliproxyapi/client-key\""];
@@ -126,6 +129,7 @@ in {
       - Identify the actual host with `hostnamectl` and `/etc/os-release` before inspecting or changing its configuration.
       - Before activation, compare the checkout, pins and intended changes with the running host. Capture the working system path, build once, retain the exact output and inspect the activation diff. Resolve unrelated removals, downgrades and service changes first.
       - Use actual Nix build outputs and verify executables exist. Fix Nix-managed services through modules, not manual units or runtime overrides.
+      - Build remote hosts from their current nixconf checkout, never from saved snapshots or ad hoc files, and compare against the live `/run/current-system`. Run remote activation and rollback in detached `systemd-run` units with absolute tool paths, because restarting tailscaled ends `tailscale ssh` sessions mid-switch.
       - After activation, check affected services and authenticated client requests. On regression, restore and verify the captured working deployment before another fix. For the proxy carrying this session, keep independent recovery access and arrange automatic rollback unless client checks pass.
       - Evaluate affected hosts and inspect the build plan. Perform small routine rebuilds and activation. Leave large source compilations and broad program updates to me unless explicitly requested.
 

@@ -35,6 +35,8 @@
           request-retry = 3;
           max-retry-interval = 30;
         };
+        # Upstream overloads hit every account, so cooling one down only turns them into long 429s.
+        cooldown.transient-error-cooldown-seconds = -1;
       };
       oauth.auth-dir = "/var/lib/cliproxyapi/auth";
     };
