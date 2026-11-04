@@ -102,9 +102,12 @@ in {
       org.freedesktop.impl.portal.ScreenCast=niri
       org.freedesktop.impl.portal.Secret=none
     '';
+    # Store paths prevent stale caches when the system profile changes.
     "fonts/conf.d/99-nixconf.conf".text = ''
       <?xml version="1.0"?><!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">
-      <fontconfig><dir>/run/system-manager/sw/share/fonts</dir></fontconfig>
+      <fontconfig>
+        ${lib.concatMapStringsSep "\n" (font: "<dir>${font}</dir>") nixos.fonts.packages}
+      </fontconfig>
     '';
   };
   environment.variables = {
