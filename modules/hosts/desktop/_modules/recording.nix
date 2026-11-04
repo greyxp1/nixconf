@@ -33,7 +33,6 @@ in {
 
   programs.niri.settings.binds = lib.mapAttrs (_: command:
     lib.mkForce {
-      repeat = false;
       action.spawn-sh = ''${lib.getExe' recorder "gsr-cli"} -ipc "$XDG_RUNTIME_DIR/gpu-screen-recorder.sock" ${command}'';
     }) {
     "Mod+Print" = "save-replay";

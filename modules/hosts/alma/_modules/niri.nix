@@ -100,7 +100,6 @@ in {
       default=gtk
       org.freedesktop.impl.portal.FileChooser=termfilechooser
       org.freedesktop.impl.portal.ScreenCast=niri
-      org.freedesktop.impl.portal.Secret=none
     '';
     # Store paths prevent stale caches when the system profile changes.
     "fonts/conf.d/99-nixconf.conf".text = ''

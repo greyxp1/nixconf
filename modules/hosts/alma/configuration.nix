@@ -6,7 +6,6 @@
   }:
     inputs.system-manager.lib.makeSystemConfig {
       overlays = [
-        inputs.niri.overlays.default
         inputs.niri-screenshare.overlays.default
       ];
       specialArgs = {

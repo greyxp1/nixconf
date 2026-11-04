@@ -20,7 +20,6 @@
 in {
   environment.systemPackages = [pkgs.whisrs];
   programs.niri.settings.binds."Mod+Space" = {
-    repeat = false;
     action.spawn = ["whisrs" "toggle"];
   };
   hardware.uinput.enable = true;

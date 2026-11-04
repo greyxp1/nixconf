@@ -58,7 +58,6 @@
           programs.nixcord.discord.enable = lib.mkForce false;
           programs.niri.settings.binds = {
             "Mod+Shift+O" = {
-              repeat = false;
               action.spawn = "niri-swap-outputs";
             };
           };
