@@ -11,9 +11,9 @@
     "type": "github",
     "owner": "greyxp1",
     "repo": "CLIProxyAPI",
-    "rev": "ab2d832a82d6c7121face9518aa5d9ca94202474",
-    "narHash": "sha256-Z3UuSG/Vo+83nPlnbSuj639drkmeGGjRt6h0oOi7TK0=",
-    "lastModified": 1793799247
+    "rev": "804066a6cb10fc8c75a1f7d1ba9bc918649eb9a0",
+    "narHash": "sha256-8Yq4VSE0HPn/h+B5sno3VUN5xyG82UtfplThLJn49tQ=",
+    "lastModified": 1793818860
   },
   "compress-yazi": {
     "type": "github",
@@ -42,10 +42,10 @@
   "gpu-screen-recorder": {
     "type": "git",
     "url": "https://repo.dec05eba.com/gpu-screen-recorder",
-    "ref": "refs/tags/6.1.7",
-    "rev": "1d4946a16139b446e6308f741e9ba99f2ed5b3a7",
-    "narHash": "sha256-mSOMCzEiD0Ha18gxEZHdQgBb63ptT1pdflSXroGOdhM=",
-    "lastModified": 1793713175
+    "ref": "HEAD",
+    "rev": "f97d1e392816503282d20a0804c3ce3fd2943767",
+    "narHash": "sha256-3uIo6G6w2Ey8vymxWQB6YW6LZz85Xs1nhjPyTpQhsLI=",
+    "lastModified": 1793771691
   },
   "helium": {
     "type": "github",
@@ -116,9 +116,9 @@
     "type": "github",
     "owner": "greyxp1",
     "repo": "niri",
-    "rev": "981c91da1208f7271a61f39095ae34045ed0ced7",
-    "narHash": "sha256-rShozCrAQ7f/u80ERbMRPRzqD/34+SXT7ewkHRQCeNs=",
-    "lastModified": 1793756093
+    "rev": "76d649f208643297055324081adfbd360f72a458",
+    "narHash": "sha256-8KcW2kNSv2654/3xyYfUHnjqkuDq1erznss3oPoVDOA=",
+    "lastModified": 1793839843
   },
   "niri-screenshare": {
     "type": "github",
@@ -148,17 +148,17 @@
     "type": "github",
     "owner": "4evy",
     "repo": "nixcord",
-    "rev": "2d3b66a8d3f517d74a6f25c6fedb1496dbc4214f",
-    "narHash": "sha256-0MQ+lueIAltz5ozXTPhwbhJobM9r4jqGTNzfiHElkIM=",
-    "lastModified": 1793752145
+    "rev": "4780876aded03f5839e5cbb4a23b40b3d4a9cc05",
+    "narHash": "sha256-PbhX7ijnbfGpaGlpRhP5igFgoQLsahVX5tH5N3q63Y4=",
+    "lastModified": 1793833243
   },
   "nixpkgs": {
     "type": "github",
     "owner": "nixos",
     "repo": "nixpkgs",
-    "rev": "0bb2eedc20e4739f29e8045034f2828ad7054f8f",
-    "narHash": "sha256-fiPJ88izTVucjeo2EQ3jk4aWmLg03I1D4vxnX2QjEgE=",
-    "lastModified": 1793540411
+    "rev": "1d060086d60cb76a40cf37109f979d88a5bd6396",
+    "narHash": "sha256-jQp1wKvbwWdLBASTXkSi/VYmDJ5AbBi1WvcMt9HWJC8=",
+    "lastModified": 1793726008
   },
   "perch": {
     "type": "github",
@@ -188,9 +188,9 @@
     "type": "git",
     "url": "https://github.com/LizardByte/Sunshine",
     "ref": "refs/heads/master",
-    "rev": "2efa60fb85a54fb61495d12c6b22d405e89627d3",
-    "narHash": "sha256-z0cpSVB/A/0ueMoyRBiiUDI/166wBVzltTPGC6A96H8=",
-    "lastModified": 1793749988,
+    "rev": "05691b3d9095a20ec689e892797d8401ade6c189",
+    "narHash": "sha256-4T/v32/tCVace2Y6XrpegsiRCX9zrEEK9b82KFu6Q/8=",
+    "lastModified": 1793802518,
     "submodules": true
   },
   "system-manager": {
@@ -205,8 +205,8 @@
     "type": "github",
     "owner": "numtide",
     "repo": "llm-agents.nix",
-    "rev": "78f777ba4f6141fca604a5cee3f6ff8dfab09f48",
-    "narHash": "sha256-ueNHsKFN7SA7Lzk4DPnjWgpIET+IaJZ8uIIeDszen+Y=",
-    "lastModified": 1793750192
+    "rev": "98309b147b1c011b7d3c16d63402ca7b6805e952",
+    "narHash": "sha256-yqPCd/pPhocRFu3/LCKvaWfVygR4GOf+jRSX3LdA61A=",
+    "lastModified": 1793837165
   }
 }

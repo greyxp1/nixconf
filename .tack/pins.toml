@@ -59,7 +59,7 @@ exclude_follow = ["nixpkgs"]
 url = "gh:greyxp1/hydro"
 type = "fetch"
 [inputs.gpu-screen-recorder]
-url = "git+https://repo.dec05eba.com/gpu-screen-recorder?ref=refs/tags/6.1.7"
+url = "git+https://repo.dec05eba.com/gpu-screen-recorder?rev=f97d1e392816503282d20a0804c3ce3fd2943767"
 type = "fetch"
 
 [inputs.cliproxyapi]
