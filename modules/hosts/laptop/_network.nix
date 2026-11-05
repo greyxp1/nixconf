@@ -36,7 +36,7 @@
     };
   };
   systemd.services.school-exit-node = {
-    description = "Use server as an exit node on the school network";
+    description = "Use server as an exit node on school Wi-Fi and the Pixel hotspot";
     wantedBy = ["multi-user.target"];
     after = ["NetworkManager.service" "tailscaled.service"];
     requires = ["tailscaled.service"];
@@ -52,7 +52,7 @@
       if nmcli -g IP4.DOMAIN,IP4.SEARCHES device show | jq -Rse '
         [splits("[[:space:],:]+")]
         | any(. == "cmontmorency.qc.ca" or endswith(".cmontmorency.qc.ca"))
-      ' >/dev/null; then
+      ' >/dev/null || nmcli -g GENERAL.CONNECTION device show | grep -Fxq Pixel_9747; then
         exit_node=$(tailscale status --json | jq -r '
           [.Peer[]? | select(.HostName == "server" and .Online and .ExitNodeOption)
             | .TailscaleIPs[0]][0] // ""
