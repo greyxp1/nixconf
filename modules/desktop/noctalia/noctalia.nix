@@ -20,7 +20,6 @@ in {
     location.auto_locate = true;
     lockscreen.tint_intensity = 0.0;
     hooks = {
-      started = "noctalia msg session lock";
       session_unlocked = ''
         systemctl --user start xdg-desktop-portal.service niri-screenshare.service${lib.optionalString recorderEnabled " && noctalia msg plugin noctalia/screen_recorder:service all replay-start"}
       '';
