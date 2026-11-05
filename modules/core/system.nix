@@ -1,7 +1,13 @@
 {config, ...}: {
   time.timeZone = "America/Montreal";
   networking.networkmanager.enable = true;
-  preservation.preserveAt."/persistent".directories = ["/var/lib/NetworkManager"];
+  preservation.preserveAt."/persistent".directories = [
+    "/var/lib/NetworkManager"
+    {
+      directory = "/etc/NetworkManager/system-connections";
+      mode = "0700";
+    }
+  ];
   hardware.enableRedistributableFirmware = true;
 
   systemd = {
