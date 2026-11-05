@@ -9,7 +9,10 @@
     inputs.perch.nixosModules.default
   ];
   services = {
-    vellum.enable = true;
+    vellum = {
+      enable = true;
+      package = inputs.vellum.packages.${pkgs.stdenv.hostPlatform.system}.default;
+    };
     greetd = {
       enable = true;
       settings.default_session = {
