@@ -11,9 +11,9 @@
     "type": "github",
     "owner": "greyxp1",
     "repo": "CLIProxyAPI",
-    "rev": "596b453b3240de129b43cb6a4bd2692022fada23",
-    "narHash": "sha256-oalDbrqe6FsdQfKckaYiuSlqCtrXnkQZ7vG6s3k6kx8=",
-    "lastModified": 1793905624
+    "rev": "9267e018284afdeb79b36fbc307c8032a2d67157",
+    "narHash": "sha256-EdS6fQb9CyIgpdHUEF2cqQwEO3rbX5bvfK7zKD5YqcU=",
+    "lastModified": 1793906072
   },
   "compress-yazi": {
     "type": "github",
