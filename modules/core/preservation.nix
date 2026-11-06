@@ -13,6 +13,11 @@
           inInitrd = true;
         }
         "/var/log"
+        {
+          # Nix's Git cache must not fill the RAM-backed root filesystem.
+          directory = "/root/.cache/nix";
+          mode = "0700";
+        }
       ];
       files = [
         {
