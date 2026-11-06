@@ -5,6 +5,8 @@
   pkgs,
   ...
 }: let
+  agentModels = {codex = "gpt-6.1-sol"; claude = "claude-opus-5-5";};
+  reasoningEffort = "high";
   llmAgents = inputs.t3.packages.${pkgs.stdenv.hostPlatform.system};
   hub = config.services.cliproxyapi;
   # The proxy host uses loopback even when the public route is unavailable.
@@ -75,6 +77,7 @@ in {
     package = llmAgents.claude-code;
     settings = {
       hooks = lib.mkIf completionCleanup computerUseHooks;
+      effortLevel = reasoningEffort;
       env.ANTHROPIC_BASE_URL = proxyEndpoint;
       apiKeyHelper = "cat \"$HOME/.config/cliproxyapi/client-key\"";
       # Empty strings drop the Co-Authored-By trailer and the PR line.
@@ -92,6 +95,8 @@ in {
     package = llmAgents.codex;
     settings = {
       hooks = lib.mkIf completionCleanup computerUseHooks;
+      model_reasoning_effort = reasoningEffort;
+      plan_mode_reasoning_effort = reasoningEffort;
       model_provider = "cliproxy";
       model_providers.cliproxy = {
         name = "CLIProxyAPI";
@@ -123,6 +128,8 @@ in {
       - For school reports, match the referenced format. Use short numbered noun phrases such as "Configuration des interfaces d’Edge", retaining the action, device and network details. Put requested steps and commands under the matching report questions. Use common Cisco CLI abbreviations and avoid long dashes.
       - Load paginated lists automatically as the user scrolls. Do not add manual "load more" buttons.
       - Enter the project's Nix environment before running project commands when available.
+      - Agent model aliases: `codex` = `${agentModels.codex}`, `claude` = `${agentModels.claude}`. Resolve these aliases to available providers and exact model IDs through the harness. Honor explicit model requests and keep other subagent choices available when the task calls for them.
+      - Use ${reasoningEffort} reasoning effort for these models across implementation, audits, reviews and delegated work unless I explicitly request another level. Set the supported effort option explicitly rather than relying on catalog defaults or inheriting another level.
       - Do not add tests unless asked. Reproduce reported failures when practical and verify the same path after fixing them. Builds, mocks and headless checks do not prove live input, hardware or visible interaction. State verification gaps. Repeat successful checks only after relevant changes or unresolved concerns.
       - Use the Niri MCP agents workspace by default. It uses normal desktop apps without filesystem isolation. Use an isolated Niri session when filesystem separation is needed. The user's active browser may be used when requested. Preserve the user's existing browser windows and tabs. Close only task-owned tabs and windows that the user has not taken over or asked to keep, and never quit a shared browser process. Prefer Wayland. Use X11 when needed, with a private Xvfb display for isolated computer use. Start with list_windows and get_app_state, target a window explicitly and use coordinates from its latest screenshot. Use launch_app to start private applications. Accessibility actions require snapshot_id and element_index from get_app_state. Ask before using niri mcp --desktop to control the user's compositor or accessing live-session hardware. The current project is writable in the isolated session, while its home and application profiles are temporary and removed when the connection ends.
       - Use the installed Helium launcher (`helium --new-window`) with my existing profile, sign-ins, extensions and settings by default. Do not add `--user-data-dir`, change profile environment variables, use incognito or bypass the configured launcher unless I request a separate profile or isolation. For isolated browser work, use a separate profile and `--force-renderer-accessibility`. Never force a separate browser instance onto a live Chromium profile. Check installed browsers before fetching another.
@@ -130,11 +137,12 @@ in {
       - When computer use needs human help, call request_handoff and tell me what to do on the host and exact workspace returned by get_session_state. Stay paused until I explicitly return control, then call resume_session. If another session owns the handoff, wait for that thread instead of asking me to resume yours. Inspect the app again before continuing. Never resume just because a sign-in appears complete.
       - Discover available tools before declaring a capability unavailable, and verify it before claiming it works. In the isolated MCP, start with `list_windows` and `get_app_state`. Missing display variables are not proof of no desktop: inspect `systemctl --user show-environment` and session sockets under `XDG_RUNTIME_DIR`, using discovered values rather than guessed socket names.
       - Before stopping or restarting T3 Code, its tunnel, or a service carrying the current connection, check for connected users and running threads. If either is present or cannot be checked, request explicit approval through the available user question or approval UI and wait. Explain the interruption and affected threads. A chat progress message is not approval. This also applies to delayed restarts and configuration activation that restarts these services. An explicit restart request authorizes that restart.
-      - Commit completed work automatically and stage only this task's changes. Before finishing, review this task's unpublished series: fold attempts, follow-up fixes, cleanup and related docs into the unpushed commit they belong to. Split independently useful changes and name commits for their final result, not the development sequence. Honor requested grouping. Verify publication status before rewriting. A request to clean up or squash history, or remove a feature, authorizes rewriting affected published history, including dropping a change and its revert. Do not ask separately for history-rewrite permission. Use force-with-lease for authorized force-pushes.
+      - Commit completed work automatically and stage only this task's changes. Before finishing, review this task's unpublished series: fold attempts, follow-up fixes, cleanup and related docs into the unpushed commit they belong to. Split independently useful changes and name commits for their final result, not the development sequence. Honor requested grouping. Verify publication status before rewriting. A request to clean up or squash history, or remove a feature, authorizes rewriting affected published history, including dropping a change and its revert. Do not ask separately for history-rewrite permission. Use force-with-lease tied to the remote head observed before rewriting for authorized force-pushes.
       - Check the target repository's instructions and conventions before writing commits or PR titles. In my own projects, use short lowercase past-tense commit messages. Follow upstream conventions in external projects, including my forks.
       - Never add AI attribution to commits or PRs. Preserve human authorship and contributor credit when adapting others' work.
+      - When continuing existing work, read the source PR, branch or agent thread and later user corrections, then verify handoff claims against current code and preserve intended behavior. Continue in place unless I request a replacement or separation is needed to protect unrelated work.
       - Automatically babysit PRs opened from T3 Code. Address existing review findings, fix verified issues and CI failures, resolve conflicts, then call `watch_pull_request` and end the turn. Handle subsequent events without polling and stop when bot reviews and required checks pass on the latest commit.
-      - Pull with rebase, resolve conflicts and drop changes already upstream. Do not create pull merge commits unless explicitly requested.
+      - Pull with rebase. Before rebasing, compare the change's intent with current upstream behavior, check for superseding work and drop changes already upstream. Resolve conflicts according to current behavior, compare the old and new series with git range-diff and verify affected workflows. Explain obsolete work before publishing. Do not create pull merge commits unless explicitly requested.
       - Do not push, publish, send messages or make other online changes unless explicitly requested. Publication and deployment authorization carries through related follow-up fixes. Read-only access is allowed.
       - Keep instructions and custom skills in `/home/grey/Projects/nixconf/modules/desktop/t3code.nix`. Do not create project `AGENTS.md` or `.agents/` files.
 
@@ -221,47 +229,43 @@ in {
 
         Wait for answers before dependent questions while continuing independent investigation. Stop when material choices are settled, summarize the direction and honor existing implementation authorization. Create documents only when requested.
       '';
+      # Coupling framework adapted from https://github.com/caldoai/skills/blob/f3cf47774975a7d9fca45730babf4ff7ad765ada/skills/untangle-codebase/SKILL.md
       review = ''
         ---
         name: review
-        description: "Use when a scoped change is ready for review, or the user asks to review a change, commit or diff."
+        description: "Use when reviewing a change, commit or PR, or auditing a codebase or subsystem for recurring defects and unnecessary complexity."
         ---
-        Stay read-only unless fixes are requested. Resolve the target repository and complete requested diff from the conversation, including relevant callers and uncommitted changes. Review a requested series as a whole, not only its last commit. Do not assume the thread's working directory is the target.
+        Stay read-only unless fixes are requested. Resolve the actual repository, intended behavior and requested scope, including relevant callers. For changes, inspect the complete requested diff and uncommitted work, reviewing a series as a whole rather than only its last commit. For audits, map the requested codebase or subsystem and mark unassessed areas.
 
-        Check correctness, integration and whether the change fixes the root cause. Verify findings against code or behavior and recommend the smallest complete fix. Distinguish defects from optional preferences. Report actionable findings with locations, evidence and impact, plus coverage gaps. Do not reopen settled findings without new evidence.
+        Check correctness, integration and root causes. For audits, ask whether pieces should change together. Look for hidden links where related changes require coordination without an explicit contract, needless links where unrelated concerns force each other to change, and surplus such as dead code, redundant layers, speculative abstractions or stale compatibility. Use callers, behavior and Git history as evidence rather than treating directory layout or similar code as proof.
+
+        Treat special cases as clues to requirements. Establish why a wrapper, retry, platform branch or absence check is unnecessary before removing it. Preserve useful invariants in comments and distinct behavior coverage in tests. Compare shared abstractions with smaller local fixes, accounting for complexity and integration cost.
+
+        Verify and deduplicate findings, distinguishing defects from optional preferences. Report locations, evidence, impact, the smallest complete proposed fixes and coverage gaps. For audits, group verified symptoms under their root cause in the existing plan or report without creating a separate document unless requested. Delegate substantial independent areas only when useful, using the current model unless the user requests another.
+
+        When implementing, establish relevant test, build and behavior baselines before edits, then verify affected behavior after each cohesive fix. Investigate new failures before deciding to fix or revert, distinguishing regressions from brittle checks and environmental failures. Passing tests are evidence only for the behavior they cover.
+
+        Finish once the requested scope is covered and actionable findings are verified. Record unresolved or rejected findings with reasons, defer speculative or marginal redesigns and revisit settled findings only with new evidence.
+
+        Give scores only when requested, defining the rubric first and supporting ratings with evidence. Report strengths without inventing precision.
       '';
-      # Coupling framework adapted from https://github.com/caldoai/skills/blob/f3cf47774975a7d9fca45730babf4ff7ad765ada/skills/untangle-codebase/SKILL.md
-      audit-codebase = ''
-        ---
-        name: audit-codebase
-        description: "Use when assessing a whole codebase or subsystem for recurring defects or unnecessary complexity, rather than a specific diff."
-        ---
-        Map the requested area and relevant callers. Stay read-only unless implementation is requested.
-
-        Ask whether pieces should change together. Look for hidden links where related changes must be coordinated without an explicit contract, needless links where unrelated concerns force each other to change, and surplus such as dead code, redundant layers, speculative abstractions or stale compatibility. Use callers, behavior and Git history as evidence rather than treating directory layout or similar code as proof.
-
-        Treat special cases as clues to requirements, not defects by themselves. Establish why a wrapper, retry, platform branch or absence check is unnecessary before removing it. Preserve useful invariants in comments and distinct behavior coverage in tests. Compare shared abstractions with smaller local fixes, accounting for complexity and integration cost.
-
-        Keep a concise decision log in the existing plan or report, grouping verified symptoms under their root cause and smallest complete proposed fix. Record locations, evidence, impact and unresolved or rejected findings with reasons. Do not create a separate document unless requested.
-
-        When implementing, establish relevant test, build and behavior baselines before edits. Apply cohesive fixes and verify affected behavior after each. Investigate new failures before deciding to fix or revert, distinguishing regressions from brittle checks and environmental failures. Passing tests are evidence only for the behavior they cover, so report coverage gaps and practical verification limits.
-
-        Delegate substantial independent areas only when useful, using the current model unless the user requests another. Verify and deduplicate findings. Finish once the requested area is covered and actionable findings are verified, reporting any unassessed areas. Defer speculative or marginal redesigns, and revisit settled findings only with new evidence.
-
-        If scores are requested, define the rubric first and support ratings with evidence. Mark unassessed areas and report strengths without inventing precision.
-      '';
+      # Adapted from https://github.com/t3dotgg/tstack/tree/1085050f3baed1ac724caa4a8166145fb2ac88af/skills
       refine-change = ''
         ---
         name: refine-change
-        description: "Use when optimizing or simplifying a change, or when a change or artifact needs a fix-and-review loop, including requests to refine-change or iterate to a clean result."
+        description: "Use when refining or simplifying a change, running a fix-and-review loop, or requesting council from codex and claude."
         ---
-        Resolve the actual repository, complete change or artifact, intended behavior and relevant callers. Keep that scope. For rewrites, identify the behavior that must survive.
+        Resolve the actual repository, complete change or artifact, intended behavior and relevant callers. Keep that scope and identify behavior that must survive a rewrite. For advice or review alone, collect findings without changing the artifact. Implement fixes only when authorized.
 
         Review the full scope once for correctness and unnecessary complexity, then fix supported findings and verify affected behavior. Prefer removing or simplifying code to adding helpers, guards or options. Track fixed, disputed and remaining findings in the existing plan or brief. The implementing agent owns the result: challenge findings that expand scope or add machinery without a demonstrated need, and explain rejected findings with evidence. Later rounds examine changed behavior and open findings, reusing valid checks and conclusions for unchanged areas.
 
-        Use at most three review rounds by default. Stop earlier on a clean pass or only non-actionable feedback. Use one independent GPT-6.1 Sol reviewer when useful, with a fresh context, a scoped brief and no nested reviewers. Keep implementation on the current model unless the user requests another. If the requested reviewer is unavailable, report that rather than silently substituting. Do not accept findings merely to obtain agreement.
+        Use one independent codex reviewer when useful. For council, use one fresh reviewer each from codex and claude in parallel, including when the implementing agent uses one of those models. Resolve the shared model aliases and supported options through the harness. Report unavailable reviewers rather than substituting or presenting a partial council as complete. Keep implementation on the current model unless the user requests another.
 
-        Review and verification must cover the final behavior diff, including late fixes. If the budget ends or verification is unavailable, report unresolved concerns rather than implying approval. Extend only when the user asks for more rounds. Preserve the user's permissions and commit rules. Report the reviewer's actual verdict, rounds completed and unresolved or rejected findings with reasons. If no independent review ran, say so. Include verification gaps and commits.
+        Give reviewers a fresh context and scoped brief. For code, include the complete intended diff, relevant callers and verification results, allowing inspection beyond touched files. Keep reviewers read-only with no nested agents. In council's first pass, give both the same request and raw evidence without the other reviewer's conclusions. A missing or failed review is not approval.
+
+        Use at most three review rounds by default, counting one council pass by both reviewers as one round. Advice and review-only requests need one pass. Stop earlier on a clean pass or only non-actionable feedback. Judge findings by evidence and impact rather than votes or agreement, and do not accept them merely to end the loop. Extend only when the user asks for more rounds.
+
+        Review and verification must cover the final behavior diff, including late fixes. Report each reviewer's actual verdict, useful disagreements, rounds completed, accepted and rejected findings with reasons, verification gaps and commits. If no independent review ran or the budget ends with unresolved concerns, say so without implying approval. Give scores only when requested and define the rubric first. Preserve the user's permissions and commit rules.
       '';
       # Adapted from https://github.com/mattpocock/skills/blob/a496f5513d4a4cf889bc48e189e579f4b0bdf6aa/skills/engineering/diagnosing-bugs/SKILL.md
       diagnosing-bugs = ''
