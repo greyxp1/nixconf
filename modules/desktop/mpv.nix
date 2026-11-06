@@ -12,6 +12,7 @@
     profile = "gpu-hq";
     video-sync = "display-resample";
     af = "scaletempo2";
+    volume-max = 100;
     cache = "yes";
     demuxer-max-bytes = "512MiB";
     demuxer-max-back-bytes = "256MiB";
@@ -62,5 +63,6 @@
     vidscale = "no";
     sub_margins = "no";
     tick_delay_follow_display_fps = "yes";
+    seekrange = "no";
   };
 }
