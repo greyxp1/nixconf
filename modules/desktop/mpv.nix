@@ -10,6 +10,8 @@
     gpu-context = "wayland";
     hwdec = "auto-safe";
     profile = "gpu-hq";
+    video-sync = "display-resample";
+    af = "scaletempo2";
     cache = "yes";
     demuxer-max-bytes = "512MiB";
     demuxer-max-back-bytes = "256MiB";
@@ -57,5 +59,6 @@
     window_controls = "no";
     vidscale = "no";
     sub_margins = "no";
+    tick_delay_follow_display_fps = "yes";
   };
 }
