@@ -24,6 +24,7 @@
     sub-scale = "0.8";
     watch-later-options-remove = "sid";
     ytdl-format = "bestvideo+bestaudio";
+    ytdl-raw-options = "check-formats=";
   };
   programs.mpv.scripts = [
     pkgs.mpvScripts.modernz

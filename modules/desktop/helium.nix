@@ -1,9 +1,11 @@
 {
   inputs,
   config,
+  pkgs,
   ...
 }: {
   imports = [inputs.helium.nixosModules.helium ./nixcord.nix];
+  environment.etc."chromium/native-messaging-hosts/ff2mpv.json".source = "${pkgs.ff2mpv-rust}/etc/chromium/native-messaging-hosts/ff2mpv.json";
   programs.helium = {
     enable = true;
     defaultBrowser = true;
@@ -36,6 +38,7 @@
 
     extensions = {
       equicord.path = config.programs.nixcord.browser.finalPackage;
+      ff2mpv.id = "ephjcajbkgplkjmelpglennepbpmdpjg";
       sponsorBlock.id = "mnjggcdmjocbbbhaepdhchncahnbgone";
       deArrow.id = "enamippconapkdmgfgjchkhakpfinmaj";
       controlPanel.id = "lodcanccmfbpjjpnngindkkmiehimile";
