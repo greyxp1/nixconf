@@ -95,7 +95,7 @@
         CopyFileContents.enabled = true;
         CopyStickerLinks.enabled = true;
         DragFavoriteEmotes.enabled = true;
-        ExpressionCloner.enabled = true;
+        ExpressionManager.enabled = true;
         FixCodeblockGap.enabled = true;
         FixFileExtensions.enabled = true;
         FixYoutubeEmbeds.enabled = true;
