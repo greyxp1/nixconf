@@ -5,7 +5,7 @@ nixpkgs = "nixpkgs"
 [inputs.nixpkgs]
 url = "gh:nixos/nixpkgs/nixos-unstable"
 [inputs.sunshine]
-url = "git+https://github.com/LizardByte/Sunshine?ref=master"
+url = "git+https://github.com/LizardByte/Sunshine?rev=774be88e41b5ddfe6cea5baab4ad658e3cb4adde"
 type = "fetch"
 submodules = true
 [inputs.moonlight-embedded]
