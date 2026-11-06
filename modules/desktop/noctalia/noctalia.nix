@@ -29,6 +29,12 @@ in {
       default.path = ./assets/wallpaper.jpg;
     };
 
+    backdrop = {
+      enabled = true;
+      blur_intensity = 0.1;
+      tint_intensity = 0.0;
+    };
+
     bar.default = {
       auto_hide = true;
       background_opacity = 0.9;

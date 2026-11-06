@@ -113,7 +113,7 @@
         ];
         layer-rules = [
           {
-            matches = [{namespace = "^noctalia-wallpaper";}];
+            matches = [{namespace = "^noctalia-backdrop";}];
             place-within-backdrop = true;
           }
           {
@@ -177,6 +177,8 @@
         hotkey-overlay.skip-at-startup = {};
         gestures.hot-corners.off = {};
         cursor.hide-after-inactive-ms = 5000;
+        overview.zoom = 0.25;
+
         input = {
           touchpad.natural-scroll = {};
           keyboard = {
@@ -204,7 +206,6 @@
           fill-empty-space = {};
           maximize-single-window-to-edges = {};
           insert-hint.off = {};
-          background-color = "transparent";
           fullscreen-backdrop-color = "transparent";
           focus-ring.active-color = "#cba6f7";
         };
@@ -212,11 +213,6 @@
         blur = {
           noise = 0.03;
           saturation = 1.0;
-        };
-
-        overview = {
-          workspace-shadow.off = {};
-          zoom = 0.25;
         };
 
         debug = {
