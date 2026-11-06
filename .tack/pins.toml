@@ -69,4 +69,4 @@ url = "git+https://repo.dec05eba.com/gpu-screen-recorder?rev=f97d1e392816503282d
 type = "fetch"
 
 [inputs.cliproxyapi]
-url = "gh:greyxp1/CLIProxyAPI/pool"
+url = "gh:greyxp1/CLIProxyAPI/main"
