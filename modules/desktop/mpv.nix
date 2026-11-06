@@ -57,6 +57,7 @@
   ];
 
   programs.mpv.scriptOpts.modernz = {
+    layout = "compact";
     window_controls = "no";
     vidscale = "no";
     sub_margins = "no";
