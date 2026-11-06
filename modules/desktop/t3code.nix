@@ -16,8 +16,16 @@
   graphical = config.services.graphical-desktop.enable;
   computerUse = {
     command = "niri";
-    args = ["mcp" "--workspace" "agents"];
+    args = ["mcp" "--workspace"];
   };
+  computerUseHooks.Stop = [{
+    hooks = [{
+      type = "command";
+      command = "${lib.getExe config.programs.niri.package} mcp --check-cleanup";
+      timeout = 3;
+    }];
+  }];
+  completionCleanup = graphical && config.programs.niri.package.mcpCompletionCleanup or false;
   claudeMcpConfig = pkgs.writeText "claude-mcp.json" (builtins.toJSON {
     mcpServers.computer_use = computerUse // {type = "stdio";};
   });
@@ -66,6 +74,7 @@ in {
     enable = true;
     package = llmAgents.claude-code;
     settings = {
+      hooks = lib.mkIf completionCleanup computerUseHooks;
       env.ANTHROPIC_BASE_URL = proxyEndpoint;
       apiKeyHelper = "cat \"$HOME/.config/cliproxyapi/client-key\"";
       # Empty strings drop the Co-Authored-By trailer and the PR line.
@@ -82,6 +91,7 @@ in {
     enable = true;
     package = llmAgents.codex;
     settings = {
+      hooks = lib.mkIf completionCleanup computerUseHooks;
       model_provider = "cliproxy";
       model_providers.cliproxy = {
         name = "CLIProxyAPI";
