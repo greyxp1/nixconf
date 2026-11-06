@@ -230,14 +230,23 @@ in {
 
         Check correctness, integration and whether the change fixes the root cause. Verify findings against code or behavior and recommend the smallest complete fix. Distinguish defects from optional preferences. Report actionable findings with locations, evidence and impact, plus coverage gaps. Do not reopen settled findings without new evidence.
       '';
+      # Coupling framework adapted from https://github.com/caldoai/skills/blob/f3cf47774975a7d9fca45730babf4ff7ad765ada/skills/untangle-codebase/SKILL.md
       audit-codebase = ''
         ---
         name: audit-codebase
         description: "Use when assessing a whole codebase or subsystem for recurring defects or unnecessary complexity, rather than a specific diff."
         ---
-        Map the requested area and relevant callers. Investigate redundant layers, duplicated logic, dead code, speculative abstractions, stale compatibility and weak integration. Establish why something is unnecessary rather than assuming wrappers or absence checks are bad.
+        Map the requested area and relevant callers. Stay read-only unless implementation is requested.
 
-        Delegate substantial independent areas only when useful, using the current model unless the user requests another. Verify and deduplicate findings. Report evidence, locations, impact, the smallest proposed fixes and coverage gaps. Stay read-only unless implementation is requested.
+        Ask whether pieces should change together. Look for hidden links where related changes must be coordinated without an explicit contract, needless links where unrelated concerns force each other to change, and surplus such as dead code, redundant layers, speculative abstractions or stale compatibility. Use callers, behavior and Git history as evidence rather than treating directory layout or similar code as proof.
+
+        Treat special cases as clues to requirements, not defects by themselves. Establish why a wrapper, retry, platform branch or absence check is unnecessary before removing it. Preserve useful invariants in comments and distinct behavior coverage in tests. Compare shared abstractions with smaller local fixes, accounting for complexity and integration cost.
+
+        Keep a concise decision log in the existing plan or report, grouping verified symptoms under their root cause and smallest complete proposed fix. Record locations, evidence, impact and unresolved or rejected findings with reasons. Do not create a separate document unless requested.
+
+        When implementing, establish relevant test, build and behavior baselines before edits. Apply cohesive fixes and verify affected behavior after each. Investigate new failures before deciding to fix or revert, distinguishing regressions from brittle checks and environmental failures. Passing tests are evidence only for the behavior they cover, so report coverage gaps and practical verification limits.
+
+        Delegate substantial independent areas only when useful, using the current model unless the user requests another. Verify and deduplicate findings. Finish once the requested area is covered and actionable findings are verified, reporting any unassessed areas. Defer speculative or marginal redesigns, and revisit settled findings only with new evidence.
 
         If scores are requested, define the rubric first and support ratings with evidence. Mark unassessed areas and report strengths without inventing precision.
       '';
