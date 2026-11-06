@@ -29,7 +29,7 @@ url = "gh:greyxp1/mpv-auto-sub-sync"
 [inputs.ncr]
 url = "gh:greyxp1/ncr"
 [inputs.iets]
-url = "gh:numtide/iets"
+url = "gh:numtide/iets/pull/380/head"
 exclude_follow = ["nixpkgs"]
 [inputs.niri]
 url = "gh:greyxp1/niri/personal"

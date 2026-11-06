@@ -3,17 +3,17 @@
     "type": "github",
     "owner": "catppuccin",
     "repo": "nix",
-    "rev": "554ec4b3017406fe44b19edc8332f5bae4cf0e71",
-    "narHash": "sha256-Bs64Wlde5bqcMfw2zkXmxfQ0PKO7Doq7c8C7GWR/fho=",
-    "lastModified": 1793950799
+    "rev": "5a735352cd3535d43109415bcbb512a72304226a",
+    "narHash": "sha256-i2+b4Rdp7/yIcVESrp0tzS97FkTuTJxIlqNOTjoswfk=",
+    "lastModified": 1794001184
   },
   "cliproxyapi": {
     "type": "github",
     "owner": "greyxp1",
     "repo": "CLIProxyAPI",
-    "rev": "437d9250754a0f9b723087567688f6fa1f8bc6ee",
-    "narHash": "sha256-ANqG8ei0Pkdsz6d28ViTwsJ/zXCOvSYoxxswBGOQ5Qs=",
-    "lastModified": 1793999355
+    "rev": "434161da25b9a8d2beaa6c20bfeb7cab8ed6359a",
+    "narHash": "sha256-9m1kU6ldA25nFZUDvzerKLcvYw7kETv9pnSKppAnb64=",
+    "lastModified": 1794003327
   },
   "compress-yazi": {
     "type": "github",
@@ -59,17 +59,17 @@
     "type": "github",
     "owner": "greyxp1",
     "repo": "hydro",
-    "rev": "980c7c4b17225be2bd04a5be0fc4606798d31430",
-    "narHash": "sha256-wP/O/WXRQAa1Ke/rWVlZIhG2CkQ85+ydzVpQcnwLm74=",
-    "lastModified": 1792358139
+    "rev": "ad35eaf3bcfc532ce68f810be9e61f00aa3b680d",
+    "narHash": "sha256-uPV+FnXS/H8bWV47nNQ7Ql3vRwBZtV2mf5yLArQSFLk=",
+    "lastModified": 1793998507
   },
   "iets": {
     "type": "github",
     "owner": "numtide",
     "repo": "iets",
-    "rev": "ac6d2d885170a560432babbfa957483d3ff1ef29",
-    "narHash": "sha256-ETtzzDELjbn7WoMm7JW5h6JRTpUQmrJhUdqx/TSpClk=",
-    "lastModified": 1793876660
+    "rev": "f9117259f75b9950ca48e4ae82a05f69aa5aede2",
+    "narHash": "sha256-EPdSuIUS8+gPiO6/aqPXijUIg0RkzDa+4jXAJt323nM=",
+    "lastModified": 1794005665
   },
   "monstar": {
     "type": "github",
@@ -108,9 +108,9 @@
     "type": "github",
     "owner": "greyxp1",
     "repo": "ncr",
-    "rev": "b75f24a9c4b095cd03c24ad04687542f1b0dbfb4",
-    "narHash": "sha256-kcDVMe0PU7Lk8+ho2o2SLc8Kt9dLdmF0bBNGOnXluaA=",
-    "lastModified": 1793644591
+    "rev": "52b86121086b65b58a233b8107e91cf1551f93dd",
+    "narHash": "sha256-e/8ASjNVGoMdE4BK/tC+W/JHNYYiUFnMqKzGRe9bg6Q=",
+    "lastModified": 1794002723
   },
   "neo-ls": {
     "type": "github",
@@ -156,9 +156,9 @@
     "type": "github",
     "owner": "4evy",
     "repo": "nixcord",
-    "rev": "3067f0516568506d327f6654535ba03d1327e8a6",
-    "narHash": "sha256-iBioKvxFMkbBIXhe56UKpMK7qrrMxU9XtUO11DOiYhQ=",
-    "lastModified": 1793982526
+    "rev": "5171bb987426e0e7cddf6b302e99305b4612bf20",
+    "narHash": "sha256-+LQeFOGHvRISlD058/pk+SpZffpudeTy2Vev7gTsu1I=",
+    "lastModified": 1794000011
   },
   "nixpkgs": {
     "type": "github",
