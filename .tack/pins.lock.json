@@ -63,6 +63,14 @@
     "narHash": "sha256-wP/O/WXRQAa1Ke/rWVlZIhG2CkQ85+ydzVpQcnwLm74=",
     "lastModified": 1792358139
   },
+  "iets": {
+    "type": "github",
+    "owner": "numtide",
+    "repo": "iets",
+    "rev": "ac6d2d885170a560432babbfa957483d3ff1ef29",
+    "narHash": "sha256-ETtzzDELjbn7WoMm7JW5h6JRTpUQmrJhUdqx/TSpClk=",
+    "lastModified": 1793876660
+  },
   "monstar": {
     "type": "github",
     "owner": "rockorager",

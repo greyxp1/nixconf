@@ -1,5 +1,6 @@
 {
   config,
+  inputs,
   pkgs,
   ...
 }: let
@@ -9,6 +10,10 @@
     OOMScoreAdjust = 500;
   };
 in {
+  imports = [inputs.iets.nixosModules.default];
+
+  iets.classic.enable = true;
+
   nixpkgs.config.allowUnfree = true;
   documentation.nixos.enable = false;
   hardware.block.defaultScheduler = "mq-deadline";
