@@ -192,6 +192,14 @@
     "narHash": "sha256-zAN0IBdtV3bDP9oVOzGQ7J70NcJ3XJjYejBmNUHr+T0=",
     "lastModified": 1792338601
   },
+  "suncord-bridge": {
+    "type": "git",
+    "url": "file:///home/grey/Projects/SuncordBridge",
+    "ref": "HEAD",
+    "rev": "6778efa4e804bb1472535c3015431bc6dceb1f6e",
+    "narHash": "sha256-xl8DhcfkGyqfsd72NWujZA9r4OOOqsc5DKZgsKPmUn0=",
+    "lastModified": 1794086880
+  },
   "sunshine": {
     "type": "git",
     "url": "https://github.com/LizardByte/Sunshine",
