@@ -35,9 +35,9 @@
     };
   };
 
-  services.scx = {
+  services.scx-loader = {
     enable = true;
-    scheduler = "scx_cosmos";
+    config.default_sched = "scx_cosmos";
   };
 
   imports = [
