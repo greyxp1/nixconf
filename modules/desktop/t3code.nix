@@ -7,7 +7,7 @@
 }: let
   agentModels = {codex = "gpt-6.1-sol"; claude = "claude-opus-5-5";};
   reasoningEffort = {codex = "medium"; claude = "high";};
-  llmAgents = inputs.t3.packages.${pkgs.stdenv.hostPlatform.system};
+  llmAgents = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
   hub = config.services.cliproxyapi;
   # The proxy host uses loopback even when the public route is unavailable.
   proxyEndpoint =

@@ -61,7 +61,7 @@ url = "gh:sonorahq/sonora/pull/1006/head"
 url = "gh:nix-community/nix-index-database"
 [inputs.catppuccin]
 url = "gh:catppuccin/nix"
-[inputs.t3]
+[inputs.llm-agents]
 url = "gh:numtide/llm-agents.nix"
 exclude_follow = ["nixpkgs"]
 [inputs.hydro]
