@@ -123,7 +123,6 @@ in {
       tray = {
         drawer = true;
         drawer_item_size = 24.0;
-        hidden = ["discord_status_icon_1"];
       };
 
       workspaces = {
