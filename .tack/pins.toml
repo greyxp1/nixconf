@@ -73,3 +73,7 @@ type = "fetch"
 
 [inputs.cliproxyapi]
 url = "gh:greyxp1/CLIProxyAPI"
+
+[inputs.browse]
+url = "gh:anomalyco/browse/v0.0.15"
+type = "fetch"

@@ -20,6 +20,11 @@
     command = "niri";
     args = ["mcp" "--workspace"];
   };
+  browse = {
+    command = lib.getExe config.programs.browse.package;
+    env = config.programs.browse.environment;
+    args = ["mcp"];
+  };
   computerUseHooks.Stop = [{
     hooks = [{
       type = "command";
@@ -29,10 +34,15 @@
   }];
   completionCleanup = graphical && config.programs.niri.package.mcpCompletionCleanup or false;
   claudeMcpConfig = pkgs.writeText "claude-mcp.json" (builtins.toJSON {
-    mcpServers.computer_use = computerUse // {type = "stdio";};
+    mcpServers = {
+      computer_use = computerUse // {type = "stdio";};
+    } // lib.optionalAttrs config.programs.browse.enable {
+      browse = browse // {type = "stdio";};
+    };
   });
 in {
   imports = [
+    ../_custom-modules/browse.nix
     ../_custom-modules/claude-code.nix
     ../_custom-modules/codex.nix
     ../_custom-modules/t3code.nix
@@ -117,6 +127,7 @@ in {
         inherit (computerUse) command args;
         env_vars = ["XDG_RUNTIME_DIR"];
       };
+      mcp_servers.browse = lib.mkIf (graphical && config.programs.browse.enable) browse;
     };
     instructions = ''
       # Global
@@ -133,6 +144,7 @@ in {
       - Use ${reasoningEffort.codex} reasoning effort for codex and ${reasoningEffort.claude} for claude in implementation, audits, reviews and delegated work unless I explicitly request another level. Pass the supported effort option explicitly instead of relying on catalog defaults or inherited levels.
       - Do not add tests unless asked. Reproduce reported failures when practical and verify the same path after fixing them. Builds, mocks and headless checks do not prove live input, hardware or visible interaction. State verification gaps. Repeat successful checks only after relevant changes or for unresolved concerns.
       - Use the Niri MCP agents workspace by default, with normal desktop apps and no filesystem isolation. Use an isolated Niri session when filesystem or app-profile separation is needed: the project remains writable, while temporary home and app profiles disappear at disconnect. Prefer Wayland, using X11 when needed and a private Xvfb display for isolated X11 work. Use the user's active browser only when requested. Preserve existing browser windows and tabs, closing only task-owned ones the user has neither taken over nor asked to keep. Never quit a shared browser process. Start with list_windows and get_app_state, explicitly target a window, use its latest screenshot coordinates and launch private apps through launch_app. Accessibility actions require snapshot_id and element_index from get_app_state. Ask before niri mcp --desktop or live-session hardware access.
+      - Use Browse for web pages in my existing Helium profile when it is paired. Manage Browse through Nix, not `browse install` or `browse update`. Create a named Browse session for each thread and pass its session id on every call. Delete your session when finished, preserving pending human handoffs and other sessions. Use Niri for native applications, browser chrome and isolated sessions.
       - Use installed Helium through its configured launcher. Run self-contained browser tests in an isolated Niri session with a temporary profile, without asking me to focus the agent window. Use `helium --new-window` with my existing profile, sign-ins, extensions and settings when the task needs my actual account, extensions or profile state. Do not use a separate profile to avoid investigating failures in my existing profile. Outside isolated work, do not pass `--user-data-dir`, change profile environment variables, use incognito or bypass the launcher unless I explicitly request it. Never force a separate browser instance onto a live Chromium profile. Check the active account and ongoing calls before reloads or joins, since new windows share profile state. Check installed browsers before fetching another.
       - After authentication or other manual steps, request approvals and confirmations through the question or approval UI with a clickable "Done" or "Continue" choice. Wait for my explicit selection instead of asking for a typed reply.
       - Prefer explicit accessibility actions and editable targets over keyboard shortcuts. Inspect the intended field before typing or submitting. When sibling-window focus blocks keyboard input, use accessibility or move self-contained tests to an isolated session. Request a handoff only when required human or profile interaction has no safe supported alternative. Never bypass an input refusal with shell commands such as `niri msg action focus-window`, workspace or output switching, or global input utilities. Foreground interaction requires my explicit authorization.

@@ -1,4 +1,12 @@
 {
+  "browse": {
+    "type": "github",
+    "owner": "anomalyco",
+    "repo": "browse",
+    "rev": "b2c22c020b8e8f3930d8d15bfa3f8a52f25dc260",
+    "narHash": "sha256-E8tb6qDw2L4B4EH49nRdGWZjtlP2aclvwuEs+XYgiRU=",
+    "lastModified": 1794095939
+  },
   "catppuccin": {
     "type": "github",
     "owner": "catppuccin",
