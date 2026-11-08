@@ -124,9 +124,9 @@
     "type": "github",
     "owner": "greyxp1",
     "repo": "niri",
-    "rev": "794410fbaf68f3006c2b7fabf1821c9af9a8409d",
-    "narHash": "sha256-mEKbqgMem/rbEau9Il1v0ZEEtplBDU1650VwEzqmXQU=",
-    "lastModified": 1793990986
+    "rev": "fa596da0d07fd35daed7b656dc23da00922b8a45",
+    "narHash": "sha256-h/DVTDoW794RNne6wpy38C3KDd68CZHG86sQ24KlBIg=",
+    "lastModified": 1794106305
   },
   "niri-screenshare": {
     "type": "github",

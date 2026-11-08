@@ -21,7 +21,7 @@
     (lib.filterAttrs (name: _: lib.hasPrefix "mpv/" name) nixos.environment.etc);
   environment.systemPackages = nixos.fonts.packages;
   environment.variables = {
-    inherit (nixos.environment.sessionVariables) XCURSOR_THEME XCURSOR_SIZE;
+    inherit (nixos.environment.sessionVariables) ACCESSIBILITY_ENABLED XCURSOR_THEME XCURSOR_SIZE;
   };
   environment.pathsToLink = ["/share/themes" "/share/icons"];
 }

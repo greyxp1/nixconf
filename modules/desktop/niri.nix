@@ -28,6 +28,7 @@
     };
   };
   environment = {
+    sessionVariables.ACCESSIBILITY_ENABLED = "1";
     pathsToLink = ["/share/applications"];
     systemPackages = [
       (pkgs.tesseract.override {enableLanguages = ["eng"];})

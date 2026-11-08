@@ -1,7 +1,6 @@
 {
   inputs,
   config,
-  pkgs,
   ...
 }: {
   imports = [inputs.helium.nixosModules.helium ./nixcord.nix];
@@ -9,7 +8,6 @@
   programs.helium = {
     enable = true;
     defaultBrowser = true;
-
     flags = [
       "--enable-features=HeliumMiddleClickAutoscroll"
       "--disable-features=MiddleClickPasteEnabled"
