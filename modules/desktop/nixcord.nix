@@ -1,8 +1,4 @@
-{
-  inputs,
-  lib,
-  ...
-}: {
+{inputs, ...}: {
   imports = [inputs.nixcord.nixosModules.nixcord];
   programs.nixcord = {
     enable = true;
@@ -10,7 +6,7 @@
     useGlobalPkgs = true;
     discord.enable = false;
     quickCss = "@import url(https://mwittrien.github.io/BetterDiscordAddons/Themes/EmojiReplace/base/Apple.css);";
-    userPlugins = lib.mapAttrs (_: path: /. + builtins.unsafeDiscardStringContext path) {
+    userPlugins = {
       autoReact = "${inputs.cord-stash}/plugins/AutoReact";
       clientPreferences = "${inputs.cord-stash}/plugins/ClientPreferences";
       discordPopoutTitle = "${inputs.cord-stash}/plugins/DiscordPopoutTitle";

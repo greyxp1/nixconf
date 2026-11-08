@@ -19,9 +19,9 @@
     "type": "github",
     "owner": "greyxp1",
     "repo": "CLIProxyAPI",
-    "rev": "21951bc0515ec93cc37f762071c502d26d8129f5",
-    "narHash": "sha256-5rDErFC2x9U54pvXi7dFYdrqTu27WxRyRdrdPsetUZA=",
-    "lastModified": 1794126808
+    "rev": "5a85b9e993882be6661b5c7116255669c845abfb",
+    "narHash": "sha256-zo69r9psLbW1rCC+/RI0QAJ45jBqYKYCTzqf+edFDxM=",
+    "lastModified": 1794325053
   },
   "compress-yazi": {
     "type": "github",
@@ -75,25 +75,25 @@
     "type": "github",
     "owner": "numtide",
     "repo": "iets",
-    "rev": "4779491fff8162e35bc09c326a9caa8273a7e245",
-    "narHash": "sha256-+r+OiSytOtJ2cSLQvlsxpGNGH1UV0JaPl5j5H5GKQA8=",
-    "lastModified": 1794100038
+    "rev": "9820c971a602519a297c533129050e93f691a0d4",
+    "narHash": "sha256-TAGS0nMDv1bKoMPHRrbnZAvJskyDiEMCVfvLd6BOyYE=",
+    "lastModified": 1794247071
   },
   "llm-agents": {
     "type": "github",
     "owner": "numtide",
     "repo": "llm-agents.nix",
-    "rev": "21e98ee207424e4134513fc66a72ddfa1684e77a",
-    "narHash": "sha256-Di0auoDTZUANT8VzcdMVvW8njPTX23G7cqsygHtdrqA=",
-    "lastModified": 1794114872
+    "rev": "e7ec2cef4fda261e0f92e65ea55ac54948ca3a40",
+    "narHash": "sha256-RDWuueNfF5JxlTDQUpZfDmpsiG2kXvTW4Cw8COvKJmQ=",
+    "lastModified": 1794178147
   },
   "monstar": {
     "type": "github",
     "owner": "rockorager",
     "repo": "monstar",
-    "rev": "c7269a638d68b2dde542e286c2c1f4ed7a5a7f57",
-    "narHash": "sha256-EcCR9PqUjjFqV0dt5x+efl2sFcBrFuSHVssJekwtbhM=",
-    "lastModified": 1794072665
+    "rev": "7f37495bc3b575e4dba8f5123ab375639e3dbf7d",
+    "narHash": "sha256-JYt8RKdGV8JFSzIvTNNRH2xWLTjALh/V2fcz8p/cMI8=",
+    "lastModified": 1794190554
   },
   "moonlight-embedded": {
     "type": "git",
@@ -164,25 +164,25 @@
     "type": "github",
     "owner": "nix-community",
     "repo": "nix-index-database",
-    "rev": "cee0f879d338cf08f814210fa6c2b280594ade0a",
-    "narHash": "sha256-PHtGxKYM99f8WhGR5YD7iiCiwemKa2wUD4yVI2oALFg=",
-    "lastModified": 1793543282
+    "rev": "af9249ca33bc2efaae5d071e4c67ddef19dcb681",
+    "narHash": "sha256-iGNtQnUZsi+v6/4NbtYr+dsmASa6GkzXtUcTpE8F3mE=",
+    "lastModified": 1794132860
   },
   "nixcord": {
     "type": "github",
     "owner": "4evy",
     "repo": "nixcord",
-    "rev": "b30c1a84431bf66ea5884869c846769df16ebe71",
-    "narHash": "sha256-+mtZLfNDP+qrzKUaqjcXpYxGKZHFH5LRHqxKy39hA4M=",
-    "lastModified": 1794112296
+    "rev": "803504cff18fad929f6d72612e0b8b23de6d9c02",
+    "narHash": "sha256-54MAVlTBxvqEjobNpu6Yu53+psn0cOJ/NnMdT8Ws9h8=",
+    "lastModified": 1794324842
   },
   "nixpkgs": {
     "type": "github",
     "owner": "nixos",
     "repo": "nixpkgs",
-    "rev": "f9a75f41be3a74eab55d3a7679d34ad6cc0da977",
-    "narHash": "sha256-Wojg9lIH/hDH91iDVH2/EPw8oDSpxjxhXONbU1yf4Zg=",
-    "lastModified": 1793876309
+    "rev": "f4a03c008967841f2a0b3cb7c436fc6fc31671f6",
+    "narHash": "sha256-ziZn2PvCJE5JEEpqTdxXwJpPB+L3YqoCpTAMCzyaP3U=",
+    "lastModified": 1794042290
   },
   "perch": {
     "type": "github",
@@ -204,9 +204,9 @@
     "type": "git",
     "url": "file:///home/grey/Projects/Relay",
     "ref": "HEAD",
-    "rev": "33f6ffe0346b3091189c46d6dea607df11f4a537",
-    "narHash": "sha256-dqjqrzZMbt+yyyuFRGD2db0nu+fE/nqGJmqoJuWlF68=",
-    "lastModified": 1794127709
+    "rev": "002e2c344440ad46d7d98c52e3c2a87de553a95e",
+    "narHash": "sha256-GXXQM5285zXTxPpUDR2EXEmnGmQyVtY55OCaMUtmgPU=",
+    "lastModified": 1794253623
   },
   "sonora": {
     "type": "github",
