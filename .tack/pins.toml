@@ -22,8 +22,8 @@ url = "gh:numtide/system-manager"
 url = "gh:greyxp1/helium-flake"
 [inputs.nixcord]
 url = "gh:4evy/nixcord"
-[inputs.mpv-smartcut]
-url = "gh:greyxp1/mpv-smartcut"
+[inputs.mpv-splice]
+url = "gh:greyxp1/mpv-splice"
 [inputs.mpv-auto-sub-sync]
 url = "gh:greyxp1/mpv-auto-sub-sync"
 [inputs.ncr]

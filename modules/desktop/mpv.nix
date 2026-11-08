@@ -28,12 +28,11 @@
     ytdl-raw-options = "check-formats=";
   };
   programs.mpv.scripts = [
-    pkgs.mpvScripts.modernz
     pkgs.mpvScripts.thumbfast
     pkgs.mpvScripts.mpris
     pkgs.mpvScripts.visualizer
     inputs.mpv-auto-sub-sync.packages.${pkgs.stdenv.hostPlatform.system}.default
-    inputs.mpv-smartcut.packages.${pkgs.stdenv.hostPlatform.system}.default
+    inputs.mpv-splice.packages.${pkgs.stdenv.hostPlatform.system}.default
     ((pkgs.writeTextDir "share/mpv/scripts/short-loop.lua" ''
       local function has_real_video()
         local tracks = mp.get_property_native("track-list")
@@ -56,13 +55,4 @@
       mp.register_event("file-loaded", maybe_loop)
     '').overrideAttrs (_: {passthru.scriptName = "short-loop.lua";}))
   ];
-
-  programs.mpv.scriptOpts.modernz = {
-    layout = "compact";
-    window_controls = "no";
-    vidscale = "no";
-    sub_margins = "no";
-    tick_delay_follow_display_fps = "yes";
-    seekrange = "no";
-  };
 }

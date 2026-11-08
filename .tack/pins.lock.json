@@ -104,13 +104,13 @@
     "narHash": "sha256-yAKHliM5lXAehEUpmrfoF5M1+PuccJvgfS4NwFhOqW8=",
     "lastModified": 1793645034
   },
-  "mpv-smartcut": {
+  "mpv-splice": {
     "type": "github",
     "owner": "greyxp1",
-    "repo": "mpv-smartcut",
-    "rev": "2258d2f0072257bf01248044b46988153a4dd020",
-    "narHash": "sha256-3B0Sq9x+fThHstP5SYoqZxY1LX2gd9o3LMUasugQzeY=",
-    "lastModified": 1793234590
+    "repo": "mpv-splice",
+    "rev": "2eaff8a650f3809b51e5cefc77f5329307f2625c",
+    "narHash": "sha256-IC5W24uVjbEmhhrdt1gNc/zden3PcPvRB3BoRtp07S8=",
+    "lastModified": 1794119217
   },
   "ncr": {
     "type": "github",

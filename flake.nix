@@ -16,7 +16,7 @@
       });
     packages.${system} = {
       disko = inputs.disko.packages.${system}.disko;
-      mpv-smartcut = inputs.mpv-smartcut.packages.${system}.default;
+      mpv-splice = inputs.mpv-splice.packages.${system}.default;
       system-manager = inputs.system-manager.packages.${system}.default;
     };
     inherit (import ./modules/hosts/alma/configuration.nix {inherit inputs;}) lib systemConfigs;
