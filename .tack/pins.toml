@@ -3,7 +3,7 @@ gh = "github:{path}"
 [all_follow]
 nixpkgs = "nixpkgs"
 [inputs.nixpkgs]
-url = "gh:nixos/nixpkgs/nixos-unstable"
+url = "gh:nixos/nixpkgs/f9a75f41be3a74eab55d3a7679d34ad6cc0da977"
 [inputs.sunshine]
 url = "git+https://github.com/LizardByte/Sunshine?rev=774be88e41b5ddfe6cea5baab4ad658e3cb4adde"
 type = "fetch"
