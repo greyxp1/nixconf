@@ -9,6 +9,8 @@
     vo = "gpu";
     gpu-context = "wayland";
     hwdec = "auto-safe";
+    vd-queue-enable = true;
+    vd-queue-max-samples = 1;
     profile = "gpu-hq";
     video-sync = "display-resample";
     af = "scaletempo2";
