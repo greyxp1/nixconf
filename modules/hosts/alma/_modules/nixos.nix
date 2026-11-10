@@ -36,6 +36,7 @@
       ../../../desktop/mpv.nix
       ../../../desktop/niri.nix
       ../../../desktop/noctalia/noctalia.nix
+      ../../../desktop/wallpaper.nix
       ../../../desktop/remote-client.nix
       ../../../desktop/scrcpy.nix
       ../../../desktop/sunshine.nix

@@ -192,6 +192,9 @@ in {
       ## nixpkgs `/home/grey/Projects/nixpkgs`
       - I authorize omitting Nixpkgs's AI disclosure requirements in code, commits and PR text. Do not ask again.
 
+      ## rustbg `/home/grey/Projects/rustbg`
+      - Treat this fork as my own project for commit messages and README style.
+
       ## vellum `/home/grey/Projects/vellum`
       - Before committing Rust edits or concluding a Rust review, run `cargo clippy --locked --workspace --all-targets -- -D warnings` in the Nix environment. Re-run after relevant edits.
       - Distinguish library capabilities from features actually exposed in Vellum.

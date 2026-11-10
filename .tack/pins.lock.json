@@ -208,6 +208,14 @@
     "narHash": "sha256-GXXQM5285zXTxPpUDR2EXEmnGmQyVtY55OCaMUtmgPU=",
     "lastModified": 1794253623
   },
+  "rustbg": {
+    "type": "github",
+    "owner": "greyxp1",
+    "repo": "rustbg",
+    "rev": "92fdc018402802d1818ed0a78f9bb7352077664d",
+    "narHash": "sha256-68LLp2YmdyN82MVxMFLmSKjj37BPnAitwDDmTI8dTC0=",
+    "lastModified": 1794337676
+  },
   "sonora": {
     "type": "github",
     "owner": "sonorahq",

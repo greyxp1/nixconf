@@ -114,7 +114,7 @@
         ];
         layer-rules = [
           {
-            matches = [{namespace = "^noctalia-backdrop";}];
+            matches = [{namespace = "^rustbg-backdrop$";}];
             place-within-backdrop = true;
           }
           {

@@ -18,21 +18,11 @@ in {
     system.monitor.enabled = false;
     theme.builtin = "Catppuccin";
     location.auto_locate = true;
-    lockscreen.tint_intensity = 0.0;
+    wallpaper.enabled = false;
     hooks = {
       session_unlocked = ''
         systemctl --user start xdg-desktop-portal.service niri-screenshare.service${lib.optionalString recorderEnabled " && noctalia msg plugin noctalia/screen_recorder:service all replay-start"}
       '';
-    };
-
-    wallpaper = {
-      default.path = ./assets/wallpaper.jpg;
-    };
-
-    backdrop = {
-      enabled = true;
-      blur_intensity = 0.1;
-      tint_intensity = 0.0;
     };
 
     bar.default = {
