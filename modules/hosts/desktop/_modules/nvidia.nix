@@ -4,6 +4,7 @@
   ...
 }: {
   environment.systemPackages = [pkgs.nvidia-vaapi-driver];
+  services.vellum.graphicsDriver = "nvidia";
   boot.kernelParams = ["nvidia.NVreg_RegistryDwords=PerfLevelSrc=0x2222"];
   environment.etc."nvidia/nvidia-application-profiles-rc.d/50-niri.json".text = builtins.toJSON {
     rules = [

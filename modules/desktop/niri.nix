@@ -7,12 +7,10 @@
     ../_custom-modules/niri.nix
     inputs.niri-screenshare.nixosModules.default
     inputs.perch.nixosModules.default
+    inputs.vellum.nixosModules.default
   ];
   services = {
-    vellum = {
-      enable = true;
-      package = inputs.vellum.packages.${pkgs.stdenv.hostPlatform.system}.default;
-    };
+    vellum.enable = true;
     greetd = {
       enable = true;
       settings.default_session = {
