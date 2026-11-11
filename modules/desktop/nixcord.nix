@@ -1,5 +1,6 @@
-{inputs, ...}: {
-  imports = [inputs.nixcord.nixosModules.nixcord];
+{inputs, pkgs, ...}: {
+  imports = [inputs.nixcord.nixosModules.nixcord inputs.relay.nixosModules.default];
+  services.relay.enable = true;
   programs.nixcord = {
     enable = true;
     user = "grey";
@@ -12,6 +13,7 @@
       discordPopoutTitle = "${inputs.cord-stash}/plugins/DiscordPopoutTitle";
       fakeDeafen = "${inputs.cord-stash}/plugins/FakeDeafen";
       localEdit = "${inputs.cord-stash}/plugins/LocalEdit";
+      relay = inputs.relay.packages.${pkgs.stdenv.hostPlatform.system}.plugin;
     };
 
     browser = {
@@ -57,7 +59,7 @@
             collapseDeleted = true;
             ignoreSelf = true;
             inlineEdits = false;
-            logEdits = false;
+            logEdits = true;
           };
           MoreUserTags = {
             enabled = true;
@@ -81,7 +83,6 @@
           NoUnblockToJump.enabled = true;
           OnePingPerDM.enabled = true;
           PinIcon.enabled = true;
-          PlatformIndicators.enabled = true;
           PreviewMessage.enabled = true;
           Quoter = {
             enabled = true;
@@ -110,11 +111,16 @@
           };
           WebContextMenus.enabled = true;
           WebKeybinds.enabled = true;
-          WebScreenShareFixes.enabled = true;
           WhoReacted.enabled = true;
           YoutubeAdblock.enabled = true;
 
           # Voice chat and screensharing
+          Relay = {
+            enabled = true;
+            autoShare = true;
+          };
+          WebScreenShare.enabled = false;
+          WebScreenShareFixes.enabled = false;
           ClientPreferences = {
             enabled = true;
             inputProfile = "STUDIO";
@@ -135,6 +141,7 @@
           };
           DisableCallIdle.enabled = true;
           FakeNitro.enabled = true;
+          FakeNitro.enableStreamQualityBypass = false;
           FollowVoiceUser = {
             enabled = true;
             onlyWhenInVoice = false;

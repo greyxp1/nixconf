@@ -49,7 +49,6 @@
     ./_modules/noctalia.nix
     ./_modules/recording.nix
     ./_modules/at2005usb.nix
-    ./_modules/relay.nix
     ./_modules/whisrs.nix
     ./_modules/gaming.nix
     ./_modules/kovaaks.nix

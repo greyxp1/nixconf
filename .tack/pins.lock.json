@@ -201,12 +201,12 @@
     "lastModified": 1792953443
   },
   "relay": {
-    "type": "git",
-    "url": "file:///home/grey/Projects/Relay",
-    "ref": "HEAD",
-    "rev": "002e2c344440ad46d7d98c52e3c2a87de553a95e",
-    "narHash": "sha256-GXXQM5285zXTxPpUDR2EXEmnGmQyVtY55OCaMUtmgPU=",
-    "lastModified": 1794253623
+    "type": "github",
+    "owner": "greyxp1",
+    "repo": "Relay",
+    "rev": "ec7ab835d02eb1dba96a57ff5de5a1d0d16232ea",
+    "narHash": "sha256-SnHPGOHJdp/IsGrCOtAGNlLY5rg8zoRqZPWDQ0rw1P4=",
+    "lastModified": 1794608809
   },
   "rustbg": {
     "type": "github",
