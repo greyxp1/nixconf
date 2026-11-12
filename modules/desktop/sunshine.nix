@@ -1,5 +1,4 @@
 {
-  inputs,
   lib,
   pkgs,
   config,
@@ -14,7 +13,12 @@
   };
   sunshine = (pkgs.sunshine.override {inherit (cfg) cudaSupport;}).overrideAttrs (final: old: {
     version = "unstable-${builtins.substring 0 7 sunshinePin.rev}";
-    src = inputs.sunshine;
+    src = pkgs.fetchgit {
+      name = "source";
+      inherit (sunshinePin) url rev;
+      hash = sunshinePin.narHash;
+      fetchSubmodules = true;
+    };
     env =
       old.env
       // {
