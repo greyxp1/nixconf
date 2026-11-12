@@ -119,6 +119,10 @@
             matches = [{namespace = "^noctalia-(bar-[^\"]+|notification|dock|panel|osd)$";}];
             background-effect.xray = false;
           }
+          {
+            matches = [{namespace = "^vellum$";}];
+            background-effect.xray = false;
+          }
         ];
 
         binds = {
