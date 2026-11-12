@@ -44,6 +44,17 @@
   };
 
   programs = {
+    fish.shellAliases.rebuild = lib.mkForce "tailscale ssh grey@server true && nh os switch --build-host grey@server --use-substitutes";
+
+    ssh.extraConfig = ''
+      Host server
+        HostName server.tail1785c.ts.net.
+        ProxyCommand tailscale nc %h %p
+        UserKnownHostsFile ~/.config/tailscale/ssh_known_hosts
+        StrictHostKeyChecking yes
+        UpdateHostKeys no
+    '';
+
     # Ironlake only supports GLES 2, so Chromium's GLES 3 initialization fails.
     helium.flags = ["--disable-gpu"];
     noctalia.settings = {
