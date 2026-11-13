@@ -3,7 +3,7 @@ gh = "github:{path}"
 [all_follow]
 nixpkgs = "nixpkgs"
 [inputs.nixpkgs]
-url = "gh:nixos/nixpkgs/f9a75f41be3a74eab55d3a7679d34ad6cc0da977"
+url = "gh:nixos/nixpkgs/nixos-unstable"
 [inputs.sunshine]
 url = "git+https://github.com/LizardByte/Sunshine?rev=774be88e41b5ddfe6cea5baab4ad658e3cb4adde"
 type = "fetch"
@@ -44,7 +44,7 @@ exclude_follow = ["nixpkgs"]
 url = "gh:greyxp1/cord-stash/396a52eaa9c0430bb9e8022427945840e0e960e1"
 type = "fetch"
 [inputs.relay]
-url = "gh:greyxp1/Relay"
+url = "gh:greyxp1/Relay/e93d56e8b9587505d8c4baa038763e3f7b17da13"
 exclude_follow = ["nixpkgs"]
 [inputs.nix-flatpak]
 url = "gh:gmodena/nix-flatpak"
@@ -67,16 +67,10 @@ exclude_follow = ["nixpkgs"]
 [inputs.hydro]
 url = "gh:greyxp1/hydro"
 type = "fetch"
-[inputs.gpu-screen-recorder]
-url = "git+https://repo.dec05eba.com/gpu-screen-recorder?rev=f97d1e392816503282d20a0804c3ce3fd2943767"
-type = "fetch"
-
 [inputs.cliproxyapi]
 url = "gh:greyxp1/CLIProxyAPI"
-
 [inputs.browse]
 url = "gh:anomalyco/browse/v0.0.17"
 type = "fetch"
-
 [inputs.rustbg]
 url = "gh:greyxp1/rustbg"

@@ -1,6 +1,5 @@
 {
   config,
-  inputs,
   lib,
   pkgs,
   ...
@@ -12,10 +11,6 @@
 in {
   imports = [../../../_custom-modules/gpu-screen-recorder.nix];
 
-  programs.gpu-screen-recorder.package = pkgs.gpu-screen-recorder.overrideAttrs {
-    version = "6.1.7";
-    src = inputs.gpu-screen-recorder;
-  };
   programs.gpu-screen-recorder.replay = {
     enable = true;
     settings = {
