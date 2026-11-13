@@ -14,10 +14,10 @@ in
     inherit version;
     src = fetchurl {
       url = "https://registry.npmjs.org/@opencode/browse/-/browse-${version}.tgz";
-      hash = "sha256-TUb6MjrpUVzTSPlPPIUJ8FzPE7rVI0O3h4KhhRLtqo4=";
+      hash = "sha256-ZgVJPXm+uFtjhgnkFSrvk8jXjBkXmZvfOtaIHYSKXVg=";
     };
     sourceRoot = "package";
-    npmDepsHash = "sha256-l0j9TzFaMVjDCtlVNVqzoQ3j2sZeYPdH8Z7iGwn3aSU=";
+    npmDepsHash = "sha256-HhkllSEJ1okpbyCcHTkiNZJ/tK83aCIH2B8DZOHiLQ8=";
     nativeBuildInputs = [jq makeWrapper];
     postPatch = ''
       cp ${./package-lock.json} package-lock.json
@@ -29,7 +29,7 @@ in
     installPhase = ''
       runHook preInstall
       mkdir -p "$out/lib/browse" "$out/bin"
-      cp -r dist skills package.json node_modules "$out/lib/browse/"
+      cp -r dist package.json node_modules "$out/lib/browse/"
       install -Dm444 LICENSE "$out/share/licenses/opencode-browse/LICENSE"
       makeWrapper ${lib.getExe nodejs} "$out/bin/browse" \
         --add-flags "$out/lib/browse/dist/cli.mjs" \

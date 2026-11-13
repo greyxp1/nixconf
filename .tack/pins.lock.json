@@ -3,9 +3,9 @@
     "type": "github",
     "owner": "anomalyco",
     "repo": "browse",
-    "rev": "b2c22c020b8e8f3930d8d15bfa3f8a52f25dc260",
-    "narHash": "sha256-E8tb6qDw2L4B4EH49nRdGWZjtlP2aclvwuEs+XYgiRU=",
-    "lastModified": 1794095939
+    "rev": "ac696c86573dbd97033ee2abdc70526a4b417e0d",
+    "narHash": "sha256-r9l14z5cWxAXy2/ME1pFEZ++u9PO53+Xk9CwHdISyas=",
+    "lastModified": 1794680598
   },
   "catppuccin": {
     "type": "github",

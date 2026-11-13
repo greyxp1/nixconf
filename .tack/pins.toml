@@ -75,7 +75,7 @@ type = "fetch"
 url = "gh:greyxp1/CLIProxyAPI"
 
 [inputs.browse]
-url = "gh:anomalyco/browse/v0.0.15"
+url = "gh:anomalyco/browse/v0.0.17"
 type = "fetch"
 
 [inputs.rustbg]
