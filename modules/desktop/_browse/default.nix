@@ -17,6 +17,7 @@ in
       hash = "sha256-TUb6MjrpUVzTSPlPPIUJ8FzPE7rVI0O3h4KhhRLtqo4=";
     };
     sourceRoot = "package";
+    patches = [./release-interception.patch];
     npmDepsHash = "sha256-l0j9TzFaMVjDCtlVNVqzoQ3j2sZeYPdH8Z7iGwn3aSU=";
     nativeBuildInputs = [jq makeWrapper];
     postPatch = ''

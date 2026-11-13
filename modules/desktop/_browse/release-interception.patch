@@ -1,0 +1,33 @@
+--- a/dist/relay-pc2ke2t2.mjs
++++ b/dist/relay-pc2ke2t2.mjs
+@@ -670,6 +670,10 @@
+     this.connectionGeneration += 1;
+   }
+   unregister(client) {
++    const state = this.states.get(client);
++    if (state) {
++      for (const sessionId of state.announcements.keys()) this.detachSession(client, state, sessionId, { notify: false });
++    }
+     if (!this.states.delete(client) || this.states.size !== 0)
+       return;
+     return ++this.connectionGeneration;
+@@ -18334,7 +18338,18 @@
+     sendEvent: sendCdpEvent2,
+     ...contextDebugLog ? { trace: contextDebugLog } : {}
+   });
+-  const cdpClients = new CdpClientPool((client, event) => cdpRuntime.deliver(client, event), (client, sessionId) => cdpRuntime.detach(client, sessionId));
++  const cdpClients = new CdpClientPool((client, event) => cdpRuntime.deliver(client, event), (client, sessionId) => {
++    cdpRuntime.detach(client, sessionId);
++    // Patchright leaves Fetch enabled after its connection closes.
++    void runPromise(shutdownControl.trackTransport(suspend2(() => {
++      if (Array.from(cdpClients).some(viewer => cdpClients.hasSession(viewer, sessionId))) return void_3;
++      const root = registry.targets.get(sessionId);
++      const child = registry.childTargets.get(sessionId);
++      const target = root ?? child;
++      if (!target) return void_3;
++      return sendDebuggerCommand({ tabId: target.tabId, ...(child ? { sessionId } : {}), method: "Fetch.disable", params: {} }).pipe(asVoid2);
++    })).pipe(ignore)).catch(() => {});
++  });
+   const mainFrameIdsByTab = new Map;
+   const blankNavigationWaiters = new Map;
+   const suppressedChildSessions = new Map;
