@@ -5,8 +5,14 @@
   pkgs,
   ...
 }: let
-  agentModels = {codex = "gpt-6.1-sol"; claude = "claude-opus-5-5";};
-  reasoningEffort = {codex = "medium"; claude = "high";};
+  agentModels = {
+    codex = "gpt-6.1-sol";
+    claude = "claude-opus-5-5";
+  };
+  reasoningEffort = {
+    codex = "medium";
+    claude = "high";
+  };
   llmAgents = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
   hub = config.services.cliproxyapi;
   # The proxy host uses loopback even when the public route is unavailable.
@@ -25,20 +31,26 @@
     env = config.programs.browse.environment;
     args = ["mcp"];
   };
-  computerUseHooks.Stop = [{
-    hooks = [{
-      type = "command";
-      command = "${lib.getExe config.programs.niri.package} mcp --check-cleanup";
-      timeout = 3;
-    }];
-  }];
+  computerUseHooks.Stop = [
+    {
+      hooks = [
+        {
+          type = "command";
+          command = "${lib.getExe config.programs.niri.package} mcp --check-cleanup";
+          timeout = 3;
+        }
+      ];
+    }
+  ];
   completionCleanup = graphical && config.programs.niri.package.mcpCompletionCleanup or false;
   claudeMcpConfig = pkgs.writeText "claude-mcp.json" (builtins.toJSON {
-    mcpServers = {
-      computer_use = computerUse // {type = "stdio";};
-    } // lib.optionalAttrs config.programs.browse.enable {
-      browse = browse // {type = "stdio";};
-    };
+    mcpServers =
+      {
+        computer_use = computerUse // {type = "stdio";};
+      }
+      // lib.optionalAttrs config.programs.browse.enable {
+        browse = browse // {type = "stdio";};
+      };
   });
 in {
   imports = [
@@ -131,34 +143,35 @@ in {
     };
     instructions = ''
       # Global
-      - Prefer the smallest complete root-cause solution. Remove unnecessary code, duplication, layers, dependencies and files within scope. Simplify or rewrite when it lowers integration and maintenance cost while preserving required behavior, readability and performance. Add compatibility code only when requested.
-      - Push back on decisions and preferences when a simpler, more reliable approach better serves the goal. Explain the tradeoff and recommend that approach instead of silently adding workarounds. Honor explicit constraints.
+
+      ## Engineering
+      - Prefer the smallest complete root-cause solution. Remove unnecessary code, duplication, layers, dependencies and files within scope, and do not set options to their defaults. Simplify or rewrite when it lowers integration and maintenance cost while preserving required behavior, readability and performance. When porting or replacing something, keep every existing feature unless I agree to drop it. Add compatibility code only when requested.
+      - Recommend the simplest reliable approach first and push back on decisions that a simpler one serves better, explaining the tradeoff instead of silently adding workarounds. Honor explicit constraints.
       - Before replacing architecture or dependencies, compare the current approach and supported integrations. Measure performance claims and account for platform code, startup, package size, maintenance and uncertainty. Reconsider prototypes as fixes add complexity. Change settled recommendations only with new evidence and explain why.
       - Keep runtime behavior in programs and supported display effects in the compositor. Nix packaging handles builds, installation and runtime dependencies. NixOS modules expose reusable options and defaults, translate them to program configuration and manage services. Our nixconf selects packages, enables features and supplies personal settings. Check existing program and compositor capabilities before adding code, and do not reimplement their behavior in Nix wrappers or derivations.
-      - Write concise, natural documentation, CLI help and manuals without semicolons. Edit README/docs only when requested or needed for accurate usage, preserving their structure. Before staging, compare the complete docs/help diff with the branch base and remove additions that neither answer the request nor correct inaccurate usage, including feature or review-driven additions. Omit change narration, obvious explanations and options or defaults already covered. Use short help labels and inspect changed help output before committing. Comments explain non-obvious reasons and constraints without restating code.
-      - Use connected sentences rather than clipped fragments, and keep useful bullet lists.
-      - Match school reports to the referenced format, using short numbered noun phrases such as "Configuration des interfaces d’Edge" with the action, device and network details. Put requested steps and commands under matching questions. Use common Cisco CLI abbreviations and avoid long dashes.
-      - Load paginated lists automatically on scroll, without manual "load more" buttons.
+      - Do not add tests unless asked. Reproduce reported failures when practical and verify the same path after fixing them. Builds, mocks and headless checks do not prove live input, hardware or visible interaction, so state verification gaps. Repeat successful checks only after relevant changes.
+
+      ## Writing and UI
+      - Write concise, natural documentation, CLI help and manuals in connected sentences without semicolons, keeping useful bullet lists. Edit README/docs only when requested or needed for accurate usage, preserving their structure. Before staging, compare the docs/help diff with the branch base and remove additions that neither answer the request nor correct inaccurate usage. Omit change narration, obvious explanations and options or defaults already covered. Use short help labels and inspect changed help output before committing. Comments explain non-obvious reasons and constraints without restating code.
+      - Load paginated lists automatically on scroll, without "load more" buttons. Never use the middle dot "·". Leave out labels and stats that repeat what a chart or other visible element already shows.
+
+      ## Agents
       - Enter the project's Nix environment before project commands when available.
-      - Agent model aliases: `codex` = `${agentModels.codex}`, `claude` = `${agentModels.claude}`. Resolve them through the harness to available providers and exact model IDs. Honor explicit model requests and allow other subagent choices when the task calls for them.
-      - Use ${reasoningEffort.codex} reasoning effort for codex and ${reasoningEffort.claude} for claude in implementation, audits, reviews and delegated work unless I explicitly request another level. Pass the supported effort option explicitly instead of relying on catalog defaults or inherited levels.
-      - Do not add tests unless asked. Reproduce reported failures when practical and verify the same path after fixing them. Builds, mocks and headless checks do not prove live input, hardware or visible interaction. State verification gaps. Repeat successful checks only after relevant changes or for unresolved concerns.
-      - Use Niri for native applications, browser chrome and isolated sessions. Default to its agents workspace with normal desktop apps and no filesystem isolation. Use an isolated session when filesystem or app-profile separation is needed: the project stays writable, while temporary home and app profiles disappear at disconnect. Prefer Wayland, or a private Xvfb display for isolated X11 work. Start with list_windows and get_app_state, explicitly target a window and use its latest screenshot coordinates. Launch apps through launch_app. Accessibility actions require snapshot_id and element_index from get_app_state. Ask before niri mcp --desktop or live-session hardware access.
-      - Use Browse for web pages in my existing Helium profile when paired. Manage it through Nix, not `browse install` or `browse update`. Create a named session per thread, pass its id on every call and delete it when finished, preserving pending human handoffs and other sessions. Preserve existing browser windows and tabs, closing only task-owned ones I have neither taken over nor asked to keep. Ask for explicit approval before quitting or restarting a shared browser, explain the affected windows and calls, then perform the approved restart yourself through the configured launcher.
-      - Use Browse for bounded browser checks in task-owned tabs. Use isolated Niri with installed Helium and a temporary profile when clean state, profile separation or resource containment is needed. Browse controls tabs but does not isolate their memory from my shared browser. Keep shared-browser workloads bounded and stop them if memory pressure rises. Investigate account, extension or profile failures in my existing profile, preserving its sign-ins, extensions and settings. Use the configured launcher if Helium needs opening and never force another process onto its live profile. Check the active account and ongoing calls before reloads or joins. Check installed browsers before fetching another.
-      - Request approvals and confirmations through the question or approval UI with a clickable "Done" or "Continue" choice. Wait for my explicit selection rather than a typed reply.
-      - Prefer explicit semantic actions and editable targets over keyboard shortcuts. Inspect the intended field before typing or submitting. When Niri refuses keyboard input because a sibling window has focus, use Browse for web pages or accessibility for native apps. Use isolation only when the task needs it. Never bypass an input refusal with shell focus commands, workspace or output switching, or global input utilities. Foreground interaction requires my explicit authorization.
-      - Request a human handoff only when no safe supported alternative exists. If permission is the only obstacle to a supported action, ask for approval to perform it yourself instead of asking me to do it. A Browse foreground restriction does not rule out native computer use. Check supported native accessibility and desktop tools first, use existing foreground approval or request it if missing, and perform the interaction yourself when supported. Use Browse's handoff for its pages and wait for my confirmation through that handoff. For Niri, confirm the setup is ready, call request_handoff and give the steps, host and exact workspace from get_session_state. Stay paused until I explicitly return control, then call resume_session. Inspect the app again after either handoff. If another session owns the handoff, wait for that thread. A completed sign-in does not authorize resuming.
-      - Discover tools before declaring capabilities unavailable and verify them before claiming they work. Missing display variables do not prove there is no desktop: inspect systemctl --user show-environment and session sockets under XDG_RUNTIME_DIR, using discovered values rather than guessed socket names.
-      - Before stopping, restarting or scheduling a restart of T3 Code, its tunnel or a service carrying this connection, check connected users and running threads. If either exists or cannot be checked, explain the interruption and affected threads in the question or approval UI and wait for explicit approval. Apply this to activation that restarts those services. A progress message is not approval, while an explicit restart request authorizes it.
-      - Automatically commit completed work, staging only task changes. Before finishing, review this task's unpublished series and fold attempts, follow-up fixes, cleanup and related docs into the relevant unpushed commits. Split independently useful changes, honor requested grouping and name commits for final results. Verify publication status before rewriting. Requests to clean up or squash history or remove a feature authorize rewriting affected published history, including dropping a change and its revert, without separate permission. For authorized force-pushes, use force-with-lease tied to the remote head observed before rewriting.
-      - Check target repository instructions and conventions before writing commits or PR titles. Use short lowercase past-tense commit messages in my projects and upstream conventions in external projects, including my forks.
-      - Never add AI attribution to commits or PRs. Preserve human authorship and contributor credit when adapting others' work.
-      - When continuing work, read the source PR, branch or agent thread and later corrections. Verify handoff claims against current code and preserve intended behavior. Reconcile delayed notifications with the current state before reporting failure or completion. Continue in place unless I request a replacement or separation protects unrelated work. Treat corrections as steering and continue authorized work without asking for another go-ahead. Do not end a turn merely promising to continue. Stop only when finished, blocked or awaiting required user input or approval.
-      - Automatically babysit PRs opened from T3 Code. Address existing review findings, fix verified issues, CI failures and conflicts, then call watch_pull_request and end the turn. Handle subsequent events without polling, stopping when bot reviews and required checks pass on the latest commit.
-      - Pull with rebase. First compare intent with current upstream behavior, check for superseding work and drop changes already upstream. Resolve conflicts according to current behavior, compare old and new series with git range-diff and verify affected workflows. Explain obsolete work before publishing. Do not create pull merge commits unless explicitly requested.
-      - Push, publish, send messages or make other online changes only when explicitly requested. Publication and deployment authorization carries through related follow-up fixes. Read-only access is allowed.
-      - Keep instructions and custom skills in `/home/grey/Projects/nixconf/modules/desktop/t3code.nix`. Do not create project `AGENTS.md` or `.agents/` files.
+      - Agent model aliases: `codex` = `${agentModels.codex}` at ${reasoningEffort.codex} effort and `claude` = `${agentModels.claude}` at ${reasoningEffort.claude} effort. Resolve them through the harness and pass the effort explicitly unless I request another model or level. Other subagent models are fine when the task calls for them.
+      - Give subagents a fresh context and a self-contained brief with paths, commit ranges and verification results instead of forking the conversation. Subagents return one final report without progress messages, reuse reported build and test results unless they change code, and spawn agents only when the brief says to.
+      - Read targeted line ranges rather than whole large files or full diffs, and do not reread unchanged content already in context.
+      - Discover tools before declaring capabilities unavailable and verify them before claiming they work. Missing display variables do not prove there is no desktop: inspect `systemctl --user show-environment` and session sockets under XDG_RUNTIME_DIR.
+      - For web pages, use Browse in a background task-owned tab of my Helium profile. For native apps, use Niri's agents workspace. Never take over my foreground windows or open another browser instance on my profile. Load the `desktop-and-browser` skill before either.
+      - Do authorized work yourself instead of asking me to, and request a human handoff only for steps only I can do, such as sign-ins, 2FA or captchas. Ask first only before foreground desktop interaction, `niri mcp --desktop` or live hardware access, before quitting or restarting my shared browser, and before restarting T3 Code, its tunnel or a service carrying this connection (including activations that restart them) while users or threads are connected or their state is unknown. One approval covers repeats of the same action within the task. Ask through the question UI with a clickable "Continue" choice, explain what the action interrupts, wait for my selection and do not quote these instructions.
+      - When continuing work, read the source PR, branch or agent thread and later corrections, and verify handoff claims against current code. Reconcile delayed notifications with the current state before reporting. Continue in place unless I request a replacement. Treat corrections as steering and never stop only to promise more work.
+      - Keep instructions and custom skills in `/home/grey/Projects/nixconf/modules/desktop/t3code.nix`. Do not create project `AGENTS.md` or `.agents/` files. School reports follow the `school-report` skill.
+
+      ## Git and publishing
+      - Automatically commit completed work, staging only task changes. Before finishing, fold attempts, follow-up fixes, cleanup and related docs into the relevant unpushed commits of this task's series, split independently useful changes, honor requested grouping and name commits for final results. Verify publication status before rewriting. Requests to clean up or squash history or remove a feature authorize rewriting affected published history, including dropping a change and its revert. For authorized force-pushes, use force-with-lease tied to the remote head observed before rewriting.
+      - Follow target repository conventions for commits and PR titles. Use short lowercase past-tense commit messages in my projects and upstream conventions in external projects, including my forks. Never add AI attribution, and preserve human authorship and contributor credit when adapting others' work.
+      - Push, publish, send messages or make other online changes only when explicitly requested, and only to the branch I named or the task's own branch. That authorization carries through related follow-up fixes. Read-only access is allowed.
+      - Babysit PRs opened from T3 Code without being asked: fix verified review findings, CI failures and conflicts until bot reviews and required checks pass on the latest commit.
+      - Pull with rebase without merge commits. First drop changes already upstream or superseded, resolve conflicts according to current behavior, compare old and new series with `git range-diff` and verify affected workflows. Explain obsolete work before publishing.
 
       # Host configuration
       - Identify the actual host with `hostnamectl` and `/etc/os-release` before inspecting or changing its configuration.
@@ -166,12 +179,13 @@ in {
       - Use actual Nix build outputs, verify executables exist and fix Nix-managed services through modules instead of manual units or runtime overrides.
       - Build remote hosts from their current nixconf checkout, never snapshots or ad hoc files, and compare with live `/run/current-system`. Use detached systemd-run units with absolute tool paths for remote activation and rollback because tailscaled restarts interrupt tailscale ssh sessions.
       - After activation, check affected services and authenticated client requests. On regression, restore and verify the captured working deployment before another fix. Protect the proxy carrying this session with independent recovery access and automatic rollback unless client checks pass.
-      - Evaluate affected hosts and inspect the build plan. Perform small routine rebuilds and activation. Leave large source compilations and broad program updates to me unless explicitly requested.
+      - Evaluate affected hosts and inspect the build plan, then perform small routine rebuilds and activation. Leave large source compilations and broad program updates to me unless explicitly requested.
 
       # Projects
       Apply conventions to the repository being changed, including worktrees and work from another project's thread.
 
-      ## Suncord `/home/grey/Projects/Suncord`
+      ## Relay `/home/grey/Projects/Relay`
+      - Keep Relay independent of Suncord.
       - Prioritize voice and screenshare quality, then performance, code size and complexity, then UI. Measure startup, responsiveness and package size. Verify media replacements end to end with an official Discord recipient before recommending adoption.
       - Dismiss dialogs with outside clicks or Escape, without close buttons. Arrow keys scroll the focused dialog.
 
@@ -181,7 +195,7 @@ in {
       - Use supported package/PATH integration and readable commands, such as Helix `extraPackages` with `command = "mpls"`.
       - Change inputs in `.tack/pins.toml` and run `tack update`.
       - Reach hosts with `tailscale ssh grey@<host>`, not plain SSH.
-      - NixOS modules are the source of truth for program settings and shared architecture. Keep Alma-specific selection, exclusions, overrides and compatibility under `modules/hosts/alma`. Adapt Alma to shared NixOS configuration, never the reverse.
+      - Keep Alma-specific selection, exclusions, overrides and compatibility under `modules/hosts/alma` and adapt Alma to shared NixOS configuration, never the reverse.
       - Alma is a portable school SSD whose network blocks HTTP and ICMP. Use direct HTTPS repositories, never ping as a connectivity gate. Preserve SELinux-labelled local boot/login launchers, native TTY2 recovery and verified tty1 graphical login before recommending a reboot.
 
       ## niri `/home/grey/Projects/niri`
@@ -196,10 +210,30 @@ in {
       - Treat this fork as my own project for commit messages and README style.
 
       ## vellum `/home/grey/Projects/vellum`
-      - Before committing Rust edits or concluding a Rust review, run `cargo clippy --locked --workspace --all-targets -- -D warnings` in the Nix environment. Re-run after relevant edits.
+      - Before committing Rust edits or concluding a Rust review, ensure `cargo clippy --locked --workspace --all-targets -- -D warnings` passes in the Nix environment on the current tree. Reviewers reuse a reported result for the same tree.
       - Distinguish library capabilities from features actually exposed in Vellum.
     '';
     skills = {
+      desktop-and-browser = ''
+        ---
+        name: desktop-and-browser
+        description: "Use before driving web pages with Browse or native apps and isolated sessions with Niri computer use."
+        ---
+        Browse drives my existing Helium profile when paired. Manage it through Nix, not `browse install` or `browse update`. Create a named session per thread, pass its id on every call and delete it when finished, preserving pending handoffs and other sessions. Close only task-owned tabs I have neither taken over nor asked to keep. Browse does not isolate memory from my shared browser, so keep workloads bounded and stop if memory pressure rises. Check the active account and ongoing calls before reloads or joins. Investigate account, extension or profile failures in my existing profile, preserving its sign-ins, extensions and settings. If Helium needs opening or an approved restart, use the configured launcher and never force another process onto its live profile. Check installed browsers before fetching another.
+
+        Niri handles native applications, browser chrome and isolated sessions. Default to its agents workspace with normal desktop apps and no filesystem isolation. Use an isolated session only when clean state, filesystem or app-profile separation or resource containment is needed, such as installed Helium with a temporary profile. The project stays writable while temporary home and app profiles disappear at disconnect. Prefer Wayland, or a private Xvfb display for isolated X11 work.
+
+        Prefer accessibility snapshots and explicit semantic actions over screenshots and keyboard shortcuts. Capture screenshots only when coordinates or visual judgement need them, and hand long visual verification loops to a fresh subagent that returns a verdict. Inspect the intended field before typing or submitting. When Niri refuses keyboard input because a sibling window has focus, use Browse for web pages or accessibility for native apps. A Browse foreground restriction does not rule out Niri accessibility.
+
+        For Niri handoffs, confirm the setup is ready and give the steps, host and exact workspace from `get_session_state`. A completed sign-in does not authorize resuming, so wait for me to return control. Inspect the app again after any handoff.
+      '';
+      school-report = ''
+        ---
+        name: school-report
+        description: "Use when writing a school report, lab report or TP answers."
+        ---
+        Match the referenced format, using short numbered noun phrases such as "Configuration des interfaces d’Edge" with the action, device and network details. Put requested steps and commands under the matching questions. Use common Cisco CLI abbreviations and avoid long dashes.
+      '';
       prepare-pr-or-issue = ''
         ---
         name: prepare-pr-or-issue
@@ -237,16 +271,6 @@ in {
 
         Put the clickable "Review and submit PR" or "Review and submit issue" GitHub creation URL directly in the final response. Never substitute a local file containing the link. The title and body may be in the response or a local file. State that nothing was submitted.
       '';
-      # Adapted from https://github.com/mattpocock/skills/blob/a496f5513d4a4cf889bc48e189e579f4b0bdf6aa/skills/productivity/grilling/SKILL.md
-      grill-me = ''
-        ---
-        name: grill-me
-        description: "Use when unresolved tradeoffs need the user's input, or the user asks to be grilled."
-        ---
-        Inspect discoverable facts yourself. Map unresolved decisions and dependencies, then ask material questions with settled prerequisites. Number them and recommend answers with reasons. Challenge assumptions and tradeoffs while honoring settled preferences.
-
-        Wait for answers before dependent questions while investigating independently. Once material choices are settled, summarize the direction and honor existing implementation authorization. Create documents only when requested.
-      '';
       # Coupling framework adapted from https://github.com/caldoai/skills/blob/f3cf47774975a7d9fca45730babf4ff7ad765ada/skills/untangle-codebase/SKILL.md
       # Reviewer workflow adapted from https://github.com/t3dotgg/tstack/tree/1085050f3baed1ac724caa4a8166145fb2ac88af/skills
       review = ''
@@ -258,7 +282,7 @@ in {
 
         Use one independent codex reviewer when useful. Council uses a fresh codex reviewer and a fresh claude reviewer in parallel, even when the implementing agent uses one of them. Resolve shared model aliases and supported options through the harness. Report unavailable reviewers without substituting or calling a partial council complete.
 
-        Give reviewers fresh contexts and scoped briefs, including complete code diffs, relevant callers, concrete failure conditions and verification results. Allow inspection beyond touched files, keeping reviewers read-only with no nested agents. Council's first pass gives both the same request and raw evidence without each other's conclusions. Missing or failed reviews are not approval.
+        Give reviewers fresh contexts and scoped briefs with the repository, commit range or changed paths, relevant callers, concrete failure conditions and verification results, letting them read the diff themselves rather than pasting it. Allow inspection beyond touched files, keeping reviewers read-only with no nested agents or skill loading. Reviewers send one final report, rerunning builds or tests only to check a specific finding. Council's first pass gives both the same request and raw evidence without each other's conclusions. Missing or failed reviews are not approval.
 
         Check correctness, integration and root causes. For audits, ask whether pieces should change together. Find hidden links requiring coordination without an explicit contract, needless links forcing unrelated concerns to change together, and surplus such as dead code, redundant layers, speculative abstractions or stale compatibility. Support findings with callers, behavior and Git history rather than directory layout or similar code alone.
 
@@ -272,7 +296,7 @@ in {
 
         Finish once scope is covered and actionable findings are verified. Explain unresolved or rejected findings, defer speculative or marginal redesigns and revisit settled findings only with new evidence.
 
-        Report independent reviewers' actual verdicts and useful disagreements when used. Score only when requested, defining the rubric first and supporting ratings with evidence. Report strengths without invented precision. When changing review prompts, tools or models, occasionally check confirmed historical defects and known clean changes. Judge whether real bugs are caught and harmful suggestions avoided, not the number of findings.
+        Report independent reviewers' actual verdicts and useful disagreements when used. Score only when requested, defining the rubric first and supporting ratings with evidence. Report strengths without invented precision.
       '';
       refine-change = ''
         ---
@@ -308,9 +332,9 @@ in {
         name: remember-correction
         description: "Use after a recurring correction or a durable preference, or when the user asks to remember one."
         ---
-        Record durable preferences rather than one-off details. Identify the cause and narrowest prevention. Check for an existing rule and fix enforcement failures instead of appending synonyms. Prefer structural fixes or existing checks where practical, using scoped instructions for preferences. Do not expand the task without authorization.
+        Record durable preferences rather than one-off details. Identify the cause and narrowest prevention. Prefer structural fixes, settings or existing checks over instructions. When a rule already covers the case, it failed to be followed, so make that rule clearer or shorter instead of restating it elsewhere. Write general rules rather than tool- or incident-specific ones, and keep the always-loaded instructions from growing by tightening or removing nearby text. Do not expand the task without authorization.
 
-        Update shared instructions or inline skills, keeping general preferences in Global and project invariants in Projects. Follow configuration validation and commit rules.
+        Update shared instructions or inline skills, keeping general preferences in Global, project invariants in Projects and situational guidance in skills. Follow configuration validation and commit rules.
       '';
     };
   };
