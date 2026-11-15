@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{
+  lib,
+  pkgs,
+  ...
+}: {
   services.tailscale = {
     useRoutingFeatures = "client";
     extraDaemonFlags = [
@@ -10,10 +14,8 @@
       })}"
     ];
   };
-  systemd.user.services.t3code.environment = {
-    T3CODE_TAILSCALE_SERVE = "true";
-    TUNNEL_TRANSPORT_PROTOCOL = "http2";
-  };
+  # Too slow for agents, so threads run on the desktop and server and reach it over Tailscale.
+  programs.t3code.server.enable = lib.mkForce false;
   networking.networkmanager.dispatcherScripts = [
     {
       source = pkgs.writeShellScript "school-exit-node-dispatcher" ''

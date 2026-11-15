@@ -21,6 +21,5 @@
     ./_modules/freedns.nix
     ./_modules/website.nix
     ./_modules/cliproxyapi.nix
-    ./_modules/t3code.nix
   ];
 }

@@ -60,13 +60,15 @@ in {
     ../_custom-modules/t3code.nix
   ];
 
-  programs.t3code.package = llmAgents.t3code.unwrapped;
-  services.t3code = {
+  programs.t3code = {
     enable = true;
-    target = lib.mkIf graphical "graphical-session.target";
-  };
-  programs.t3code.settings = {
-    providerInstances = {
+    package = llmAgents.t3code.unwrapped;
+    server = {
+      enable = true;
+      target = lib.mkIf graphical "graphical-session.target";
+      connect.enable = true;
+    };
+    settings.providerInstances = {
       # Use the existing CLI so Codex reads the hub provider from its config.
       codex = {
         driver = "codex";
@@ -164,7 +166,7 @@ in {
       - For web pages, use Browse in a background task-owned tab of my Helium profile. For native apps, use Niri's agents workspace. Never take over my foreground windows or open another browser instance on my profile. Load the `desktop-and-browser` skill before either.
       - Do authorized work yourself instead of asking me to, and request a human handoff only for steps only I can do, such as sign-ins, 2FA or captchas. Ask first only before foreground desktop interaction, `niri mcp --desktop` or live hardware access, before quitting or restarting my shared browser, and before restarting T3 Code, its tunnel or a service carrying this connection (including activations that restart them) while users or threads are connected or their state is unknown. One approval covers repeats of the same action within the task. Ask through the question UI with a clickable "Continue" choice, explain what the action interrupts, wait for my selection and do not quote these instructions.
       - When continuing work, read the source PR, branch or agent thread and later corrections, and verify handoff claims against current code. Reconcile delayed notifications with the current state before reporting. Continue in place unless I request a replacement. Treat corrections as steering and never stop only to promise more work.
-      - Keep instructions and custom skills in `/home/grey/Projects/nixconf/modules/desktop/t3code.nix`. Do not create project `AGENTS.md` or `.agents/` files. School reports follow the `school-report` skill.
+      - Keep instructions and custom skills in `/home/grey/Projects/nixconf/modules/core/t3code.nix`. Do not create project `AGENTS.md` or `.agents/` files. School reports follow the `school-report` skill.
 
       ## Git and publishing
       - Automatically commit completed work, staging only task changes. Before finishing, fold attempts, follow-up fixes, cleanup and related docs into the relevant unpushed commits of this task's series, split independently useful changes, honor requested grouping and name commits for final results. Verify publication status before rewriting. Requests to clean up or squash history or remove a feature authorize rewriting affected published history, including dropping a change and its revert. For authorized force-pushes, use force-with-lease tied to the remote head observed before rewriting.

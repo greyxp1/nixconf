@@ -40,7 +40,7 @@
       ../../../desktop/remote-client.nix
       ../../../desktop/scrcpy.nix
       ../../../desktop/sunshine.nix
-      ../../../desktop/t3code.nix
+      ../../../core/t3code.nix
       ../../../desktop/termfilechooser.nix
       ../../../desktop/theme.nix
       ({config, ...}: let
@@ -56,6 +56,9 @@
         config = {
           # Alma's systemd does not support this newer slice setting.
           systemd.user.slices.app-t3code.sliceConfig.ManagedOOMMemoryPressureDurationSec = lib.mkForce [];
+          # The school network blocks QUIC.
+          programs.t3code.server.connect.protocol = "http2";
+          systemd.user.services.t3code.environment.NIX_SSL_CERT_FILE = "/etc/pki/tls/certs/ca-bundle.crt";
           programs.niri.settings.binds = {
             "Mod+Shift+O" = {
               action.spawn = "niri-swap-outputs";

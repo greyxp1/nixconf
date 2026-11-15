@@ -5,18 +5,7 @@
 }: {
   alma.packages = ["at-spi2-core"];
   environment.etc =
-    {
-      "systemd/user/t3code.service.d/environment.conf" = {
-        text = ''
-          [Service]
-          Environment=TUNNEL_TRANSPORT_PROTOCOL=http2
-          Environment=NIX_SSL_CERT_FILE=/etc/pki/tls/certs/ca-bundle.crt
-        '';
-        mode = "0644";
-        replaceExisting = true;
-      };
-    }
-    // lib.mapAttrs' (name: file:
+    lib.mapAttrs' (name: file:
       # Codex skips symlinked SKILL.md files, which system-manager creates from directories.
         if lib.hasPrefix "codex/skills/" name
         then

@@ -12,8 +12,15 @@ curl -fsSL https://greyxp1.github.io/nixconf/alma | bash
 
 # T3 Code
 
-1. Run `t3 connect`, then `systemctl --user restart t3code` on each host. Use the same account.
-2. Sign in at [app.t3.codes](https://app.t3.codes).
+On each host using T3 Connect, run `t3 connect link`, then `systemctl --user restart t3code`.
+
+# Notes
+
+Syncthing keeps `~/Documents/Notes` in sync on every host and the phone.
+
+1. After installing or reinstalling a host, read its ID from a peer's pending devices or with `syncthing device-id --home ~/.config/syncthing`.
+2. Set that ID in `devices` in `modules/core/syncthing.nix`, then rebuild every host.
+3. On the phone, accept each host Syncthing-Fork offers. For a new phone, also accept the `notes` folder at `/storage/emulated/0/Documents/Notes` and open that folder as an Obsidian vault.
 
 # Sunshine and Moonlight
 
