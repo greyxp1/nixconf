@@ -177,7 +177,7 @@ in {
       - Identify the actual host with `hostnamectl` and `/etc/os-release` before inspecting or changing its configuration.
       - Before activation, compare the checkout, pins and intended changes with the running host. Capture the working system path, build once, retain the exact output and inspect the activation diff. Resolve unrelated removals, downgrades and service changes first.
       - Use actual Nix build outputs, verify executables exist and fix Nix-managed services through modules instead of manual units or runtime overrides.
-      - Build remote hosts from their current nixconf checkout, never snapshots or ad hoc files, and compare with live `/run/current-system`. Use detached systemd-run units with absolute tool paths for remote activation and rollback because tailscaled restarts interrupt tailscale ssh sessions.
+      - Build remote hosts from their current nixconf checkout, never snapshots or ad hoc files. Run remote activation and rollback in detached systemd-run units with absolute tool paths, so they finish when the session drops.
       - After activation, check affected services and authenticated client requests. On regression, restore and verify the captured working deployment before another fix. Protect the proxy carrying this session with independent recovery access and automatic rollback unless client checks pass.
       - Evaluate affected hosts and inspect the build plan, then perform small routine rebuilds and activation. Leave large source compilations and broad program updates to me unless explicitly requested.
 
@@ -191,16 +191,19 @@ in {
 
       ## nixconf `/home/grey/Projects/nixconf`
       - Use stock upstream applications and supported integrations. Do not introduce locally maintained application patches or forks unless I explicitly request them.
-      - Design custom NixOS modules for nixpkgs: reusable options and defaults, standard module conventions and personal settings in consuming modules. Use Home Manager as a reference without copying its interface.
+      - Design custom NixOS modules for nixpkgs: reusable options and defaults, standard module conventions and personal settings in consuming modules. Shared definitions stay plain and the host that overrides one marks its value, such as `lib.mkForce`. Use Home Manager as a reference without copying its interface.
       - Use supported package/PATH integration and readable commands, such as Helix `extraPackages` with `command = "mpls"`.
-      - Change inputs in `.tack/pins.toml` and run `tack update`.
+      - Change inputs in `.tack/pins.toml` and run `tack update`. Fold a pin update into a recent commit for the same pin, push it from the desktop checkout and pull it on the other host checkouts before building there.
       - Reach hosts with `tailscale ssh grey@<host>`, not plain SSH.
-      - Keep Alma-specific selection, exclusions, overrides and compatibility under `modules/hosts/alma` and adapt Alma to shared NixOS configuration, never the reverse.
+      - Keep Alma-specific selection, exclusions, overrides and compatibility under `modules/hosts/alma` and adapt Alma to shared NixOS configuration, never the reverse. Shared modules hold no values or comments chosen for Alma.
       - Alma is a portable school SSD whose network blocks HTTP and ICMP. Use direct HTTPS repositories, never ping as a connectivity gate. Preserve SELinux-labelled local boot/login launchers, native TTY2 recovery and verified tty1 graphical login before recommending a reboot.
+
+      ## CLIProxyAPI `/home/grey/Projects/cliproxyapi`
+      - Keep my fork as one commit on upstream `main`. After each change, rebase onto upstream `main`, fold the change into that commit, force-push `origin/main`, update the nixconf pin and deploy to the server. This authorizes those pushes.
 
       ## niri `/home/grey/Projects/niri`
       - I authorize preparing code and public PR text despite Niri's LLM authorship restriction. Do not ask again.
-      - Keep fork-specific changes on dedicated branches and cherry-pick selected changes onto `personal`.
+      - Keep each fork feature or idea as one commit on its own branch, folding related fixes into it. Cherry-pick that commit onto `personal` to combine enabled features. Keep dependencies explicit and preserve all existing features when rewriting history.
       - Keep Niri computer-use, private-session startup and filesystem isolation in the Niri fork. Configure its package and MCP registration in nixconf. Avoid extra compositor dependencies such as Sway.
 
       ## nixpkgs `/home/grey/Projects/nixpkgs`
