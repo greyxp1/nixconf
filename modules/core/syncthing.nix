@@ -3,9 +3,9 @@
   lib,
   ...
 }: let
-  # Syncthing creates each host's ID on first start. Add it here from a peer's pending devices
-  # or `syncthing device-id --home ~/.config/syncthing`, then rebuild every host. A reinstalled
-  # host keeps its ID only if ~/.config/syncthing is restored.
+  # A new host creates its ID on first start. Add it here from a peer's pending devices or
+  # `syncthing device-id --home ~/.config/syncthing`, store its cert.pem and key.pem with
+  # `nix-secrets edit syncthing/<host>/{cert,key}`, then rebuild every host.
   devices = {
     desktop = "SZPGBLD-JSMNNQT-FBKOBQ4-2ZTKES4-CWYCHJP-IAX4KC4-AMB2F3Z-ODYBYQL";
     server = "OAETKIB-GLNECRC-YMOWH6H-J4RMOBQ-NUMUFPK-FDPB47E-3EAUTGX-DSSKCAT";
@@ -16,9 +16,19 @@
   # Every device connects directly to every other, so syncing never waits on one host.
   peers = lib.removeAttrs devices [host];
   notes = "/home/grey/Documents/Notes";
+  secrets = config.security.nix-secrets;
+  # Listed hosts keep their identity as secrets, so a reinstall keeps the same ID.
+  identity = lib.genAttrs ["cert" "key"] (file: "syncthing/${host}/${file}");
+  storedIdentity = secrets.enable && devices ? ${host};
 in {
+  security.nix-secrets.secrets = lib.mkIf storedIdentity (lib.genAttrs (lib.attrValues identity) (_: {
+    owner = "grey";
+    group = "users";
+  }));
   services.syncthing = {
     enable = true;
+    cert = lib.mkIf storedIdentity secrets.secrets.${identity.cert}.path;
+    key = lib.mkIf storedIdentity secrets.secrets.${identity.key}.path;
     user = "grey";
     group = "users";
     dataDir = "/home/grey";

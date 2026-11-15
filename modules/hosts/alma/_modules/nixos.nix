@@ -40,6 +40,7 @@
       ../../../desktop/remote-client.nix
       ../../../desktop/scrcpy.nix
       ../../../desktop/sunshine.nix
+      ../../../core/secrets.nix
       ../../../core/syncthing.nix
       ../../../core/t3code.nix
       ../../../desktop/termfilechooser.nix
@@ -55,6 +56,10 @@
             };
         };
         config = {
+          # system-manager cannot run nix-secrets, so Alma keeps its secrets by hand.
+          security.nix-secrets.enable = lib.mkForce false;
+          programs.claude-code.settings.apiKeyHelper = lib.mkForce "cat /home/grey/.config/cliproxyapi/client-key";
+          programs.codex.settings.model_providers.cliproxy.auth.args = lib.mkForce ["/home/grey/.config/cliproxyapi/client-key"];
           # Alma's systemd does not support this newer slice setting.
           systemd.user.slices.app-t3code.sliceConfig.ManagedOOMMemoryPressureDurationSec = lib.mkForce [];
           # The school network blocks QUIC.

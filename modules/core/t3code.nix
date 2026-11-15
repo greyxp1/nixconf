@@ -15,6 +15,7 @@
   };
   llmAgents = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
   hub = config.services.cliproxyapi;
+  clientKey = config.security.nix-secrets.secrets."cliproxyapi/client-key".path;
   # The proxy host uses loopback even when the public route is unavailable.
   proxyEndpoint =
     if hub.enable
@@ -95,6 +96,8 @@ in {
     ManagedOOMMemoryPressureDurationSec = "20s";
   };
 
+  security.nix-secrets.secrets."cliproxyapi/client-key".owner = "grey";
+
   # Claude subscriptions are only used from Claude Code, as Theo's proxy guide requires.
   programs.claude-code = {
     enable = true;
@@ -103,7 +106,7 @@ in {
       hooks = lib.mkIf completionCleanup computerUseHooks;
       effortLevel = reasoningEffort.claude;
       env.ANTHROPIC_BASE_URL = proxyEndpoint;
-      apiKeyHelper = "cat \"$HOME/.config/cliproxyapi/client-key\"";
+      apiKeyHelper = "cat ${clientKey}";
       # Empty strings drop the Co-Authored-By trailer and the PR line.
       attribution = {
         commit = "";
@@ -133,8 +136,8 @@ in {
         request_max_retries = 10;
         stream_max_retries = 10;
         auth = {
-          command = "sh";
-          args = ["-c" "cat \"$HOME/.config/cliproxyapi/client-key\""];
+          command = "cat";
+          args = [clientKey];
         };
       };
       mcp_servers.computer_use = lib.mkIf graphical {

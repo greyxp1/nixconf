@@ -44,6 +44,9 @@ fi
 read -rp "Type WIPE to erase $DEV: " confirm < /dev/tty
 [[ $confirm == WIPE ]] || { echo "Aborted"; exit 1; }
 PASSWORD_HASH=$(mkpasswd --method=yescrypt < /dev/tty)
+read -rsp "Age key (AGE-SECRET-KEY-...): " AGE_KEY < /dev/tty
+echo
+[[ $AGE_KEY == AGE-SECRET-KEY-1* ]] || { echo "Not an age secret key" >&2; exit 1; }
 
 WORK_DIR=$(mktemp -d -t nixconf.XXXXXX)
 INSTALL_MANAGES_MNT=false
@@ -90,6 +93,11 @@ sudo install -d -m1777 /mnt/persistent/tmp
 printf '%s\n' "$PASSWORD_HASH" | sudo tee /mnt/persistent/passwords/grey >/dev/null
 sudo chmod 600 /mnt/persistent/passwords/grey
 unset PASSWORD_HASH
+# nix-secrets decrypts with this key during activation.
+sudo install -d -m700 /mnt/persistent/secrets
+printf '%s\n' "$AGE_KEY" | sudo tee /mnt/persistent/secrets/age.key >/dev/null
+sudo chmod 600 /mnt/persistent/secrets/age.key
+unset AGE_KEY
 sudo nixos-install "${NIX_OPTS[@]}" --root /mnt --flake "$WORK_DIR#$HOST" --no-root-passwd --no-channel-copy
 sudo install -d -o 1000 -g 100 /mnt/home/grey/Projects
 sudo cp -rT "$WORK_DIR" /mnt/home/grey/Projects/nixconf

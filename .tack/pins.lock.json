@@ -160,6 +160,14 @@
     "narHash": "sha256-iGNtQnUZsi+v6/4NbtYr+dsmASa6GkzXtUcTpE8F3mE=",
     "lastModified": 1794132860
   },
+  "nix-secrets": {
+    "type": "github",
+    "owner": "unnamed-systems",
+    "repo": "nix-secrets",
+    "rev": "857a7594bc4cd65533bc9fcdd056dc843e10e441",
+    "narHash": "sha256-WCcx6veQ5yrOUYA9MTXXbMb4ZpwpbV9EIV0zRIZw+u0=",
+    "lastModified": 1793717226
+  },
   "nixcord": {
     "type": "github",
     "owner": "4evy",

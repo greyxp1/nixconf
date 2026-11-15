@@ -74,3 +74,6 @@ url = "gh:anomalyco/browse/v0.0.17"
 type = "fetch"
 [inputs.rustbg]
 url = "gh:greyxp1/rustbg"
+
+[inputs.nix-secrets]
+url = "gh:unnamed-systems/nix-secrets"
