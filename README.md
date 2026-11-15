@@ -22,6 +22,14 @@ Syncthing keeps `~/Documents/Notes` in sync on every host and the phone.
 2. Set that ID in `devices` in `modules/core/syncthing.nix`, then rebuild every host.
 3. On the phone, accept each host Syncthing-Fork offers. For a new phone, also accept the `notes` folder at `/storage/emulated/0/Documents/Notes` and open that folder as an Obsidian vault.
 
+# Notes
+
+Syncthing keeps `~/Documents/Notes` in sync on every host and the phone.
+
+1. After installing or reinstalling a host, read its ID from a peer's pending devices or with `syncthing device-id --home ~/.config/syncthing`.
+2. Set that ID in `devices` in `modules/core/syncthing.nix`, then rebuild every host.
+3. On the phone, accept each host Syncthing-Fork offers. For a new phone, also accept the `notes` folder at `/storage/emulated/0/Documents/Notes` and open that folder as an Obsidian vault.
+
 # Sunshine and Moonlight
 
 1. Run `sudo tailscale up` on both PCs and use the same account.

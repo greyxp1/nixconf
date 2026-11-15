@@ -40,6 +40,7 @@
       ../../../desktop/remote-client.nix
       ../../../desktop/scrcpy.nix
       ../../../desktop/sunshine.nix
+      ../../../core/syncthing.nix
       ../../../core/t3code.nix
       ../../../desktop/termfilechooser.nix
       ../../../desktop/theme.nix

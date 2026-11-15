@@ -6,6 +6,7 @@
   imports = [
     ./core.nix
     ./t3code.nix
+    ./syncthing.nix
     ./helium.nix
     ./niri.nix
     ./sunshine.nix
