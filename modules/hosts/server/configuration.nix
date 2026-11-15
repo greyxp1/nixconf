@@ -16,7 +16,6 @@
   imports = [
     (importTree ../../core)
     ./_modules/jellyfin.nix
-    ./_modules/livesync.nix
     ./_modules/docker/docker.nix
     ./_modules/freedns.nix
     ./_modules/website.nix
