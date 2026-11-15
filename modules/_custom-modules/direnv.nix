@@ -162,6 +162,14 @@ in {
             source ${cfg.nix-direnv.package}/share/nix-direnv/direnvrc
           ''}
 
+          # iets exposes use_flake directly while project .envrc files use use flake.
+          if ! declare -F use >/dev/null; then
+            use() {
+              [[ $1 == flake && $# -le 2 ]] || return 1
+              use_flake "''${2:-.}"
+            }
+          fi
+
           #Load direnvrcExtra
           ${cfg.direnvrcExtra}
 
@@ -187,6 +195,7 @@ in {
         '';
       };
     };
+
   };
   meta.maintainers = with lib.maintainers; [gerg-l];
 }
