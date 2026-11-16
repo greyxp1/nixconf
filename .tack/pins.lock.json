@@ -241,6 +241,14 @@
     "narHash": "sha256-CSYQ71PDu1ba18yrGo1XtxXUI5X1lR1M4fpqEPyVgWI=",
     "lastModified": 1794675770
   },
+  "t3code": {
+    "type": "github",
+    "owner": "greyxp1",
+    "repo": "t3code-flake",
+    "rev": "698857844d847822c827ada4a05ff8ec7a43597e",
+    "narHash": "sha256-BX1rgvK9vsU4c5/cxWgOwKIcfraSncDp7JXrP6hDVEU=",
+    "lastModified": 1794795644
+  },
   "vellum": {
     "type": "github",
     "owner": "greyxp1",

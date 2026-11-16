@@ -77,3 +77,8 @@ url = "gh:greyxp1/rustbg"
 
 [inputs.nix-secrets]
 url = "gh:unnamed-systems/nix-secrets"
+
+[inputs.t3code]
+url = "gh:greyxp1/t3code-flake"
+# Uses its own nixpkgs, so builds match the ones CI uploads to t3code.cachix.org.
+exclude_follow = ["nixpkgs"]
