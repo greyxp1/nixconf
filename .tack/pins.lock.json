@@ -245,9 +245,9 @@
     "type": "github",
     "owner": "greyxp1",
     "repo": "t3code-flake",
-    "rev": "bfdabdc5f59dafdf668910169704709989cc4f0d",
-    "narHash": "sha256-t/g2KFresX8hivCBjNIViBNjhYPkwWOpwI5Q2JknJFw=",
-    "lastModified": 1794800240
+    "rev": "0a2e7067c5c36961527ce381bdf6d9ebf3d27174",
+    "narHash": "sha256-aPFFtv+gv9LMsSd3V6U8fKruha9MzIim3SALnL2D6hE=",
+    "lastModified": 1794803145
   },
   "vellum": {
     "type": "github",
