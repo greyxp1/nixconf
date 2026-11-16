@@ -58,12 +58,12 @@ in {
     ../_custom-modules/browse.nix
     ../_custom-modules/claude-code.nix
     ../_custom-modules/codex.nix
-    ../_custom-modules/t3code.nix
+    inputs.t3code.nixosModules.default
   ];
 
   programs.t3code = {
     enable = true;
-    package = llmAgents.t3code.unwrapped;
+    package = inputs.t3code.packages.${pkgs.stdenv.hostPlatform.system}.nightly;
     server = {
       enable = true;
       target = lib.mkIf graphical "graphical-session.target";
