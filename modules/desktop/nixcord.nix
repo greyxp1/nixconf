@@ -32,6 +32,7 @@
           AddAttachments.enabled = true;
           AlwaysTrust.enabled = true;
           BetterCommands.enabled = true;
+          BetterPollDetails.enabled = true;
           BetterSettings.enabled = true;
           BetterUploadButton.enabled = true;
           ClearURLs.enabled = true;
