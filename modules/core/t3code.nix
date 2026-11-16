@@ -219,6 +219,17 @@ in {
 
         For Niri handoffs, confirm the setup is ready and give the steps, host and exact workspace from `get_session_state`. A completed sign-in does not authorize resuming, so wait for me to return control. Inspect the app again after any handoff.
       '';
+      android-device = ''
+        ---
+        name: android-device
+        description: "Use when building, installing or checking an Android app on my phone."
+        ---
+        Install release builds, since debug builds feel laggy. Build in the project's Nix environment, or a temporary `nix-shell` with a JDK and an `androidenv` SDK whose `GRADLE_OPTS` points `aapt2FromMavenOverride` at the SDK's aapt2. Stop Gradle and Kotlin daemons afterwards, without letting `pkill -f` match its own command.
+
+        My Pixel is on this host's `adb` or, when I'm at school, on Alma through `tailscale ssh grey@alma` with commands wrapped in `bash -c` for its fish shell. Copy the APK to a temporary file there before `adb install`, because `adb shell` consumes stdin. Installing and driving the app under development is authorized, but check `topResumedActivity` on its own before each install or input. When another app is in front, ask through the question UI with a "Continue" choice before taking over the phone.
+
+        T3 device tools cover emulators, so drive the phone with `adb shell input`. Check results with `screencap` scaled down or cropped, `screenrecord` for animations and `uiautomator dump` for coordinates.
+      '';
       school-report = ''
         ---
         name: school-report
