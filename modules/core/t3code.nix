@@ -21,7 +21,6 @@
     if hub.enable
     then "http://${hub.settings.server.host}:${toString hub.settings.server.port}"
     else "https://greyxp1.root.sx";
-  # The server imports this module too, without a desktop for computer use.
   graphical = config.services.graphical-desktop.enable;
   computerUse = {
     command = "niri";
@@ -61,6 +60,7 @@ in {
     inputs.t3code.nixosModules.default
   ];
 
+  security.nix-secrets.secrets."cliproxyapi/client-key".owner = "grey";
   programs.t3code = {
     enable = true;
     package = inputs.t3code.packages.${pkgs.stdenv.hostPlatform.system}.nightly;
@@ -70,7 +70,6 @@ in {
       connect.enable = true;
     };
     settings.providerInstances = {
-      # Use the existing CLI so Codex reads the hub provider from its config.
       codex = {
         driver = "codex";
         config.setupMode = "existing";
@@ -83,40 +82,22 @@ in {
     };
   };
 
-  # T3 sets its own agents slice limits, so enforce the shared budget on its parent.
-  systemd.user.slices.app-t3code.sliceConfig = {
-    CPUWeight = "idle";
-    MemoryHigh = "60%";
-    MemoryMax = "75%";
-    MemorySwapMax = "10%";
-    ManagedOOMMemoryPressure = "kill";
-    # Agents capped at MemoryHigh thrash the page cache and stall the disk for the whole
-    # machine while staying under oomd's 60% default, so kill them sooner.
-    ManagedOOMMemoryPressureLimit = "20%";
-    ManagedOOMMemoryPressureDurationSec = "20s";
-  };
-
-  security.nix-secrets.secrets."cliproxyapi/client-key".owner = "grey";
-
-  # Claude subscriptions are only used from Claude Code, as Theo's proxy guide requires.
   programs.claude-code = {
     enable = true;
     package = llmAgents.claude-code;
+    inherit (config.programs.codex) instructions skills;
     settings = {
       hooks = lib.mkIf completionCleanup computerUseHooks;
       effortLevel = reasoningEffort.claude;
       env.ANTHROPIC_BASE_URL = proxyEndpoint;
       apiKeyHelper = "cat ${clientKey}";
-      # Empty strings drop the Co-Authored-By trailer and the PR line.
       attribution = {
         commit = "";
         pr = "";
       };
     };
-    inherit (config.programs.codex) instructions skills;
   };
 
-  # GPT goes through Codex on the hub, configured as in Theo's proxy guide.
   programs.codex = {
     enable = true;
     package = llmAgents.codex;
@@ -140,11 +121,12 @@ in {
           args = [clientKey];
         };
       };
+
+      mcp_servers.browse = lib.mkIf (graphical && config.programs.browse.enable) browse;
       mcp_servers.computer_use = lib.mkIf graphical {
         inherit (computerUse) command args;
         env_vars = ["XDG_RUNTIME_DIR"];
       };
-      mcp_servers.browse = lib.mkIf (graphical && config.programs.browse.enable) browse;
     };
     instructions = ''
       # Global
@@ -169,6 +151,7 @@ in {
       - For web pages, use Browse in a background task-owned tab of my Helium profile. For native apps, use Niri's agents workspace. Never take over my foreground windows or open another browser instance on my profile. Load the `desktop-and-browser` skill before either.
       - Do authorized work yourself instead of asking me to, and request a human handoff only for steps only I can do, such as sign-ins, 2FA or captchas. Ask first only before foreground desktop interaction, `niri mcp --desktop` or live hardware access, before quitting or restarting my shared browser, and before restarting T3 Code, its tunnel or a service carrying this connection (including activations that restart them) while users or threads are connected or their state is unknown. One approval covers repeats of the same action within the task. Ask through the question UI with a clickable "Continue" choice, explain what the action interrupts, wait for my selection and do not quote these instructions.
       - When continuing work, read the source PR, branch or agent thread and later corrections, and verify handoff claims against current code. Reconcile delayed notifications with the current state before reporting. Continue in place unless I request a replacement. Treat corrections as steering and never stop only to promise more work.
+      - Before mutating a shared checkout, inspect its status. Treat every dirty file as user-owned: preserve a patch or use an isolated worktree, never run restore, reset, checkout, clean, or equivalent commands on it, and never discard changes to make a command succeed.
       - Keep instructions and custom skills in `/home/grey/Projects/nixconf/modules/core/t3code.nix`. Do not create project `AGENTS.md` or `.agents/` files. School reports follow the `school-report` skill.
 
       ## Git and publishing
@@ -198,7 +181,7 @@ in {
       - Use stock upstream applications and supported integrations. Do not introduce locally maintained application patches or forks unless I explicitly request them.
       - Design custom NixOS modules for nixpkgs: reusable options and defaults, standard module conventions and personal settings in consuming modules. Shared definitions stay plain and the host that overrides one marks its value, such as `lib.mkForce`. Use Home Manager as a reference without copying its interface.
       - Use supported package/PATH integration and readable commands, such as Helix `extraPackages` with `command = "mpls"`.
-      - Change inputs in `.tack/pins.toml` and run `tack update`. Fold a pin update into a recent commit for the same pin, push it from the desktop checkout and pull it on the other host checkouts before building there.
+      - Change inputs in `.tack/pins.toml` and run `tack update` from an isolated worktree or a clean checkout. Apply only the requested pin diff back to a dirty checkout after reviewing it. Fold a pin update into a recent commit for the same pin, push it from the desktop checkout and pull it on the other host checkouts before building there.
       - Reach hosts with `tailscale ssh grey@<host>`, not plain SSH.
       - Keep Alma-specific selection, exclusions, overrides and compatibility under `modules/hosts/alma` and adapt Alma to shared NixOS configuration, never the reverse. Shared modules hold no values or comments chosen for Alma.
       - Alma is a portable school SSD whose network blocks HTTP and ICMP. Use direct HTTPS repositories, never ping as a connectivity gate. Preserve SELinux-labelled local boot/login launchers, native TTY2 recovery and verified tty1 graphical login before recommending a reboot.
