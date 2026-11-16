@@ -179,6 +179,7 @@ in {
 
       ## nixconf `/home/grey/Projects/nixconf`
       - Use stock upstream applications and supported integrations. Do not introduce locally maintained application patches or forks unless I explicitly request them.
+      - Keep host-specific behavior and compatibility fixes under `modules/hosts/<host>`, not shared modules.
       - Design custom NixOS modules for nixpkgs: reusable options and defaults, standard module conventions and personal settings in consuming modules. Shared definitions stay plain and the host that overrides one marks its value, such as `lib.mkForce`. Use Home Manager as a reference without copying its interface.
       - Use supported package/PATH integration and readable commands, such as Helix `extraPackages` with `command = "mpls"`.
       - Change inputs in `.tack/pins.toml` and run `tack update` from an isolated worktree or a clean checkout. Apply only the requested pin diff back to a dirty checkout after reviewing it. Fold a pin update into a recent commit for the same pin, push it from the desktop checkout and pull it on the other host checkouts before building there.

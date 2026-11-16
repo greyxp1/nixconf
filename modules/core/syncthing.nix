@@ -7,6 +7,7 @@
   # `syncthing device-id --home ~/.config/syncthing`, store its cert.pem and key.pem with
   # `nix-secrets edit syncthing/<host>/{cert,key}`, then rebuild every host.
   devices = {
+    alma = "PTNZ5IT-GV5PIGJ-Z5THHTM-C27MPWU-NEAR3GE-M5C2DF7-RHWYIEW-F3SGHAW";
     desktop = "SZPGBLD-JSMNNQT-FBKOBQ4-2ZTKES4-CWYCHJP-IAX4KC4-AMB2F3Z-ODYBYQL";
     server = "OAETKIB-GLNECRC-YMOWH6H-J4RMOBQ-NUMUFPK-FDPB47E-3EAUTGX-DSSKCAT";
     laptop = "55HVKIA-5JTEWB7-63HKSBZ-NFWG6AU-2IHWSDB-H5AUQUV-P4CMJ7Q-WSSTLAZ";
