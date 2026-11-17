@@ -1,11 +1,11 @@
 {
   "browse": {
     "type": "github",
-    "owner": "anomalyco",
-    "repo": "browse",
-    "rev": "ac696c86573dbd97033ee2abdc70526a4b417e0d",
-    "narHash": "sha256-r9l14z5cWxAXy2/ME1pFEZ++u9PO53+Xk9CwHdISyas=",
-    "lastModified": 1794680598
+    "owner": "greyxp1",
+    "repo": "browse-flake",
+    "rev": "8e2d5546d479ee26b0aab69f946b20b562346572",
+    "narHash": "sha256-0kb2cEcu+IXKVTstLyOKV0z9rOGDRqe7tBpOcvZTs+w=",
+    "lastModified": 1794957004
   },
   "catppuccin": {
     "type": "github",

@@ -69,9 +69,6 @@ url = "gh:greyxp1/hydro"
 type = "fetch"
 [inputs.cliproxyapi]
 url = "gh:greyxp1/CLIProxyAPI"
-[inputs.browse]
-url = "gh:anomalyco/browse/v0.0.17"
-type = "fetch"
 [inputs.rustbg]
 url = "gh:greyxp1/rustbg"
 
@@ -82,3 +79,6 @@ url = "gh:unnamed-systems/nix-secrets"
 url = "gh:greyxp1/t3code-flake"
 # Uses its own nixpkgs, so builds match the ones CI uploads to t3code.cachix.org.
 exclude_follow = ["nixpkgs"]
+
+[inputs.browse]
+url = "gh:greyxp1/browse-flake"

@@ -1,16 +1,13 @@
 {
   inputs,
   config,
-  pkgs,
   ...
 }: {
-  imports = [inputs.helium.nixosModules.helium ./nixcord.nix ../_custom-modules/browse.nix];
+  imports = [inputs.helium.nixosModules.helium ./nixcord.nix];
   programs.browse = {
     enable = true;
-    package = pkgs.callPackage ./_browse {source = inputs.browse;};
     settings = {
       window = "current";
-      cursor = "always";
       humanInput = true;
     };
   };

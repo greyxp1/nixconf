@@ -54,7 +54,7 @@
   });
 in {
   imports = [
-    ../_custom-modules/browse.nix
+    inputs.browse.nixosModules.default
     ../_custom-modules/claude-code.nix
     ../_custom-modules/codex.nix
     inputs.t3code.nixosModules.default
@@ -211,7 +211,7 @@ in {
         name: desktop-and-browser
         description: "Use before driving web pages with Browse or native apps and isolated sessions with Niri computer use."
         ---
-        Browse drives my existing Helium profile when paired. Manage it through Nix, not `browse install` or `browse update`. Create a named session per thread, pass its id on every call and delete it when finished, preserving pending handoffs and other sessions. Close only task-owned tabs I have neither taken over nor asked to keep. Browse does not isolate memory from my shared browser, so keep workloads bounded and stop if memory pressure rises. Check the active account and ongoing calls before reloads or joins. Investigate account, extension or profile failures in my existing profile, preserving its sign-ins, extensions and settings. If Helium needs opening or an approved restart, use the configured launcher and never force another process onto its live profile. Check installed browsers before fetching another.
+        Browse drives my existing Helium profile when paired. Manage it through Nix. Open a background tab for the task and pass its tab ID on every call that targets it. Close only task-owned tabs when finished, preserving pending handoffs and tabs I have taken over or asked to keep. Browse does not isolate memory from my shared browser, so keep workloads bounded and stop if memory pressure rises. Check the active account and ongoing calls before reloads or joins. Investigate account, extension or profile failures in my existing profile, preserving its sign-ins, extensions and settings. If Helium needs opening or an approved restart, use the configured launcher and never force another process onto its live profile. Check installed browsers before fetching another.
 
         Niri handles native applications, browser chrome and isolated sessions. Default to its agents workspace with normal desktop apps and no filesystem isolation. Use an isolated session only when clean state, filesystem or app-profile separation or resource containment is needed, such as installed Helium with a temporary profile. The project stays writable while temporary home and app profiles disappear at disconnect. Prefer Wayland, or a private Xvfb display for isolated X11 work.
 
