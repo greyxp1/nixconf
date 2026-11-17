@@ -76,8 +76,7 @@ in {
       };
       claudeAgent = {
         driver = "claudeAgent";
-        # T3 only lists skills from user, project and added dirs, not Claude's managed dir.
-        config.launchArgs = "${lib.optionalString graphical "--mcp-config ${claudeMcpConfig} "}--add-dir=/etc/claude-code";
+        config.launchArgs = lib.mkIf graphical "--mcp-config ${claudeMcpConfig}";
       };
     };
   };
