@@ -32,7 +32,11 @@
 in {
   virtualisation.oci-containers.containers.pelican = {
     image = "ghcr.io/pelican/panel@sha256:46f356f3fda423b1d43f0dc3c71efc056cd8b9bec365d1d7817306a17ee5694a";
-    extraOptions = ["--network=host" "--add-host=server.tail1785c.ts.net:100.72.114.84"];
+    extraOptions = [
+      "--network=host"
+      "--add-host=server.tail1785c.ts.net:100.72.114.84"
+      "--health-cmd=curl -fsS http://127.0.0.1:18080/up >/dev/null"
+    ];
     volumes = [
       "/home/grey/.local/share/pelican:/pelican-data"
       "${caddyConfig}:/etc/caddy/Caddyfile:ro"
