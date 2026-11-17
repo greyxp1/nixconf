@@ -11,22 +11,24 @@
       install -Dm755 "$src" "$out/bin/pelican-wings"
     '';
   };
+  panelPort = 18080;
+  phpSocket = "/tmp/pelican-php-fpm.sock";
   caddyConfig = pkgs.writeText "pelican-Caddyfile" ''
     {
       admin off
       auto_https off
     }
-    http://:18080 {
+    http://:${toString panelPort} {
       bind 127.0.0.1
       root * /var/www/html/public
       encode gzip
       file_server
-      php_fastcgi unix//tmp/pelican-php-fpm.sock
+      php_fastcgi unix/${phpSocket}
     }
   '';
   phpConfig = pkgs.writeText "pelican-php-fpm.conf" ''
     [www]
-    listen = /tmp/pelican-php-fpm.sock
+    listen = ${phpSocket}
     listen.mode = 0600
   '';
 in {
@@ -35,7 +37,7 @@ in {
     extraOptions = [
       "--network=host"
       "--add-host=server.tail1785c.ts.net:100.72.114.84"
-      "--health-cmd=curl -fsS http://127.0.0.1:18080/up >/dev/null"
+      "--health-cmd=curl -fsS -o /dev/null http://127.0.0.1:${toString panelPort}/up"
     ];
     volumes = [
       "/home/grey/.local/share/pelican:/pelican-data"
@@ -98,7 +100,7 @@ in {
       RestartSec = 5;
     };
     script = ''
-      ${pkgs.tailscale}/bin/tailscale serve --bg --https=8444 http://127.0.0.1:18080
+      ${pkgs.tailscale}/bin/tailscale serve --bg --https=8444 http://127.0.0.1:${toString panelPort}
       ${pkgs.tailscale}/bin/tailscale serve --bg --https=8445 http://127.0.0.1:18081
     '';
   };

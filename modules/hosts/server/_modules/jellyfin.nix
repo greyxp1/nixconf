@@ -17,7 +17,6 @@
     }
   ];
   systemd.tmpfiles.rules = [
-    "z /var/lib/jellyfin 0700 jellyfin jellyfin -"
     "Z /var/lib/jellyfin - jellyfin jellyfin -"
     "d /home/grey/Videos 0755 grey users -"
     "d /home/grey/Videos/Movies 0755 grey users -"

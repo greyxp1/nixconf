@@ -4,7 +4,7 @@
       wrap json
       fields {
         request>headers delete
-        request>uri regexp [\?].* ""
+        request>uri regexp [?].* ""
         resp_headers delete
       }
     }
