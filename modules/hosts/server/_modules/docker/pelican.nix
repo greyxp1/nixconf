@@ -11,26 +11,38 @@
       install -Dm755 "$src" "$out/bin/pelican-wings"
     '';
   };
+  panelPort = 18080;
+  phpSocket = "/tmp/pelican-php-fpm.sock";
   caddyConfig = pkgs.writeText "pelican-Caddyfile" ''
     {
       admin off
       auto_https off
     }
-    http://:18080 {
+    http://:${toString panelPort} {
       bind 127.0.0.1
       root * /var/www/html/public
       encode gzip
       file_server
-      php_fastcgi 127.0.0.1:9000
+      php_fastcgi unix/${phpSocket}
     }
+  '';
+  phpConfig = pkgs.writeText "pelican-php-fpm.conf" ''
+    [www]
+    listen = ${phpSocket}
+    listen.mode = 0600
   '';
 in {
   virtualisation.oci-containers.containers.pelican = {
     image = "ghcr.io/pelican/panel@sha256:46f356f3fda423b1d43f0dc3c71efc056cd8b9bec365d1d7817306a17ee5694a";
-    extraOptions = ["--network=host" "--add-host=server.tail1785c.ts.net:100.72.114.84"];
+    extraOptions = [
+      "--network=host"
+      "--add-host=server.tail1785c.ts.net:100.72.114.84"
+      "--health-cmd=curl -fsS -o /dev/null http://127.0.0.1:${toString panelPort}/up"
+    ];
     volumes = [
       "/home/grey/.local/share/pelican:/pelican-data"
       "${caddyConfig}:/etc/caddy/Caddyfile:ro"
+      "${phpConfig}:/usr/local/etc/php-fpm.d/zzz-nixos.conf:ro"
     ];
     environment = {
       APP_URL = "https://server.tail1785c.ts.net:8444";
@@ -88,7 +100,7 @@ in {
       RestartSec = 5;
     };
     script = ''
-      ${pkgs.tailscale}/bin/tailscale serve --bg --https=8444 http://127.0.0.1:18080
+      ${pkgs.tailscale}/bin/tailscale serve --bg --https=8444 http://127.0.0.1:${toString panelPort}
       ${pkgs.tailscale}/bin/tailscale serve --bg --https=8445 http://127.0.0.1:18081
     '';
   };
