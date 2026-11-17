@@ -73,13 +73,6 @@ in {
     after = ["docker.service" "preservation.target" "network-online.target"];
     wants = ["network-online.target"];
     path = [pkgs.shadow pkgs.iproute2];
-    # Wings resumes games marked as running even with Docker's restart policy disabled.
-    preStart = ''
-      states=/home/grey/.local/share/pelican-wings/states.json
-      if [ -f "$states" ] && ${pkgs.jq}/bin/jq 'del(."09ec812f-82d9-44d7-b261-c534de442cda")' "$states" > "$states.next"; then
-        mv -f "$states.next" "$states"
-      fi
-    '';
     unitConfig = {
       ConditionPathExists = "/persistent/secrets/pelican/config.yml";
       RequiresMountsFor = ["/home/grey/Games/Pelican" "/home/grey/Backups/Games"];
