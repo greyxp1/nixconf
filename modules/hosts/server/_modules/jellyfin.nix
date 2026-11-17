@@ -3,12 +3,12 @@
     enable = true;
   };
   users.users.jellyfin.extraGroups = ["render" "video"];
-  networking.firewall.allowedTCPPorts = [8097 8921];
   preservation.preserveAt."/persistent".directories = [
     {
       directory = "/var/lib/jellyfin";
       user = "jellyfin";
       group = "jellyfin";
+      mode = "0700";
     }
     {
       directory = "/var/cache/jellyfin";
@@ -30,6 +30,8 @@
       ${pkgs.xmlstarlet}/bin/xmlstarlet ed --inplace \
         --update /NetworkConfiguration/BaseUrl --value /jellyfin \
         --update /NetworkConfiguration/EnableUPnP --value false \
+        --delete /NetworkConfiguration/LocalNetworkAddresses/string \
+        --subnode /NetworkConfiguration/LocalNetworkAddresses --type elem --name string --value 127.0.0.1 \
         --delete /NetworkConfiguration/KnownProxies/string \
         --subnode /NetworkConfiguration/KnownProxies --type elem --name string --value 127.0.0.1 \
         /var/lib/jellyfin/config/network.xml

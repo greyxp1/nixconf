@@ -1,14 +1,30 @@
-{pkgs, ...}: {
+{pkgs, ...}: let
+  privateLogFormat = ''
+    format filter {
+      wrap json
+      fields {
+        request>headers delete
+        request>uri regexp [?].* ""
+        resp_headers delete
+      }
+    }
+  '';
+in {
   services.caddy = {
     enable = true;
     openFirewall = true;
     globalConfig = ''
       default_bind 192.168.1.2
     '';
+    logFormat = ''
+      level ERROR
+      ${privateLogFormat}
+    '';
     virtualHosts."greyxp1.root.sx" = {
-      logFormat = null;
+      logFormat = privateLogFormat;
       extraConfig = ''
         encode zstd gzip
+        header Strict-Transport-Security "max-age=31536000"
         handle /favicon.svg {
           root * ${pkgs.writeTextDir "favicon.svg" ''
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
