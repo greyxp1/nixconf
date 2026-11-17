@@ -21,8 +21,13 @@
       root * /var/www/html/public
       encode gzip
       file_server
-      php_fastcgi 127.0.0.1:9000
+      php_fastcgi unix//tmp/pelican-php-fpm.sock
     }
+  '';
+  phpConfig = pkgs.writeText "pelican-php-fpm.conf" ''
+    [www]
+    listen = /tmp/pelican-php-fpm.sock
+    listen.mode = 0600
   '';
 in {
   virtualisation.oci-containers.containers.pelican = {
@@ -31,6 +36,7 @@ in {
     volumes = [
       "/home/grey/.local/share/pelican:/pelican-data"
       "${caddyConfig}:/etc/caddy/Caddyfile:ro"
+      "${phpConfig}:/usr/local/etc/php-fpm.d/zzz-nixos.conf:ro"
     ];
     environment = {
       APP_URL = "https://server.tail1785c.ts.net:8444";
@@ -63,6 +69,16 @@ in {
     after = ["docker.service" "preservation.target" "network-online.target"];
     wants = ["network-online.target"];
     path = [pkgs.shadow pkgs.iproute2];
+    preStart = ''
+      states=/home/grey/.local/share/pelican-wings/states.json
+      if [ -f "$states" ]; then
+        next=$(mktemp "$states.XXXXXX")
+        trap 'rm -f "$next"' EXIT
+        # Wings restores cached running games even when Docker's restart policy is disabled.
+        ${pkgs.jq}/bin/jq 'del(."09ec812f-82d9-44d7-b261-c534de442cda")' "$states" > "$next"
+        mv -f "$next" "$states"
+      fi
+    '';
     unitConfig = {
       ConditionPathExists = "/persistent/secrets/pelican/config.yml";
       RequiresMountsFor = ["/home/grey/Games/Pelican" "/home/grey/Backups/Games"];
