@@ -15,5 +15,6 @@
     after = ["network-online.target" "preservation.target"];
     wants = ["network-online.target"];
     requires = ["preservation.target"];
+    unitConfig.ConditionPathExists = config.services.ddclient.passwordFile;
   };
 }

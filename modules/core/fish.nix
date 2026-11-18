@@ -59,14 +59,6 @@
         cd "$previous_dir"
         return $update_status
       '';
-
-      restore-ssh-key.body = ''
-        mkdir -p ~/.ssh; and chmod 700 ~/.ssh; or return
-        echo 'Paste your SSH private key, then press Ctrl+D:'
-        cat > ~/.ssh/id_ed25519
-        chmod 600 ~/.ssh/id_ed25519
-        ssh-add ~/.ssh/id_ed25519
-      '';
     };
   };
 }

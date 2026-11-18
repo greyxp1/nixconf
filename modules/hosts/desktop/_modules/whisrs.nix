@@ -18,6 +18,7 @@
     groq.model = "whisper-large-v3";
   };
 in {
+  security.nix-secrets.secrets."desktop/whisrs".owner = "grey";
   environment.systemPackages = [pkgs.whisrs];
   programs.niri.settings.binds."Mod+Space" = {
     action.spawn = ["whisrs" "toggle"];
@@ -26,7 +27,6 @@ in {
   users.users.grey.extraGroups = ["uinput"];
   systemd.user.tmpfiles.rules = [
     "d %h/.config/whisrs 0700 - - -"
-    "f %h/.config/whisrs/credentials 0600 - - -"
   ];
   systemd.user.services.whisrs = {
     description = "Headless voice dictation";
@@ -35,10 +35,11 @@ in {
     wantedBy = ["graphical-session.target"];
     path = [pkgs.whisrs pkgs.wl-clipboard config.programs.niri.package];
     restartTriggers = [configFile];
+    unitConfig.ConditionPathExists = config.security.nix-secrets.secrets."desktop/whisrs".path;
     serviceConfig = {
       ExecStartPre = "${pkgs.coreutils}/bin/ln -sfn ${configFile} %h/.config/whisrs/config.toml";
       ExecStart = "${lib.getExe' pkgs.whisrs "whisrsd"}";
-      EnvironmentFile = "-%h/.config/whisrs/credentials";
+      EnvironmentFile = config.security.nix-secrets.secrets."desktop/whisrs".path;
       Restart = "on-failure";
       RestartSec = 3;
     };

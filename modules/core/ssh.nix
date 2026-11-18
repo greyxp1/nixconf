@@ -1,4 +1,8 @@
-{
+{config, lib, ...}: {
+  security.nix-secrets.secrets = lib.mkIf config.security.nix-secrets.enable {
+    "git/ssh-key".owner = "grey";
+  };
+
   programs.ssh = {
     startAgent = true;
     extraConfig = ''
@@ -14,7 +18,9 @@
         UpdateHostKeys no
       Host github.com gitlab.com codeberg.org
         User git
-        IdentityFile ~/.ssh/id_ed25519
+        IdentityFile ${if config.security.nix-secrets.enable
+          then config.security.nix-secrets.secrets."git/ssh-key".path
+          else "~/.ssh/id_ed25519"}
     '';
   };
 }

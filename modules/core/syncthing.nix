@@ -26,6 +26,7 @@ in {
     owner = "grey";
     group = "users";
   }));
+  systemd.services.syncthing.unitConfig.ConditionPathExists = lib.mkIf (storedIdentity && secrets.activate.method == "systemd") secrets.secrets.${identity.key}.path;
   services.syncthing = {
     enable = true;
     cert = lib.mkIf storedIdentity secrets.secrets.${identity.cert}.path;

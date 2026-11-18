@@ -1,4 +1,11 @@
-{importTree, ...}: {
+{
+  config,
+  importTree,
+  ...
+}: let
+  secrets = config.security.nix-secrets.secrets;
+  tailscaleState = "/var/lib/tailscale/tailscaled.state";
+in {
   hardware.cpu.amd.updateMicrocode = true;
   powerManagement.cpuFreqGovernor = "performance";
   boot = {
@@ -18,6 +25,14 @@
     enable = true;
     config.default_sched = "scx_cosmos";
   };
+
+  security.nix-secrets.secrets."desktop/tailscale-state" = {};
+
+  # The first login works without secrets. Seed client state when it becomes available.
+  systemd.tmpfiles.rules = [
+    "C- ${tailscaleState} 0600 root root - ${secrets."desktop/tailscale-state".path}"
+  ];
+  systemd.services.tailscaled.unitConfig.ConditionPathExists = tailscaleState;
 
   imports = [
     (importTree ../../core)

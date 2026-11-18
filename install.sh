@@ -44,9 +44,6 @@ fi
 read -rp "Type WIPE to erase $DEV: " confirm < /dev/tty
 [[ $confirm == WIPE ]] || { echo "Aborted"; exit 1; }
 PASSWORD_HASH=$(mkpasswd --method=yescrypt < /dev/tty)
-read -rsp "Age key (AGE-SECRET-KEY-...): " AGE_KEY < /dev/tty
-echo
-[[ $AGE_KEY == AGE-SECRET-KEY-1* ]] || { echo "Not an age secret key" >&2; exit 1; }
 
 WORK_DIR=$(mktemp -d -t nixconf.XXXXXX)
 INSTALL_MANAGES_MNT=false
@@ -74,6 +71,18 @@ NIX_OPTS=(
   --option extra-trusted-public-keys "$(cache_attr trusted-public-keys)"
 )
 
+needs_age_key=$(nix eval "${NIX_OPTS[@]}" --json \
+  "$WORK_DIR#nixosConfigurations.$HOST.config" \
+  --apply 'config:
+    let secrets = config.security.nix-secrets or null; in
+    secrets != null && secrets.enable && secrets.activate.enable &&
+    secrets.activate.method == "activationScripts"')
+if [[ $needs_age_key == true ]]; then
+  IFS= read -rsp "Age key (AGE-SECRET-KEY-...): " AGE_KEY < /dev/tty
+  echo
+  [[ $AGE_KEY =~ ^AGE-SECRET-KEY-1[0-9A-Z]+$ ]] || { echo "Not an age secret key" >&2; exit 1; }
+fi
+
 if [[ $HOST == laptop ]]; then
   GRUB_DEVICE=$(nix eval "${NIX_OPTS[@]}" --raw "$WORK_DIR#nixosConfigurations.laptop.config.boot.loader.grub.devices" --apply builtins.head)
   [[ $DEV -ef $GRUB_DEVICE ]] || { echo "The laptop bootloader requires $GRUB_DEVICE" >&2; exit 1; }
@@ -87,17 +96,18 @@ INSTALL_MANAGES_MNT=true
 # Format first so nixos-install builds on disk instead of in the ISO's RAM.
 sudo nix run "${NIX_OPTS[@]}" "$WORK_DIR#disko" -- \
   --flake "$WORK_DIR#$HOST" --mode destroy,format,mount --yes-wipe-all-disks
-sudo install -d -m700 /mnt/persistent/passwords
 # /tmp bind-mounts this at boot, before tmpfiles could create it.
 sudo install -d -m1777 /mnt/persistent/tmp
+sudo install -d -m700 /mnt/persistent/passwords
 printf '%s\n' "$PASSWORD_HASH" | sudo tee /mnt/persistent/passwords/grey >/dev/null
 sudo chmod 600 /mnt/persistent/passwords/grey
 unset PASSWORD_HASH
-# nix-secrets decrypts with this key during activation.
-sudo install -d -m700 /mnt/persistent/secrets
-printf '%s\n' "$AGE_KEY" | sudo tee /mnt/persistent/secrets/age.key >/dev/null
-sudo chmod 600 /mnt/persistent/secrets/age.key
-unset AGE_KEY
+if [[ $needs_age_key == true ]]; then
+  sudo install -d -m700 /mnt/persistent/secrets
+  printf '%s\n' "$AGE_KEY" | sudo tee /mnt/persistent/secrets/age.key >/dev/null
+  sudo chmod 600 /mnt/persistent/secrets/age.key
+  unset AGE_KEY
+fi
 sudo nixos-install "${NIX_OPTS[@]}" --root /mnt --flake "$WORK_DIR#$HOST" --no-root-passwd --no-channel-copy
 sudo install -d -o 1000 -g 100 /mnt/home/grey/Projects
 sudo cp -rT "$WORK_DIR" /mnt/home/grey/Projects/nixconf

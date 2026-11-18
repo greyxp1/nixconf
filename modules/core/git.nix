@@ -1,8 +1,35 @@
 {
+  config,
   inputs,
+  lib,
   pkgs,
   ...
-}: {
+}: let
+  githubHosts = config.security.nix-secrets.secrets."github/hosts";
+in {
+  security.nix-secrets.secrets = lib.mkIf config.security.nix-secrets.enable {
+    "github/hosts".owner = "grey";
+  };
+  systemd.user.services.restore-github-credentials = lib.mkIf config.security.nix-secrets.enable {
+    description = "Restore GitHub CLI credentials";
+    # The user manager reports readiness when basic.target is reached.
+    wantedBy = ["basic.target"];
+    before = ["basic.target"];
+    unitConfig = {
+      ConditionPathExists = [githubHosts.path "!%h/.config/gh/hosts.yml"];
+      ConditionUser = githubHosts.owner;
+      DefaultDependencies = false;
+    };
+    serviceConfig.Type = "oneshot";
+    script = ''
+      directory="$HOME/.config/gh"
+      mkdir -p -m 0700 -- "$directory"
+      temporary=$(mktemp -- "$directory/.hosts.XXXXXXXX")
+      trap 'rm -f -- "$temporary"' EXIT
+      install -m 0600 -- ${lib.escapeShellArg githubHosts.path} "$temporary"
+      ln -T -- "$temporary" "$directory/hosts.yml" || test -e "$directory/hosts.yml"
+    '';
+  };
   environment.systemPackages = [pkgs.gh pkgs.delta];
   programs = {
     git = {
