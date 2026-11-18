@@ -1,5 +1,7 @@
 {
+  config,
   inputs,
+  lib,
   pkgs,
   ...
 }: {
@@ -13,10 +15,7 @@
     vellum.enable = true;
     greetd = {
       enable = true;
-      settings.default_session = {
-        command = "niri-session";
-        user = "grey";
-      };
+      settings.default_session.command = "${lib.getExe' config.services.greetd.package "agreety"} --cmd niri-session";
     };
     niri-screenshare = {
       enable = true;
