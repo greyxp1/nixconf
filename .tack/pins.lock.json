@@ -19,9 +19,9 @@
     "type": "github",
     "owner": "greyxp1",
     "repo": "CLIProxyAPI",
-    "rev": "120b4a58157a2b1ee8b6ff560f12931d76cb5108",
-    "narHash": "sha256-TUx532rWIezFveWeRpUkshbNw8+P25iZ9JzrVlrFmnU=",
-    "lastModified": 1794945929
+    "rev": "77c20672bcfeb6fc8b9f84c6183efc1a028cef8b",
+    "narHash": "sha256-Yy6s7V3vr8bxX2LaXivvCJHmIzxmxkcRYCOJNviyyTs=",
+    "lastModified": 1794961024
   },
   "compress-yazi": {
     "type": "github",
@@ -67,17 +67,17 @@
     "type": "github",
     "owner": "numtide",
     "repo": "iets",
-    "rev": "9820c971a602519a297c533129050e93f691a0d4",
-    "narHash": "sha256-TAGS0nMDv1bKoMPHRrbnZAvJskyDiEMCVfvLd6BOyYE=",
-    "lastModified": 1794247071
+    "rev": "ff1c8e3ba1dce70f6efd3e4f86c2575d7a0f870e",
+    "narHash": "sha256-NCtSuiwGfT5EgPNzzHJ4vzkX8HhwBoOZMz/p7C5RIhM=",
+    "lastModified": 1794959966
   },
   "llm-agents": {
     "type": "github",
     "owner": "numtide",
     "repo": "llm-agents.nix",
-    "rev": "60ed0dea6b10ed77643c51ff170f7828625202a6",
-    "narHash": "sha256-YKt88NJKq7AG5WwY7uH545Da3JYbov8C/R9+f26sPdg=",
-    "lastModified": 1794955590
+    "rev": "e5211f128936223dc192a2b1e139bfa996ec4550",
+    "narHash": "sha256-HW455Z57n1KpvSrUBCxGW+Mg0bT5Lw8MeYkw0VCahp8=",
+    "lastModified": 1794956402
   },
   "monstar": {
     "type": "github",
@@ -188,9 +188,9 @@
     "type": "github",
     "owner": "greyxp1",
     "repo": "perch",
-    "rev": "bd3aa365b9f60520d5182282665c100cad7c4407",
-    "narHash": "sha256-gvGg3iTRU3SbOBkciO/hYSOXmJOuJY52hO7dJBGK8xk=",
-    "lastModified": 1794854156
+    "rev": "1cbb1129f5448028b3baa38b6533b0e99271538c",
+    "narHash": "sha256-+HmCvrlE4gJLXCIOlZoMZGypbgedxPz0jCZhxLUH31U=",
+    "lastModified": 1794962453
   },
   "preservation": {
     "type": "github",
