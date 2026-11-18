@@ -21,7 +21,7 @@
 
   imports = [
     (importTree ../../core)
-    (importTree ../../desktop)
+    (importTree ../../graphical)
     ./_modules/sshfs.nix
     ./_modules/sunshine.nix
     ./_modules/noctalia.nix

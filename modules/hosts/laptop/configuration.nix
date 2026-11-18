@@ -6,7 +6,7 @@
 }: {
   imports = [
     (importTree ../../core)
-    (importTree ../../desktop)
+    (importTree ../../graphical)
     ./_hardware.nix
     ./_network.nix
   ];

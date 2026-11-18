@@ -31,20 +31,20 @@
       ../../../core/fish.nix
       ../../../core/ssh.nix
       ../../../core/yazi.nix
-      ../../../desktop/helium.nix
-      ../../../desktop/monstar.nix
-      ../../../desktop/mpv.nix
-      ../../../desktop/niri.nix
-      ../../../desktop/noctalia/noctalia.nix
-      ../../../desktop/wallpaper.nix
-      ../../../desktop/remote-client.nix
-      ../../../desktop/scrcpy.nix
-      ../../../desktop/sunshine.nix
+      ../../../graphical/helium.nix
+      ../../../graphical/monstar.nix
+      ../../../graphical/mpv.nix
+      ../../../graphical/niri.nix
+      ../../../graphical/noctalia/noctalia.nix
+      ../../../graphical/wallpaper.nix
+      ../../../graphical/remote-client.nix
+      ../../../graphical/scrcpy.nix
+      ../../../graphical/sunshine.nix
       ../../../core/secrets.nix
       ../../../core/syncthing.nix
       ../../../core/t3code.nix
-      ../../../desktop/termfilechooser.nix
-      ../../../desktop/theme.nix
+      ../../../graphical/termfilechooser.nix
+      ../../../graphical/theme.nix
       ({config, ...}: let
         resizeDisk = widget: widget // lib.optionalAttrs ((widget.type or "") == "disk") {ratio = 2;} // lib.optionalAttrs (widget ? child) {child = map resizeDisk widget.child;};
       in {

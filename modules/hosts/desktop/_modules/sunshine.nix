@@ -5,7 +5,7 @@
   utils,
   ...
 }: let
-  display = import ../../../desktop/_sunshine-display.nix {inherit pkgs;};
+  display = import ../../../graphical/_sunshine-display.nix {inherit pkgs;};
   prepCommands = builtins.toJSON [
     {
       do = "${lib.getExe display} start";

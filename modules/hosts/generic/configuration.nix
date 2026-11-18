@@ -1,7 +1,7 @@
 {importTree, ...}: {
   imports = [
     (importTree ../../core)
-    (importTree ../../desktop)
+    (importTree ../../graphical)
   ];
 
   services.qemuGuest.enable = true;
