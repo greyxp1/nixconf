@@ -52,14 +52,7 @@
     };
   };
 
-  services = {
-    irqbalance.enable = true;
-    journald.settings.Journal = {
-      SystemMaxUse = "500M";
-      MaxFileSec = "1week";
-    };
-  };
-
+  services.irqbalance.enable = true;
   zramSwap.enable = true;
   boot.kernel.sysctl = {
     "vm.swappiness" = 100;

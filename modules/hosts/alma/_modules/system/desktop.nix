@@ -10,65 +10,57 @@
     paths = with pkgs; [mesa libglvnd libvdpau-va-gl intel-media-driver];
   };
 in {
-  environment.etc = {
-    "polkit-1/rules.d/50-nixconf-udisks2.rules" = {
+  environment.etc =
+    {
+      "polkit-1/rules.d/50-nixconf-udisks2.rules" = {
+        mode = "0644";
+        replaceExisting = true;
+        text = ''
+          polkit.addRule(function(action, subject) {
+            if (subject.isInGroup("wheel") && action.id.startsWith("org.freedesktop.udisks2.")) {
+              return polkit.Result.YES;
+            }
+          });
+        '';
+      };
+      "sysctl.d/90-nixconf.conf" = {
+        mode = "0644";
+        replaceExisting = true;
+        text = ''
+          vm.swappiness=100
+          vm.page-cluster=0
+        '';
+      };
+      "tmpfiles.d/non-nixos-gpu.conf" = {
+        mode = "0644";
+        replaceExisting = true;
+        text = ''
+          L+ /run/opengl-driver - - - - ${drivers}
+        '';
+      };
+      "systemd/zram-generator.conf" = {
+        mode = "0644";
+        replaceExisting = true;
+        text = ''
+          [zram0]
+          zram-size = ram / 2
+          compression-algorithm = zstd
+          swap-priority = 5
+        '';
+      };
+    }
+    // lib.genAttrs (map (service: "systemd/user/${service}.service.d/native-data.conf") [
+      "pipewire"
+      "pipewire-pulse"
+      "wireplumber"
+    ]) (_: {
       mode = "0644";
       replaceExisting = true;
       text = ''
-        polkit.addRule(function(action, subject) {
-          if (subject.isInGroup("wheel") && action.id.startsWith("org.freedesktop.udisks2.")) {
-            return polkit.Result.YES;
-          }
-        });
+        [Service]
+        Environment=XDG_DATA_DIRS=/usr/local/share:/usr/share
       '';
-    };
-    "systemd/journald.conf.d/nixconf.conf" = {
-      mode = "0644";
-      replaceExisting = true;
-      text = ''
-        [Journal]
-        Storage=persistent
-        SystemMaxUse=500M
-        MaxFileSec=1week
-      '';
-    };
-    "sysctl.d/90-nixconf.conf" = {
-      mode = "0644";
-      replaceExisting = true;
-      text = ''
-        vm.swappiness=100
-        vm.page-cluster=0
-      '';
-    };
-    "tmpfiles.d/non-nixos-gpu.conf" = {
-      mode = "0644";
-      replaceExisting = true;
-      text = ''
-        L+ /run/opengl-driver - - - - ${drivers}
-      '';
-    };
-    "systemd/zram-generator.conf" = {
-      mode = "0644";
-      replaceExisting = true;
-      text = ''
-        [zram0]
-        zram-size = ram / 2
-        compression-algorithm = zstd
-        swap-priority = 5
-      '';
-    };
-  } // lib.genAttrs (map (service: "systemd/user/${service}.service.d/native-data.conf") [
-    "pipewire"
-    "pipewire-pulse"
-    "wireplumber"
-  ]) (_: {
-    mode = "0644";
-    replaceExisting = true;
-    text = ''
-      [Service]
-      Environment=XDG_DATA_DIRS=/usr/local/share:/usr/share
-    '';
-  });
+    });
   systemd.tmpfiles.rules = ["d /var/log/journal 2755 root systemd-journal -"];
   alma.activation.policy = ''
     install_helium_policy() {
@@ -96,7 +88,6 @@ in {
         /etc/polkit-1/rules.d /etc/sudoers.d /etc/systemd/zram-generator.conf
     fi
     /usr/sbin/sysctl --system
-    /usr/bin/systemctl restart systemd-journald.service
     /usr/bin/journalctl --flush
     /usr/bin/systemctl try-restart nix-daemon.service
     /usr/bin/systemctl start dev-zram0.swap
