@@ -5,7 +5,6 @@
 }: {
   imports = [
     ../_custom-modules/fzf.nix
-    ../_custom-modules/direnv.nix
     ../_custom-modules/zoxide.nix
   ];
   environment.systemPackages = [
