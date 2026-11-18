@@ -6,7 +6,7 @@
   ...
 }: let
   agentModels = {
-    codex = "gpt-6.1-sol";
+    codex = "gpt-6.2-sol";
     claude = "claude-opus-5-5";
   };
   reasoningEffort = {
