@@ -29,6 +29,7 @@
       ../../../core/git.nix
       ../../../core/helix.nix
       ../../../core/fish.nix
+      ../../../core/rex.nix
       ../../../core/ssh.nix
       ../../../core/yazi.nix
       ../../../graphical/helium.nix

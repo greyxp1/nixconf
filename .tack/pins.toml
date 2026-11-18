@@ -82,3 +82,6 @@ exclude_follow = ["nixpkgs"]
 
 [inputs.browse]
 url = "gh:greyxp1/browse-flake"
+
+[inputs.rex]
+url = "https://pkgs.superlogical.com/rex/nix/preview/0.1.0-preview.21.tar.gz"

@@ -41,6 +41,7 @@ in {
     ./_modules/sunshine.nix
     ./_modules/noctalia.nix
     ./_modules/recording.nix
+    ./_modules/rex-rune.nix
     ./_modules/at2005usb.nix
     ./_modules/whisrs.nix
     ./_modules/gaming.nix

@@ -208,6 +208,12 @@
     "narHash": "sha256-AMnCI7Qr9uTyVBhZ4Bv4J1rlGtLTPwtGLsoOXGjD7iY=",
     "lastModified": 1795223961
   },
+  "rex": {
+    "type": "tarball",
+    "url": "https://wthziax2yejsqc4k.public.blob.vercel-storage.com/public/pkgs/rex/nix/preview/0.1.0-preview.21.tar.gz",
+    "narHash": "sha256-Tsr0uwzT2RvMj5wamTy20im8Df8YdBY6BWZlTvqaj+c=",
+    "lastModified": 1794983304
+  },
   "rustbg": {
     "type": "github",
     "owner": "greyxp1",
