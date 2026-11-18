@@ -56,11 +56,9 @@
             };
         };
         config = {
-          # system-manager cannot run nix-secrets, so Alma keeps its secrets by hand.
+          # Alma activates its secrets through the native System Manager module.
           security.nix-secrets.enable = lib.mkForce false;
-          programs.antigravity-cli.gateway.apiKeyFile = lib.mkForce "/home/grey/.config/cliproxyapi/client-key";
-          programs.claude-code.settings.apiKeyHelper = lib.mkForce "cat /home/grey/.config/cliproxyapi/client-key";
-          programs.codex.settings.model_providers.cliproxy.auth.args = lib.mkForce ["/home/grey/.config/cliproxyapi/client-key"];
+          environment.variables.LOCALE_ARCHIVE = lib.mkForce "${pkgs.glibcLocales}/lib/locale/locale-archive";
           # Alma's systemd does not support this newer slice setting.
           systemd.user.slices.app-t3code.sliceConfig.ManagedOOMMemoryPressureDurationSec = lib.mkForce [];
           # The school network blocks QUIC.

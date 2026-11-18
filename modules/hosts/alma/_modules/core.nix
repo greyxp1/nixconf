@@ -7,12 +7,14 @@
 }: {
   imports = [
     ./nixos.nix
+    ./secrets.nix
     "${inputs.nixpkgs}/nixos/modules/programs/nh.nix"
     "${inputs.nixpkgs}/nixos/modules/services/misc/nix-gc.nix"
   ];
   environment.variables = {
     inherit (nixos.environment.variables) DIRENV_CONFIG;
     EDITOR = "hx";
+    LOCALE_ARCHIVE = "${pkgs.glibcLocales}/lib/locale/locale-archive";
     VISUAL = "hx";
   };
   environment.etc = {

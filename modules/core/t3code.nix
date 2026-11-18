@@ -30,7 +30,10 @@ in {
     inputs.t3code.nixosModules.default
   ];
 
-  security.nix-secrets.secrets."cliproxyapi/client-key".owner = "grey";
+  security.nix-secrets.secrets."cliproxyapi/client-key" = {
+    owner = "grey";
+    recipients = builtins.attrValues (import ../../secrets/cliproxyapi/recipients.nix);
+  };
   programs.t3code = {
     enable = true;
     package = inputs.t3code.packages.${pkgs.stdenv.hostPlatform.system}.nightly;
