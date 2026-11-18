@@ -45,7 +45,6 @@
     (importTree ../../desktop)
     ./_modules/sshfs.nix
     ./_modules/sunshine.nix
-    ./_modules/cachix-publisher.nix
     ./_modules/noctalia.nix
     ./_modules/recording.nix
     ./_modules/at2005usb.nix
