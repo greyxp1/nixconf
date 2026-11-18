@@ -17,7 +17,7 @@ in {
     enable = true;
     settings = {
       CODEC = "av1";
-      QUALITY = "24000";
+      QUALITY = "18000";
       AUDIO_DEVICE = audio;
       OUTPUT_RESOLUTION = resolution;
       ADDITIONAL_ARGS = "-sc ${saved}";
