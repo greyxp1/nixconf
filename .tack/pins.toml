@@ -44,7 +44,7 @@ exclude_follow = ["nixpkgs"]
 url = "gh:greyxp1/cord-stash/396a52eaa9c0430bb9e8022427945840e0e960e1"
 type = "fetch"
 [inputs.relay]
-url = "gh:greyxp1/Relay/e93d56e8b9587505d8c4baa038763e3f7b17da13"
+url = "gh:greyxp1/Relay"
 exclude_follow = ["nixpkgs"]
 [inputs.nix-flatpak]
 url = "gh:gmodena/nix-flatpak"
