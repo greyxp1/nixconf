@@ -39,6 +39,18 @@
         cooldown.transient-error-cooldown-seconds = -1;
       };
       oauth.auth-dir = "/var/lib/cliproxyapi/auth";
+      oauth.model-alias.antigravity = [
+        {
+          name = "gemini-4-argon-high";
+          alias = "gemini-4-argon";
+          fork = true;
+        }
+        {
+          name = "gemini-4-neon-xhigh";
+          alias = "gemini-4-neon";
+          fork = true;
+        }
+      ];
     };
   };
 
@@ -63,7 +75,7 @@
   };
 
   services.caddy.virtualHosts."greyxp1.root.sx".extraConfig = lib.mkBefore ''
-    @proxy path /v1/models /v1/models/* /v1/messages /v1/messages/count_tokens /v1/chat/completions /v1/completions /v1/responses /v1/responses/compact /v1/alpha/search /responses /responses/compact
+    @proxy path /v1/models /v1/models/* /v1/messages /v1/messages/count_tokens /v1/chat/completions /v1/completions /v1/responses /v1/responses/compact /v1/alpha/search /responses /responses/compact /v1beta/models /v1beta/models/* /v1beta/interactions
     handle @proxy {
       route {
         forward_auth 127.0.0.1:8318 {
@@ -71,6 +83,7 @@
           copy_headers Authorization
         }
         request_header -X-Api-Key
+        request_header -X-Goog-Api-Key
         request_body {
           max_size 32MB
         }

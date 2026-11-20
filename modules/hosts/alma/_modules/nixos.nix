@@ -58,6 +58,7 @@
         config = {
           # system-manager cannot run nix-secrets, so Alma keeps its secrets by hand.
           security.nix-secrets.enable = lib.mkForce false;
+          programs.antigravity-cli.gateway.apiKeyFile = lib.mkForce "/home/grey/.config/cliproxyapi/client-key";
           programs.claude-code.settings.apiKeyHelper = lib.mkForce "cat /home/grey/.config/cliproxyapi/client-key";
           programs.codex.settings.model_providers.cliproxy.auth.args = lib.mkForce ["/home/grey/.config/cliproxyapi/client-key"];
           # Alma's systemd does not support this newer slice setting.

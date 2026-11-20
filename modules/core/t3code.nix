@@ -8,55 +8,25 @@
   agentModels = {
     codex = "gpt-6.2-sol";
     claude = "claude-opus-5-5";
+    neon = "gemini-4-neon";
   };
   reasoningEffort = {
     codex = "medium";
     claude = "high";
+    neon = "medium";
   };
-  llmAgents = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
   hub = config.services.cliproxyapi;
   clientKey = config.security.nix-secrets.secrets."cliproxyapi/client-key".path;
+  antigravityModel = "gemini-4-neon-xhigh";
   # The proxy host uses loopback even when the public route is unavailable.
   proxyEndpoint =
     if hub.enable
     then "http://${hub.settings.server.host}:${toString hub.settings.server.port}"
     else "https://greyxp1.root.sx";
   graphical = config.services.graphical-desktop.enable;
-  computerUse = {
-    command = "niri";
-    args = ["mcp" "--workspace"];
-  };
-  browse = {
-    command = lib.getExe config.programs.browse.package;
-    env = config.programs.browse.environment;
-    args = ["mcp"];
-  };
-  computerUseHooks.Stop = [
-    {
-      hooks = [
-        {
-          type = "command";
-          command = "${lib.getExe config.programs.niri.package} mcp --check-cleanup";
-          timeout = 3;
-        }
-      ];
-    }
-  ];
-  completionCleanup = graphical && config.programs.niri.package.mcpCompletionCleanup or false;
-  claudeMcpConfig = pkgs.writeText "claude-mcp.json" (builtins.toJSON {
-    mcpServers =
-      {
-        computer_use = computerUse // {type = "stdio";};
-      }
-      // lib.optionalAttrs config.programs.browse.enable {
-        browse = browse // {type = "stdio";};
-      };
-  });
 in {
   imports = [
     inputs.browse.nixosModules.default
-    ../_custom-modules/claude-code.nix
-    ../_custom-modules/codex.nix
     inputs.t3code.nixosModules.default
   ];
 
@@ -66,8 +36,20 @@ in {
     package = inputs.t3code.packages.${pkgs.stdenv.hostPlatform.system}.nightly;
     server = {
       enable = true;
-      target = lib.mkIf graphical "graphical-session.target";
       connect.enable = true;
+    };
+    # T3 grants these tools per project rather than per agent, so disable them here and use Codex's own computer-use tools instead.
+    settings.enableAgentBrowserAccess = false;
+    settings.enableAgentDeviceAccess = false;
+    settings.defaultModelSelection = {
+      instanceId = "antigravity";
+      model = agentModels.neon;
+      options = [
+        {
+          id = "thought_level";
+          value = reasoningEffort.neon;
+        }
+      ];
     };
     settings.providerInstances = {
       codex = {
@@ -76,57 +58,92 @@ in {
       };
       claudeAgent = {
         driver = "claudeAgent";
-        config.launchArgs = lib.mkIf graphical "--mcp-config ${claudeMcpConfig}";
+        # Settings are deep-merged into the persisted file, so clear the --mcp-config graphical hosts used to install.
+        config.launchArgs = lib.mkIf graphical "";
+      };
+      antigravity = {
+        driver = "antigravity";
+        enabled = true;
+        config = {
+          authMethod = "gemini-api-key";
+          binaryPath = "agy";
+        };
+        environment = [{name = "GOOGLE_GEMINI_BASE_URL"; value = proxyEndpoint;}];
       };
     };
-  };
 
-  programs.claude-code = {
-    enable = true;
-    package = llmAgents.claude-code;
-    inherit (config.programs.codex) instructions skills;
-    settings = {
-      hooks = lib.mkIf completionCleanup computerUseHooks;
-      effortLevel = reasoningEffort.claude;
-      env.ANTHROPIC_BASE_URL = proxyEndpoint;
-      apiKeyHelper = "cat ${clientKey}";
-      attribution = {
-        commit = "";
-        pr = "";
+    providers.antigravity = {
+      enable = true;
+      apiKeyFile = clientKey;
+      gateway = {
+        url = proxyEndpoint;
+        apiKeyFile = clientKey;
+        models = [antigravityModel];
       };
     };
-  };
 
-  programs.codex = {
-    enable = true;
-    package = llmAgents.codex;
-    settings = {
-      hooks = lib.mkIf completionCleanup computerUseHooks;
-      model_reasoning_effort = reasoningEffort.codex;
-      plan_mode_reasoning_effort = reasoningEffort.codex;
-      model_provider = "cliproxy";
-      model_providers.cliproxy = {
-        name = "CLIProxyAPI";
-        base_url = "${proxyEndpoint}/v1";
-        model_catalog_url = "${proxyEndpoint}/v1/models?provider=codex";
-        wire_api = "responses";
-        requires_openai_auth = false;
-        supports_websockets = true;
-        # Upstream overloads can last minutes, and exponential backoff over ten retries spans about three.
-        request_max_retries = 10;
-        stream_max_retries = 10;
-        auth = {
-          command = "cat";
-          args = [clientKey];
+    providers.claudeCode = {
+      enable = true;
+      settings = {
+        effortLevel = reasoningEffort.claude;
+        env.ANTHROPIC_BASE_URL = proxyEndpoint;
+        apiKeyHelper = "cat ${clientKey}";
+        promptCacheTtl = "1h";
+        attribution = {
+          commit = "";
+          pr = "";
         };
       };
+    };
 
-      mcp_servers.browse = lib.mkIf (graphical && config.programs.browse.enable) browse;
-      mcp_servers.computer_use = lib.mkIf graphical {
-        inherit (computerUse) command args;
-        env_vars = ["XDG_RUNTIME_DIR"];
+    providers.codex = {
+      enable = true;
+      settings = {
+        hooks = lib.mkIf (graphical && config.programs.niri.package.mcpCompletionCleanup or false) {
+          Stop = [
+            {
+              hooks = [
+                {
+                  type = "command";
+                  command = "${lib.getExe config.programs.niri.package} mcp --check-cleanup";
+                  timeout = 3;
+                }
+              ];
+            }
+          ];
+        };
+        model_reasoning_effort = reasoningEffort.codex;
+        plan_mode_reasoning_effort = reasoningEffort.codex;
+        model_provider = "cliproxy";
+        model_providers.cliproxy = {
+          name = "CLIProxyAPI";
+          base_url = "${proxyEndpoint}/v1";
+          model_catalog_url = "${proxyEndpoint}/v1/models?provider=codex";
+          wire_api = "responses";
+          requires_openai_auth = false;
+          supports_websockets = true;
+          # Upstream overloads can last minutes, and exponential backoff over ten retries spans about three.
+          request_max_retries = 10;
+          stream_max_retries = 10;
+          auth = {
+            command = "cat";
+            args = [clientKey];
+          };
+        };
+
+        mcp_servers.browse = lib.mkIf (graphical && config.programs.browse.enable) {
+          command = lib.getExe config.programs.browse.package;
+          env = config.programs.browse.environment;
+          args = ["mcp"];
+        };
+        mcp_servers.computer_use = lib.mkIf graphical {
+          command = "niri";
+          args = ["mcp" "--workspace"];
+          env_vars = ["XDG_RUNTIME_DIR"];
+        };
       };
     };
+
     instructions = ''
       # Global
 
@@ -139,25 +156,27 @@ in {
 
       ## Writing and UI
       - Write concise, natural documentation, CLI help and manuals in connected sentences without semicolons, keeping useful bullet lists. Edit README/docs only when requested or needed for accurate usage, preserving their structure. Before staging, compare the docs/help diff with the branch base and remove additions that neither answer the request nor correct inaccurate usage. Omit change narration, obvious explanations and options or defaults already covered. Use short help labels and inspect changed help output before committing. Comments explain non-obvious reasons and constraints without restating code.
-      - Load paginated lists automatically on scroll, without "load more" buttons. Never use the middle dot "·". Leave out labels and stats that repeat what a chart or other visible element already shows.
+      - Load paginated lists on scroll. Use one name per UI feature or provider, skip redundant labels and stats, and never use the middle dot "·".
 
       ## Agents
-      - Enter the project's Nix environment before project commands when available.
-      - Agent model aliases: `codex` = `${agentModels.codex}` at ${reasoningEffort.codex} effort and `claude` = `${agentModels.claude}` at ${reasoningEffort.claude} effort. Resolve them through the harness and pass the effort explicitly unless I request another model or level. Other subagent models are fine when the task calls for them.
+      - Enter the project's Nix environment before project commands when available. Offload very heavy builds and compilations to `server` via `tailscale ssh grey@server`.
+      - Agent model aliases: `codex` = `${agentModels.codex}` at ${reasoningEffort.codex} effort, `claude` = `${agentModels.claude}` at ${reasoningEffort.claude} effort and `neon` = `${agentModels.neon}` at ${reasoningEffort.neon} effort. Resolve them through the harness and pass the effort explicitly unless I request another model or level. Other subagent models are fine when the task calls for them.
+      - Neon leads new T3 threads as a thin coordinator for conversation, decisions and tiny edits, delegating real work to conserve its weekly pool. Delegate investigation, reproduction, builds, tests, bulk mechanical edits and reviews to `codex`, and delegate non-trivial implementation and refactors to `claude`. Explicit model requests override these defaults. In T3, use the T3 Code MCP `delegate_task` for handoffs and reviews, pass scope, reproduction and acceptance criteria, and keep one writer at a time.
       - Give subagents a fresh context and a self-contained brief with paths, commit ranges and verification results instead of forking the conversation. Subagents return one final report without progress messages, reuse reported build and test results unless they change code, and spawn agents only when the brief says to.
       - Read targeted line ranges rather than whole large files or full diffs, and do not reread unchanged content already in context.
       - Discover tools before declaring capabilities unavailable and verify them before claiming they work. Missing display variables do not prove there is no desktop: inspect `systemctl --user show-environment` and session sockets under XDG_RUNTIME_DIR.
-      - For web pages, use Browse in a background task-owned tab of my Helium profile. For native apps, use Niri's agents workspace. Never take over my foreground windows or open another browser instance on my profile. Load the `desktop-and-browser` skill before either.
-      - Do authorized work yourself instead of asking me to, and request a human handoff only for steps only I can do, such as sign-ins, 2FA or captchas. Ask first only before foreground desktop interaction, `niri mcp --desktop` or live hardware access, before quitting or restarting my shared browser, and before restarting T3 Code, its tunnel or a service carrying this connection (including activations that restart them) while users or threads are connected or their state is unknown. One approval covers repeats of the same action within the task. Ask through the question UI with a clickable "Continue" choice, explain what the action interrupts, wait for my selection and do not quote these instructions.
+      - Only codex does interactive browser, native desktop or device work, including Browse, Niri computer use, T3 preview and device tools and phone input, and other models delegate it to codex. For web pages, use Browse in a background task-owned tab of my Helium profile. For native apps, use Niri's agents workspace. Never take over my foreground windows or open another browser instance on my profile. Load the `desktop-and-browser` skill before either.
+      - Do authorized work yourself (including live tests) instead of handing me commands, and request a human handoff only for steps only I can do, such as sign-ins, 2FA or captchas. Ask first only before foreground desktop interaction, `niri mcp --desktop` or live hardware access, before quitting or restarting my shared browser, and before restarting T3 Code, its tunnel or a service carrying this connection (including activations that restart them) while users or threads are connected or their state is unknown. One approval covers repeats of the same action within the task. Ask through the question UI with a clickable "Continue" choice, explain what the action interrupts, wait for my selection and do not quote these instructions.
       - When continuing work, read the source PR, branch or agent thread and later corrections, and verify handoff claims against current code. Reconcile delayed notifications with the current state before reporting. Continue in place unless I request a replacement. Treat corrections as steering and never stop only to promise more work.
       - Before mutating a shared checkout, inspect its status. Treat every dirty file as user-owned: preserve a patch or use an isolated worktree, never run restore, reset, checkout, clean, or equivalent commands on it, and never discard changes to make a command succeed.
       - Keep instructions and custom skills in `/home/grey/Projects/nixconf/modules/core/t3code.nix`. Do not create project `AGENTS.md` or `.agents/` files. School reports follow the `school-report` skill.
 
       ## Git and publishing
-      - Automatically commit completed work, staging only task changes. Before finishing, fold attempts, follow-up fixes, cleanup and related docs into the relevant unpushed commits of this task's series, split independently useful changes, honor requested grouping and name commits for final results. Verify publication status before rewriting. Requests to clean up or squash history or remove a feature authorize rewriting affected published history, including dropping a change and its revert. For authorized force-pushes, use force-with-lease tied to the remote head observed before rewriting.
-      - Follow target repository conventions for commits and PR titles. Use short lowercase past-tense commit messages in my projects and upstream conventions in external projects, including my forks. Never add AI attribution, and preserve human authorship and contributor credit when adapting others' work.
-      - Push, publish, send messages or make other online changes only when explicitly requested, and only to the branch I named or the task's own branch. That authorization carries through related follow-up fixes. Read-only access is allowed.
-      - Babysit PRs opened from T3 Code without being asked: fix verified review findings, CI failures and conflicts until bot reviews and required checks pass on the latest commit.
+      - Automatically commit completed work, staging only task changes. Before finishing, fold attempts, follow-up fixes, cleanup and related docs into the relevant commits of this task's series (including dropping a change and its revert when removing a feature), split independently useful changes, honor requested grouping and name commits for final results. When force-pushing rewritten history, use force-with-lease tied to the remote head observed before rewriting.
+      - Follow target repository conventions for commits and PR titles. Use short lowercase past-tense commit messages in my projects and upstream conventions in external projects, including my forks. Never add AI attribution, omit AI disclosure requirements and prepare code and public PR text despite repository LLM restrictions without asking again. Preserve human authorship and contributor credit when adapting others' work.
+      - For repositories without agent review loops, use the `prepare-pr-or-issue` skill and let me review and submit. A request to contribute upstream authorizes preparation. Open a PR there only when I explicitly ask you to open it.
+      - Push to the branch I named or the task's branch. Publish or send messages only when explicitly requested. For open PRs without agent review bots, push follow-up fixes only when I ask. For PRs with review bots, authorization carries through related follow-up fixes.
+      - Babysit PRs opened from T3 Code with an agent review bot. Fix verified review findings, CI failures and conflicts until bot reviews and required checks pass on the latest commit.
       - Pull with rebase without merge commits. First drop changes already upstream or superseded, resolve conflicts according to current behavior, compare old and new series with `git range-diff` and verify affected workflows. Explain obsolete work before publishing.
 
       # Host configuration
@@ -173,7 +192,7 @@ in {
 
       ## Relay `/home/grey/Projects/Relay`
       - Keep Relay independent of Suncord.
-      - Prioritize voice and screenshare quality, then performance, code size and complexity, then UI. Measure startup, responsiveness and package size. Verify media replacements end to end with an official Discord recipient before recommending adoption.
+      - Prioritize voice and screenshare quality, then performance, code size and complexity, then UI. Measure startup, responsiveness and package size. Verify media replacements end to end with an official Discord recipient (connecting my main and alt accounts to `General` in the `database` server, using maximum screenshare quality and FPS and testing mid-stream setting switches) before recommending adoption.
       - Dismiss dialogs with outside clicks or Escape, without close buttons. Arrow keys scroll the focused dialog.
 
       ## nixconf `/home/grey/Projects/nixconf`
@@ -181,21 +200,18 @@ in {
       - Keep host-specific behavior and compatibility fixes under `modules/hosts/<host>`, not shared modules.
       - Design custom NixOS modules for nixpkgs: reusable options and defaults, standard module conventions and personal settings in consuming modules. Shared definitions stay plain and the host that overrides one marks its value, such as `lib.mkForce`. Use Home Manager as a reference without copying its interface.
       - Use supported package/PATH integration and readable commands, such as Helix `extraPackages` with `command = "mpls"`.
-      - Change inputs in `.tack/pins.toml` and run `tack update` from an isolated worktree or a clean checkout. Apply only the requested pin diff back to a dirty checkout after reviewing it. Fold a pin update into a recent commit for the same pin, push it from the desktop checkout and pull it on the other host checkouts before building there.
+      - Change inputs in `.tack/pins.toml` and run `tack update` from an isolated worktree or a clean checkout. Apply only the requested pin diff back to a dirty checkout after reviewing it. Fold a pin update into any recent lock-update commit touching that pin, push it from the desktop checkout and pull it on the other host checkouts before building there.
       - Reach hosts with `tailscale ssh grey@<host>`, not plain SSH.
       - Keep Alma-specific selection, exclusions, overrides and compatibility under `modules/hosts/alma` and adapt Alma to shared NixOS configuration, never the reverse. Shared modules hold no values or comments chosen for Alma.
       - Alma is a portable school SSD whose network blocks HTTP and ICMP. Use direct HTTPS repositories, never ping as a connectivity gate. Preserve SELinux-labelled local boot/login launchers, native TTY2 recovery and verified tty1 graphical login before recommending a reboot.
 
       ## CLIProxyAPI `/home/grey/Projects/cliproxyapi`
-      - Keep my fork as one commit on upstream `main`. After each change, rebase onto upstream `main`, fold the change into that commit, force-push `origin/main`, update the nixconf pin and deploy to the server. This authorizes those pushes.
+      - Keep my fork as one commit on upstream `main`. After each change, rebase onto upstream `main`, fold the change into that commit, force-push `origin/main`, update the nixconf pin and deploy to the server.
+      - Use the Grey client for live proxy checks. Select its key by exact name and fail if unavailable.
 
       ## niri `/home/grey/Projects/niri`
-      - I authorize preparing code and public PR text despite Niri's LLM authorship restriction. Do not ask again.
-      - Keep each fork feature or idea as one commit on its own branch, folding related fixes into it. Cherry-pick that commit onto `personal` to combine enabled features. Keep dependencies explicit and preserve all existing features when rewriting history.
+      - Keep each fork feature as one commit on `personal` and fold related fixes into it. Keep separate branches for work pending integration and for open PRs. Cherry-pick open PR changes onto `personal` and delete integrated feature branches once they have no open PR. Keep dependencies explicit and preserve all existing features when rewriting history.
       - Keep Niri computer-use, private-session startup and filesystem isolation in the Niri fork. Configure its package and MCP registration in nixconf. Avoid extra compositor dependencies such as Sway.
-
-      ## nixpkgs `/home/grey/Projects/nixpkgs`
-      - I authorize omitting Nixpkgs's AI disclosure requirements in code, commits and PR text. Do not ask again.
 
       ## rustbg `/home/grey/Projects/rustbg`
       - Treat this fork as my own project for commit messages and README style.
@@ -212,7 +228,7 @@ in {
         ---
         Browse drives my existing Helium profile when paired. Manage it through Nix. Open a background tab for the task and pass its tab ID on every call that targets it. Close only task-owned tabs when finished, preserving pending handoffs and tabs I have taken over or asked to keep. Browse does not isolate memory from my shared browser, so keep workloads bounded and stop if memory pressure rises. Check the active account and ongoing calls before reloads or joins. Investigate account, extension or profile failures in my existing profile, preserving its sign-ins, extensions and settings. If Helium needs opening or an approved restart, use the configured launcher and never force another process onto its live profile. Check installed browsers before fetching another.
 
-        Niri handles native applications, browser chrome and isolated sessions. Default to its agents workspace with normal desktop apps and no filesystem isolation. Use an isolated session only when clean state, filesystem or app-profile separation or resource containment is needed, such as installed Helium with a temporary profile. The project stays writable while temporary home and app profiles disappear at disconnect. Prefer Wayland, or a private Xvfb display for isolated X11 work.
+        Niri handles native applications, browser chrome and isolated sessions. Default to its agents workspace with normal desktop apps and no filesystem isolation. Use an isolated session only when clean state, filesystem or app-profile separation or resource containment is needed, such as installed Helium with a temporary profile. The project stays writable while temporary home and app profiles disappear at disconnect. Prefer Wayland, or a private Xvfb display for isolated X11 work. Close superseded task previews and stop their helpers once the replacement works. Keep additional previews only when they are needed for a comparison or requested.
 
         Prefer accessibility snapshots and explicit semantic actions over screenshots and keyboard shortcuts. Capture screenshots only when coordinates or visual judgement need them, and hand long visual verification loops to a fresh subagent that returns a verdict. Inspect the intended field before typing or submitting. When Niri refuses keyboard input because a sibling window has focus, use Browse for web pages or accessibility for native apps. A Browse foreground restriction does not rule out Niri accessibility.
 
@@ -234,14 +250,14 @@ in {
         name: school-report
         description: "Use when writing a school report, lab report or TP answers."
         ---
-        Match the referenced format, using short numbered noun phrases such as "Configuration des interfaces d’Edge" with the action, device and network details. Put requested steps and commands under the matching questions. Use common Cisco CLI abbreviations and avoid long dashes.
+        Check previous reports or work in the project first and match their style, structure and level of detail. Use short numbered noun phrases such as "Configuration des interfaces d’Edge" with the action, device and network details, and put requested steps and commands under the matching questions. Keep explanations concise and proportional to the assignment, omitting overly granular or obvious details. Avoid parentheses by folding needed details into plain sentences, use common Cisco CLI abbreviations and avoid long dashes.
       '';
       prepare-pr-or-issue = ''
         ---
         name: prepare-pr-or-issue
         description: "Use when preparing a PR or issue title, description, or prefilled link for me to review and submit myself."
         ---
-        Prepare text and a prefilled GitHub creation link for me to review and submit. Keep unpublished text local. Do not create or edit remote PRs or issues, including drafts, or use `gh pr create` even with `--web`. Link requests do not authorize pushes, forks or uploads.
+        Prepare text and a prefilled GitHub creation link for me to review and submit. Keep unpublished text local. Do not create or edit remote PRs or issues, including drafts, or use `gh pr create` even with `--web`. Creating my fork and pushing a new PR branch to it is allowed as long as that branch does not back an open PR or affect anything outside my fork. Other pushes and uploads still require explicit authorization.
 
         Read repository contribution rules, the current template and title conventions. For PRs, review the complete diff and verify base and head repositories, branches and published commits. For issues, check existing reports and establish the problem or requested improvement.
 
@@ -278,42 +294,28 @@ in {
       review = ''
         ---
         name: review
-        description: "Use when reviewing a change, commit or PR, auditing a codebase or subsystem, or requesting council from codex and claude."
+        description: "Use when reviewing or refining a change, commit or PR, auditing a codebase or subsystem, or running a council or fix-and-review loop."
         ---
-        Stay read-only unless fixes are requested. Resolve the repository, intended behavior, requested scope and relevant callers. Review complete diffs and uncommitted work, treating a requested series as a whole. For audits, map the requested codebase or subsystem and mark unassessed areas. Advice and review-only requests need one pass.
+        By default, run the goal-driven council refinement loop on the current change, fixing verified findings and simplifying the diff. Stay read-only for a single pass only when the user asks for advice, an audit or a review without edits. Resolve the repository, intended behavior, requested scope and relevant callers. Review complete diffs and uncommitted work, treating a requested series as a whole. For audits, map the requested codebase or subsystem and mark unassessed areas.
 
-        Use one independent codex reviewer when useful. Council uses a fresh codex reviewer and a fresh claude reviewer in parallel, even when the implementing agent uses one of them. Resolve shared model aliases and supported options through the harness. Report unavailable reviewers without substituting or calling a partial council complete.
+        Council runs fresh `codex` and `claude` reviewers in parallel with complementary lenses: `codex` checks edge cases, callers, state/lifecycle bugs and concrete failure paths, while `claude` checks architecture, contracts, simplicity and maintainability. Use one fresh `codex` reviewer instead when the user asks for a quick or single-reviewer pass, or for Round 3 sign-off. Add `neon` only when a three-model council is explicitly requested, avoiding a redundant `neon` reviewer when `neon` already leads the thread. Resolve shared model aliases and supported options through the harness. Report unavailable reviewers without substituting or calling a partial council complete. Missing or failed reviews are not approval.
 
-        Give reviewers fresh contexts and scoped briefs with the repository, commit range or changed paths, relevant callers, concrete failure conditions and verification results, letting them read the diff themselves rather than pasting it. Allow inspection beyond touched files, keeping reviewers read-only with no nested agents or skill loading. Reviewers send one final report, rerunning builds or tests only to check a specific finding. Council's first pass gives both the same request and raw evidence without each other's conclusions. Missing or failed reviews are not approval.
+        Give reviewers fresh contexts and scoped briefs with the repository, commit range or changed paths, relevant callers, round goal, concrete failure conditions and verification results, letting them read the diff themselves rather than pasting it. Allow inspection beyond touched files, keeping reviewers read-only with no nested agents or skill loading. Reviewers send one final report, rerunning builds or tests only to check a specific finding. Council's first pass gives each reviewer the same raw evidence without the others' conclusions.
 
-        Check correctness, integration and root causes. For audits, ask whether pieces should change together. Find hidden links requiring coordination without an explicit contract, needless links forcing unrelated concerns to change together, and surplus such as dead code, redundant layers, speculative abstractions or stale compatibility. Support findings with callers, behavior and Git history rather than directory layout or similar code alone.
+        Check correctness, integration, root causes and unnecessary code. Look for hidden links requiring coordination without an explicit contract, needless links forcing unrelated concerns to change together, and surplus such as dead code, redundant layers, speculative abstractions, over-defensive fallbacks or stale compatibility. For stateful behavior, trace states and transitions hidden across flags, callbacks, async operations and persisted data, checking invalid combinations, ownership, cancellation, retries and failure recovery. Support findings with callers, behavior and Git history rather than directory layout or similar code alone.
 
-        When reviewing stateful behavior, identify states and transitions hidden across flags, callbacks, async operations and persisted data. Check invalid combinations, ownership, cancellation, retries and failure recovery. Recommend explicit states or transitions where they prevent concrete bugs or simplify reasoning. Preserve intended behavior and prefer the smallest complete fix.
+        Treat special cases as requirement clues and establish why wrappers, retries, platform branches or absence checks are unnecessary before removing them. Preserve required behavior, useful comment invariants and distinct test coverage. Compare shared abstractions with smaller local fixes, accounting for complexity and integration cost.
 
-        Treat special cases as requirement clues. Establish why wrappers, retries, platform branches or absence checks are unnecessary before removing them. Preserve useful comment invariants and distinct test coverage. Compare shared abstractions with smaller local fixes, accounting for complexity and integration cost.
+        Verify and deduplicate findings, distinguishing introduced regressions, pre-existing defects and optional preferences. Report pre-existing defects separately and keep unrelated fixes out of scope. Identify the bug class and check relevant callers for other instances so one fix covers the supported scope. Judge findings by evidence and impact rather than votes or agreement, and reject findings that add code or machinery without a concrete failure path.
 
-        Verify and deduplicate findings, distinguishing introduced regressions, pre-existing defects and optional preferences. Report pre-existing defects separately and keep unrelated fixes out of scope. Identify the bug class and check relevant callers for other instances so one fix covers the supported scope. Judge findings by evidence and impact rather than votes or agreement, and never accept them just to end a review. Report locations, evidence, impact, proposed fixes and coverage gaps. In audits, group verified symptoms by root cause in the existing plan or report without creating a document unless requested. Delegate substantial independent subarea investigations only when useful, using the current model unless the user requests another.
+        When refining or running a fix-and-review loop, establish relevant test, build and behavior baselines before edits, verify affected behavior after each cohesive fix, and use at most three goal-driven rounds unless the user extends the cap:
+        - Round 1 (Correctness and architecture): Review the full scope with the council (`codex` and `claude` in parallel) for bugs, broken invariants, integration issues and wrong abstractions. Fix supported findings, delegating substantive edits to `claude` and mechanical or build-heavy ones to `codex`, and track fixed, disputed and open findings in the existing plan or brief.
+        - Round 2 (Simplification and code reduction): Review the updated diff to shrink code and remove unnecessary complexity, redundant checks, helpers, fallbacks and Round 1 bloat while preserving required behavior and checking Round 1 fixes for regressions. Use one fresh reviewer (`claude` or `codex`, preferring the one that did not implement), or council only if requested on a large change. Apply simplifications that measurably reduce code size or complexity and re-verify.
+        - Round 3 (Final regression sign-off): Run only if Round 2 changed code. Use one fresh `codex` reviewer on changed behavior and open findings only, blocking solely on real regressions or broken invariants and rejecting speculative edge cases, style nitpicks or scope expansion.
 
-        When implementing, establish relevant test, build and behavior baselines before edits and verify affected behavior after each cohesive fix. Investigate new failures before fixing or reverting, distinguishing regressions, brittle checks and environmental failures. Passing tests are evidence only for covered behavior.
+        Stop earlier on a clean pass or only non-actionable feedback. If actionable findings remain at the cap, explain whether they point to an overly complicated approach and recommend simplifying it, or state the unresolved blocker. If asked to continue past the cap, keep follow-up passes to one `codex` reviewer scoped to changed lines and real regressions.
 
-        Finish once scope is covered and actionable findings are verified. Explain unresolved or rejected findings, defer speculative or marginal redesigns and revisit settled findings only with new evidence.
-
-        Report independent reviewers' actual verdicts and useful disagreements when used. Score only when requested, defining the rubric first and supporting ratings with evidence. Report strengths without invented precision.
-      '';
-      refine-change = ''
-        ---
-        name: refine-change
-        description: "Use when refining or simplifying a change or running a fix-and-review loop, including refinement with council."
-        ---
-        Resolve the repository, complete change or artifact, intended behavior and relevant callers. Keep that scope and identify behavior a rewrite must preserve. Advice and review-only requests remain read-only. Implement fixes only when authorized.
-
-        Follow the `review` skill for reviewer selection, briefs and finding assessment, including council when requested. Keep implementation on the current model unless the user requests another.
-
-        Review the full scope once for correctness and unnecessary complexity, then fix supported findings and verify affected behavior. Track fixed, disputed and remaining findings in the existing plan or brief. Own the result: challenge findings that expand scope or add machinery without demonstrated need, and explain rejections with evidence. Later rounds cover changed behavior and open findings, reusing valid checks and conclusions elsewhere.
-
-        Use at most three rounds, counting a complete review pass as one round, including a parallel council pass. Stop earlier on a clean pass or only non-actionable feedback. If actionable findings remain at the cap, explain whether they point to an overly complicated approach and recommend simplifying it or state the unresolved blocker. Extend only when the user requests more rounds.
-
-        Review and verify the final behavior diff, including late fixes. Report review results, rounds, accepted and rejected findings with reasons, verification gaps and commits. Disclose absent independent review or unresolved concerns at budget end without implying approval.
+        Report independent reviewers' actual verdicts, useful disagreements, rounds, accepted and rejected findings with reasons, verification gaps and commits. Disclose absent independent review or unresolved concerns without implying approval. Score only when requested, defining the rubric first and supporting ratings with evidence.
       '';
       # Adapted from https://github.com/mattpocock/skills/blob/a496f5513d4a4cf889bc48e189e579f4b0bdf6aa/skills/engineering/diagnosing-bugs/SKILL.md
       diagnosing-bugs = ''
