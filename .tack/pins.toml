@@ -77,7 +77,7 @@ url = "gh:unnamed-systems/nix-secrets"
 
 [inputs.t3code]
 url = "gh:greyxp1/t3code-flake"
-# Uses its own nixpkgs, so builds match the ones CI uploads to t3code.cachix.org.
+# Uses its own nixpkgs to match the packages built by CI.
 exclude_follow = ["nixpkgs"]
 
 [inputs.browse]
