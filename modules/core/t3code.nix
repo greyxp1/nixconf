@@ -16,6 +16,7 @@
   llmAgents = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
   hub = config.services.cliproxyapi;
   clientKey = config.security.nix-secrets.secrets."cliproxyapi/client-key".path;
+  antigravityModel = "gemini-4-neon-xhigh";
   # The proxy host uses loopback even when the public route is unavailable.
   proxyEndpoint =
     if hub.enable
@@ -55,6 +56,7 @@
 in {
   imports = [
     inputs.browse.nixosModules.default
+    ../_custom-modules/antigravity-cli.nix
     ../_custom-modules/claude-code.nix
     ../_custom-modules/codex.nix
     inputs.t3code.nixosModules.default
@@ -66,7 +68,6 @@ in {
     package = inputs.t3code.packages.${pkgs.stdenv.hostPlatform.system}.nightly;
     server = {
       enable = true;
-      target = lib.mkIf graphical "graphical-session.target";
       connect.enable = true;
     };
     settings.providerInstances = {
@@ -78,6 +79,26 @@ in {
         driver = "claudeAgent";
         config.launchArgs = lib.mkIf graphical "--mcp-config ${claudeMcpConfig}";
       };
+      antigravity = lib.mkIf config.security.nix-secrets.enable {
+        driver = "antigravity";
+        enabled = true;
+        config = {
+          authMethod = "gemini-api-key";
+          # T3 selects authentication over ACP, independently of the terminal command.
+          binaryPath = lib.getExe config.programs.antigravity-cli.finalPackage;
+        };
+        environment = [{name = "GOOGLE_GEMINI_BASE_URL"; value = proxyEndpoint;}];
+      };
+    };
+  };
+
+  programs.antigravity-cli = {
+    enable = true;
+    inherit (config.programs.codex) instructions skills;
+    gateway = lib.mkIf config.security.nix-secrets.enable {
+      url = proxyEndpoint;
+      apiKeyFile = clientKey;
+      models = [antigravityModel];
     };
   };
 
@@ -90,6 +111,7 @@ in {
       effortLevel = reasoningEffort.claude;
       env.ANTHROPIC_BASE_URL = proxyEndpoint;
       apiKeyHelper = "cat ${clientKey}";
+      promptCacheTtl = "1h";
       attribution = {
         commit = "";
         pr = "";
