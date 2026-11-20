@@ -48,7 +48,8 @@
       equicord.path = config.programs.nixcord.browser.finalPackage;
       sponsorBlock.id = "mnjggcdmjocbbbhaepdhchncahnbgone";
       deArrow.id = "enamippconapkdmgfgjchkhakpfinmaj";
-      controlPanel.id = "lodcanccmfbpjjpnngindkkmiehimile";
+      controlPanelForYoutube.id = "lodcanccmfbpjjpnngindkkmiehimile";
+      controlPanelForTwitter.id = "kpmjjdhbcfebfjgdnpjagcndoelnidfj";
       alternatePlayer.id = "aojjiodaaogdbbcnbpjnojilccopgcbk;https://edge.microsoft.com/extensionwebstorebase/v1/crx";
 
       ublock = {
