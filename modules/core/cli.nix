@@ -24,7 +24,10 @@
   environment.systemPackages = with pkgs; [curl wget fzf fd ripgrep microfetch nixpkgs-track];
 
   programs = {
-    tack.enable = true;
+    tack = {
+      enable = true;
+      package = inputs.tack.packages.${pkgs.stdenv.hostPlatform.system}.default;
+    };
     nix-index.enable = true;
     nix-index-database.comma.enable = true;
 

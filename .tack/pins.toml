@@ -29,10 +29,11 @@ url = "gh:greyxp1/mpv-auto-sub-sync"
 [inputs.ncr]
 url = "gh:greyxp1/ncr"
 [inputs.iets]
-url = "gh:numtide/iets/pull/380/head"
+url = "gh:numtide/iets"
 exclude_follow = ["nixpkgs"]
 [inputs.niri]
 url = "gh:greyxp1/niri/personal"
+exclude_follow = ["nixpkgs"]
 [inputs.niri-screenshare]
 url = "gh:pantarune/niri-screenshare"
 [inputs.perch]
@@ -41,10 +42,10 @@ url = "gh:greyxp1/perch"
 url = "gh:greyxp1/vellum/master"
 exclude_follow = ["nixpkgs"]
 [inputs.cord-stash]
-url = "gh:greyxp1/cord-stash/396a52eaa9c0430bb9e8022427945840e0e960e1"
+url = "gh:greyxp1/cord-stash"
 type = "fetch"
 [inputs.relay]
-url = "gh:greyxp1/Relay/e93d56e8b9587505d8c4baa038763e3f7b17da13"
+url = "gh:greyxp1/Relay"
 exclude_follow = ["nixpkgs"]
 [inputs.nix-flatpak]
 url = "gh:gmodena/nix-flatpak"
@@ -61,9 +62,6 @@ url = "gh:sonorahq/sonora/pull/1006/head"
 url = "gh:nix-community/nix-index-database"
 [inputs.catppuccin]
 url = "gh:catppuccin/nix"
-[inputs.llm-agents]
-url = "gh:numtide/llm-agents.nix"
-exclude_follow = ["nixpkgs"]
 [inputs.hydro]
 url = "gh:greyxp1/hydro"
 type = "fetch"
@@ -86,3 +84,9 @@ url = "gh:greyxp1/browse-flake"
 [inputs.lintel]
 url = "gh:greyxp1/lintel"
 type = "fetch"
+
+[inputs.tack]
+# Keep immutable channel URLs until a release after 1.0.1 reaches nixpkgs.
+url = "gh:manic-systems/tack/pull/241/head"
+# Uses its own nixpkgs to match the builds on cache.manic.systems.
+exclude_follow = ["nixpkgs"]
