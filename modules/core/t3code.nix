@@ -139,7 +139,7 @@ in {
 
       ## Writing and UI
       - Write concise, natural documentation, CLI help and manuals in connected sentences without semicolons, keeping useful bullet lists. Edit README/docs only when requested or needed for accurate usage, preserving their structure. Before staging, compare the docs/help diff with the branch base and remove additions that neither answer the request nor correct inaccurate usage. Omit change narration, obvious explanations and options or defaults already covered. Use short help labels and inspect changed help output before committing. Comments explain non-obvious reasons and constraints without restating code.
-      - Load paginated lists automatically on scroll, without "load more" buttons. Never use the middle dot "·". Leave out labels and stats that repeat what a chart or other visible element already shows.
+      - Load paginated lists on scroll. Use one name per UI feature or provider, skip redundant labels and stats, and never use the middle dot "·".
 
       ## Agents
       - Enter the project's Nix environment before project commands when available.
@@ -154,9 +154,9 @@ in {
       - Keep instructions and custom skills in `/home/grey/Projects/nixconf/modules/core/t3code.nix`. Do not create project `AGENTS.md` or `.agents/` files. School reports follow the `school-report` skill.
 
       ## Git and publishing
-      - Automatically commit completed work, staging only task changes. Before finishing, fold attempts, follow-up fixes, cleanup and related docs into the relevant unpushed commits of this task's series, split independently useful changes, honor requested grouping and name commits for final results. Verify publication status before rewriting. Requests to clean up or squash history or remove a feature authorize rewriting affected published history, including dropping a change and its revert. For authorized force-pushes, use force-with-lease tied to the remote head observed before rewriting.
+      - Automatically commit completed work, staging only task changes. Before finishing, fold attempts, follow-up fixes, cleanup and related docs into the relevant commits of this task's series (including dropping a change and its revert when removing a feature), split independently useful changes, honor requested grouping and name commits for final results. When force-pushing rewritten history, use force-with-lease tied to the remote head observed before rewriting.
       - Follow target repository conventions for commits and PR titles. Use short lowercase past-tense commit messages in my projects and upstream conventions in external projects, including my forks. Never add AI attribution, and preserve human authorship and contributor credit when adapting others' work.
-      - Push, publish, send messages or make other online changes only when explicitly requested, and only to the branch I named or the task's own branch. That authorization carries through related follow-up fixes. Read-only access is allowed.
+      - Pushing commits to the branch I named or the task's own branch is allowed, except do not push automatically to PRs without CodeRabbit or other code review bots for agent loops. Publish, send messages, push to those PRs or make other online changes only when explicitly requested, with authorization carrying through related follow-up fixes. Read-only access is allowed.
       - Babysit PRs opened from T3 Code without being asked: fix verified review findings, CI failures and conflicts until bot reviews and required checks pass on the latest commit.
       - Pull with rebase without merge commits. First drop changes already upstream or superseded, resolve conflicts according to current behavior, compare old and new series with `git range-diff` and verify affected workflows. Explain obsolete work before publishing.
 
@@ -187,7 +187,8 @@ in {
       - Alma is a portable school SSD whose network blocks HTTP and ICMP. Use direct HTTPS repositories, never ping as a connectivity gate. Preserve SELinux-labelled local boot/login launchers, native TTY2 recovery and verified tty1 graphical login before recommending a reboot.
 
       ## CLIProxyAPI `/home/grey/Projects/cliproxyapi`
-      - Keep my fork as one commit on upstream `main`. After each change, rebase onto upstream `main`, fold the change into that commit, force-push `origin/main`, update the nixconf pin and deploy to the server. This authorizes those pushes.
+      - Keep my fork as one commit on upstream `main`. After each change, rebase onto upstream `main`, fold the change into that commit, force-push `origin/main`, update the nixconf pin and deploy to the server.
+      - Use the Grey client for live proxy checks. Select its key by exact name and fail if unavailable.
 
       ## niri `/home/grey/Projects/niri`
       - I authorize preparing code and public PR text despite Niri's LLM authorship restriction. Do not ask again.
