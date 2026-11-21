@@ -35,8 +35,9 @@
       ../../../graphical/monstar.nix
       ../../../graphical/mpv.nix
       ../../../graphical/niri.nix
-      ../../../graphical/noctalia/noctalia.nix
       ../../../graphical/wallpaper.nix
+      ../../../graphical/shell/lintel.nix
+      ../../../graphical/shell/session-tools.nix
       ../../../graphical/remote-client.nix
       ../../../graphical/scrcpy.nix
       ../../../graphical/sunshine.nix
@@ -69,9 +70,20 @@
               action.spawn = "niri-swap-outputs";
             };
           };
-          programs.noctalia.settings = {
-            bar.default.margin_ends = lib.mkForce 415;
-            plugin_settings."noctalia/screen_recorder".video_codec = lib.mkForce "h264";
+          programs.gpu-screen-recorder.replay.settings.CODEC = lib.mkForce "h264";
+          programs.gpu-screen-recorder.recording.extraArgs = ["-k" "h264"];
+          systemd.user.services.systemd-lock-handler.serviceConfig = {
+            ExecStart = "${pkgs.systemd-lock-handler}/lib/systemd-lock-handler";
+            Type = "notify";
+            Restart = "on-failure";
+          };
+          systemd.user.targets = {
+            lock.conflicts = ["unlock.target"];
+            unlock.conflicts = ["lock.target"];
+            sleep = {
+              requires = ["lock.target"];
+              after = ["lock.target"];
+            };
           };
           programs.helix.languages.language-server.nixd.config = {
             nixpkgs.expr = "import ${pkgs.path} {}";

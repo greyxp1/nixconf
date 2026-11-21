@@ -90,6 +90,20 @@ in {
   ];
   environment.etc = {
     "niri/config.kdl".source = nixos.programs.niri.configFile;
+    "xdg/fuzzel/fuzzel.ini".text = nixos.environment.etc."xdg/fuzzel/fuzzel.ini".text;
+    "pam.d/swaylock" = {
+      text = ''
+        auth include system-auth
+        account include system-auth
+      '';
+      mode = "0644";
+      replaceExisting = true;
+    };
+    "systemd/user/gpu-screen-recorder.service" = {
+      source = "${nixos.programs.gpu-screen-recorder.package}/share/systemd/user/gpu-screen-recorder.service";
+      mode = "0644";
+      replaceExisting = true;
+    };
     "systemd/user/niri-shutdown.target" = {
       source = "${almaNiri}/share/systemd/user/niri-shutdown.target";
       mode = "0644";

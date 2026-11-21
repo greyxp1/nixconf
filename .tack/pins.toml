@@ -82,3 +82,7 @@ exclude_follow = ["nixpkgs"]
 
 [inputs.browse]
 url = "gh:greyxp1/browse-flake"
+
+[inputs.lintel]
+url = "gh:greyxp1/lintel"
+type = "fetch"

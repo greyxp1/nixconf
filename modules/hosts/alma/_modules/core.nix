@@ -29,7 +29,5 @@
   } // lib.mapAttrs (_: file: {inherit (file) source;})
     (lib.filterAttrs (name: _: lib.hasPrefix "direnv/" name) nixos.environment.etc);
   programs.nh = nixos.programs.nh;
-  environment.systemPackages = [
-    pkgs.openssh
-  ];
+  environment.systemPackages = [pkgs.openssh];
 }

@@ -1,8 +1,18 @@
-{pkgs, ...}: let
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
   rate = 48000;
   stereo = ["FL" "FR"];
   micCard = "AT2005USB";
-  micSource = "rnnoise_source";
+  mixMusic = config.services.lintel.musicMic.enable;
+  publicMicSource = "rnnoise_source";
+  micSource =
+    if mixMusic
+    then "rnnoise_filtered"
+    else publicMicSource;
   rawMicSource = "alsa_input.usb-Audio-Technica_AT2005USB-00.analog-stereo";
   headphonesSink = "alsa_output.usb-Audio-Technica_AT2005USB-00.analog-stereo";
 
@@ -49,7 +59,17 @@ in {
     };
   };
 
+  services.lintel.musicMic = {
+    enable = true;
+    voiceSource = micSource;
+    sourceName = publicMicSource;
+  };
+
   services.pipewire = {
+    wireplumber.extraConfig."51-audio-menu-cleanup"."wireplumber.profiles" = lib.optionalAttrs mixMusic {
+      main."hardware.bluetooth" = "disabled";
+    };
+
     wireplumber.extraConfig."50-at2005usb-soft-mixer"."monitor.alsa.rules" = [
       {
         matches = [{"device.name" = "alsa_card.usb-Audio-Technica_AT2005USB-00";}];
@@ -58,41 +78,97 @@ in {
     ];
 
     wireplumber.extraConfig."51-audio-menu-cleanup"."monitor.alsa.rules" =
-      map (nodeRule "node.hidden") [headphonesSink rawMicSource]
+      (
+        if mixMusic
+        then [
+          {
+            matches = [{"node.name" = headphonesSink;}];
+            actions.update-props."media.class" = "Audio/Sink/Internal";
+          }
+          {
+            matches = [{"node.name" = rawMicSource;}];
+            actions.update-props."media.class" = "Audio/Source/Internal";
+          }
+          {
+            matches = [
+              {
+                "media.class" = "~^Audio/(Sink|Source)";
+                "node.name" = "!~^(${lib.escapeRegex headphonesSink}|${lib.escapeRegex rawMicSource})$";
+              }
+            ];
+            actions.update-props."node.disabled" = true;
+          }
+        ]
+        else map (nodeRule "node.hidden") [headphonesSink rawMicSource]
+      )
       ++ map (nodeRule "node.disabled") [
         "alsa_output.pci-0000_07_00.1.hdmi-stereo"
         "alsa_output.pci-0000_09_00.4.iec958-stereo"
         "alsa_input.pci-0000_09_00.4.analog-stereo"
       ];
 
-    extraLadspaPackages = [pkgs.rnnoise-plugin.ladspa];
+    extraLadspaPackages = [pkgs.rnnoise-plugin.ladspa pkgs.ladspaPlugins];
     extraConfig.pipewire = {
       "50-rnnoise"."context.modules" = [
         (filterChain {
           "node.description" = "RNNoise Microphone";
           "media.name" = "RNNoise Microphone";
-          "filter.graph".nodes = [
-            {
-              type = "ladspa";
-              name = "rnnoise";
-              plugin = "librnnoise_ladspa";
-              label = "noise_suppressor_stereo";
-              control = {
-                "VAD Threshold (%)" = 85.0;
-                "VAD Grace Period (ms)" = 200.0;
-                "Retroactive VAD Grace (ms)" = 0.0;
-              };
-            }
-          ];
-          "capture.props" = {
-            "node.name" = "capture.${micSource}";
-            "node.passive" = true;
-            "audio.rate" = rate;
-            "audio.position" = stereo;
+          "filter.graph" = {
+            nodes = [
+              {
+                type = "ladspa";
+                name = "rnnoise";
+                plugin = "librnnoise_ladspa";
+                label = "noise_suppressor_stereo";
+                control = {
+                  "VAD Threshold (%)" = 85.0;
+                  "VAD Grace Period (ms)" = 200.0;
+                  "Retroactive VAD Grace (ms)" = 0.0;
+                };
+              }
+              {
+                type = "ladspa";
+                name = "limiter";
+                plugin = "fast_lookahead_limiter_1913";
+                label = "fastLookaheadLimiter";
+                control = {
+                  "Input gain (dB)" = 8.0;
+                  "Limit (dB)" = -1.0;
+                  "Release time (s)" = 0.15;
+                };
+              }
+            ];
+            links = [
+              {
+                output = "rnnoise:Output (L)";
+                input = "limiter:Input 1";
+              }
+              {
+                output = "rnnoise:Output (R)";
+                input = "limiter:Input 2";
+              }
+            ];
+            inputs = ["rnnoise:Input (L)" "rnnoise:Input (R)"];
+            outputs = ["limiter:Output 1" "limiter:Output 2"];
           };
+          "capture.props" =
+            {
+              "node.name" = "capture.${micSource}";
+              "node.passive" = true;
+              "audio.rate" = rate;
+              "audio.position" = stereo;
+            }
+            // lib.optionalAttrs mixMusic {
+              "target.object" = rawMicSource;
+              "node.dont-fallback" = true;
+              "node.linger" = true;
+            };
           "playback.props" = {
             "node.name" = micSource;
-            "media.class" = "Audio/Source";
+            "media.class" =
+              if mixMusic
+              then "Audio/Source/Internal"
+              else "Audio/Source";
             "node.description" = "RNNoise Microphone";
             "audio.rate" = rate;
             "audio.position" = stereo;

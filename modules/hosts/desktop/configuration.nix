@@ -39,7 +39,6 @@ in {
     (importTree ../../graphical)
     ./_modules/sshfs.nix
     ./_modules/sunshine.nix
-    ./_modules/noctalia.nix
     ./_modules/recording.nix
     ./_modules/at2005usb.nix
     ./_modules/whisrs.nix

@@ -111,14 +111,6 @@
         ];
         layer-rules = [
           {
-            matches = [{namespace = "^rustbg-backdrop$";}];
-            place-within-backdrop = true;
-          }
-          {
-            matches = [{namespace = "^noctalia-(bar-[^\"]+|notification|dock|panel|osd)$";}];
-            background-effect.xray = false;
-          }
-          {
             matches = [{namespace = "^vellum$";}];
             background-effect.xray = false;
           }
@@ -130,15 +122,6 @@
           "Mod+Escape" = {action = {spawn = ["monstar" "-e" "btm"];};};
           "Mod+E" = {action = {spawn = ["monstar" "-e" "fish" "-C" "y"];};};
           "Mod+B" = {action = {spawn = "helium";};};
-
-          "Mod+C" = {action = {spawn = ["noctalia" "msg" "panel-toggle" "control-center"];};};
-          "Alt+Space" = {action = {spawn = ["noctalia" "msg" "panel-toggle" "launcher"];};};
-          "Mod+V" = {action = {spawn = ["noctalia" "msg" "panel-toggle" "clipboard"];};};
-          "Mod+Print" = {action = {spawn = ["noctalia" "msg" "plugin" "noctalia/screen_recorder:service" "all" "replay-save"];};};
-
-          "XF86AudioRaiseVolume" = {action = {spawn = ["noctalia" "msg" "volume-up"];};};
-          "XF86AudioLowerVolume" = {action = {spawn = ["noctalia" "msg" "volume-down"];};};
-          "XF86AudioMute" = {action = {spawn = ["noctalia" "msg" "media" "toggle"];};};
 
           "Mod+Q" = {action = {close-window = {};};};
           "Mod+F" = {action = {maximize-window-to-edges = {};};};

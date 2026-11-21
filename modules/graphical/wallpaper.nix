@@ -3,11 +3,17 @@
   services.rustbg = {
     enable = true;
     wallpapers = {
-      wallpaper.image = ./noctalia/assets/wallpaper.jpg;
+      wallpaper.image = ./_assets/wallpaper.jpg;
       backdrop = {
-        image = ./noctalia/assets/wallpaper.jpg;
+        image = ./_assets/wallpaper.jpg;
         blur = 7;
       };
     };
   };
+  programs.niri.settings.layer-rules = [
+    {
+      matches = [{namespace = "^rustbg-backdrop$";}];
+      place-within-backdrop = true;
+    }
+  ];
 }

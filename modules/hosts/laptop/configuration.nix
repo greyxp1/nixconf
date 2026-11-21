@@ -50,17 +50,7 @@
 
     # Ironlake only supports GLES 2, so Chromium's GLES 3 initialization fails.
     helium.flags = ["--disable-gpu"];
-    noctalia.settings = {
-      bar.default = {
-        margin_ends = lib.mkForce 32;
-        scale = lib.mkForce 1.0;
-        start = lib.mkForce [];
-      };
-      plugin_settings."noctalia/screen_recorder".replay_enabled = lib.mkForce false;
-      hooks.started = lib.mkForce ''
-        noctalia msg session lock
-        systemctl --user start xdg-desktop-portal.service niri-screenshare.service
-      '';
-    };
   };
+  programs.gpu-screen-recorder.replay.enable = lib.mkForce false;
+  systemd.user.services.swaylock.wantedBy = ["graphical-session.target"];
 }
