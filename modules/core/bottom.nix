@@ -12,6 +12,7 @@
       temperature.sensor_filter.list = ["Tccd1"];
       processes = {
         columns = ["Name" "CPU%" "GPU%" "Mem%" "GMem%"];
+        default_sort = "Mem%";
         default_memory_value = true;
         default_grouped = true;
         regex = true;
