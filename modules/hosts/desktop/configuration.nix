@@ -44,6 +44,7 @@ in {
     ./_modules/at2005usb.nix
     ./_modules/whisrs.nix
     ./_modules/gaming.nix
+    ./_modules/rocket-league.nix
     ./_modules/kovaaks.nix
     ./_modules/sober.nix
     ./_modules/nvidia.nix

@@ -13,7 +13,7 @@
     };
   };
 
-  environment.systemPackages = with pkgs; [pandora-launcher heroic];
+  environment.systemPackages = with pkgs; [pandora-launcher];
   programs.niri.settings = {
     outputs.DP-2 = {
       mode = "2560x1440@170.071";
