@@ -1,4 +1,8 @@
-{inputs, pkgs, ...}: {
+{
+  inputs,
+  pkgs,
+  ...
+}: {
   imports = [inputs.nixcord.nixosModules.nixcord inputs.relay.nixosModules.default];
   services.relay.enable = true;
   programs.nixcord = {
@@ -116,10 +120,7 @@
           YoutubeAdblock.enabled = true;
 
           # Voice chat and screensharing
-          Relay = {
-            enabled = true;
-            autoShare = true;
-          };
+          Relay.enabled = true;
           WebScreenShare.enabled = false;
           WebScreenShareFixes.enabled = false;
           ClientPreferences = {
