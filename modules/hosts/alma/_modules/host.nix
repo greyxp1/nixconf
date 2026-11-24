@@ -126,6 +126,8 @@ in {
       max-jobs = 1;
       cores = 0;
       warn-dirty = false;
+      http2 = false;
+      download-attempts = 10;
       extra-substituters = cache.substituters;
       extra-trusted-public-keys = cache.trusted-public-keys;
     };

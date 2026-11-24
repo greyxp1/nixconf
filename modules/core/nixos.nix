@@ -28,6 +28,8 @@ in {
         trusted-users = ["@wheel"];
         experimental-features = ["nix-command" "flakes"];
         warn-dirty = false;
+        http2 = false;
+        download-attempts = 10;
         max-jobs = 1;
         cores = 0;
       };
