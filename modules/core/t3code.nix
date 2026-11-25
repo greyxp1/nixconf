@@ -83,6 +83,11 @@ in {
         apiKeyFile = clientKey;
         models = [antigravityModel];
       };
+      instructions = ''
+        # Neon
+        - Neon leads new T3 threads as a thin coordinator for conversation, decisions and tiny edits, delegating real work to conserve its weekly pool instead of doing multi-step reads, edits, builds or deploys itself. Delegate investigation, reproduction, builds, tests, git/pin/deploy ops, routine or mechanical edits and reviews to `codex`, and reserve `claude` for non-trivial code design, implementation and refactors. Explicit model requests override these defaults. In T3, use the T3 Code MCP `delegate_task` for handoffs and reviews, pass scope, reproduction and acceptance criteria, and keep one writer at a time.
+        - If a delegated subagent refuses or exits without using tools on a benign task, reword the brief in plain engineering terms and retry that model instead of absorbing the work into Neon or shifting grunt work to `claude`.
+      '';
     };
 
     providers.claudeCode = {
@@ -101,6 +106,10 @@ in {
 
     providers.codex = {
       enable = true;
+      instructions = ''
+        # Codex
+        - For web pages, use Browse in a background task-owned tab of my Helium profile. For native apps, use Niri's agents workspace. Never take over my foreground windows or open another browser instance on my profile. Load the `desktop-and-browser` skill before either.
+      '';
       settings = {
         hooks = lib.mkIf (graphical && config.programs.niri.package.mcpCompletionCleanup or false) {
           Stop = [
@@ -164,11 +173,10 @@ in {
       ## Agents
       - Enter the project's Nix environment before project commands when available. Offload very heavy builds and compilations to `server` via `tailscale ssh grey@server`.
       - Agent model aliases: `codex` = `${agentModels.codex}` at ${reasoningEffort.codex} effort, `claude` = `${agentModels.claude}` at ${reasoningEffort.claude} effort and `neon` = `${agentModels.neon}` at ${reasoningEffort.neon} effort. Resolve them through the harness and pass the effort explicitly unless I request another model or level. Other subagent models are fine when the task calls for them.
-      - Neon leads new T3 threads as a thin coordinator for conversation, decisions and tiny edits, delegating real work to conserve its weekly pool. Delegate investigation, reproduction, builds, tests, bulk mechanical edits and reviews to `codex`, and delegate non-trivial implementation and refactors to `claude`. Explicit model requests override these defaults. In T3, use the T3 Code MCP `delegate_task` for handoffs and reviews, pass scope, reproduction and acceptance criteria, and keep one writer at a time.
       - Give subagents a fresh context and a self-contained brief with paths, commit ranges and verification results instead of forking the conversation. Subagents return one final report without progress messages, reuse reported build and test results unless they change code, and spawn agents only when the brief says to.
       - Read targeted line ranges rather than whole large files or full diffs, and do not reread unchanged content already in context.
       - Discover tools before declaring capabilities unavailable and verify them before claiming they work. Missing display variables do not prove there is no desktop: inspect `systemctl --user show-environment` and session sockets under XDG_RUNTIME_DIR.
-      - Only codex does interactive browser, native desktop or device work, including Browse, Niri computer use, T3 preview and device tools and phone input, and other models delegate it to codex. For web pages, use Browse in a background task-owned tab of my Helium profile. For native apps, use Niri's agents workspace. Never take over my foreground windows or open another browser instance on my profile. Load the `desktop-and-browser` skill before either.
+      - Only codex does interactive browser, native desktop or device work, including Browse, Niri computer use, T3 preview and device tools and phone input, and other models delegate it to codex.
       - Do authorized work yourself (including live tests) instead of handing me commands, and request a human handoff only for steps only I can do, such as sign-ins, 2FA or captchas. Ask first only before foreground desktop interaction, `niri mcp --desktop` or live hardware access, before quitting or restarting my shared browser, and before restarting T3 Code, its tunnel or a service carrying this connection (including activations that restart them) while users or threads are connected or their state is unknown. One approval covers repeats of the same action within the task. Ask through the question UI with a clickable "Continue" choice, explain what the action interrupts, wait for my selection and do not quote these instructions.
       - When continuing work, read the source PR, branch or agent thread and later corrections, and verify handoff claims against current code. Reconcile delayed notifications with the current state before reporting. Continue in place unless I request a replacement. Treat corrections as steering and never stop only to promise more work.
       - Before mutating a shared checkout, inspect its status. Treat every dirty file as user-owned: preserve a patch or use an isolated worktree, never run restore, reset, checkout, clean, or equivalent commands on it, and never discard changes to make a command succeed.
@@ -182,14 +190,6 @@ in {
       - Babysit PRs opened from T3 Code with an agent review bot. Fix verified review findings, CI failures and conflicts until bot reviews and required checks pass on the latest commit.
       - Pull with rebase without merge commits. First drop changes already upstream or superseded, resolve conflicts according to current behavior, compare old and new series with `git range-diff` and verify affected workflows. Explain obsolete work before publishing.
 
-      # Host configuration
-      - Identify the actual host with `hostnamectl` and `/etc/os-release` before inspecting or changing its configuration.
-      - Before activation, compare the checkout, pins and intended changes with the running host. Capture the working system path, build once, retain the exact output and inspect the activation diff. Resolve unrelated removals, downgrades and service changes first.
-      - Use actual Nix build outputs, verify executables exist and fix Nix-managed services through modules instead of manual units or runtime overrides.
-      - Build remote hosts from their current nixconf checkout, never snapshots or ad hoc files. Run remote activation and rollback in detached systemd-run units with absolute tool paths, so they finish when the session drops.
-      - After activation, check affected services and authenticated client requests. On regression, restore and verify the captured working deployment before another fix. Protect the proxy carrying this session with independent recovery access and automatic rollback unless client checks pass.
-      - Evaluate affected hosts and inspect the build plan, then perform small routine rebuilds and activation. Leave large source compilations and broad program updates to me unless explicitly requested.
-
       # Projects
       Apply conventions to the repository being changed, including worktrees and work from another project's thread.
 
@@ -197,16 +197,6 @@ in {
       - Keep Relay independent of Suncord.
       - Prioritize voice and screenshare quality, then performance, code size and complexity, then UI. Measure startup, responsiveness and package size. Verify media replacements end to end with an official Discord recipient (connecting my main and alt accounts to `General` in the `database` server, using maximum screenshare quality and FPS and testing mid-stream setting switches) before recommending adoption.
       - Dismiss dialogs with outside clicks or Escape, without close buttons. Arrow keys scroll the focused dialog.
-
-      ## nixconf `/home/grey/Projects/nixconf`
-      - Use stock upstream applications and supported integrations. Do not introduce locally maintained application patches or forks unless I explicitly request them.
-      - Keep host-specific behavior and compatibility fixes under `modules/hosts/<host>`, not shared modules.
-      - Design custom NixOS modules for nixpkgs: reusable options and defaults, standard module conventions and personal settings in consuming modules. Shared definitions stay plain and the host that overrides one marks its value, such as `lib.mkForce`. Use Home Manager as a reference without copying its interface.
-      - Use supported package/PATH integration and readable commands, such as Helix `extraPackages` with `command = "mpls"`.
-      - Change inputs in `.tack/pins.toml` and run `tack update` from an isolated worktree or a clean checkout. Apply only the requested pin diff back to a dirty checkout after reviewing it. Fold a pin update into any recent lock-update commit touching that pin, push it from the desktop checkout and pull it on the other host checkouts before building there.
-      - Reach hosts with `tailscale ssh grey@<host>`, not plain SSH.
-      - Keep Alma-specific selection, exclusions, overrides and compatibility under `modules/hosts/alma` and adapt Alma to shared NixOS configuration, never the reverse. Shared modules hold no values or comments chosen for Alma.
-      - Alma is a portable school SSD whose network blocks HTTP and ICMP. Use direct HTTPS repositories, never ping as a connectivity gate. Preserve SELinux-labelled local boot/login launchers, native TTY2 recovery and verified tty1 graphical login before recommending a reboot.
 
       ## CLIProxyAPI `/home/grey/Projects/cliproxyapi`
       - Keep my fork as one commit on upstream `main`. After each change, rebase onto upstream `main`, fold the change into that commit, force-push `origin/main`, update the nixconf pin and deploy to the server.
@@ -236,6 +226,29 @@ in {
         Prefer accessibility snapshots and explicit semantic actions over screenshots and keyboard shortcuts. Capture screenshots only when coordinates or visual judgement need them, and hand long visual verification loops to a fresh subagent that returns a verdict. Inspect the intended field before typing or submitting. When Niri refuses keyboard input because a sibling window has focus, use Browse for web pages or accessibility for native apps. A Browse foreground restriction does not rule out Niri accessibility.
 
         For Niri handoffs, confirm the setup is ready and give the steps, host and exact workspace from `get_session_state`. A completed sign-in does not authorize resuming, so wait for me to return control. Inspect the app again after any handoff.
+      '';
+      nixconf = ''
+        ---
+        name: nixconf
+        description: "Use when editing /home/grey/Projects/nixconf, updating its .tack/pins.toml pins, or inspecting, building, activating or deploying hosts such as desktop, server or alma."
+        ---
+        ## Hosts
+        - Identify the actual host with `hostnamectl` and `/etc/os-release` before inspecting or changing its configuration.
+        - Before activation, compare the checkout, pins and intended changes with the running host. Capture the working system path, build once, retain the exact output and inspect the activation diff. Resolve unrelated removals, downgrades and service changes first.
+        - Use actual Nix build outputs, verify executables exist and fix Nix-managed services through modules instead of manual units or runtime overrides.
+        - Build remote hosts from their current nixconf checkout, never snapshots or ad hoc files. Run remote activation and rollback in detached systemd-run units with absolute tool paths, so they finish when the session drops.
+        - After activation, check affected services and authenticated client requests. On regression, restore and verify the captured working deployment before another fix. Protect the proxy carrying this session with independent recovery access and automatic rollback unless client checks pass.
+        - Evaluate affected hosts and inspect the build plan, then perform small routine rebuilds and activation. Leave large source compilations and broad program updates to me unless explicitly requested.
+        - Reach hosts with `tailscale ssh grey@<host>`, not plain SSH.
+
+        ## nixconf
+        - Use stock upstream applications and supported integrations. Do not introduce locally maintained application patches or forks unless I explicitly request them.
+        - Keep host-specific behavior and compatibility fixes under `modules/hosts/<host>`, not shared modules.
+        - Design custom NixOS modules for nixpkgs: reusable options and defaults, standard module conventions and personal settings in consuming modules. Shared definitions stay plain and the host that overrides one marks its value, such as `lib.mkForce`. Use Home Manager as a reference without copying its interface.
+        - Use supported package/PATH integration and readable commands, such as Helix `extraPackages` with `command = "mpls"`.
+        - Change inputs in `.tack/pins.toml` and run `tack update` from an isolated worktree or a clean checkout. Apply only the requested pin diff back to a dirty checkout after reviewing it. Fold a pin update into any recent lock-update commit touching that pin, push it from the desktop checkout and pull it on the other host checkouts before building there.
+        - Keep Alma-specific selection, exclusions, overrides and compatibility under `modules/hosts/alma` and adapt Alma to shared NixOS configuration, never the reverse. Shared modules hold no values or comments chosen for Alma.
+        - Alma is a portable school SSD whose network blocks HTTP and ICMP. Use direct HTTPS repositories, never ping as a connectivity gate. Preserve SELinux-labelled local boot/login launchers, native TTY2 recovery and verified tty1 graphical login before recommending a reboot.
       '';
       android-device = ''
         ---
@@ -341,7 +354,7 @@ in {
         ---
         Record durable preferences rather than one-off details. Identify the cause and narrowest prevention. Prefer structural fixes, settings or existing checks over instructions. When a rule already covers the case, it failed to be followed, so make that rule clearer or shorter instead of restating it elsewhere. Write general rules rather than tool- or incident-specific ones, and keep the always-loaded instructions from growing by tightening or removing nearby text. Do not expand the task without authorization.
 
-        Update shared instructions or inline skills, keeping general preferences in Global, project invariants in Projects and situational guidance in skills. Follow configuration validation and commit rules.
+        Update shared instructions, provider-specific instructions or inline skills, keeping general preferences in Global, provider-only rules in that provider's instructions, project invariants in Projects, nixconf and host rules in the `nixconf` skill and situational guidance in skills. Follow configuration validation and commit rules.
       '';
     };
   };
