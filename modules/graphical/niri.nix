@@ -50,6 +50,7 @@
             open-floating = true;
             focus-ring.off = {};
             geometry-corner-radius = 0;
+            draw-border-with-background = false;
             border = {
               on = {};
               width = 1;
