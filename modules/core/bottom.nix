@@ -1,14 +1,13 @@
 {
   inputs,
-  lib,
   pkgs,
   ...
 }: {
   imports = [../_custom-modules/bottom.nix];
   programs.bottom = {
     enable = true;
+    themeFile = "${inputs.catppuccin.packages.${pkgs.stdenv.hostPlatform.system}.bottom}/mocha.toml";
     settings = {
-      inherit ((lib.importTOML "${inputs.catppuccin.packages.${pkgs.stdenv.hostPlatform.system}.bottom}/mocha.toml")) styles;
       temperature.sensor_filter.list = ["Tccd1"];
       processes = {
         columns = ["Name" "CPU%" "GPU%" "Mem%" "GMem%"];

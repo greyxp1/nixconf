@@ -5,7 +5,6 @@
   ...
 }: let
   catppuccin = inputs.catppuccin.packages.${pkgs.stdenv.hostPlatform.system};
-  theme = lib.importTOML "${catppuccin.yazi}/mocha/catppuccin-mocha-mauve.toml";
 in {
   imports = [../_custom-modules/yazi.nix];
   environment.etc."mime.types".source = "${pkgs.mailcap}/etc/mime.types";
@@ -27,16 +26,18 @@ in {
       require("keep-preferences"):setup({ path_preferences = preferences })
       require("smart-enter"):setup({ open_multi = true })
     '';
-    settings.theme = lib.recursiveUpdate (theme // {app = removeAttrs theme.app ["overall"];}) {
-      mgr.syntect_theme = "${catppuccin.bat}/Catppuccin Mocha.tmTheme";
-      icon.conds = lib.concatMap (icon:
-        lib.optional ((icon."if" or "") == "dir") (icon
-          // {
-            "if" = "dir & hovered";
-            text = "";
-          })
-        ++ [icon])
-      theme.icon.conds;
+    # The wrapper points YAZI_CONFIG_HOME at the store, so a full theme file can only be added as a flavor.
+    flavors.catppuccin-mocha = pkgs.runCommandLocal "catppuccin-mocha.yazi" {} ''
+      mkdir $out
+      ln -s "${catppuccin.bat}/Catppuccin Mocha.tmTheme" $out/tmtheme.xml
+      sed -e '/^overall = /d' \
+        -e 's/^\(\s*\){ if = "dir", text = "[^"]*"\(.*\)/\1{ if = "dir \& hovered", text = ""\2\n&/' \
+        ${catppuccin.yazi}/mocha/catppuccin-mocha-mauve.toml > $out/flavor.toml
+      grep -q 'dir & hovered' $out/flavor.toml
+    '';
+    settings.theme.flavor = {
+      dark = "catppuccin-mocha";
+      light = "catppuccin-mocha";
     };
     settings.yazi = {
       mgr = {

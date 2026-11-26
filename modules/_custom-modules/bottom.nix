@@ -6,7 +6,11 @@
 }: let
   cfg = config.programs.bottom;
   format = pkgs.formats.toml {};
-  configFile = format.generate "bottom.toml" cfg.settings;
+  settingsFile = format.generate "bottom.toml" cfg.settings;
+  configFile =
+    if cfg.themeFile == null
+    then settingsFile
+    else pkgs.concatText "bottom.toml" [settingsFile cfg.themeFile];
 in {
   options.programs.bottom = {
     enable = lib.mkEnableOption "bottom";
@@ -15,6 +19,11 @@ in {
       type = format.type;
       default = {};
       description = "bottom settings.";
+    };
+    themeFile = lib.mkOption {
+      type = lib.types.nullOr lib.types.path;
+      default = null;
+      description = "TOML file with `[styles]` tables appended to the generated settings, which must not set `styles` themselves.";
     };
     finalPackage = lib.mkOption {
       type = lib.types.package;
