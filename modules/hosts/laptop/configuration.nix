@@ -18,10 +18,11 @@
     }
   ];
 
-  # Temporary server cache, delete with harmonia.nix once laptop and alma are dropped.
+  # Drop with alma/laptop: this server cache setup, along with harmonia.nix.
   nix.settings = {
     extra-substituters = ["https://greyxp1.root.sx/nix-cache"];
     extra-trusted-public-keys = ["greyxp1.root.sx-1:6g4cMFPtBQhoHsPcDFw/aNl8xhR5yYoZyjYqrmOjxAA="];
+    always-allow-substitutes = true;
   };
 
   services.upower.enable = true;
