@@ -32,6 +32,7 @@ in {
 
   security.nix-secrets.secrets."cliproxyapi/client-key" = {
     owner = "grey";
+    # Drop with alma: its extra recipient, then re-encrypt the key for grey alone.
     recipients = builtins.attrValues (import ../../secrets/cliproxyapi/recipients.nix);
   };
   programs.t3code = {
@@ -227,6 +228,7 @@ in {
 
         For Niri handoffs, confirm the setup is ready and give the steps, host and exact workspace from `get_session_state`. A completed sign-in does not authorize resuming, so wait for me to return control. Inspect the app again after any handoff.
       '';
+      # Drop with alma: its mention in the description and its two Alma rules.
       nixconf = ''
         ---
         name: nixconf
@@ -250,6 +252,7 @@ in {
         - Keep Alma-specific selection, exclusions, overrides and compatibility under `modules/hosts/alma` and adapt Alma to shared NixOS configuration, never the reverse. Shared modules hold no values or comments chosen for Alma.
         - Alma is a portable school SSD whose network blocks HTTP and ICMP. Use direct HTTPS repositories, never ping as a connectivity gate. Preserve SELinux-labelled local boot/login launchers, native TTY2 recovery and verified tty1 graphical login before recommending a reboot.
       '';
+      # Drop with alma: the phone-on-Alma route in this skill.
       android-device = ''
         ---
         name: android-device

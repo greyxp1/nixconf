@@ -11,6 +11,7 @@
     content = {
       type = "gpt";
       partitions = {
+        # Drop with laptop: mkDefault lets its BIOS layout replace this ESP.
         ESP = lib.mkDefault {
           size = "512M";
           type = "EF00";

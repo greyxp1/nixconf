@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - install.sh
+      # Drop with alma:
       - install-alma.sh
       - .github/workflows/pages.yml
   workflow_dispatch:
@@ -32,6 +33,7 @@ jobs:
       - run: |
           mkdir _site
           cp install.sh _site/i
+          # Drop with alma:
           cp install-alma.sh _site/alma
 
       - uses: actions/upload-pages-artifact@v5

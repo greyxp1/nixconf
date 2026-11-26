@@ -62,6 +62,7 @@ in {
             };
           };
       }) (lib.filterAttrs (name: _: name != config.networking.hostName) {
+      # Drop with alma:
       alma = "alma.tail1785c.ts.net";
       desktop = "desktop.tail1785c.ts.net";
     });

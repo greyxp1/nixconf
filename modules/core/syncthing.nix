@@ -7,9 +7,11 @@
   # `syncthing device-id --home ~/.config/syncthing`, store its cert.pem and key.pem with
   # `nix-secrets edit syncthing/<host>/{cert,key}`, then rebuild every host.
   devices = {
+    # Drop with alma:
     alma = "PTNZ5IT-GV5PIGJ-Z5THHTM-C27MPWU-NEAR3GE-M5C2DF7-RHWYIEW-F3SGHAW";
     desktop = "SZPGBLD-JSMNNQT-FBKOBQ4-2ZTKES4-CWYCHJP-IAX4KC4-AMB2F3Z-ODYBYQL";
     server = "OAETKIB-GLNECRC-YMOWH6H-J4RMOBQ-NUMUFPK-FDPB47E-3EAUTGX-DSSKCAT";
+    # Drop with laptop: also secrets/syncthing/laptop.
     laptop = "55HVKIA-5JTEWB7-63HKSBZ-NFWG6AU-2IHWSDB-H5AUQUV-P4CMJ7Q-WSSTLAZ";
     pixel-9 = "O2BEKRC-VAKWYYH-WAW6C2L-WNU37RH-CXOD2GO-JL7OXU2-XDVFJ3A-UMPXNAA";
   };
@@ -20,6 +22,7 @@
   secrets = config.security.nix-secrets;
   # Listed hosts keep their identity as secrets, so a reinstall keeps the same ID.
   identity = lib.genAttrs ["cert" "key"] (file: "syncthing/${host}/${file}");
+  # Drop with alma: the secrets.enable check, since only alma disables nix-secrets.
   storedIdentity = secrets.enable && devices ? ${host};
 in {
   security.nix-secrets.secrets = lib.mkIf storedIdentity (lib.genAttrs (lib.attrValues identity) (_: {

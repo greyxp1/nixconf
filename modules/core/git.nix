@@ -7,6 +7,7 @@
 }: let
   githubHosts = config.security.nix-secrets.secrets."github/hosts";
 in {
+  # Drop with alma: the nix-secrets.enable guards here, since only alma disables nix-secrets.
   security.nix-secrets.secrets = lib.mkIf config.security.nix-secrets.enable {
     "github/hosts".owner = "grey";
   };

@@ -16,6 +16,7 @@ submodules = true
 url = "gh:nix-community/preservation"
 [inputs.disko]
 url = "gh:nix-community/disko"
+# Drop with alma: only alma and install-alma.sh use System Manager.
 [inputs.system-manager]
 url = "gh:numtide/system-manager"
 [inputs.helium]

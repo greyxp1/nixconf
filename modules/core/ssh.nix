@@ -1,10 +1,12 @@
 {config, lib, ...}: {
+  # Drop with alma: the nix-secrets.enable guards here, since only alma disables nix-secrets.
   security.nix-secrets.secrets = lib.mkIf config.security.nix-secrets.enable {
     "git/ssh-key".owner = "grey";
   };
 
   programs.ssh = {
     startAgent = true;
+    # Drop with alma/laptop: their names on the tailnet Host line.
     extraConfig = ''
       Host *
         AddKeysToAgent yes

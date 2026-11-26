@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+# Drop with alma: this whole installer, together with its .github/workflows/pages.yml publication and README section.
 umask 022
 
 REPO="${NIXCONF_REPO:-https://github.com/greyxp1/nixconf.git}"

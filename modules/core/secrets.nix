@@ -26,6 +26,7 @@ in {
     defaultRecipients = ["grey"];
   };
 
+  # Drop with alma: the secrets.enable guards here, since only alma disables nix-secrets.
   systemd.services.nix-secrets-activate = lib.mkIf (secrets.enable && secrets.activate.enable && secrets.activate.method == "systemd") {
     before = ["systemd-tmpfiles-setup.service"];
     unitConfig.ConditionPathExists = map (path: "|${path}") secrets.identityPaths;

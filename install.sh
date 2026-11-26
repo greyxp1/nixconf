@@ -6,6 +6,7 @@ REPO="${NIXCONF_REPO:-https://github.com/greyxp1/nixconf.git}"
 HOST=${1:-}
 if [[ -z $HOST ]]; then
   PS3="Select a host: "
+  # Drop with laptop: its entry in both host lists.
   select HOST in desktop generic laptop server; do
     [[ -n $HOST ]] && break
   done < /dev/tty
@@ -14,6 +15,7 @@ case "$HOST" in
   desktop|generic|laptop|server) ;;
   *) echo "Unknown host: $HOST" >&2; exit 1 ;;
 esac
+# Drop with laptop: the BIOS exception.
 if [[ $HOST != laptop && ! -d /sys/firmware/efi/efivars ]]; then
   echo "UEFI required for $HOST" >&2
   exit 1
@@ -83,6 +85,7 @@ if [[ $needs_age_key == true ]]; then
   [[ $AGE_KEY =~ ^AGE-SECRET-KEY-1[0-9A-Z]+$ ]] || { echo "Not an age secret key" >&2; exit 1; }
 fi
 
+# Drop with laptop: its GRUB disk check.
 if [[ $HOST == laptop ]]; then
   GRUB_DEVICE=$(nix eval "${NIX_OPTS[@]}" --raw "$WORK_DIR#nixosConfigurations.laptop.config.boot.loader.grub.devices" --apply builtins.head)
   [[ $DEV -ef $GRUB_DEVICE ]] || { echo "The laptop bootloader requires $GRUB_DEVICE" >&2; exit 1; }

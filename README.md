@@ -5,6 +5,7 @@ curl -fsSL greyxp1.github.io/nixconf/i | bash
 ```
 To restore deferred secrets after your first sign-in, run `sudo restore-secrets`, paste your age key, and reboot once.
 
+<!-- Drop with alma: this section and install-alma.sh. -->
 For AlmaLinux:
 
 ```bash
