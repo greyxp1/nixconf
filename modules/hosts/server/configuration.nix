@@ -21,5 +21,7 @@
     ./_modules/freedns.nix
     ./_modules/website.nix
     ./_modules/cliproxyapi.nix
+    # Drop with alma/laptop:
+    ./_modules/harmonia.nix
   ];
 }

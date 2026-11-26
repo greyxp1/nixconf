@@ -18,6 +18,12 @@
     }
   ];
 
+  # Temporary server cache, delete with harmonia.nix once laptop and alma are dropped.
+  nix.settings = {
+    extra-substituters = ["https://greyxp1.root.sx/nix-cache"];
+    extra-trusted-public-keys = ["greyxp1.root.sx-1:6g4cMFPtBQhoHsPcDFw/aNl8xhR5yYoZyjYqrmOjxAA="];
+  };
+
   services.upower.enable = true;
   boot.loader = {
     systemd-boot.enable = lib.mkForce false;
@@ -45,8 +51,8 @@
   };
 
   programs = {
-    # nh copies the derivation to the server, and iets writes it only when instantiating, not on eval.
-    fish.shellAliases.rebuild = lib.mkForce "tailscale ssh grey@server true && iets build --no-build ${config.programs.nh.flake}#nixosConfigurations.laptop.config.system.build.toplevel && nh os switch --build-host grey@server --use-substitutes";
+    # Build on the server, then substitute everything from its cache instead of building locally.
+    fish.shellAliases.rebuild = lib.mkForce "tailscale ssh grey@server true && nix build --store ssh-ng://grey@server --no-link ${config.programs.nh.flake}#nixosConfigurations.laptop.config.system.build.toplevel && nh os switch --max-jobs 0";
 
     # Ironlake only supports GLES 2, so Chromium's GLES 3 initialization fails.
     helium.flags = ["--disable-gpu"];
