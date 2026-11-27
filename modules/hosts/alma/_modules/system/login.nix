@@ -40,17 +40,13 @@ in {
         %wheel ALL=(ALL:ALL) NOPASSWD: ALL
       '';
     };
-    "systemd/system/getty@tty1.service.d/autologin.conf" = {
+    "systemd/system/getty@tty1.service.d/nixconf.conf" = {
       mode = "0644";
       replaceExisting = true;
       text = ''
         [Unit]
         Wants=system-manager-path.service
         After=system-manager-path.service
-
-        [Service]
-        ExecStart=
-        ExecStart=-/sbin/agetty --autologin grey --noclear %I $TERM
       '';
     };
   };

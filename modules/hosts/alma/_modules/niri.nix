@@ -55,27 +55,6 @@
     Install.WantedBy = "graphical-session.target";
   };
   services = {
-    xdg-desktop-portal = {
-      Service = {
-        Type = "dbus";
-        BusName = "org.freedesktop.portal.Desktop";
-        ExecStart = "${pkgs.xdg-desktop-portal}/libexec/xdg-desktop-portal";
-      };
-    };
-    xdg-desktop-portal-gtk = {
-      Service = {
-        Type = "dbus";
-        BusName = "org.freedesktop.impl.portal.desktop.gtk";
-        ExecStart = "${pkgs.xdg-desktop-portal-gtk}/libexec/xdg-desktop-portal-gtk";
-      };
-    };
-    xdg-desktop-portal-termfilechooser = {
-      Service = {
-        Type = "dbus";
-        BusName = "org.freedesktop.impl.portal.desktop.termfilechooser";
-        ExecStart = "${termfilechooser}/libexec/xdg-desktop-portal-termfilechooser";
-      };
-    };
     niri-screenshare = lib.recursiveUpdate (sessionService "${screenshots}/bin/niri-screenshare") {
       Service = {
         Type = "dbus";
@@ -122,7 +101,16 @@ in {
         ${lib.concatMapStringsSep "\n" (font: "<dir>${font}</dir>") nixos.fonts.packages}
       </fontconfig>
     '';
-  };
+  } // lib.mapAttrs' (name: package:
+    lib.nameValuePair "systemd/user/${name}.service" {
+      source = "${package}/lib/systemd/user/${name}.service";
+      mode = "0644";
+      replaceExisting = true;
+    }) {
+      xdg-desktop-portal = pkgs.xdg-desktop-portal;
+      xdg-desktop-portal-gtk = pkgs.xdg-desktop-portal-gtk;
+      xdg-desktop-portal-termfilechooser = termfilechooser;
+    };
   environment.variables = {
     XDG_CONFIG_DIRS = "/etc/xdg";
   };
