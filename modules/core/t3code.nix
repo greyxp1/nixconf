@@ -6,7 +6,7 @@
   ...
 }: let
   agentModels = {
-    codex = "gpt-6.2-sol";
+    codex = "gpt-6.1-sol";
     claude = "claude-opus-5-5";
     neon = "gemini-4-neon";
   };
@@ -72,7 +72,12 @@ in {
           authMethod = "gemini-api-key";
           binaryPath = "agy";
         };
-        environment = [{name = "GOOGLE_GEMINI_BASE_URL"; value = proxyEndpoint;}];
+        environment = [
+          {
+            name = "GOOGLE_GEMINI_BASE_URL";
+            value = proxyEndpoint;
+          }
+        ];
       };
     };
 
