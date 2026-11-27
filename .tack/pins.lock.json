@@ -27,7 +27,6 @@
     "preservation": "github:nix-community/preservation",
     "relay": "github:greyxp1/Relay",
     "rustbg": "github:greyxp1/rustbg",
-    "sonora": "github:sonorahq/sonora/pull/1006/head",
     "sunshine": "git+https://github.com/LizardByte/Sunshine?rev=774be88e41b5ddfe6cea5baab4ad658e3cb4adde",
     "system-manager": "github:numtide/system-manager",
     "t3code": "github:greyxp1/t3code-flake",
@@ -291,14 +290,6 @@
     "narHash": "sha256-EsVzYJaDM6UVpWGNoA76ZVkRbrIcxGxUN6yx+M11IgQ=",
     "lastModified": 1795550574,
     "public": true
-  },
-  "sonora": {
-    "type": "github",
-    "owner": "sonorahq",
-    "repo": "sonora",
-    "rev": "d8cd2399245b320bc5da99390928cb261d5f66c9",
-    "narHash": "sha256-tgBmnJ7rIRs4DlHaEnWWBIFPCaCl3Ifl9hTGysmfsOc=",
-    "lastModified": 1794100128
   },
   "sunshine": {
     "type": "git",

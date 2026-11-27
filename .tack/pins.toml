@@ -59,8 +59,6 @@ url = "gh:greyxp1/compress.yazi"
 type = "fetch"
 [inputs.monstar]
 url = "gh:rockorager/monstar"
-[inputs.sonora]
-url = "gh:sonorahq/sonora/pull/1006/head"
 [inputs.nix-index-database]
 url = "gh:nix-community/nix-index-database"
 [inputs.catppuccin]

@@ -69,7 +69,7 @@
             open-floating = true;
           }
           {
-            matches = [{"app-id" = "^dev\\.rockorager\\.monstar$|^sonora$";}];
+            matches = [{"app-id" = "^dev\\.rockorager\\.monstar$";}];
             background-effect = {
               blur = true;
               xray = false;
