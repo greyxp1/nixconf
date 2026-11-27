@@ -2,6 +2,8 @@
 gh = "github:{path}"
 [all_follow]
 nixpkgs = "nixpkgs"
+systems = "default"
+flake-parts = "flake-parts"
 [inputs.nixpkgs]
 url = "gh:nixos/nixpkgs/nixos-unstable"
 [inputs.sunshine]
@@ -70,10 +72,12 @@ type = "fetch"
 url = "gh:greyxp1/CLIProxyAPI"
 [inputs.rustbg]
 url = "gh:greyxp1/rustbg"
-
 [inputs.nix-secrets]
 url = "gh:unnamed-systems/nix-secrets"
-
+[inputs.tack]
+url = "gh:manic-systems/tack"
+# Uses its own nixpkgs to match the builds on cache.manic.systems.
+exclude_follow = ["nixpkgs"]
 [inputs.t3code]
 url = "gh:greyxp1/t3code-flake"
 # Uses its own nixpkgs to match the packages built by CI.
@@ -86,8 +90,3 @@ url = "gh:greyxp1/browse-flake"
 url = "gh:greyxp1/lintel"
 type = "fetch"
 
-[inputs.tack]
-# Keep immutable channel URLs until a release after 1.0.1 reaches nixpkgs.
-url = "gh:manic-systems/tack/pull/241/head"
-# Uses its own nixpkgs to match the builds on cache.manic.systems.
-exclude_follow = ["nixpkgs"]
